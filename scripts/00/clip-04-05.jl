@@ -27,6 +27,5 @@ coef(m)
 
 scatter( df2[!, :height], residuals(m), xlab="Height",
   ylab="Model residual values", lab="Model residuals", leg=:bottomright)
-savefig("$ProjDir/Fig-04-05.png")
 
 # End of `00/clip-04-05.jl`
