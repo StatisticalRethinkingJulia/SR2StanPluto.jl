@@ -23,13 +23,13 @@ using DrWatson
 using PlutoUI
 
 # ╔═╡ bfa90d82-dc1e-11ea-0fe9-83abb69fd819
-md"### Load Julia packages (libraries) needed for clip"
+md"### clip-01-03.jl"
 
 # ╔═╡ 5501c4a6-dda6-11ea-1083-37331529819c
 Pkg.add("DrWatson")
 
 # ╔═╡ f476d956-dc1e-11ea-002f-79f79dfc79e2
-@quickactivate "StatisticalRethinking"
+@quickactivate "StatisticalRethinkingStan"
 
 # ╔═╡ 6dbd0e7c-dc4d-11ea-18f7-1b16fb607fbd
 pkg"status"
@@ -81,7 +81,7 @@ md"#### End of `clip-01-03.jl`"
 # ╠═f476d956-dc1e-11ea-002f-79f79dfc79e2
 # ╠═e21327c0-de4f-11ea-179c-a5e955a827be
 # ╠═6dbd0e7c-dc4d-11ea-18f7-1b16fb607fbd
-# ╟─1b540d64-dc1f-11ea-321a-f1e0d2bab3e8
+# ╠═1b540d64-dc1f-11ea-321a-f1e0d2bab3e8
 # ╠═624b8daa-dc1f-11ea-114f-19896cd76aa5
 # ╟─8fa79b3e-dc1f-11ea-1437-d7bfe6cdea51
 # ╠═c4321a66-de4f-11ea-3449-774edd51eb10

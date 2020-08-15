@@ -255,9 +255,9 @@ version = "0.25.1"
 
 [[DrWatson]]
 deps = ["Dates", "FileIO", "LibGit2", "Pkg", "Random", "Requires", "UnPack"]
-git-tree-sha1 = "8647f70f2eca7ebab5dd67e13539cb18d0ffc21c"
+git-tree-sha1 = "8ef82b6b2d62a96ce2d69d4b368147a4b71b0367"
 uuid = "634d3b9d-ee7a-5ddf-bec9-22491ea816e1"
-version = "1.14.7"
+version = "1.15.0"
 
 [[ElasticArrays]]
 deps = ["Adapt"]
@@ -271,10 +271,10 @@ uuid = "da5c29d0-fa7d-589e-88eb-ea29b0a81949"
 version = "0.4.0"
 
 [[FFMPEG]]
-deps = ["FFMPEG_jll"]
-git-tree-sha1 = "c82bef6fc01e30d500f588cd01d29bdd44f1924e"
+deps = ["FFMPEG_jll", "x264_jll"]
+git-tree-sha1 = "9a73ffdc375be61b0e4516d83d880b265366fe1f"
 uuid = "c87230d0-a227-11e9-1b43-d7ebe4e7570a"
-version = "0.3.0"
+version = "0.4.0"
 
 [[FFMPEG_jll]]
 deps = ["Bzip2_jll", "FreeType2_jll", "FriBidi_jll", "LAME_jll", "LibVPX_jll", "Libdl", "Ogg_jll", "OpenSSL_jll", "Opus_jll", "Pkg", "Zlib_jll", "libass_jll", "libfdk_aac_jll", "libvorbis_jll", "x264_jll", "x265_jll"]
@@ -432,10 +432,10 @@ uuid = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
 version = "0.21.0"
 
 [[KernelDensity]]
-deps = ["Distributions", "FFTW", "Interpolations", "Optim", "StatsBase", "Test"]
-git-tree-sha1 = "c1048817fe5711f699abc8fabd47b1ac6ba4db04"
+deps = ["Distributions", "DocStringExtensions", "FFTW", "Interpolations", "StatsBase"]
+git-tree-sha1 = "c4cd736343d767c0e78e37c7d95548782b8f9424"
 uuid = "5ab0869b-81aa-558d-bb23-cbf5423bbe9b"
-version = "0.5.1"
+version = "0.6.0"
 
 [[LAME_jll]]
 deps = ["Libdl", "Pkg"]
@@ -539,6 +539,12 @@ deps = ["Distributed", "Distributions", "GenericLinearAlgebra", "LinearAlgebra",
 git-tree-sha1 = "a70705081d33a011d3137aabc1ea8f88452dfb97"
 uuid = "0987c9cc-fe09-11e8-30f0-b96dd679fdca"
 version = "0.9.5"
+
+[[MsgPack]]
+deps = ["Serialization"]
+git-tree-sha1 = "a8cbf066b54d793b9a48c5daa5d586cf2b5bd43d"
+uuid = "99f44e22-a591-53d1-9472-aa23ef4bd671"
+version = "1.1.0"
 
 [[MultivariateStats]]
 deps = ["Arpack", "LinearAlgebra", "SparseArrays", "Statistics", "StatsBase"]
@@ -661,9 +667,21 @@ version = "1.0.5"
 
 [[Plots]]
 deps = ["Base64", "Contour", "Dates", "FFMPEG", "FixedPointNumbers", "GR", "GeometryBasics", "GeometryTypes", "JSON", "LinearAlgebra", "Measures", "NaNMath", "PlotThemes", "PlotUtils", "Printf", "REPL", "Random", "RecipesBase", "RecipesPipeline", "Reexport", "Requires", "Showoff", "SparseArrays", "Statistics", "StatsBase", "UUIDs"]
-git-tree-sha1 = "0ca3e823caba835d5283fc9112266a4f20f3f713"
+git-tree-sha1 = "0a9119948a55993312c46d40b3f26387e4dd35e9"
 uuid = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
-version = "1.5.8"
+version = "1.5.9"
+
+[[Pluto]]
+deps = ["Base64", "Distributed", "HTTP", "InteractiveUtils", "Markdown", "MsgPack", "Pkg", "REPL", "Sockets", "UUIDs"]
+git-tree-sha1 = "1a45003ca6729c36cda3f5b972abd7fdfc14c2ee"
+uuid = "c3e4b0f8-55cb-11ea-2926-15256bba5781"
+version = "0.11.6"
+
+[[PlutoUI]]
+deps = ["Base64", "Markdown", "Random"]
+git-tree-sha1 = "d05ae9b2d5292dc0cb50029dcdd4664f4f87e9bd"
+uuid = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
+version = "0.6.0"
 
 [[PooledArrays]]
 deps = ["DataAPI"]
@@ -729,10 +747,10 @@ uuid = "3cdcf5f2-1ef4-517c-9805-6587b60abb01"
 version = "1.0.2"
 
 [[RecipesPipeline]]
-deps = ["Dates", "PlotUtils", "RecipesBase"]
-git-tree-sha1 = "d2a58b8291d1c0abae6a91489973f8a92bf5c04a"
+deps = ["Dates", "NaNMath", "PlotUtils", "RecipesBase"]
+git-tree-sha1 = "84ff6ab4187fb812522e7e3e6447107110171e62"
 uuid = "01d81517-befc-4cb6-b9ec-a95719d0359c"
-version = "0.1.11"
+version = "0.1.12"
 
 [[Reexport]]
 deps = ["Pkg"]
@@ -775,9 +793,9 @@ version = "0.5.5"
 
 [[SentinelArrays]]
 deps = ["Dates", "Random"]
-git-tree-sha1 = "7871163033b83a0d08bb601af56488c6f642a113"
+git-tree-sha1 = "7be68c77ae9e608762d00a74da3fc86938a08963"
 uuid = "91c51154-3ec4-41a3-a24f-3f23e20d615c"
-version = "1.2.10"
+version = "1.2.11"
 
 [[Serialization]]
 uuid = "9e88b42a-f829-5b0c-bbe9-9e923198166b"
@@ -860,8 +878,8 @@ uuid = "90137ffa-7385-5640-81b9-e52037218182"
 version = "0.12.4"
 
 [[StatisticalRethinking]]
-deps = ["CSV", "DataFrames", "Distributions", "DocStringExtensions", "KernelDensity", "LaTeXStrings", "MCMCChains", "MonteCarloMeasurements", "NamedArrays", "Parameters", "Random", "Reexport", "Requires", "StanOptimize", "StanSample", "Statistics", "StatsBase", "StatsFuns", "StatsPlots", "Test", "UnicodePlots"]
-git-tree-sha1 = "601121e63114ad53111eb4d022f3a6e088717042"
+deps = ["CSV", "DataFrames", "Distributions", "DocStringExtensions", "KernelDensity", "LaTeXStrings", "MCMCChains", "MonteCarloMeasurements", "NamedArrays", "Parameters", "Random", "Reexport", "Requires", "StanOptimize", "StanSample", "Statistics", "StatsBase", "StatsFuns", "StatsPlots", "Test"]
+git-tree-sha1 = "d896d83e3bce9d63b487db7b1c2539ebf88a4fc0"
 repo-rev = "v2.3.0"
 repo-url = "../StatisticalRethinking"
 uuid = "2d09df54-9d0f-5258-8220-54c2a3d4fbee"
@@ -873,9 +891,9 @@ uuid = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 
 [[StatsBase]]
 deps = ["DataAPI", "DataStructures", "LinearAlgebra", "Missings", "Printf", "Random", "SortingAlgorithms", "SparseArrays", "Statistics"]
-git-tree-sha1 = "19bfcb46245f69ff4013b3df3b977a289852c3a1"
+git-tree-sha1 = "a6102b1f364befdb05746f386b67c6b7e3262c45"
 uuid = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
-version = "0.32.2"
+version = "0.33.0"
 
 [[StatsFuns]]
 deps = ["Rmath", "SpecialFunctions"]
@@ -944,18 +962,12 @@ deps = ["Random", "SHA"]
 uuid = "cf7118a7-6976-5b1a-9a39-7adc72f591a4"
 
 [[UnPack]]
-git-tree-sha1 = "d4bfa022cd30df012700cf380af2141961bb3bfb"
+git-tree-sha1 = "387c1f73762231e86e0c9c5443ce3b4a0a9a0c2b"
 uuid = "3a884ed6-31ef-47d7-9d2a-63182c4928ed"
-version = "1.0.1"
+version = "1.0.2"
 
 [[Unicode]]
 uuid = "4ec0a83e-493e-50e2-b9ac-8f72acf5a8f5"
-
-[[UnicodePlots]]
-deps = ["Crayons", "Dates", "SparseArrays", "StatsBase"]
-git-tree-sha1 = "af0c29913f108f649999e74098814c7ef0f644de"
-uuid = "b8865327-cd53-5732-bb35-84acbb429228"
-version = "1.2.0"
 
 [[VectorizationBase]]
 deps = ["CpuId", "Libdl", "LinearAlgebra"]
