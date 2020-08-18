@@ -1,5 +1,8 @@
 # Execute this script after `scripts/03/intro_stan/clip-intro-1.jl`
 
+cd(@__DIR__)
+using DrWatson
+@quickactivate "StatisticalRethinkingStan"
 using StatisticalRethinking
 
 if success(rc)
@@ -33,8 +36,7 @@ if success(rc)
    plot!(p[i], x, pdf.(Normal(fits[i].μ, fits[i].σ), x), lab="Fitted Normal($μ, $σ)")
   end
   plot(p..., layout=(4, 1))
-  savefig("$ProjDir/Fig-part-2.png")
-
+  
 end
 
 # End of `intro/clip-intro-2.jl`

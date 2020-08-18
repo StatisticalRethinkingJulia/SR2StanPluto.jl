@@ -1,9 +1,10 @@
-# Load Julia packages (libraries) needed
+# `02/clip-08.jl`
 
+cd(@__DIR__)
+using DrWatson
+@quickactivate "StatisticalRethinkingStan"
 using StatisticalRethinking
 
-ProjDir = @__DIR__
-  
 # ### snippet 2.8
 
 # Simple Metropolis algorithm
@@ -31,20 +32,16 @@ end
 a3d[:, 1, 1] = p
 chns = MCMCChains.Chains(a3d, ["toss"])
 
-# Describe the chain
-
-MCMCChains.show(chns)
-
 # Plot the chain
 
 plot(chns)
-savefig("$ProjDir/Fig-08.1.png")
+savefig(plotsdir("Fig2.9.1.png"))
 
 # Show density and computed conjugate solution
 
 w = 6; n = 9; x = 0:0.01:1
 density(chns, lab="Samples")
 plot!( x, pdf.(Beta( w+1 , n-w+1 ) , x ), lab="Conjugate solution")
-savefig("$ProjDir/fig-08.2.png")
+savefig(plotsdir("Fig2.9.2.png"))
 
 # End of `02/clip-08.jl`

@@ -2,7 +2,11 @@
 # `scripts/03/intro_stan/clip-intro-2.jl` and 
 # `scripts/03/intro_stan/clip-intro-3.jl` (in that order)
 
-using StatisticalRethinking, Optim
+cd(@__DIR__)
+using DrWatson
+@quickactivate "StatisticalRethinkingStan"
+using StatisticalRethinking
+using Optim
 
 # This scripts shows a number of different ways to estimate
 # a quadratic approximation.
@@ -33,8 +37,8 @@ println("\nMode of samples based estimates of mean, std:\n")
 
 # Use mode of Stan samples, determine std using mode as mean
 
-mu_mode = mode(dfs[:, :theta])
-sigma_mode = std(dfs[:, :theta], mean=mu_mode)
+mu_mode = mode(dfs.theta)
+sigma_mode = std(dfs.theta, mean=mu_mode)
 display([mu_mode, sigma_mode])
 
 # Use kernel density of Stan samples

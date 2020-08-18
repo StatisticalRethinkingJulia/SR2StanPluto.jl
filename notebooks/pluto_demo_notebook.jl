@@ -31,21 +31,27 @@ using StatsPlots
 # ╔═╡ 1df9a2c0-d8c5-11ea-0422-c1bf4be84abe
 using Distributions
 
+# ╔═╡ 2f5466ce-df30-11ea-01b8-033529b3b536
+md"### Pluto demo notebook"
+
 # ╔═╡ 7079ec54-d3f6-11ea-0034-79a1c1c5b137
-md"# The Basel problem
+md"#### The Basel problem
 _Leonard Euler_ proved in 1741 that the series
 $$\frac{1}{1} + \frac{1}{4} + \frac{1}{9} + \cdots$$
 converges to
 $$\frac{\pi^2}{6}$$"
 
 # ╔═╡ cce045ac-d373-11ea-29af-5be52ed80e36
-md"## Test Pluto notebook"
+md"#### Test Pluto notebook"
 
 # ╔═╡ a1b39506-d278-11ea-1a13-05f75d56dbca
 VERSION
 
 # ╔═╡ 926695b4-d974-11ea-1dbd-ff56f8ab770e
 Text(sprint(versioninfo))
+
+# ╔═╡ a083e88e-df3b-11ea-2ea6-ebb67dddbf81
+pkg"status"
 
 # ╔═╡ 4f4d4b4c-d7eb-11ea-2aad-4dd2949c05e8
 Text(sprint(io -> Pkg.status(io=io, "StructuralCausalModels")))
@@ -80,11 +86,13 @@ density(rand(Normal(μ, σ), 500), lab="Normal(μ=$μ, σ=$σ)")
 @bind debug CheckBox(default=false)
 
 # ╔═╡ Cell order:
+# ╟─2f5466ce-df30-11ea-01b8-033529b3b536
 # ╟─7079ec54-d3f6-11ea-0034-79a1c1c5b137
 # ╟─cce045ac-d373-11ea-29af-5be52ed80e36
 # ╠═a1b39506-d278-11ea-1a13-05f75d56dbca
 # ╠═926695b4-d974-11ea-1dbd-ff56f8ab770e
 # ╠═82aff0b0-d7f4-11ea-0425-858a365a7bf5
+# ╠═a083e88e-df3b-11ea-2ea6-ebb67dddbf81
 # ╠═4f4d4b4c-d7eb-11ea-2aad-4dd2949c05e8
 # ╠═6d6e761e-d979-11ea-2ad8-7904c919e31f
 # ╟─4d6bd562-d836-11ea-0756-11ef4bf1b67d

@@ -1,16 +1,15 @@
 # Fig 2.5
 
-#=
-
-This clip is only intended to generate Fig 2.5 (fig-00.png).
-
-It is not intended to show how to use Stan (yet)!
-
-=#
-
+cd(@__DIR__)
+using DrWatson
+@quickactivate "StatisticalRethinkingStan"
 using StatisticalRethinking
+using StanSample
 
-ProjDir = @__DIR__
+#=
+This clip is only intended to generate Fig 2.5 (fig-00.png).
+It is not intended to show how to use Stan (yet)!
+=#
 
 m2_0s = "
 // Inferring a rate
@@ -61,6 +60,6 @@ for n in 1:9
 end
 
 plot(p..., layout=(3, 3))
-savefig("$ProjDir/Fig-00.1.png")
+savefig(plotsdir("Fig2.5.png"))
 
 # End of `m2.0.jl`

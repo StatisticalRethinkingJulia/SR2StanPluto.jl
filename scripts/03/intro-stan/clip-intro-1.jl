@@ -1,8 +1,10 @@
 # Introduction to a Stan Language program
 
+cd(@__DIR__)
+using DrWatson
+@quickactivate "StatisticalRethinkingStan"
 using StatisticalRethinking
-
-ProjDir = @__DIR__
+using StanSample
 
 #=
 
@@ -110,9 +112,8 @@ if success(rc)
   
   chn = read_samples(sm; output_format=:mcmcchains)
   println()
-  show(chn)
-  savefig(plot(chn), "$ProjDir/Fig-part-1.png")
-
+  plot(chn)
+  
   # Display the stansummary result
 
   println()

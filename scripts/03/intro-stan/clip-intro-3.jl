@@ -1,8 +1,10 @@
 # Execute this script after `scripts/03/intro_stan/clip-intro-1.jl`
 
+cd(@__DIR__)
+using DrWatson
+@quickactivate "StatisticalRethinkingStan"
+using StatisticalRethinking
 using StanOptimize
-
-ProjDir = @__DIR__
 
 # Define the OptimizeModel, use model from intro_part_1.jl.
 

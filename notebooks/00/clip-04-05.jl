@@ -4,29 +4,22 @@
 using Markdown
 using InteractiveUtils
 
-# ╔═╡ 0b586340-de65-11ea-39a9-1be72fd535d5
-using DrWatson
+# ╔═╡ ead8af44-dfef-11ea-104e-d7b1bc038f70
+using Pkg, DrWatson
 
-# ╔═╡ 0199c268-de65-11ea-145d-7ff65c6ba37e
+# ╔═╡ 0b586340-de65-11ea-39a9-1be72fd535d5
 begin
+	@quickactivate "StatisticalRethinkingStan"
 	using StatisticalRethinking
 	using GLM
+	include(projectdir("src", "tools.jl"))
 end
-
-# ╔═╡ b1abf73a-defa-11ea-0dbf-87315b3280c3
-include(projectdir("src", "tools.jl"))
 
 # ╔═╡ c5bf8a48-de64-11ea-0be8-cd41ff1e44aa
 md"### clip-04-05.jl"
 
-# ╔═╡ a021c0e4-de64-11ea-10be-53c53e3e2280
-@quickactivate "StatisticalRethinkingStan"
-
 # ╔═╡ b85b1474-de64-11ea-089d-b947253b7bb7
 md"##### Load packages."
-
-# ╔═╡ 30487bf0-defa-11ea-3e9c-c940d215e474
-rel_path()
 
 # ╔═╡ 92dba6fc-de64-11ea-1a2a-6fec4bfff88d
 md"#### snippet 0.4"
@@ -39,7 +32,7 @@ begin
 end
 
 # ╔═╡ adfe9074-df14-11ea-38a2-a1e45e0b41e4
-Text(precis(String, howell1))
+Text(precis(howell1; io = String))
 
 # ╔═╡ df4e5f92-de65-11ea-2815-4b96147b9ade
 md"##### Fit a linear regression of weight on height"
@@ -59,12 +52,9 @@ md"### End of 00/clip-04-05.jl"
 
 # ╔═╡ Cell order:
 # ╟─c5bf8a48-de64-11ea-0be8-cd41ff1e44aa
-# ╠═0b586340-de65-11ea-39a9-1be72fd535d5
-# ╠═a021c0e4-de64-11ea-10be-53c53e3e2280
 # ╟─b85b1474-de64-11ea-089d-b947253b7bb7
-# ╠═0199c268-de65-11ea-145d-7ff65c6ba37e
-# ╠═30487bf0-defa-11ea-3e9c-c940d215e474
-# ╠═b1abf73a-defa-11ea-0dbf-87315b3280c3
+# ╠═ead8af44-dfef-11ea-104e-d7b1bc038f70
+# ╠═0b586340-de65-11ea-39a9-1be72fd535d5
 # ╟─92dba6fc-de64-11ea-1a2a-6fec4bfff88d
 # ╠═54362642-de65-11ea-31ec-991677bf86a9
 # ╠═adfe9074-df14-11ea-38a2-a1e45e0b41e4

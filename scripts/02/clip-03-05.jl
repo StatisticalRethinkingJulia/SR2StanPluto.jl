@@ -1,8 +1,9 @@
-# Load Julia packages (libraries) needed
+# `02/clip-03-05.jl`
 
+cd(@__DIR__)
+using DrWatson
+@quickactivate "StatisticalRethinkingStan"
 using StatisticalRethinking
-
-ProjDir = @__DIR__
 
 # ### snippet 2.5
 
@@ -33,7 +34,7 @@ for l in 1:3            # Different priors
     end
 
 plot(p..., layout=(3, 3))
-savefig("$ProjDir/Fig-03-05.$l.png")
+savefig(plotsdir("Fig2.7.$l.png"))
 
 end
 

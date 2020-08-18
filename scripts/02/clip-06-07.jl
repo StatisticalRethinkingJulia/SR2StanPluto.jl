@@ -1,9 +1,10 @@
-# Load Julia packages (libraries) needed
+# `02/clip-06-07.jl`
 
+cd(@__DIR__)
+using DrWatson
+@quickactivate "StatisticalRethinkingStan"
 using StatisticalRethinking
 using Optim
-
-ProjDir = @__DIR__
 
 # ### snippet 2.6
 
@@ -42,7 +43,7 @@ MCMCChains.describe(chn)
 # Plot the chain
 
 plot(chn)
-savefig("$ProjDir/fig-06-07.1.png")
+savefig(plotsdir("Fig2.8.1.png"))
 
 # Compute the MAP (maximum_a_posteriori) estimate
 
@@ -97,6 +98,6 @@ p[4] = plot( x, pdf.(Beta( w+1 , n-w+1 ) , x ), lab="Conjugate solution")
 f = fit(Normal, samples)
 plot!(p[4], x, pdf.(Normal( f.μ , f.σ ) , x ), lab="Normal approximation")
 plot(p..., layout=(2, 2))
-savefig("$ProjDir/fig-06-07.2.png")
+savefig(plotsdir("Fig2.8.2.png"))
 
 # End of `02/clip-06-07.jl`

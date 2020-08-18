@@ -48,7 +48,7 @@ function unicode_histogram(data, nbins = 12)
     return join((BARS[i] for i in indices))
 end
 
-function precis(io, df::DataFrame; digits = 2, depth = Inf, alpha = 0.11)
+function precis(df::DataFrame; io = stdout, digits = 2, depth = Inf, alpha = 0.11)
     d = DataFrame()
     d.param = names(df)
     d.mean = mean.(eachcol(df))

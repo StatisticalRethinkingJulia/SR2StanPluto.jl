@@ -1,6 +1,10 @@
-# Load Julia packages (libraries) needed
+# `02/clip-01-02.jl`
 
+cd(@__DIR__)
+using DrWatson
+@quickactivate "StatisticalRethinkingStan"
 using StatisticalRethinking
+using StanSample
 
 # snippet 2.1
 
