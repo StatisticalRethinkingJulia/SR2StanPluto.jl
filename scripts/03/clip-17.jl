@@ -1,8 +1,9 @@
 # Load Julia packages (libraries) needed
 
+cd(@__DIR__)
+using DrWatson
+@quickactivate "StatisticalRethinkingStan"
 using StatisticalRethinking
-
-ProjDir = @__DIR__
 
 # Define the Stan language model
 
@@ -53,15 +54,14 @@ if success(rc)
 
   # Look at area of hpd
 
-  hpd(chn)
+  MCMCChains.hpd(chn)
 
   # Plot the 4 chains
 
   mixeddensity(chn, xlab="height [cm]", ylab="density")
-  bnds = hpd(chn[:,1,1])
-  vline!([bnds[:lower]], line=:dash)
-  vline!([bnds[:upper]], line=:dash)
-  savefig("$(ProjDir)/Fig_17.png")
+  bnds = MCMCChains.hpd(chn)
+  vline!([bnds[:theta, :lower]], line=:dash)
+  vline!([bnds[:theta, :upper]], line=:dash)
 
 end
 

@@ -43,7 +43,7 @@ MCMCChains.describe(chn)
 # Plot the chain
 
 plot(chn)
-savefig(plotsdir("Fig2.8.1.png"))
+savefig(plotsdir("02", "Fig2.8.1.png"))
 
 # Compute the MAP (maximum_a_posteriori) estimate
 

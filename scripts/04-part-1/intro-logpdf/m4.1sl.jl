@@ -1,6 +1,7 @@
+cd(@__DIR__)
+using DrWatson
+@quickactivate "StatisticalRethinkingStan"
 using StatisticalRethinking
-
-ProjDir = @__DIR__
 
 df = CSV.read(rel_path("..", "data", "Howell1.csv"), delim=';')
 df2 = filter(row -> row[:age] >= 18, df)
@@ -39,7 +40,7 @@ rc = stan_sample(sm, data=heightsdata);
 
 if success(rc)
   chn = read_samples(sm; output_format=:mcmcchains)
-  show(chn)
+  chn |> display
 end
 
 # end of m4.1sl

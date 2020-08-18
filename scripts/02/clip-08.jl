@@ -35,13 +35,13 @@ chns = MCMCChains.Chains(a3d, ["toss"])
 # Plot the chain
 
 plot(chns)
-savefig(plotsdir("Fig2.9.1.png"))
+savefig(plotsdir("02", "Fig2.9.1.png"))
 
 # Show density and computed conjugate solution
 
 w = 6; n = 9; x = 0:0.01:1
 density(chns, lab="Samples")
 plot!( x, pdf.(Beta( w+1 , n-w+1 ) , x ), lab="Conjugate solution")
-savefig(plotsdir("Fig2.9.2.png"))
+savefig(plotsdir("02", "Fig2.9.2.png"))
 
 # End of `02/clip-08.jl`

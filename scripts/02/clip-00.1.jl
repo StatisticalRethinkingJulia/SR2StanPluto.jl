@@ -60,6 +60,6 @@ for n in 1:9
 end
 
 plot(p..., layout=(3, 3))
-savefig(plotsdir("Fig2.5.png"))
+savefig(plotsdir("02", "Fig2.5.png"))
 
 # End of `m2.0.jl`

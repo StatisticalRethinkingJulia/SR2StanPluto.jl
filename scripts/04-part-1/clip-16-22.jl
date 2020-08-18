@@ -71,7 +71,7 @@ contour(mu_list, sigma_list, post_df[:, :prob],
 	xlab="height",
 	ylab="sigma",
 	title="Contour plot of posterior density")
-savefig("$ProjDir/Fig-16-22.1.png")
+savefig(plotsdir("04", "Fig-16-22.1.png"))
 
 # ### snippet 4.18
 
@@ -81,7 +81,7 @@ heatmap(mu_list, sigma_list, transpose(reshape(post_df[:, :prob], 100,100)),
 	xlab="height",
 	ylab="sigma",
 	title="Heatmap of posterior density")
-savefig("$ProjDir/Fig-16-22.2.png")
+savefig(plotsdir("04", "Fig-16-22.2.png"))
 
 # ### Snippet 4.19
 
@@ -98,14 +98,12 @@ a2d = hcat(samples[:, :mu], samples[:, :sigma])
 a3d = reshape(a2d, (size(a2d, 1), size(a2d, 2), 1))
 chn = StanSample.convert_a3d(a3d, ["mu", "sigma"], Val(:mcmcchains); start=1)
 
-show(chn)
+display(chn)
 
 # Show hpd regions
 
-@show MCMCChains.hpd(chn)
-
-mu_bnds = MCMCChains.hpd(chn[:,1,1])
-sigma_bnds = MCMCChains.hpd(chn[:, 2, 1])
+bnds = MCMCChains.hpd(chn)
+display(bnds)
 
 # ### Snippet 4.21
 
@@ -115,9 +113,9 @@ density(samples[:, :mu],
 	xlab="height",
 	ylab="density",
 	lab="posterior mu")
-vline!([mu_bnds[:upper]], line=:dash, lab="Lower bound")
-vline!([mu_bnds[:lower]], line=:dash, lab="Upper bound")
-savefig("$ProjDir/Fig-16-22.3.png")
+vline!([bnds[:mu, :upper]], line=:dash, lab="Lower bound")
+vline!([bnds[:mu, :lower]], line=:dash, lab="Upper bound")
+savefig(plotsdir("04", "Fig-16-22.3.png"))
 
 # Density of sigma
 
@@ -125,8 +123,8 @@ density(samples[:, :sigma],
 	xlab="sigma",
 	ylab="density",
 	lab="posterior sigma")
-vline!([sigma_bnds[:upper]], line=:dash, lab="Lower bound")
-vline!([sigma_bnds[:lower]], line=:dash, lab="Upper bound")
-savefig("$ProjDir/Fig-16-22.4.png")
+vline!([bnds[:sigma, :upper]], line=:dash, lab="Lower bound")
+vline!([bnds[:sigma, :lower]], line=:dash, lab="Upper bound")
+savefig(plotsdir("04", "Fig-16-22.4.png"))
 
 # End of `04/clip-16-20.jl`

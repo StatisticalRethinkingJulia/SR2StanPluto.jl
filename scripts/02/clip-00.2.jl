@@ -30,6 +30,6 @@ for i in 1:3
 end
 
 plot(p..., layout=(3, 3))
-savefig(plotsdir("Fig2.6.png"))
+savefig(plotsdir("02", "Fig2.6.png"))
 
 # End of `02/clip-00.2.jl`

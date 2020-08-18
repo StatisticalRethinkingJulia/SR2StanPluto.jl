@@ -57,7 +57,7 @@ if success(rc)
     end
   end
   plot(plts..., layout=(2,1))
-  savefig("$(ProjDir)/Fig-31.png")
+  savefig(plotsdir("04", "Fig-31.png"))
 
 	p = read_samples(sm; output_format=:particles)
   display(p)

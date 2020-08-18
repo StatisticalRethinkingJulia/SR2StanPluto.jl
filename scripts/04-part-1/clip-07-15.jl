@@ -150,17 +150,17 @@ if success(rc)
  	# Read in the samples and show a chain summary
  
  	chn = read_samples(sm; output_format=:mcmcchains)
- 	show(chn)
+ 	display(chn)
 
  	# Plot the sampling
 
  	plot(chn)
- 	savefig("$ProjDir/Fig-07-15.2.png")
+ 	savefig(plotsdir("04", "Fig-07-15.2.png"))
 
 	# Plot the density of posterior draws
 
 	density(chn)
-	savefig("$ProjDir/Fig-07-15.3.png")
+	savefig(plotsdir("04", "Fig-07-15.3.png"))
 
 end
 

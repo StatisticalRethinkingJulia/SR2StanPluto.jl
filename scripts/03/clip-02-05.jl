@@ -34,7 +34,7 @@ chn |> display
 # Plot the chain
 
 p1 = plot(chn)
-savefig(p1, plotsdir("Fig-02-05.1.png"))
+savefig(p1, plotsdir("03", "Fig-02-05.1.png"))
 
 # ### snippet 3.4
 
@@ -57,11 +57,11 @@ p2[2] = density!(samples2, ylim=(0.0, 5.0), lab="Sample density")
 # Add quadratic approximation
 
 p3 = plot(p2..., layout=(1, 2))
-savefig(p3, plotsdir("Fig-02-05.2.png"))
+savefig(p3, plotsdir("03", "Fig-02-05.2.png"))
 
 density(samples2, lab="Sample2 density")
 vline!(hpdi(samples2), lab="hpdi samples2")
 vline!(quantile(samples2, [0.25, 0.75]), lab="quantiles [0.25, 0.75]")
-savefig(plotsdir("Fig-02-05.3.png"))
+savefig(plotsdir("03", "Fig-02-05.3.png"))
 
 # End of `03/clip-02-05.jl`

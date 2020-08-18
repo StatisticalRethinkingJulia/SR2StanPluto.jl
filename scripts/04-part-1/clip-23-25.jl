@@ -83,6 +83,6 @@ density(samples[:, :sigma],
 	ylab="density",
 	lab="posterior sigma (only 20 obs)"
 )
-savefig("$ProjDir/Fig-23-25.png")
+savefig(plotsdir("04", "Fig-23-25.png"))
 
 # End of `04/clip-23-25.jl`

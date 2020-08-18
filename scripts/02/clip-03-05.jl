@@ -34,7 +34,7 @@ for l in 1:3            # Different priors
     end
 
 plot(p..., layout=(3, 3))
-savefig(plotsdir("Fig2.7.$l.png"))
+savefig(plotsdir("02", "Fig2.7.$l.png"))
 
 end
 

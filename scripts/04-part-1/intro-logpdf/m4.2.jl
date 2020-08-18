@@ -1,10 +1,10 @@
 # This scrpt shows clip-26-29 using Optim and a loglik function.
 
+cd(@__DIR__)
+using DrWatson
+@quickactivate "StatisticalRethinkingStan"
 using StatisticalRethinking
 using Optim
-
-ProjDir = @__DIR__
-cd(ProjDir)
 
 # ### snippet 4.26
 

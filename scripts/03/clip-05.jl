@@ -56,9 +56,8 @@ if success(rc)
   # Describe the draws
 
   chn = read_samples(sm; output_format=:mcmcchains)
-  show(chn)
+  chn |> display
   plot(chn)
-  savefig("Fig-05.png")
   println()
 
   # Show Particles summary of theta and thetaprior

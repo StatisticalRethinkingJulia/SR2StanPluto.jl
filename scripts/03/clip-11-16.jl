@@ -26,7 +26,7 @@ chn = MCMCChains.Chains(reshape(samples, N, 1, 1), ["toss"]);
 
 # ### snippet 3.12
 
-MCMCChains.show(chn)
+chn |> display
 
 # ### snippet 3.13
 
@@ -47,7 +47,6 @@ println("Median: $(median(samples))\n")
 density(samples, lab="density")
 vline!(hpdi(samples, alpha=0.5), line=:dash, lab="hpdi")
 vline!(quantile(samples, [0.25, 0.75]), line=:dash, lab="quantile (pi)")
-savefig("$(ProjDir)/Fig-11-16.png")
 
 # End of `03/clip-11-16.jl`
 

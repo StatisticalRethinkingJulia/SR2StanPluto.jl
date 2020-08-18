@@ -52,15 +52,14 @@ md"n will go from 1:9"
 
 # ╔═╡ 89ee4714-e0cd-11ea-2378-dffe0e058ea1
 begin
-	p = Vector{Plots.Plot{Plots.GRBackend}}(undef, 9)
-	dens = Vector{DataFrame}(undef, 10)
-
 	k = [1,0,1,1,1,0,1,0,1]       # Sequence observed
 	x = range(0, stop=9, length=10)
 end
 
 # ╔═╡ c8d96392-e0cc-11ea-2650-a950d62c37a5
 begin
+	p = Vector{Plots.Plot{Plots.GRBackend}}(undef, 9)
+	dens = Vector{DataFrame}(undef, 10)
 	for n in 1:9
 
 		p[n] = plot(xlims=(0.0, 1.0), ylims=(0.0, 3.0), leg=false)

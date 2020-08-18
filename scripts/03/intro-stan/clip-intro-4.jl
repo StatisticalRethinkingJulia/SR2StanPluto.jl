@@ -104,7 +104,6 @@ density!(dfs[:, :theta], lab="StanSample chain")
 
 vline!([bnds_hpd[1]], line=:dash, lab="hpd lower bound")
 vline!([bnds_hpd[2]], line=:dash, lab="hpd upper bound")
-savefig(joinpath(@__DIR__, "Fig-part-4.png"))
 
 # In this example usually most approximations are similar.
 # Other examples are less clear. In particular with
