@@ -2,10 +2,11 @@
 
 # Load Julia packages (libraries) needed
 
+cd(@__DIR__)
+using DrWatson
+@quickactivate "StatisticalRethinkingStan"
 using StatisticalRethinking
-
-ProjDir = @__DIR__
-cd(ProjDir)
+using StanSample
 
 # Define the Stan language model
 

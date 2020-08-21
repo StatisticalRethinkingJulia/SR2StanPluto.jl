@@ -49,6 +49,7 @@ mapreduce(p -> (p > 0.5 && p < 0.75) ? 1 : 0, +, samples) / N   |> display
 # ### snippet 3.9
 
 quantile(samples, 0.8) |> display
+println()
 
 # ### snippet 3.10
 

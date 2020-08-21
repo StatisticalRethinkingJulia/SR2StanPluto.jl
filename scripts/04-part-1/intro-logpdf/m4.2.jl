@@ -8,7 +8,7 @@ using Optim
 
 # ### snippet 4.26
 
-df = DataFrame(CSV.read(rel_path("..", "data", "Howell1.csv"), delim=';'))
+df = DataFrame(CSV.read(sr_path("..", "data", "Howell1.csv"), delim=';'))
 df2 = filter(row -> row[:age] >= 18, df);
 @show first(df2, 5)
 

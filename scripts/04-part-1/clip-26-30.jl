@@ -1,11 +1,18 @@
 # Load Julia packages (libraries) needed for clip4
 
+cd(@__DIR__)
+using DrWatson
+@quickactivate "StatisticalRethinkingStan"
 using StatisticalRethinking
+using StanSample
+
+include(projectdir("src", "quap.jl"))
 
 # ### Snippet 4.26
 
 ProjDir = @__DIR__
-df = CSV.read(rel_path("..", "data", "Howell1.csv"), delim=';')
+df = CSV.read(sr_path("..", "data", "Howell1.csv"),
+  DataFrame; delim=';')
 
 # Use only adults
 

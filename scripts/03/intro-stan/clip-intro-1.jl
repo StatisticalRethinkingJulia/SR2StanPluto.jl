@@ -6,6 +6,8 @@ using DrWatson
 using StatisticalRethinking
 using StanSample
 
+include(projectdir("src", "quap.jl"))
+
 #=
 
 The `rethinking` model is defined as:

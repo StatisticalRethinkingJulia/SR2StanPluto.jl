@@ -3,7 +3,8 @@ using DrWatson
 @quickactivate "StatisticalRethinkingStan"
 using StatisticalRethinking
 
-df = CSV.read(rel_path("..", "data", "Howell1.csv"), delim=';')
+df = CSV.read(sr_path("..", "data", "Howell1.csv"),
+  DataFrame; delim=';')
 df2 = filter(row -> row[:age] >= 18, df)
 first(df2, 5)
 

@@ -1,10 +1,12 @@
 # Load Julia packages (libraries) needed for clip
 
+cd(@__DIR__)
+using DrWatson
+@quickactivate "StatisticalRethinkingStan"
 using StatisticalRethinking
 
-ProjDir = @__DIR__
-
-df = DataFrame(CSV.read(rel_path("..", "data", "Howell1.csv"), delim=';'))
+df = DataFrame(CSV.read(sr_path("..", "data", "Howell1.csv"),
+		DataFrame; delim=';'))
 df2 = filter(row -> row[:age] >= 18, df);
 first(df2, 5)
 

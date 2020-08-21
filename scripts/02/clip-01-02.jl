@@ -4,7 +4,6 @@ cd(@__DIR__)
 using DrWatson
 @quickactivate "StatisticalRethinkingStan"
 using StatisticalRethinking
-using StanSample
 
 # snippet 2.1
 
