@@ -1,13 +1,16 @@
 # Load Julia packages (libraries) needed for clip
 
+cd(@__DIR__)
+using DrWatson
+@quickactivate "StatisticalRethinkingStan"
 using StatisticalRethinking
+using StanSample
 
-ProjDir = @__DIR__
-cd(ProjDir) do
+include(projectdir("src", "quap.jl"))
 
 # ### snippet 4.7
 
-df = CSV.read(rel_path("..", "data", "Howell1.csv"), delim=';')
+df = CSV.read(sr_path("..", "data", "Howell1.csv"), delim=';')
 
 # Use only adults
 
@@ -65,17 +68,17 @@ for i in 1:length(nvals)
     "weight" => df2[1:N, :weight]
   )
   
-  sm = SampleModel("weights", weightsmodel);
-  rc = stan_sample(sm, data=heightsdataN)
+  local sm = SampleModel("weights", weightsmodel);
+  local rc = stan_sample(sm, data=heightsdataN)
 
   if success(rc)
 
-    xi = 30.0:0.1:65.0
+    local xi = 30.0:0.1:65.0
     sample_df = read_samples(sm; output_format=:dataframe)
     p[i] = scatter(df2[1:N, :weight], df2[1:N, :height], 
       leg=false, xlab="weight_c")
     for j in 1:N
-      yi = sample_df[j, :alpha] .+ sample_df[j, :beta]*xi
+      local yi = sample_df[j, :alpha] .+ sample_df[j, :beta]*xi
       plot!(p[i], xi, yi, title="N = $N")
     end
 
@@ -87,8 +90,6 @@ for i in 1:length(nvals)
 end
 
 plot(p..., layout=(2, 2))
-savefig("$ProjDir/Fig-45-47.png")
-
-end # cd .. do
+savefig(plotsdir("04", "Fig-45-47.png"))
 
 # End of `04/clip-45-47a.jl`

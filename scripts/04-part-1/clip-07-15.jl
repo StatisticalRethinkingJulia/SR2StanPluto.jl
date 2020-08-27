@@ -1,6 +1,5 @@
 # Load Julia packages (libraries) needed for clip
 
-cd(@__DIR__)
 using DrWatson
 @quickactivate "StatisticalRethinkingStan"
 using StatisticalRethinking

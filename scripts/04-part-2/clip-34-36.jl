@@ -40,7 +40,7 @@ model {
 
 sm = SampleModel("heights", heightsmodel);
 
-heightsdata = Dict("N" => length(df2[:, :height]), "h" => df2[:, :height]);
+heightsdata = Dict("N" => length(df2.height), "h" => df2.height);
 
 rc = stan_sample(sm, data=heightsdata);
 
@@ -55,7 +55,7 @@ if success(rc)
 
 	# Check equivalence of Stan samples and Particles.
 	mu_range = 152.0:0.01:157.0
-	plot(mu_range, ecdf(sample(df[:, :mu], 10000))(mu_range),
+	plot(mu_range, ecdf(sample(df.mu, 10000))(mu_range),
 		xlabel="ecdf", ylabel="mu", lab="Stan samples")
 
   # Sampling from quap result:
@@ -65,9 +65,9 @@ if success(rc)
 		lab="Quap samples")
 
   
-  plot!(mu_range, ecdf(sample(df[:, :mu], 10000))(mu_range),
+  plot!(mu_range, ecdf(sample(df.mu, 10000))(mu_range),
     lab="Particles samples")
-	savefig("$ProjDir/Fig-34-36.1.png")
+	savefig(plotsdir("04", "Fig-34-36.1.png"))
 
   dfa = read_samples(sm; output_format=:dataframes)
   plts = Vector{Plots.Plot{Plots.GRBackend}}(undef, size(dfa[1], 2))
@@ -83,7 +83,7 @@ if success(rc)
     end
   end
   plot(plts..., layout=(2,1))
-  savefig("$(ProjDir)/Fig-34-36.2.png")
+  savefig(plotsdir("04", "Fig-34-36.2.png"))
 
 end
 

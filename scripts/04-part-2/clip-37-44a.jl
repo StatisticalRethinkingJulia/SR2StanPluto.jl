@@ -1,14 +1,20 @@
 using StatisticalRethinking
 
-ProjDir = @__DIR__
+cd(@__DIR__)
+using DrWatson
+@quickactivate "StatisticalRethinkingStan"
+using StatisticalRethinking
+using StanSample
 
-df = CSV.read(rel_path("..", "data", "Howell1.csv"), delim=';')
+include(projectdir("src", "quap.jl"))
+
+df = CSV.read(sr_path("..", "data", "Howell1.csv"), delim=';')
 
 # Use only adults
 
 df2 = filter(row -> row[:age] >= 18, df);
-mean_weight = mean(df2[:, :weight]);
-df2[!, :weight_c] = df2[:, :weight] .- mean_weight;
+mean_weight = mean(df2.weight);
+df2.weight_c = df2.weight .- mean_weight;
 first(df2, 5)
 
 # Define the Stan language model
@@ -37,8 +43,8 @@ sm = SampleModel("weights", weightsmodel);
 
 # Input data
 
-heightsdata = Dict("N" => length(df2[:, :height]), 
-	"height" => df2[:, :height], "weight" => df2[:, :weight_c]);
+heightsdata = Dict("N" => length(df2.height), 
+	"height" => df2.height, "weight" => df2.weight_c);
 
 # Sample using cmdstan
 
@@ -56,12 +62,12 @@ if success(rc)
 
 	# Plot regression line using means and observations
 
-	scatter(df2[:, :weight_c], df2[:, :height], lab="Observations",
+	scatter(df2.weight_c, df2.height, lab="Observations",
 	  ylab="height [cm]", xlab="weight[kg]")
 	xi = -16.0:0.1:18.0
-	yi = mean(df3[:, :alpha]) .+ mean(df3[:, :beta])*xi;
+	yi = mean(df3.alpha) .+ mean(df3.beta)*xi;
 	plot!(xi, yi, lab="Regression line")
-	savefig("$ProjDir/Fig-37-44.2.png")
+	savefig(plotsdir("04", "Fig-37-44.2.png"))
 
 	# ### snippet 4.44
 
@@ -70,7 +76,7 @@ if success(rc)
 	display(q)
 
 	plot(plot(q.alpha, lab="\\alpha"), plot(q.beta, lab="\\beta"), layout=(2, 1))
-	savefig("$ProjDir/Fig-37-44.1.png")
+	savefig(plotsdir("04", "Fig-37-44.1.png"))
 
 end
 

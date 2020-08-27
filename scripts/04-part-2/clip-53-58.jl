@@ -1,13 +1,17 @@
 # Load Julia packages (libraries) needed for clip
 
+cd(@__DIR__)
+using DrWatson
+@quickactivate "StatisticalRethinkingStan"
 using StatisticalRethinking
+using StanSample
 
-ProjDir = @__DIR__
-cd(ProjDir) #do
+include(projectdir("src", "quap.jl"))
 
 # ### Preliminary snippets
 
-df = CSV.read(rel_path("..", "data", "Howell1.csv"), delim=';')
+df = CSV.read(sr_path("..", "data", "Howell1.csv"),
+  DataFrame, delim=';')
 df = filter(row -> row[:age] >= 18, df);
 scale!(df, [:height, :weight])
 
@@ -100,10 +104,8 @@ if success(rc)
   plot!(q[2], mu_range, [mean(mu[i]) for i in 1:length(mu_range)], color=:red, lab="Means of mu")
 
   plot(q..., layout=(2,1))
-  savefig("$(ProjDir)/Fig-53-58.png")
+  savefig(plotsdir("04", "Fig-53-58.png"))
 
 end
-
-#end # cd .. do
 
 # End of `04/clip-53-58.jl`

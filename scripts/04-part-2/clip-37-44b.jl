@@ -1,9 +1,15 @@
 using StatisticalRethinking
 using MCMCChains
 
-ProjDir = @__DIR__
+cd(@__DIR__)
+using DrWatson
+@quickactivate "StatisticalRethinkingStan"
+using StatisticalRethinking
+using StanSample
 
-df = CSV.read(rel_path("..", "data", "Howell1.csv"), delim=';')
+include(projectdir("src", "quap.jl"))
+
+df = CSV.read(sr_path("..", "data", "Howell1.csv"), delim=';')
 
 # Use only adults
 
@@ -59,9 +65,9 @@ if success(rc)
 	# Describe the draws
 
 	chns = read_samples(sm; output_format=:mcmcchains)
-	show(chns)
+	display(chns)
 	plot(chns)
-	savefig("$(ProjDir)/Fig-37-44.1.png")
+	savefig(plotsdir("04", "Fig-37-44.1.png"))
 
 	# Use an aapended dataframe
 
@@ -78,7 +84,7 @@ if success(rc)
 	xi = -16.0:0.1:18.0
 	yi = mean(df3[:, :alpha]) .+ mean(df3[:, :beta])*xi;
 	plot!(xi, yi, lab="Regression line")
-	savefig("$ProjDir/Fig-37-44.2.png")
+	savefig(plotsdir("04", "Fig-37-44.2.png"))
 
 	# ### snippet 4.44
 
@@ -87,7 +93,7 @@ if success(rc)
 	display(q)
 
 	plot(plot(q.alpha, lab="\\alpha"), plot(q.beta, lab="\\beta"), layout=(2, 1))
-	savefig("$ProjDir/Fig-37-44.3.png")
+	savefig(plotsdir("04", "Fig-37-44.3.png"))
 
 end
 

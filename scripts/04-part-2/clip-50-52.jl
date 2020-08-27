@@ -1,13 +1,17 @@
 # Load Julia packages (libraries) needed for clip
 
+cd(@__DIR__)
+using DrWatson
+@quickactivate "StatisticalRethinkingStan"
 using StatisticalRethinking
+using StanSample
 
-ProjDir = @__DIR__
-cd(ProjDir) #do
+include(projectdir("src", "quap.jl"))
 
 # ### Preliminary snippets
 
-df = CSV.read(rel_path("..", "data", "Howell1.csv"), delim=';')
+df = CSV.read(sr_path("..", "data", "Howell1.csv"),
+  DataFrame; delim=';')
 
 # Use only adults
 
@@ -95,7 +99,7 @@ if success(rc)
   density(mu_at_50, title="mu at 50", lab="mu")
   vline!(hpd_bounds, lab="hpdi(..., alpha=0.055)")
   vline!(quantile(mu_at_50, [0.055, 0.945]), lab="quantile(...,[0.055, 0.945])")
-  savefig("$ProjDir/fig-50-52.1.png")
+  savefig(plotsdir("04", "fig-50-52.1.png"))
 
   # ### Snippet 4.54
 
@@ -111,10 +115,8 @@ if success(rc)
     vline!(q[i], hpdi(mu[i]))
   end
   plot(q..., layout=(3, 2), ticks=(3))
-  savefig("$ProjDir/Fig-50-52.2.png")
+  savefig(plotsdir("04", "Fig-50-52.2.png"))
 
 end
-
-#end # cd .. do
 
 # End of `04/clip-48-54.jl`

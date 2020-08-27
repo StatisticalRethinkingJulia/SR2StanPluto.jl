@@ -26,7 +26,7 @@ md"#### snippet 0.4"
 
 # ╔═╡ 54362642-de65-11ea-31ec-991677bf86a9
 begin
-	df = (CSV.read(rel_path("..", "data", "Howell1.csv"), DataFrame; delim=';'))
+	df = (CSV.read(sr_path("..", "data", "Howell1.csv"), DataFrame; delim=';'))
 	howell1 = filter(row -> row[:age] >= 18, df);
 	first(howell1, 5)
 end

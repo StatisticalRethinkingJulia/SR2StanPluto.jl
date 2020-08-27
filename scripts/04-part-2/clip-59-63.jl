@@ -1,13 +1,17 @@
 # Load Julia packages (libraries) needed for clip
 
+cd(@__DIR__)
+using DrWatson
+@quickactivate "StatisticalRethinkingStan"
 using StatisticalRethinking
+using StanSample
 
-ProjDir = @__DIR__
-cd(ProjDir) #do
+include(projectdir("src", "quap.jl"))
+#include(projectdir("src", "plotbounds.jl"))
 
 # ### Preliminary snippets
 
-df = CSV.read(rel_path("..", "data", "Howell1.csv"), delim=';')
+df = CSV.read(sr_path("..", "data", "Howell1.csv"), delim=';')
 df = filter(row -> row[:age] >= 18, df);
 scale!(df, [:height, :weight])
 
@@ -77,7 +81,7 @@ if success(rc)
     df, :weight, :height,
     dfa, [:a, :b];
     bounds=[:predicted, :hpdi],
-    fig="$ProjDir/Fig-56-63.png",
+    fig=plotsdir("04", "Fig-56-63.png"),
     title=title,
     colors=[:lightgrey, :darkgrey]
   )
