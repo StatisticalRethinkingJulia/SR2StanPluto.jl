@@ -1,6 +1,5 @@
-# Clip-01-03.jl
+# Clip-00-01-03.jl
 
-cd(@__DIR__)
 using DrWatson
 @quickactivate "StatisticalRethinkingStan"
 using StatisticalRethinking
@@ -39,4 +38,4 @@ x = exp(x)
 
 [log(0.01^200) 200 * log(0.01)]
 
-# End of `00/clip-01-03.jl`
+# End of clip-00-01-03.jl

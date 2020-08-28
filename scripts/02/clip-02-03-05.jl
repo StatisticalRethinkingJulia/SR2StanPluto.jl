@@ -1,4 +1,4 @@
-# `02/clip-03-05.jl`
+# Clip-02-03-05.jl
 
 cd(@__DIR__)
 using DrWatson
@@ -39,4 +39,4 @@ savefig(plotsdir("02", "Fig2.7.$l.png"))
 end
 
 
-# End of `02/clip-03-05.jl`
+# End of clip-02-03-05.jl

@@ -1,4 +1,4 @@
-# `02/clip-06-07.jl`
+# Clip-02-06-07.jl
 
 cd(@__DIR__)
 using DrWatson
@@ -102,4 +102,4 @@ plot!(p[4], x, pdf.(Normal( f.μ , f.σ ) , x ), lab="Normal approximation")
 plot(p..., layout=(2, 2))
 savefig(plotsdir("02", Fig2.8.2.png"))
 
-# End of `02/clip-06-07.jl`
+# End of clip-02-06-07.jl

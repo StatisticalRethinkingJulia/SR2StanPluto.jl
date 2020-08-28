@@ -3,7 +3,7 @@
 using DrWatson
 @quickactivate "StatisticalRethinkingStan"
 using StatisticalRethinking
-using MonteCarloMeasurements
+using StanSample
 
 # ### snippet 4.7
 
@@ -86,7 +86,7 @@ p[4] = density(prior_height_100,
 	lab="Prior predictive mu")
 
 plot(p..., layout=(2,2))
-savefig("$ProjDir/Fig-07-15.1.png")
+savefig(plotsdir("04", "Fig-07-15.1.png"))
 
 # Store in a DataFrame
 

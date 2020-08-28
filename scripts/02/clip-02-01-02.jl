@@ -1,4 +1,4 @@
-# `02/clip-01-02.jl`
+# Clip-02-01-02.jl
 
 cd(@__DIR__)
 using DrWatson
@@ -20,4 +20,4 @@ d = Binomial(9, 0.5)
 
 pdf(d, 6)
 
-# End of `02/clip-01-02.jl`
+# End of clip-02-01-02.jl

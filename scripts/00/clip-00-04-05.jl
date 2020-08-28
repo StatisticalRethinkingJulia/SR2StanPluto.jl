@@ -1,17 +1,15 @@
-using DrWatson
-@quickactivate "StatisticalRethinkingStan"
+# Clip-00-04-05.jl
 
 # ### snippet 0.5 is replaced by below `using StatisticalRethinking`.
 
+using DrWatson
+@quickactivate "StatisticalRethinkingStan"
 using StatisticalRethinking
 using GLM
 
-ProjDir = @__DIR__
-
 # ### snippet 0.4
 
-df = DataFrame!(CSV.read(sr_path("..", "data", "Howell1.csv"),
-  DataFrame; delim=';'))
+df = CSV.read("$(srdatadir())/Howell1.csv", DataFrame; delim=';')
 howell1 = filter(row -> row[:age] >= 18, df);
 first(howell1, 5)
 
@@ -28,4 +26,4 @@ coef(m)
 scatter( howell1.height, residuals(m), xlab="Height",
   ylab="Model residual values", lab="Model residuals", leg=:bottomright)
 
-# End of `00/clip-04-05.jl`
+# End of clip-00-04-05.jl

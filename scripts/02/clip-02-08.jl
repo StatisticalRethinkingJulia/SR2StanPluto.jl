@@ -1,4 +1,4 @@
-# `02/clip-08.jl`
+# Clip-02-08.jl
 
 cd(@__DIR__)
 using DrWatson
@@ -44,4 +44,4 @@ density(chns, lab="Samples")
 plot!( x, pdf.(Beta( w+1 , n-w+1 ) , x ), lab="Conjugate solution")
 savefig(plotsdir("02", "Fig2.9.2.png"))
 
-# End of `02/clip-08.jl`
+# End of clip-02-08.jl
