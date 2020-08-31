@@ -1,4 +1,4 @@
-## Purpose of this package
+## Purpose of this project
 
 This project contains Julia versions of selected `code snippets` and `mcmc models` contained in the R package "rethinking" associated with the book [Statistical Rethinking](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath.
 
@@ -8,7 +8,28 @@ This project uses Stan as the underlying mcmc implementation. Another [project](
 
 ## Usage
 
-StatisticalRethinkingStan.jl is a DrWatson project, with an added subdirectory `models`, which will contain the Stan models used in the chapters scripts and (Pluto)notebooks.
+StatisticalRethinkingStan.jl is a DrWatson project, with some added subdirectories:
+
+1. `models`, which will contain the Stan models used in the chapters scripts,
+2.  `notebooks`, used to store Pluto notebooks, and
+3.  `exercises`, can be used to store the exercises (not stored on the StatisticalRethinking/StatitsticalRethinkingStan reposotory)
+
+It is authored by Goedman and Karajan.
+
+To (locally) reproduce this project, do the following:
+
+0. Download this code base. Notice that raw data are typically not included in the
+   git-history and may need to be downloaded independently.
+1. Open a Julia console and do:
+   ```
+   julia> using Pkg
+   julia> include(joinpath("path/to/this/project", "scripts", "00", "clip-00-01-03.jl")
+   ```
+
+This will install all necessary packages for you to be able to run the script and
+everything should work out of the box.
+
+## Usage
 
 StatisticalRethinkingStan.jl is compatible with the 2nd edition of the book.
 
