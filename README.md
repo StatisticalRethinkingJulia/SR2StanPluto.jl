@@ -1,4 +1,4 @@
-## Purpose of StatisticalRething´.jl
+## Purpose of StatisticalRethingStan.jl
 
 This `project` contains Julia versions of selected `code snippets` and `mcmc models` contained in the R package "rethinking" associated with the book [Statistical Rethinking](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath.
 
@@ -10,7 +10,7 @@ This project uses Stan (the `cmdstan` executable) as the underlying mcmc impleme
 
 StatisticalRethinkingStan.jl is a DrWatson project, with some added/re-purposed subdirectories:
 
-1. `models`, contains most used Stan models,
+1. `models`, contains the Stan language models,
 2. `notebooks`, used to store Pluto notebooks and
 3. `exercises`, can be used to store the exercises (not stored in the StatisticalRethinkingStan.jl repository)
 
@@ -25,7 +25,7 @@ using DrWatson
 using StatisticalRethinking
 using StanSample
 
-include(srcdir("quap.jl"))  # For Stan quap()
+include(srcdir("quap.jl"))  # Stan version of quap()
 
 # To access e.g. the Howell1.csv data file:
 d = CSV.read(srdatadir() * "/Howell1.csv", DataFrame)
@@ -41,7 +41,7 @@ To (locally) reproduce and use this project, do the following:
    julia> include(joinpath(scriptsdir(), "00", "clip-00-01-03.jl")
    ```
 
-This assumes your Julia setup includes `Pkg` and `DrWatson`, activates project `StatisticalrethinkingStan` and everything should work out of the box.
+This assumes your Julia setup includes `Pkg` and `DrWatson`. Step 3 activates project `StatisticalrethinkingStan`, if needed includes some source files, and everything should work out of the box.
 
 For the notebooks you'll need to install Pluto.jl and PlutoUI.jl.
 
@@ -56,7 +56,7 @@ All R snippets (fragments) have been organized in clips. Clips are named as `cli
 
 Note: `d` is reserved for a combination Soss/DynamicHMC.
 
-Scripts containing the clips are stored by chapter. In some chapter directories special introductory scripts have been included or scripts that generate figures in the book. These figures are stored by chapter in the `plots` directory.
+Scripts containing the clips are stored by chapter. In some chapters special introductory scripts have been included (e.g. in `intro-julia`) or scripts that generate figures in the book (always in `figures`). The figures are stored by chapter in the `plots` directory.
 
 A similar structure is used for models and Pluto notebooks.
 
@@ -74,7 +74,7 @@ Any feedback is appreciated. Please open an issue.
 
 This repository and format is derived from work by Karajan, previous versions of StatisticalRethinking.jl and many other contributors.
 
-The huge progress made by the Turing.jl team over the last 2 years, the availability of Julia `projects` in addition to Julia `packages` and the novel apprache to notebooks in Pluto.jl were a few of the ideas that triggered exploring a new setup for the StatisticalRethinkingJulia.
+The huge progress made by the Turing.jl team over the last 2 years, the availability of Julia `projects` in addition to Julia `packages` and the novel approach to notebooks in Pluto.jl were a few of the ideas that triggered exploring a new setup for the StatisticalRethinkingJulia.
 
 ## Versions
 
