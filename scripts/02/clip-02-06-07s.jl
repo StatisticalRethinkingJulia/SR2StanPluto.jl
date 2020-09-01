@@ -77,11 +77,16 @@ p[1] = plot( x, pdf.(Beta( w+1 , n-w+1 ) , x ), xlims=(-0.5, 1.0),
   lab="Conjugate solution", leg=:topleft)
 density!(p[1], samples, lab="Sample density")
 
+# Distribution estimates copied from Turing quap()
+d = Normal{Float64}(0.6666666666666666, 0.15713484026367724)
+
 # quadratic approximation using Optim
 
 p[2] = plot( x, pdf.(Beta( w+1 , n-w+1 ) , x ), xlims=(-0.5, 1.0),
   lab="Conjugate solution", leg=:topleft)
-plot!( p[2], x, pdf.(Normal( quapfit[1], quapfit[2] ) , x ), lab="Quap approximation")
+plot!( p[2], x, pdf.(Normal( quapfit[1], quapfit[2] ) , x ),
+  lab="Optim logpdf approx.")
+plot!(p[2], x, pdf.(d, x), lab="Turing quap approx.")
 
 # quadratic approximation using StatisticalRethinking.jl quap()
 
@@ -89,14 +94,17 @@ df = DataFrame(:toss => samples)
 q = quap(df)
 p[3] = plot( x, pdf.(Beta( w+1 , n-w+1 ) , x ), xlims=(-0.5, 1.0),
   lab="Conjugate solution", leg=:topleft)
-plot!( p[3], x, pdf.(Normal(mean(q.toss), std(q.toss) ) , x ), lab="quap() approximation")
+plot!( p[3], x, pdf.(Normal(mean(q.toss), std(q.toss) ) , x ),
+  lab="Stan quap approx.")
+plot!(p[3], x, pdf.(d, x), lab="Turing quap approx.")
+
 # ### snippet 2.7
 
 w = 6; n = 9; x = 0:0.01:1
 p[4] = plot( x, pdf.(Beta( w+1 , n-w+1 ) , x ), xlims=(-0.5, 1.0),
   lab="Conjugate solution", leg=:topleft)
 f = fit(Normal, samples)
-plot!(p[4], x, pdf.(Normal( f.μ , f.σ ) , x ), lab="Normal approximation")
+plot!(p[4], x, pdf.(Normal( f.μ , f.σ ) , x ), lab="Normal MLE approx.")
 plot(p..., layout=(2, 2))
 savefig(plotsdir("02", "Fig2.8.png"))
 
