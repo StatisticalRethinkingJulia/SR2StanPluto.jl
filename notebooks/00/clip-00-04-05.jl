@@ -24,7 +24,7 @@ md"### snippet 0.4"
 
 # ╔═╡ 54362642-de65-11ea-31ec-991677bf86a9
 begin
-	df = (CSV.read(sr_path("..", "data", "Howell1.csv"), DataFrame; delim=';'))
+	df = CSV.read(srdatadir() * "/Howell1.csv", DataFrame; delim=';')
 	howell1 = filter(row -> row[:age] >= 18, df);
 	first(howell1, 5)
 end
@@ -56,8 +56,8 @@ md"## End of clip-00-04-05.jl"
 # ╟─92dba6fc-de64-11ea-1a2a-6fec4bfff88d
 # ╠═54362642-de65-11ea-31ec-991677bf86a9
 # ╠═adfe9074-df14-11ea-38a2-a1e45e0b41e4
-# ╟─df4e5f92-de65-11ea-2815-4b96147b9ade
+# ╠═df4e5f92-de65-11ea-2815-4b96147b9ade
 # ╠═e99260d4-de65-11ea-2988-1154824a802b
-# ╟─ad851604-de65-11ea-3d0c-a33a2e28c4df
+# ╠═ad851604-de65-11ea-3d0c-a33a2e28c4df
 # ╠═220f7abe-de66-11ea-0297-5d4c46c73e6f
 # ╟─6592dcfe-de66-11ea-2705-b5b07acd5c1e

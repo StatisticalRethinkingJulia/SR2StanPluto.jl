@@ -7,8 +7,7 @@ using StanSample
 
 # ### snippet 4.7
 
-df = CSV.read(sr_path("..", "data", "Howell1.csv"),
-  DataFrame; delim=';')
+df = CSV.read(srdatadir() * "/Howell1.csv", DataFrame)
 
 # ### snippet 4.8
 
@@ -32,6 +31,9 @@ df.height
 # Use only adults
 
 df = filter(row -> row[:age] >= 18, df);
+println()
+Particles(df) |> display
+precis(df)
 
 # Our model:
 
