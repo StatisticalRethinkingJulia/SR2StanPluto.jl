@@ -1,6 +1,5 @@
-# Clip-02-08.jl
+# Clip-02-08s.jl
 
-cd(@__DIR__)
 using DrWatson
 @quickactivate "StatisticalRethinkingStan"
 using StatisticalRethinking
@@ -38,4 +37,4 @@ w = 6; n = 9; x = 0:0.01:1
 density(chns, lab="Samples")
 plot!( x, pdf.(Beta( w+1 , n-w+1 ) , x ), lab="Conjugate solution")
 
-# End of clip-02-08.jl
+# End of clip-02-08s.jl

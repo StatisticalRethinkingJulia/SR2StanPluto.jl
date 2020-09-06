@@ -1,10 +1,8 @@
 # # clip-02-05.jl
 
-cd(@__DIR__)
 using DrWatson
 @quickactivate "StatisticalRethinkingStan"
 using StatisticalRethinking
-using Optim
 
 # ### snippet 3.2
 

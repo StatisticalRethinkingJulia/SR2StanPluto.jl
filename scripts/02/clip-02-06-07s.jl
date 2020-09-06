@@ -1,10 +1,8 @@
-# Clip-02-06-07.jl
+# Clip-02-06-07s.jl
 
-cd(@__DIR__)
 using DrWatson
 @quickactivate "StatisticalRethinkingStan"
 using StatisticalRethinking
-using Optim
 
 include(projectdir("src", "quap.jl"))
 
@@ -108,4 +106,4 @@ plot!(p[4], x, pdf.(Normal( f.μ , f.σ ) , x ), lab="Normal MLE approx.")
 plot(p..., layout=(2, 2))
 savefig(plotsdir("02", "Fig2.8.png"))
 
-# End of clip-02-06-07.jl
+# End of clip-02-06-07s.jl

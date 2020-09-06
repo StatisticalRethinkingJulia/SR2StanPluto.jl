@@ -1,4 +1,4 @@
-# Clip-02-01-02.jl
+# Clip-02-01-02s.jl
 
 using DrWatson
 @quickactivate "StatisticalRethinkingStan"
@@ -19,4 +19,4 @@ d = Binomial(9, 0.5)
 
 pdf(d, 6)
 
-# End of clip-02-01-02.jl
+# End of clip-02-01-02s.jl

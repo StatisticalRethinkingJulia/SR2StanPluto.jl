@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.10
+# v0.11.12
 
 using Markdown
 using InteractiveUtils
@@ -67,9 +67,6 @@ md"##### n can go from 1:9"
 # ╔═╡ 150bbb7c-e0d0-11ea-3ba0-57135fa7c974
 @bind n Slider(1:18, default=9)
 
-# ╔═╡ ae960a82-ec64-11ea-3407-d724ebcc1701
-
-
 # ╔═╡ fe925dc4-ec64-11ea-3d14-192e171af40b
 md"### 3. Create a stan_sample data object (a Dict):"
 
@@ -117,7 +114,6 @@ md"## End of Fig2.5.1s.jl"
 # ╟─c07942f0-ec64-11ea-0002-e734a075766d
 # ╟─2f43c3b0-df48-11ea-2d13-99adeddbe90a
 # ╠═150bbb7c-e0d0-11ea-3ba0-57135fa7c974
-# ╠═ae960a82-ec64-11ea-3407-d724ebcc1701
 # ╟─fe925dc4-ec64-11ea-3d14-192e171af40b
 # ╠═48d028ea-dfcb-11ea-018b-25399925cdef
 # ╟─32d38400-ec65-11ea-22cc-d1d82d7d4b08

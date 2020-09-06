@@ -2,15 +2,15 @@
 
 This `project` contains Julia versions of selected `code snippets` and `mcmc models` contained in the R package "rethinking" associated with the book [Statistical Rethinking](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath.
 
-As stated many times by the author in his [online lectures](https://www.youtube.com/watch?v=ENxTrFf9a7c&list=PLDcUM9US4XdNM4Edgs7weiyIguLSToZRI), StatisticalRethinking is a hands-on course. This project is intended to assist with that aspect of learning the key ideas in StatisticalRethinking.
+As stated many times by the author in his [online lectures](https://www.youtube.com/watch?v=ENxTrFf9a7c&list=PLDcUM9US4XdNM4Edgs7weiyIguLSToZRI), StatisticalRethinking is a hands-on course. This project is intended to assist with the hands-on aspect of learning the key ideas in StatisticalRethinking.
 
-This project uses Stan (the `cmdstan` executable) as the underlying mcmc implementation.
+This Julia project uses Stan (the `cmdstan` executable) as the underlying mcmc implementation.
 
 ## Usage
 
 StatisticalRethinkingStan.jl is a DrWatson project, with some added/re-purposed subdirectories:
 
-1. `models`, contains the Stan language models,
+1. `models`, which contains the Stan language models,
 2. `notebooks`, used to store Pluto notebooks and
 3. `exercises`, can be used to store the exercises (not stored in the StatisticalRethinkingStan.jl repository)
 

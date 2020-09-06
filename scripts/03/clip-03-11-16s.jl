@@ -2,9 +2,9 @@
 
 # Load Julia packages (libraries) needed for clip
 
+using DrWatson
+@quickactivate "StatisticalRethinkingStan"
 using StatisticalRethinking
-
-ProjDir = @__DIR__
 
 # ### snippet 3.11
 

@@ -1,41 +1,34 @@
-# Clip-02-03-05.jl
+# Clip-02-03-05s.jl
 
 using DrWatson
 @quickactivate "StatisticalRethinkingStan"
 using StatisticalRethinking
 
-# ### snippet 2.5
+# ### snippets 2.3 - 2.5
+
+# Define a grid
+
+N = 201
+p_grid = range( 0 , stop=1 , length=N )
+
+# Define thhree priors.
+
+prior = []
+append!(prior, [pdf.(Uniform(0, 1), p_grid)])
+append!(prior, [[p < 0.5 ? 0 : 1 for p in p_grid]])
+append!(prior, [[exp( -5*abs( p - 0.5 ) ) for p in p_grid]])
+
+likelihood = [pdf.(Binomial(9, p), 6) for p in p_grid]
 
 p = Vector{Plots.Plot{Plots.GRBackend}}(undef, 9)
-N = [5, 20, 50]
 
-for l in 1:3            # Different priors
-
-    for i in 1:3        # prior, likelihood & posterior
-        local p_grid = range( 0 , stop=1 , length=N[i] )
-        local prior = zeros(N[i])
-
-        if l == 1
-            prior = pdf.(Uniform(0, 1), p_grid)
-        elseif l == 2
-            prior = [[p < 0.5 ? 0 : 1 for p in p_grid]]
-        else
-            prior = [[exp( -5*abs( p - 0.5 ) ) for p in p_grid]]
-        end
-
-        local likelihood = [pdf.(Binomial(9, p), 6) for p in p_grid]
-        local post = (1  / sum(prior .* likelihood)) * (prior .* likelihood)
-
-        j = (i-1)*3 + 1
-        p[j] = plot(p_grid, prior, leg=false, ylims=(0, 1), title="Prior")
-        p[j+1] = plot(p_grid, likelihood, leg=false, title="Likelihood")
-        p[j+2] = plot(p_grid, post, leg=false, title="Posterior")
-    end
-
-plot(p..., layout=(3, 3))
-savefig(plotsdir("02", "Fig2.7.png"))
-
+for i in 1:3
+  j = (i-1)*3 + 1
+  p[j] = plot(p_grid, prior[i], leg=false, ylims=(0, 1), title="Prior")
+  p[j+1] = plot(p_grid, likelihood, leg=false, title="Likelihood")
+  p[j+2] = plot(p_grid, prior[i].*likelihood, leg=false, title="Posterior")
 end
 
+plot(p..., layout=(3, 3))
 
-# End of clip-02-03-05.jl
+# End of clip-02-03-05s.jl

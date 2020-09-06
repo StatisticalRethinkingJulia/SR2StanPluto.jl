@@ -3,6 +3,7 @@
 cd(@__DIR__)
 using DrWatson
 @quickactivate "StatisticalRethinkingStan"
+using StanSample
 using StatisticalRethinking
 
 # Define the Stan language model
@@ -50,11 +51,11 @@ if success(rc)
 
   # Describe the draws
   chn = read_samples(sm; output_format=:mcmcchains)
-  show(chn)
+  chn |> display
 
   # Look at area of hpd
 
-  MCMCChains.hpd(chn)
+  MCMCChains.hpd(chn) |> display
 
   # Plot the 4 chains
 
