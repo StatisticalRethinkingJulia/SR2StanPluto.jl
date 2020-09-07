@@ -2,9 +2,8 @@
 
 using DrWatson
 @quickactivate "StatisticalRethinkingStan"
+using StanSample
 using StatisticalRethinking
-
-include(projectdir("src", "quap.jl"))
 
 # ### snippet 2.6
 
@@ -42,10 +41,6 @@ chn |> display
 
 # Compute the MAP (maximum_a_posteriori) estimate
 
-x0 = [0.5]
-lower = [0.0]
-upper = [1.0]
-
 function loglik(x)
   ll = 0.0
   ll += log.(pdf.(Beta(1, 1), x[1]))
@@ -53,7 +48,7 @@ function loglik(x)
   -ll
 end
 
-opt = optimize(loglik, lower, upper, x0, Fminbox(GradientDescent()))
+opt = optimize(loglik, 0.0, 1.0)
 qmap = Optim.minimizer(opt)
 
 # Show optimization results
