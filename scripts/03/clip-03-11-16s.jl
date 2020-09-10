@@ -1,4 +1,4 @@
-# # clip-11-16.jl
+# Clip-03-11-16s.jl
 
 # Load Julia packages (libraries) needed for clip
 
@@ -19,18 +19,9 @@ posterior = posterior / sum(posterior)
 N = 10000
 samples = sample(p_grid, Weights(posterior), N);
 
-# In StatisticalRethinkingJulia samples will always be stored
-# in an MCMCChains.Chains object. 
-
-chn = MCMCChains.Chains(reshape(samples, N, 1, 1), ["toss"]);
-
-# ### snippet 3.12
-
-chn |> display
-
 # ### snippet 3.13
 
-MCMCChains.hpd(chn, alpha=0.5) |> display
+hpdi(samples, alpha=0.11) |> display
 
 # ### snippet 3.14
 
@@ -48,5 +39,5 @@ density(samples, lab="density")
 vline!(hpdi(samples, alpha=0.5), line=:dash, lab="hpdi")
 vline!(quantile(samples, [0.25, 0.75]), line=:dash, lab="quantile (pi)")
 
-# End of `03/clip-11-16.jl`
+# End of clip-03-11-16s.jl
 

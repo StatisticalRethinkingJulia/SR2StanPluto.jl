@@ -1,4 +1,4 @@
-# # clip-06-10.jl
+# Clip-03-06-10.jl
 
 # Load Julia packages (libraries) needed for clip
 
@@ -57,4 +57,4 @@ println()
 
 quantile(samples, [0.1, 0.9]) |> display
 
-# End of `03/clip-06-10.jl`
+# End of clip-03-06-10.jl

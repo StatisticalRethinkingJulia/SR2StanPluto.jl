@@ -1,4 +1,4 @@
-# Clip-02-06-07s.jl
+# Fig2.8s.jl
 
 using DrWatson
 @quickactivate "StatisticalRethinkingStan"
@@ -101,4 +101,4 @@ plot!(p[4], x, pdf.(Normal( f.μ , f.σ ) , x ), lab="Normal MLE approx.")
 plot(p..., layout=(2, 2))
 savefig(plotsdir("02", "Fig2.8.png"))
 
-# End of clip-02-06-07s.jl
+# End of Fig2.8s.jl

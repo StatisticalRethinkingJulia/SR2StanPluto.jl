@@ -1,4 +1,4 @@
-# Clip-00-04-05.jl
+# Clip-00-04-05s.jl
 
 # ### snippet 0.5 is replaced by below lines.
 
@@ -28,4 +28,4 @@ scatter( howell1.height, residuals(m), xlab="Height",
 # To view the plot: `gui()`
 # To close the plot: `closeall()`
 
-# End of clip-00-04-05.jl
+# End of clip-00-04-05s.jl

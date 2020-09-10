@@ -1,4 +1,4 @@
-# # clip-02-05.jl
+# # clip-02-05s.jl
 
 using DrWatson
 @quickactivate "StatisticalRethinkingStan"
@@ -62,4 +62,4 @@ vline!(hpdi(samples2), lab="hpdi samples2")
 vline!(quantile(samples2, [0.25, 0.75]), lab="quantiles [0.25, 0.75]")
 savefig(plotsdir("03", "Fig-02-05.3.png"))
 
-# End of `03/clip-02-05.jl`
+# End of `03/clip-02-05s.jl`

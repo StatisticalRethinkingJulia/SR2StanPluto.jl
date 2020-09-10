@@ -1,4 +1,4 @@
-# Clip-00-01-03.jl
+# Clip-00-01-03s.jl
 
 using DrWatson
 @quickactivate "StatisticalRethinkingStan"
@@ -37,4 +37,4 @@ x = exp(x)
 
 @show [log(0.01^200) 200 * log(0.01)]
 
-# End of clip-00-01-03.jl
+# End of clip-00-01-03s.jl

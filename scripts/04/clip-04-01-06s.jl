@@ -1,6 +1,5 @@
-# Load Julia packages (libraries) needed for clip
+# Clip-04-01-06s.jl
 
-cd(@__DIR__)
 using DrWatson
 @quickactivate "StatisticalRethinkingStan"
 using StatisticalRethinking
@@ -15,7 +14,7 @@ pos = Array{Float64, 2}(rand(Uniform(-1, 1), noofsteps, noofwalks));
 pos[1, :] = zeros(noofwalks);
 csum = cumsum(pos, dims=1);
 
-f = Plots.font("DejaVu Sans", 6)
+Plots.font("DejaVu Sans", 6)
 mx = minimum(csum) * 0.9
 
 # Plot and annotate the random walks
@@ -124,4 +123,5 @@ plot!( p[2], x, pdf.(Normal( 0.67 , 0.16 ) , x ), lab="Normal approximation", fi
 plot(p..., layout=(1, 2))
 savefig(plotsdir("04", "Fig-01-06.6.png"))
 
-# End of `clip-01-06.jl`
+# End of clip-04-01-06s.jl
+

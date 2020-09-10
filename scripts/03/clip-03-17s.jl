@@ -1,6 +1,7 @@
+# Clip-03-17s.jl
+
 # Load Julia packages (libraries) needed
 
-cd(@__DIR__)
 using DrWatson
 @quickactivate "StatisticalRethinkingStan"
 using StanSample
@@ -66,4 +67,4 @@ if success(rc)
 
 end
 
-# End of `clip-17.jl`
+# End of clip-17s.jl

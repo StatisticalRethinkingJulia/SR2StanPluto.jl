@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.10
+# v0.11.14
 
 using Markdown
 using InteractiveUtils
@@ -14,7 +14,7 @@ begin
 end
 
 # ╔═╡ c5bf8a48-de64-11ea-0be8-cd41ff1e44aa
-md"### clip-00-04-05.jl"
+md"### clip-00-04-05s.jl"
 
 # ╔═╡ b85b1474-de64-11ea-089d-b947253b7bb7
 md"##### Load packages."
@@ -46,7 +46,7 @@ scatter( howell1.height, residuals(m), xlab="Height",
   ylab="Model residual values", lab="Model residuals", leg=:bottomright)
 
 # ╔═╡ 6592dcfe-de66-11ea-2705-b5b07acd5c1e
-md"## End of clip-00-04-05.jl"
+md"## End of clip-00-04-05s.jl"
 
 # ╔═╡ Cell order:
 # ╟─c5bf8a48-de64-11ea-0be8-cd41ff1e44aa

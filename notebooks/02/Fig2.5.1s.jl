@@ -19,8 +19,8 @@ using Pkg, DrWatson
 # ╔═╡ 9fb491f0-df47-11ea-3cf9-6fa3cee85c33
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StatisticalRethinking
 	using StanSample
+	using StatisticalRethinking
 	using PlutoUI
 end
 
@@ -107,7 +107,7 @@ md"## End of Fig2.5.1s.jl"
 # ╟─cb3b80f4-df47-11ea-18e1-dd4b1f2b5cde
 # ╠═cd2366c0-e0c5-11ea-287a-abc0804397c8
 # ╠═9fb491f0-df47-11ea-3cf9-6fa3cee85c33
-# ╟─f65a77d8-df47-11ea-271a-41999fd773fb
+# ╠═f65a77d8-df47-11ea-271a-41999fd773fb
 # ╟─147b737a-df48-11ea-3679-77200acb11f0
 # ╠═0b3fbb40-df48-11ea-08f2-479bc2292d46
 # ╠═2331e85c-df48-11ea-1551-b54d9e48188c

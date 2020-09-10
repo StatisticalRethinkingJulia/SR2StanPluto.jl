@@ -1,9 +1,9 @@
-# Load Julia packages (libraries) needed for clip
+# Clip-04-01-06s.jl
 
 using DrWatson
 @quickactivate "StatisticalRethinkingStan"
-using StatisticalRethinking
 using StanSample
+using StatisticalRethinking
 
 # ### snippet 4.7
 
@@ -99,8 +99,7 @@ df2 = DataFrame(
 	prior_height_20=prior_height_20,
 	prior_height_100=prior_height_100);
 
-describe(df2, :all)
-
+precis(df2)
 
 # On to Stan.
 
@@ -168,4 +167,6 @@ if success(rc)
 
 end
 
-# End of `clip-07-15.jl`
+# End of clip-04-01-06s.jl
+
+

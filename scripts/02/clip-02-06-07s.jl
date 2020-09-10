@@ -40,6 +40,8 @@ m2_0s_data = Dict(:w => w, :l => l);
  
 rc = stan_sample(m2_0s, data=m2_0s_data);
 
+# snippet 2.7
+
 if success(rc)
   df = read_samples(m2_0s; output_format=:dataframe)
   quapfit = quap(df)
@@ -47,8 +49,5 @@ if success(rc)
   plot!( x, pdf.(Beta( w+1 , l+1 ) , x ), lab="Conjugate solution")
   plot!( x, pdf.(Normal(mean(quapfit.theta), std(quapfit.theta)) , x ), lab="Stan quap solution")
 end
-
-# snippet 2.7
-
 
 # End of clip-02-06-07s.jl

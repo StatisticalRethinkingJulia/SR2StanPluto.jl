@@ -1,4 +1,4 @@
-# # clip-05s.jl
+# Clip-05s.jl
 
 # Load Julia packages (libraries) needed
 
@@ -71,4 +71,4 @@ if success(rc)
 
 end
 
-# End of `03/clip-05.jl`
+# End of clip-03-05s.jl
