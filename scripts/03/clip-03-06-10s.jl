@@ -31,14 +31,7 @@ chn |> display
 
 # ### snippet 3.6
 
-v = 0.0
-for i in 1:length(p_grid)
-  global v
-  if p_grid[i] < 0.5
-    v += posterior[i]
-  end
-end
-v
+sum(posterior[filter(i -> p_grid[i] < 0.5, 1:length(p_grid))]) |> display
 
 # ### snippet 3.7
 

@@ -1,4 +1,4 @@
-# # clip-02-05s.jl
+# Fig3.1s.jl
 
 using DrWatson
 @quickactivate "StatisticalRethinkingStan"
@@ -36,26 +36,12 @@ p1 = plot(chn)
 
 # Create a vector to hold the plots so we can later combine them
 
-p2 = Vector{Plots.Plot{Plots.GRBackend}}(undef, 2)
-p2[1] = density(samples, ylim=(0.0, 5.0), lab="Grid density")
-p2[1] = density!(samples2, ylim=(0.0, 5.0), lab="Sample density")
+p1 = scatter(samples2, ylim=(0, 1), xlab="Sample number",
+  ylab="Proportion water(p)", leg=false)
+p2 = density(samples2, xlim=(0.0, 1.0), ylim=(0.0, 3.0), xlab="Proportion water (p)",
+  ylab="Density", leg=false)
+p2 = density!(samples2, fillrange=(0.0, 0.3), fill=(0.5, :lightblue))
+plot(p1, p2, layout=(1,2))
+savefig(plotsdir("03", "Fig3.1s.png"))
 
-# ### snippet 3.5
-
-# Analytical calculation
-
-w = 6
-n = 9
-x = 0:0.01:1
-p2[2] = plot( x, pdf.(Beta( w+1 , n-w+1 ) , x ), lab="Conjugate solution")
-p2[2] = density!(samples2, ylim=(0.0, 5.0), lab="Sample density")
-
-# Add quadratic approximation
-
-p3 = plot(p2..., layout=(1, 2))
-
-density(samples2, lab="Sample2 density")
-vline!(hpdi(samples2), lab="hpdi samples2")
-vline!(quantile(samples2, [0.25, 0.75]), lab="quantiles [0.25, 0.75]")
-
-# End of `03/clip-02-05s.jl`
+# End of Fig3.1s.jl

@@ -1,8 +1,7 @@
-# Clip-05s.jl
+# Clip-03-05s.jl
 
-# Load Julia packages (libraries) needed
+using Pkg, DrWatson
 
-using DrWatson
 @quickactivate "StatisticalRethinkingStan"
 using StanSample
 using StatisticalRethinking
@@ -30,7 +29,7 @@ model {
 }
 ";
 
-# Define the Stanmodel and set the output format to :mcmcchains.
+# Define the SampleModel.
 
 sm = SampleModel("m_05s", model_05s);
 

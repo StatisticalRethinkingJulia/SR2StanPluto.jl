@@ -1,14 +1,11 @@
+Test script Julia 1.6-DEV
+
 using MCMCChains, Distributions, StatsBase, StatsPlots
 
-# ### snippet 3.3
-# Draw 10000 samples from this posterior distribution
-
-N = 4000
-samples = reshape(rand(Normal(1, 1), N), 1000, 1, 4);
-
+samples = reshape(rand(Normal(1, 1), 4000), 1000, 1, 4);
 chn = MCMCChains.Chains(samples, [:toss]);
 
+# PrettyTables issue
 chn |> display
-
+# Grisu issue
 plot(chn)
-#savefig(joinpath(@__DIR__, "test_plot.png"))

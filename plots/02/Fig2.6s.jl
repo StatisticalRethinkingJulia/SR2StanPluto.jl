@@ -29,6 +29,6 @@ for i in 1:3
 end
 
 plot(p..., layout=(3, 3))
-savefig(plotsdir("02", "Fig2.6.png"))
+savefig(plotsdir("02", "Fig2.6s.png"))
 
 # End of Fig 2.6
