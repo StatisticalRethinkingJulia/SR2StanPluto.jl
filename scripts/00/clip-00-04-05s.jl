@@ -8,7 +8,7 @@ using StatisticalRethinking
 
 # snippet 0.4
 
-df = CSV.read("$(srdatadir())/Howell1.csv", DataFrame; delim=';')
+df = CSV.read(sr_datadir("Howell1.csv"), DataFrame; delim=';')
 howell1 = filter(row -> row[:age] >= 18, df);
 first(howell1, 5)
 

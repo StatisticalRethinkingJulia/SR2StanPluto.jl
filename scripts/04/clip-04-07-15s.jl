@@ -7,7 +7,7 @@ using StatisticalRethinking
 
 # ### snippet 4.7
 
-df = CSV.read(srdatadir() * "/Howell1.csv", DataFrame)
+df = CSV.read(sr_datadir("Howell1.csv"), DataFrame)
 
 # ### snippet 4.8
 

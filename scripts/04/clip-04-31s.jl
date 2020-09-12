@@ -1,17 +1,15 @@
 # Load Julia packages (libraries) needed for clip
 
-using DrWatson
+using Pkg, DrWatson
 @quickactivate "StatisticalRethinkingStan"
-using StatisticalRethinking
 using StanSample
-
-include(projectdir("src", "quap.jl"))
+using StatisticalRethinking
 
 # CmdStan uses a tmp directory to store the output of cmdstan
 
 ProjDir = @__DIR__
 
-df = CSV.read(srdatadir() * "/Howell1.csv", DataFrame)
+df = CSV.read(sr_datadir("Howell1.csv"), DataFrame)
 
 # Use only adults
 

@@ -2,7 +2,7 @@
 
 This `project` contains Julia versions of selected `code snippets` and `mcmc models` contained in the R package "rethinking" associated with the book [Statistical Rethinking](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath.
 
-As stated many times by the author in his [online lectures](https://www.youtube.com/watch?v=ENxTrFf9a7c&list=PLDcUM9US4XdNM4Edgs7weiyIguLSToZRI), StatisticalRethinking is a hands-on course. This project is intended to assist with the hands-on aspect of learning the key ideas in StatisticalRethinking.
+As stated many times by the author in his [online lectures](https://www.youtube.com/watch?v=ENxTrFf9a7c&list=PLDcUM9US4XdNM4Edgs7weiyIguLSToZRI), StatisticalRethinking is a hands-on course. This project is intended to assist with the hands-on aspect of learning the key ideas in StatisticalRethinking and particularly the Pluto notebooks are well suited for this purpose.
 
 This Julia project uses Stan (the `cmdstan` executable) as the underlying mcmc implementation.
 
@@ -16,34 +16,39 @@ StatisticalRethinkingStan.jl is a DrWatson project, with some added/re-purposed 
 
 The `data` directory is only used for locally generated data, exercises, etc.
 
-All example data files are stored and maintained in StatisticalRethinking.jl and can be accessed via `srdatadir()`. 
+All example data files are stored and maintained in StatisticalRethinking.jl and can be accessed via `sr_datadir()`. 
 
 This leads to a typical set of opening lines in each script:
 ```
-using DrWatson
+using Pkg, DrWatson
 @quickactivate "StatisticalRethinkingStan"
-using StatisticalRethinking
-using StanSample
 
-include(srcdir("quap.jl"))  # Stan version of quap()
+# Note: below sequence is important
+# A loaded StanSample influences StatisticalRethinking
+ 
+using StanSample
+using StatisticalRethinking
 
 # To access e.g. the Howell1.csv data file:
-d = CSV.read(srdatadir() * "/Howell1.csv", DataFrame)
+d = CSV.read(sr_datadir("Howell1.csv"), DataFrame)
 d2 = d[d.age .>= 18, :]
 ```
 
 To (locally) reproduce and use this project, do the following:
 
-0. Download this code base.
-1. Move to the downloaded directory.
-2. Open a Julia console and, to run the first script, do:
+1. Download this [project](https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingStan.jl) from Github.
+2. Move to the downloaded directory.
+3. Open a Julia console and, to run the first script, do:
    ```
-   julia> include(joinpath(scriptsdir(), "00", "clip-00-01-03.jl")
+   julia> include(scriptsdir("00", "clip-00-01-03s.jl"))
    ```
 
 This assumes your Julia setup includes `Pkg` and `DrWatson`. Step 3 activates project `StatisticalrethinkingStan`, if needed includes some source files, and everything should work out of the box.
 
-For the notebooks you'll need to install Pluto.jl and PlutoUI.jl.
+For the notebooks you'll need to install Pluto.jl and PlutoUI.jl, e.g.:
+```
+] add Pluto PlutoUI
+```
 
 ## Setup
 
@@ -58,11 +63,13 @@ Note: `d` is reserved for a combination Soss/DynamicHMC.
 
 Scripts containing the clips are stored by chapter.
 
-For some chapters, special introductory notebooks have been included (e.g. `intro-R-users` in notebooks/00 and `intro-stan-languagw` in notebooks/03).
-
-Scripts that generate important figures in the book are in the `figures` subdirectory in each chapter. The figures themselves are stored, again by chapter, in the `plots` directory.
-
 Models and Pluto notebooks directories are also organized by chapter.
+
+Special introductory notebooks have been included in `notebooks/intros`, e.g.
+`intro-stan/intro-stan-01.jl` and `intro-R-users/distributions.jl`.
+
+Scripts that generate important figures in the book are in the `plots` subdirectory, again store by chapter. The figures also right there with extension `/png`.
+
 
 ## Status
 

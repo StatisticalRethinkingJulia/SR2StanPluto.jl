@@ -2,16 +2,10 @@
 
 using DrWatson
 @quickactivate "StatisticalRethinkingStan"
-using StatisticalRethinking
 using StanSample
+using StatisticalRethinking
 
-include(projectdir("src", "quap.jl"))
-
-# CmdStan uses a tmp directory to store the output of cmdstan
-
-ProjDir = @__DIR__
-
-df = CSV.read(srdatadir() * "/Howell1.csv", DataFrame)
+df = CSV.read(sr_datadir("Howell1.csv"), DataFrame)
 
 # Use only adults
 
