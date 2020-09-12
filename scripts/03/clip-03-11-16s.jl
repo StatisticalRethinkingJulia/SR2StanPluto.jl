@@ -35,7 +35,7 @@ println("Mean: $(mean(samples))\n")
 
 println("Median: $(median(samples))\n")
 
-density(samples, lab="density")
+p1 = density(samples, lab="density")
 vline!(hpdi(samples, alpha=0.5), line=:dash, lab="hpdi")
 vline!(quantile(samples, [0.25, 0.75]), line=:dash, lab="quantile (pi)")
 

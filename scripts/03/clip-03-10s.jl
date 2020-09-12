@@ -1,8 +1,7 @@
-# Clip-03-17s.jl
+# Clip-03-17-19s.jl
 
-# Load Julia packages (libraries) needed
+using Pkg, DrWatson
 
-using DrWatson
 @quickactivate "StatisticalRethinkingStan"
 using StanSample
 using StatisticalRethinking
@@ -67,4 +66,4 @@ if success(rc)
 
 end
 
-# End of clip-17s.jl
+# End of clip-17-19s.jl

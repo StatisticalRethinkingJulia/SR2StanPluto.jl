@@ -616,9 +616,9 @@ version = "0.5.3+3"
 
 [[Optim]]
 deps = ["Compat", "FillArrays", "LineSearches", "LinearAlgebra", "NLSolversBase", "NaNMath", "Parameters", "PositiveFactorizations", "Printf", "SparseArrays", "StatsBase"]
-git-tree-sha1 = "271a1d8e586c2d357dca9f2cc94e825268dbd2c5"
+git-tree-sha1 = "c434c4853a7e61506caf0340b3c153fc08865088"
 uuid = "429524aa-4258-5aef-a3af-852621145aeb"
-version = "1.1.0"
+version = "1.2.0"
 
 [[Opus_jll]]
 deps = ["Libdl", "Pkg"]

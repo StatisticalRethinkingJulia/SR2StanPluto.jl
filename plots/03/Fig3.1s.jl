@@ -4,7 +4,7 @@ using DrWatson
 @quickactivate "StatisticalRethinkingStan"
 using StatisticalRethinking
 
-# ### snippet 3.2
+# snippet 3.2
 
 p_grid = range(0, step=0.001, stop=1)
 prior = ones(length(p_grid))
@@ -14,7 +14,7 @@ posterior = posterior / sum(posterior)
 samples = sample(p_grid, Weights(posterior), length(p_grid));
 samples[1:5]
 
-# ### snippet 3.3
+# snippet 3.3
 # Draw 10000 samples from this posterior distribution
 
 N = 10000
@@ -32,7 +32,7 @@ chn |> display
 
 p1 = plot(chn)
 
-# ### snippet 3.4
+# snippet 3.4
 
 # Create a vector to hold the plots so we can later combine them
 
