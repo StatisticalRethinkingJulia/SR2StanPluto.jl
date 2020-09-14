@@ -6,8 +6,6 @@ using StatisticalRethinking
 
 # ### snippet 4.1
 
-# No attempt has been made to condense this too fewer lines of code
-
 noofsteps = 20;
 noofwalks = 15;
 pos = Array{Float64, 2}(rand(Uniform(-1, 1), noofsteps, noofwalks));

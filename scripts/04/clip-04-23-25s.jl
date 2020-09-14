@@ -1,14 +1,11 @@
-# Load Julia packages (libraries) needed for clip
+# Clip-04-23-25s.jl
 
-cd(@__DIR__)
 using DrWatson
 @quickactivate "StatisticalRethinkingStan"
 using StatisticalRethinking
 
-df = DataFrame(CSV.read(sr_path("..", "data", "Howell1.csv"),
-		DataFrame; delim=';'))
+df = CSV.read(sr_datadir("Howell1.csv"), DataFrame)
 df2 = filter(row -> row[:age] >= 18, df);
-first(df2, 5)
 
 # ### Snippet 4.23
 
@@ -57,7 +54,7 @@ function grid_prob(x, y, prior_x, prior_y, obs)
 
 	# Make it a probability
 
-	df[!, :prob] = exp.(the_prod .- maximum(the_prod))
+	df.prob = exp.(the_prod .- maximum(the_prod))
 	df
 end
 
@@ -85,6 +82,5 @@ density(samples[:, :sigma],
 	ylab="density",
 	lab="posterior sigma (only 20 obs)"
 )
-savefig(plotsdir("04", "Fig-23-25.png"))
 
-# End of `04/clip-23-25.jl`
+# End of clip-04-23-25s.j

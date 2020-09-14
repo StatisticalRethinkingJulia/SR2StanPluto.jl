@@ -5,9 +5,7 @@ using Pkg, DrWatson
 @quickactivate "StatisticalRethinkingStan"
 using StatisticalRethinking
 
-# snippet 3.2
-
-p_grid = range(0, step=0.001, stop=1)
+p_grid = range(0, stop=1, length=10000)
 prior = ones(length(p_grid))
 likelihood = [pdf(Binomial(9, p), 6) for p in p_grid]
 posterior = likelihood .* prior
@@ -15,13 +13,9 @@ posterior = posterior / sum(posterior)
 samples = sample(p_grid, Weights(posterior), length(p_grid));
 samples[1:5]
 
-# snippet 3.3
-# Draw 10000 samples from this posterior distribution
-
 N = 10000
 samples2 = sample(p_grid, Weights(posterior), N);
 
-# ### snippet 3.7-10
 b1 = mapreduce(p -> p < 0.5 ? 1 : 0, +, samples2) / N
 b2 = mapreduce(p -> (p > 0.5 && p < 0.75) ? 1 : 0, +, samples2) / N
 b3 = quantile(samples2, 0.8)

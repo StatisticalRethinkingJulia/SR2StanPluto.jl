@@ -1,8 +1,8 @@
 ## Purpose of StatisticalRethingStan.jl
 
-This `project` contains Julia versions of selected `code snippets` and `mcmc models` contained in the R package "rethinking" associated with the book [Statistical Rethinking](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath.
+This `project` contains the Julia versions of `code snippets` and `mcmc models` contained in the R package "rethinking" associated with the book [Statistical Rethinking](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath.
 
-As stated many times by the author in his [online lectures](https://www.youtube.com/watch?v=ENxTrFf9a7c&list=PLDcUM9US4XdNM4Edgs7weiyIguLSToZRI), StatisticalRethinking is a hands-on course. This project is intended to assist with the hands-on aspect of learning the key ideas in StatisticalRethinking and particularly the Pluto notebooks are well suited for this purpose.
+As stated many times by the author in his [online lectures](https://www.youtube.com/watch?v=ENxTrFf9a7c&list=PLDcUM9US4XdNM4Edgs7weiyIguLSToZRI), StatisticalRethinking is a hands-on course. This project is intended to assist with the hands-on aspect of learning the key ideas in StatisticalRethinking. In particular the new Pluto notebooks are well suited and in fact intended for this purpose.
 
 This Julia project uses Stan (the `cmdstan` executable) as the underlying mcmc implementation.
 
@@ -14,18 +14,18 @@ StatisticalRethinkingStan.jl is a DrWatson project, with some added/re-purposed 
 2. `notebooks`, used to store Pluto notebooks and
 3. `exercises`, can be used to store the exercises (not stored in the StatisticalRethinkingStan.jl repository)
 
-The `data` directory is only used for locally generated data, exercises, etc.
-
-All example data files are stored and maintained in StatisticalRethinking.jl and can be accessed via `sr_datadir()`. 
+The `data` directory, in DrWatson accessible though `datadir()`, is only used for locally generated data, exercises, etc. All "rethinking" data files are stored and maintained in StatisticalRethinking.jl and can be accessed via `sr_datadir()`. 
 
 This leads to a typical set of opening lines in each script:
 ```
 using Pkg, DrWatson
-@quickactivate "StatisticalRethinkingStan"
 
-# Note: below sequence is important
-# A loaded StanSample influences StatisticalRethinking
- 
+# Note: Below sequence is important. First activate the project
+# followed by `using` or `import` statements. Pretty much all
+# scripts use StatisticalRethinkingStan. If mcmc sampling is
+# needed, it must be loaded before StatisticalRethinking:
+
+@quickactivate "StatisticalRethinkingStan"
 using StanSample
 using StatisticalRethinking
 
@@ -77,7 +77,7 @@ StatisticalRethinkingStan.jl is compatible with the 2nd edition of the book.
 
 Expanded coverage of chapters 7 and beyond of the book will likely happen while working on StatisticalRethinkingStan.jl.
 
-StructuralCausalModels.jl is included as en experimental dependency in the otherwise stripped down StatisticalRethinking.jl v3.0.0 package.
+StructuralCausalModels.jl is included as en experimental dependency in the StatisticalRethinking.jl v3.0.0 package.
 
 Any feedback is appreciated. Please open an issue.
 

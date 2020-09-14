@@ -5,9 +5,7 @@ using Pkg, DrWatson
 @quickactivate "StatisticalRethinkingStan"
 using StatisticalRethinking
 
-# snippet 3.11
-
-p_grid = range(0, step=0.00001, stop=1)
+p_grid = range(0, stop=1, length=10000)
 prior = ones(length(p_grid))
 likelihood = [pdf(Binomial(3, p), 3) for p in p_grid]
 posterior = likelihood .* prior

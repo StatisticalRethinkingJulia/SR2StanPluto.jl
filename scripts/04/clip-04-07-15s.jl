@@ -1,4 +1,4 @@
-# Clip-04-01-06s.jl
+# Clip-04-07-15s.jl
 
 using DrWatson
 @quickactivate "StatisticalRethinkingStan"
@@ -88,7 +88,6 @@ p[4] = density(prior_height_100,
 	lab="Prior predictive mu")
 
 plot(p..., layout=(2,2))
-savefig(plotsdir("04", "Fig-07-15.1.png"))
 
 # Store in a DataFrame
 
@@ -158,15 +157,13 @@ if success(rc)
  	# Plot the sampling
 
  	plot(chn)
- 	savefig(plotsdir("04", "Fig-07-15.2.png"))
-
+ 	
 	# Plot the density of posterior draws
 
 	density(chn)
-	savefig(plotsdir("04", "Fig-07-15.3.png"))
-
+	
 end
 
-# End of clip-04-01-06s.jl
+# End of clip-04-07-15s.jl
 
 
