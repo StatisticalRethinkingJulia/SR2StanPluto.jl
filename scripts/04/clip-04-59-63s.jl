@@ -1,17 +1,13 @@
-# Load Julia packages (libraries) needed for clip
+# Clip-04-59-63s.jl
 
-cd(@__DIR__)
-using DrWatson
+using Pkg, DrWatson
 @quickactivate "StatisticalRethinkingStan"
-using StatisticalRethinking
 using StanSample
-
-include(projectdir("src", "quap.jl"))
-#include(projectdir("src", "plotbounds.jl"))
+using StatisticalRethinking
 
 # ### Preliminary snippets
 
-df = CSV.read(sr_path("..", "data", "Howell1.csv"), delim=';')
+df = CSV.read(sr_datadir("Howell1.csv"), DataFrame)
 df = filter(row -> row[:age] >= 18, df);
 scale!(df, [:height, :weight])
 
@@ -73,13 +69,13 @@ if success(rc)
 
   # ### Snippet 4.53
 
-  dfa = read_samples(sm; output_format=:dataframe)
+  dfs = read_samples(sm; output_format=:dataframe)
 
   title = "Height vs. Weight, regions are" * "\nshowing 89% of predicted heights (lightgrey)" *
     "\nand 89% hpd interval around the mean line (darkgrey)"
   plotbounds(
     df, :weight, :height,
-    dfa, [:a, :b];
+    dfs, [:a, :b, :sigma];
     bounds=[:predicted, :hpdi],
     fig=plotsdir("04", "Fig-56-63.png"),
     title=title,
@@ -88,6 +84,4 @@ if success(rc)
 
 end
 
-#end # cd .. do
-
-# End of `04/clip-53-58.jl`
+# End of clip-04-53-58s.jl`

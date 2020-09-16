@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.13
+# v0.11.14
 
 using Markdown
 using InteractiveUtils
@@ -18,7 +18,7 @@ end
 md"## Intro-stan-02.jl"
 
 # ╔═╡ aa1296ea-f206-11ea-225c-156cb017cef6
-md"###### Re-execute relevant parts of intro_stan/intro-stan-1.jl"
+md"###### Re-execute relevant parts of intro_stan/intro-stan-01.jl"
 
 # ╔═╡ 007b3eec-f207-11ea-3331-fd0db71ffe96
 begin

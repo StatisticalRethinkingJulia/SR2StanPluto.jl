@@ -1,14 +1,11 @@
-using StatisticalRethinking
+# Clip-04-37-44s.jl
 
-cd(@__DIR__)
-using DrWatson
+using Pkg, DrWatson
 @quickactivate "StatisticalRethinkingStan"
-using StatisticalRethinking
 using StanSample
+using StatisticalRethinking
 
-include(projectdir("src", "quap.jl"))
-
-df = CSV.read(sr_path("..", "data", "Howell1.csv"), delim=';')
+df = CSV.read(sr_datadir("Howell1.csv"), DataFrame)
 
 # Use only adults
 
@@ -56,7 +53,6 @@ if success(rc)
 	df3 = read_samples(sm; output_format=:dataframe)
 	p = Particles(df3)
 	p |> display
-	println()
 
 	# ### snippet 4.37
 
@@ -67,7 +63,6 @@ if success(rc)
 	xi = -16.0:0.1:18.0
 	yi = mean(df3.alpha) .+ mean(df3.beta)*xi;
 	plot!(xi, yi, lab="Regression line")
-	savefig(plotsdir("04", "Fig-37-44.2.png"))
 
 	# ### snippet 4.44
 
@@ -76,8 +71,7 @@ if success(rc)
 	display(q)
 
 	plot(plot(q.alpha, lab="\\alpha"), plot(q.beta, lab="\\beta"), layout=(2, 1))
-	savefig(plotsdir("04", "Fig-37-44.1.png"))
 
 end
 
-# End of `clip-37-44.jl`
+# End of clip-04-37-44s.jl`

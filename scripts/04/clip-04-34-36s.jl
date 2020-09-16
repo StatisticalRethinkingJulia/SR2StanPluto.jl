@@ -1,12 +1,9 @@
-# Load Julia packages (libraries) needed for clip
+# Clip-04-34-36s.jl
 
-cd(@__DIR__)
-using DrWatson
+using Pkg, DrWatson
 @quickactivate "StatisticalRethinkingStan"
-using StatisticalRethinking
 using StanSample
-
-include(projectdir("src", "quap.jl"))
+using StatisticalRethinking
 
 # ### Snippet 4.26
 
@@ -67,7 +64,6 @@ if success(rc)
   
   plot!(mu_range, ecdf(sample(df.mu, 10000))(mu_range),
     lab="Particles samples")
-	savefig(plotsdir("04", "Fig-34-36.1.png"))
 
   dfa = read_samples(sm; output_format=:dataframes)
   plts = Vector{Plots.Plot{Plots.GRBackend}}(undef, size(dfa[1], 2))
@@ -83,8 +79,7 @@ if success(rc)
     end
   end
   plot(plts..., layout=(2,1))
-  savefig(plotsdir("04", "Fig-34-36.2.png"))
 
 end
 
-# End of `clip-34-36.jl`
+# End of clip-04-34-36s.jl

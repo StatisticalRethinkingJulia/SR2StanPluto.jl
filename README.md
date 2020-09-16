@@ -1,8 +1,8 @@
 ## Purpose of StatisticalRethingStan.jl
 
-This `project` contains the Julia versions of `code snippets` and `mcmc models` contained in the R package "rethinking" associated with the book [Statistical Rethinking](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath.
+As stated many times by the author in his [online lectures](https://www.youtube.com/watch?v=ENxTrFf9a7c&list=PLDcUM9US4XdNM4Edgs7weiyIguLSToZRI), StatisticalRethinking is a hands-on course. This project is intended to assist with the hands-on aspect of learning the key ideas in StatisticalRethinking. 
 
-As stated many times by the author in his [online lectures](https://www.youtube.com/watch?v=ENxTrFf9a7c&list=PLDcUM9US4XdNM4Edgs7weiyIguLSToZRI), StatisticalRethinking is a hands-on course. This project is intended to assist with the hands-on aspect of learning the key ideas in StatisticalRethinking. In particular the new Pluto notebooks are well suited and in fact intended for this purpose.
+StatisticalRethingStan is a Julia project that usesPluto notebooks for this purpose. Each notebook contains Julia versions of `code snippets` and `mcmc models` contained in the R package "rethinking" associated with the book [Statistical Rethinking](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath.
 
 This Julia project uses Stan (the `cmdstan` executable) as the underlying mcmc implementation.
 
@@ -10,13 +10,13 @@ This Julia project uses Stan (the `cmdstan` executable) as the underlying mcmc i
 
 StatisticalRethinkingStan.jl is a DrWatson project, with some added/re-purposed subdirectories:
 
-1. `models`, which contains the Stan language models,
+1. `models`, which contains Stan language model scripts needed repeatedly,
 2. `notebooks`, used to store Pluto notebooks and
 3. `exercises`, can be used to store the exercises (not stored in the StatisticalRethinkingStan.jl repository)
 
 The `data` directory, in DrWatson accessible though `datadir()`, is only used for locally generated data, exercises, etc. All "rethinking" data files are stored and maintained in StatisticalRethinking.jl and can be accessed via `sr_datadir()`. 
 
-This leads to a typical set of opening lines in each script:
+This leads to a typical set of opening lines in each notebook:
 ```
 using Pkg, DrWatson
 
@@ -38,17 +38,11 @@ To (locally) reproduce and use this project, do the following:
 
 1. Download this [project](https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingStan.jl) from Github.
 2. Move to the downloaded directory.
-3. Open a Julia console and, to run the first script, do:
-   ```
-   julia> include(scriptsdir("00", "clip-00-01-03s.jl"))
-   ```
+3. Start a Pluto notebook server.
+4. Open a notebook.
 
-This assumes your Julia setup includes `Pkg` and `DrWatson`. Step 3 activates project `StatisticalrethinkingStan`, if needed includes some source files, and everything should work out of the box.
-
-For the notebooks you'll need to install Pluto.jl and PlutoUI.jl, e.g.:
-```
-] add Pluto PlutoUI
-```
+This assumes your Julia setup includes `Pkg`, `DrWatson`, `Pluto` and `PlutoUI`.
+Each notebook will activate the project `StatisticalrethinkingStan`.
 
 ## Setup
 
@@ -59,17 +53,14 @@ All R snippets (fragments) have been organized in clips. Each clip is a self sta
 `ls`      : Last snippet in clip
 `[s|t|d]` : Mcmc flavor used (s : Stan, t : Turing)
 
-Note: `d` is reserved for a combination Soss/DynamicHMC.
+Note: `d` is reserved for a combination Soss/DynamicHMC. 
 
 Scripts containing the clips are stored by chapter.
 
-Models and Pluto notebooks directories are also organized by chapter.
+The Pluto notebooks directory is organized by chapter. In addition to clips some notebook chapters also demonstrate how to create some figures in the book.
 
 Special introductory notebooks have been included in `notebooks/intros`, e.g.
 `intro-stan/intro-stan-01.jl` and `intro-R-users/distributions.jl`.
-
-Scripts that generate important figures in the book are in the `plots` subdirectory, again store by chapter. The figures also right there with extension `/png`.
-
 
 ## Status
 

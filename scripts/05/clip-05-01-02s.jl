@@ -1,14 +1,19 @@
-# Load Julia packages (libraries) needed.
+# Clip-05-01-02s.jl
 
+using Pkg, DrWatson
+@quickactivate "StatisticalRethinkingStan"
+using StanSample
 using StatisticalRethinking
 
-ProjDir = @__DIR__
+# ### snippet 5.1
 
-include("m5.1.jl")
+df = CSV.read(sr_datadir("WaffleDivorce.csv"), DataFrame);
+
+include(projectdir("models", "05", "m5.1s.jl"))
 
 # ### snippet 5.2
 
-std(df[:, :MedianAgeMarriage]) |> display
+std(df.MedianAgeMarriage) |> display
 
 if success(rc)
 
@@ -44,9 +49,9 @@ if success(rc)
     colors=[:pink, :darkgrey]
   )
 
-  p = plot(p1, p2, layout=(2,1))
-  savefig(p, "$ProjDir/Fig-01-02.png")
+  plot(p1, p2, layout=(2,1))
+  savefig(plotsdir("05", "Fig-01-02.png"))
 
 end
 
-# End of `05/clip-01-02.jl`
+# End of clip-05-01-02s.jl

@@ -1,16 +1,13 @@
-# Load Julia packages (libraries) needed for clip
+# Clip-04045-47s.jl
 
-cd(@__DIR__)
-using DrWatson
+using Pkg, DrWatson
 @quickactivate "StatisticalRethinkingStan"
-using StatisticalRethinking
 using StanSample
-
-include(projectdir("src", "quap.jl"))
+using StatisticalRethinking
 
 # ### snippet 4.7
 
-df = CSV.read(sr_path("..", "data", "Howell1.csv"), delim=';')
+df = CSV.read(sr_datadir("Howell1.csv"), DataFrame)
 
 # Use only adults
 
@@ -92,4 +89,4 @@ end
 plot(p..., layout=(2, 2))
 savefig(plotsdir("04", "Fig-45-47.png"))
 
-# End of `04/clip-45-47a.jl`
+# End of clip-04-45-47a.jl

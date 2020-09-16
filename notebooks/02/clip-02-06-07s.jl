@@ -43,7 +43,7 @@ model {
 ";
 
 # ╔═╡ f4fa9a76-f2de-11ea-0adf-cd14695dc705
-md"##### Define the Stanmodel and set the output format to :mcmcchains."
+md"##### Define the SampleMdel."
 
 # ╔═╡ f5051912-f2de-11ea-0dde-9966ea7b7a1a
 m2_0s = SampleModel("m2_0s", m2_0);

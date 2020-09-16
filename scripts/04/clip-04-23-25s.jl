@@ -1,6 +1,6 @@
 # Clip-04-23-25s.jl
 
-using DrWatson
+using Pkg, DrWatson
 @quickactivate "StatisticalRethinkingStan"
 using StatisticalRethinking
 

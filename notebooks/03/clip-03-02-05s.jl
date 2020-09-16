@@ -21,13 +21,11 @@ md"### snippet 3.2"
 
 # ╔═╡ 176d23ca-f2e5-11ea-3a5c-93353273f6eb
 begin
-	p_grid = range(0, step=0.001, stop=1)
+	p_grid = range(0, stop=1, length=1000)
 	prior = ones(length(p_grid))
-	likelihood = [pdf(Binomial(9, p), 6) for p in p_grid]
+	likelihood = pdf.(Binomial.(9, p_grid), 6)
 	posterior = likelihood .* prior
 	posterior = posterior / sum(posterior)
-	samples = sample(p_grid, Weights(posterior), length(p_grid));
-	samples[1:5]
 end
 
 # ╔═╡ 177885bc-f2e5-11ea-0d11-f9ae48c08d8f
@@ -39,14 +37,14 @@ md"##### Draw 10000 samples from this posterior distribution."
 # ╔═╡ 1784a202-f2e5-11ea-051b-09f8abb69875
 begin
 	N = 10000
-	samples2 = sample(p_grid, Weights(posterior), N)
+	samples = sample(p_grid, Weights(posterior), N)
 end;
 
 # ╔═╡ 178bd8ba-f2e5-11ea-21dd-61c16076a938
 md"##### Create an MCMCChains.Chains object."
 
 # ╔═╡ 178d0d36-f2e5-11ea-2593-bf4c46edb720
-chn = MCMCChains.Chains(reshape(samples2, N, 1, 1), ["toss"]);
+chn = MCMCChains.Chains(reshape(samples, N, 1, 1), [:p]);
 
 # ╔═╡ 179c95ce-f2e5-11ea-2358-714343a64afa
 md"##### Describe the chain."
@@ -63,37 +61,29 @@ p1 = plot(chn)
 # ╔═╡ 17bdf552-f2e5-11ea-28e5-1f5f22b43146
 md"### snippet 3.4"
 
-# ╔═╡ 17bf2f80-f2e5-11ea-0eb4-ab23ad75a168
-md"##### Create a vector to hold the plots so we can later combine them."
-
 # ╔═╡ 17c6af64-f2e5-11ea-0b28-c55bf548b3ea
-begin
-p2 = Vector{Plots.Plot{Plots.GRBackend}}(undef, 2)
-	p2[1] = density(samples, ylim=(0.0, 5.0), lab="Grid density")
-	p2[1] = density!(samples2, ylim=(0.0, 5.0), lab="Sample density")
-end
+density(samples, lab="Sample density")
 
 # ╔═╡ 17cf1094-f2e5-11ea-1a80-858534e81348
 md"### snippet 3.5"
 
 # ╔═╡ 17d80aa0-f2e5-11ea-1c8f-01770152e142
-md"##### Analytical calculation."
+md"##### Compare with analytical (conjugate) solution."
 
 # ╔═╡ 17e08cca-f2e5-11ea-31a6-8931f98059ba
 begin
 	w = 6
 	n = 9
 	x = 0:0.01:1
-	p2[2] = plot( x, pdf.(Beta( w+1 , n-w+1 ) , x ), lab="Conjugate solution")
-	p2[2] = density!(samples2, ylim=(0.0, 5.0), lab="Sample density")
-	plot(p2..., layout=(1, 2))
+	plot( x, pdf.(Beta( w+1 , n-w+1 ) , x ), lab="Conjugate solution")
+	density!(samples, lab="Sample density")
 end
 
 # ╔═╡ 17f4a430-f2e5-11ea-048a-73ae33e192ed
 begin
-	density(samples2, lab="Sample2 density")
-	vline!(hpdi(samples2), lab="hpdi samples2")
-	vline!(quantile(samples2, [0.25, 0.75]), lab="quantiles [0.25, 0.75]")
+	density(samples, lab="Sample2 density")
+	vline!(hpdi(samples), lab="hpdi samples2")
+	vline!(quantile(samples, [0.25, 0.75]), lab="quantiles [0.25, 0.75]")
 end
 
 # ╔═╡ 17fecdb6-f2e5-11ea-2c5b-7bc56e8b1360
@@ -116,10 +106,9 @@ md"## End of clip-03-02-05s.jl"
 # ╟─17a70c16-f2e5-11ea-2e3f-2dc8006c1ee7
 # ╠═17aece92-f2e5-11ea-311a-1b4591b1172a
 # ╟─17bdf552-f2e5-11ea-28e5-1f5f22b43146
-# ╟─17bf2f80-f2e5-11ea-0eb4-ab23ad75a168
 # ╠═17c6af64-f2e5-11ea-0b28-c55bf548b3ea
 # ╟─17cf1094-f2e5-11ea-1a80-858534e81348
-# ╟─17d80aa0-f2e5-11ea-1c8f-01770152e142
+# ╠═17d80aa0-f2e5-11ea-1c8f-01770152e142
 # ╠═17e08cca-f2e5-11ea-31a6-8931f98059ba
 # ╠═17f4a430-f2e5-11ea-048a-73ae33e192ed
 # ╟─17fecdb6-f2e5-11ea-2c5b-7bc56e8b1360

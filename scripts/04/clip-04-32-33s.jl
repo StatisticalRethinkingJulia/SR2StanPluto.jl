@@ -1,12 +1,9 @@
-# Load Julia packages (libraries) needed for clip
+# Clip-04-32-33s.jl
 
-cd(@__DIR__)
-using DrWatson
+using Pkg, DrWatson
 @quickactivate "StatisticalRethinkingStan"
-using StatisticalRethinking
 using StanSample
-
-include(projectdir("src", "quap.jl"))
+using StatisticalRethinking
 
 # ### Snippet 4.26
 
@@ -69,4 +66,4 @@ if success(rc)
 
 end
 
-# End of `clip-32-34.jl`
+# End of clip-04-32-34s.jl

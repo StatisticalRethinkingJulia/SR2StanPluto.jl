@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.13
+# v0.11.14
 
 using Markdown
 using InteractiveUtils
@@ -17,6 +17,9 @@ end
 
 # ╔═╡ c7dd5b98-f1dd-11ea-168c-07c643e283a7
 md"## Introduction to a Stan Language program"
+
+# ╔═╡ e1794cb4-f758-11ea-0888-9d7ce10db48f
+md"Additional context can be found in the cells at the end of this notebook."
 
 # ╔═╡ d12eb360-f1ea-11ea-1a2f-fd69805cb4b4
 md"##### This model represents N experiments each tossing a globe n times and recording the number of times the globe lands on water (`W`) in an array `k`."
@@ -53,13 +56,13 @@ model {
 }";
 
 # ╔═╡ 5da326d6-f1dd-11ea-17f5-e9341ab2118c
-md"###### For this model 3 Stan language blocks are used: data, parameters and the model block."
+md"###### For this model three Stan language blocks are used: data, parameters and the model block."
 
 # ╔═╡ 1a1a5292-f1e0-11ea-14db-4989e6acb15a
-md"###### The first 2 blocks define the data and the parameter definitions for the model and at the same time can be used to define constraints. Data is known (chosen or observed), parameters are often not observed or even observable."
+md"###### The first two blocks define the data and the parameter definitions for the model and at the same time can be used to define constraints. Data is known (chosen or observed), parameters are often not observed or even observable."
 
 # ╔═╡ d12f1c4c-f1ea-11ea-1c5f-ab52ceca9c68
-md"###### We know that k can't be negative (k == 0 indicates in the n tosses of an experiment the globe never landed on `W`). We also assume at least 1 toss is performed, hence n >= 1. In this example we use 25 experiments of 9 tosses, thus n = 9 in all 25 trials. k is the number of times the globe lands on water in each experiment."
+md"###### We know that k can't be negative (k == 0 indicates in the n tosses of an experiment the globe never landed on `W`). We also assume at least 1 toss is performed, hence n >= 1. In this example we use N=10 experiments of 9 tosses, thus n = 9 in all trials. k is the number of times the globe lands on water in each experiment."
 
 # ╔═╡ d13a6034-f1ea-11ea-101e-c13a5918086f
 md"###### N, n and the vector k[N] and are all integers."
@@ -146,14 +149,84 @@ md"##### Display the stansummary result"
 # ╔═╡ 0e3309b2-f1ed-11ea-0d57-2f0e5b83c8dd
 success(rc) && read_summary(sm)
 
+# ╔═╡ 45929f5a-f759-11ea-1955-67ba740778e6
+md"## Rethinking vs. StatisticalRethinking.jl."
+
+# ╔═╡ e27ece36-f756-11ea-250c-99d909d390f9
+md"In the book and associated R package `rethinking`, statistical models are defined as illustrated below:
+
+```
+flist <- alist(
+  height ~ dnorm( mu , sigma ) ,
+  mu <- a + b*weight ,
+  a ~ dnorm( 156 , 100 ) ,
+  b ~ dnorm( 0 , 10 ) ,
+  sigma ~ dunif( 0 , 50 )
+)
+```
+"
+
+# ╔═╡ 8819279a-f757-11ea-37ee-f7b0a267d351
+md"The author of the book states: *If that (the statistical model) doesn't make much sense, good. ... you're holding the right textbook, since this book teaches you how to read and write these mathematical descriptions* (page 77).
+
+The Pluto notebooks in [StatisticalRethinkingJuliaStan](https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingStan.jl) are intended to allow experimenting with this learning process using [Stan](https://github.com/StanJulia) and [Julia](https://julialang.org).
+
+In the R package `rethinking`, posterior values can be approximated by
+ 
+```
+# Simulate quadratic approximation (for simpler models)
+m4.31 <- quap(flist, data=d2)
+```
+
+or generated using Stan by:
+
+```
+# Generate a Stan model and run a simulation
+m4.32 <- ulam(flist, data=d2)
+```
+
+In StatisticalRethinkingStan, R's ulam() has been replaced by StanSample.jl. This means that much earlier on than in the book, StatisticalRethinkingStan introduces the reader to the Stan language."
+
+
+
+
+# ╔═╡ 55ed2bde-f756-11ea-1f1d-7fbdf76c1b76
+md"To help out with this, in this notebook and a few additional notebooks in the subdirectory `notebooks/intro-stan` the Stan language is introduced and the execution of Stan language programs illustrated. Chapter 9 of the book contains a nice introduction to translating the `alist` R models to the Stan language (just before section 9.5)."
+
+# ╔═╡ 2e4c633e-f75a-11ea-2bcb-fb9800e518af
+md"The equivalent of the R function `quap()` in StatisticalRethinkingStan uses the MAP density of the Stan samples as the mean of the Normal distribution and reports the approximation as a NamedTuple. e.g. from `./scripts/04-part-1/clip-31.jl`:
+```
+if success(rc)
+  println()
+  df = read_samples(sm; output_format=:dataframe)
+  q = quap(df)
+  q |> display
+end
+```
+returns:
+```
+(mu = 178.0 ± 0.1, sigma = 24.5 ± 0.94)
+```
+To obtain the mu quap:
+```
+q.mu
+```
+Examples and comparisons of different ways of computing a quap approximation can be found in `notebooks/intro-stan/intro-stan-04.jl`."
+
+
+
+# ╔═╡ b82e2e82-f757-11ea-2696-6f294e3070f5
+md"The increasing use of Particles to represent quap approximations is possible thanks to the package [MonteCarloMeasurements.jl](https://github.com/baggepinnen/MonteCarloMeasurements.jl). [Soss.jl](https://github.com/cscherrer/Soss.jl) and [related write-ups](https://cscherrer.github.io) introduced me to that option."
+
 # ╔═╡ 5de8c1c8-f1dd-11ea-1b97-5bbb6c6316ae
-md"## End of intros/intro-stan.jl"
+md"## End of intros/intro-stan-01.jl"
 
 # ╔═╡ Cell order:
-# ╠═c7dd5b98-f1dd-11ea-168c-07c643e283a7
+# ╟─c7dd5b98-f1dd-11ea-168c-07c643e283a7
+# ╟─e1794cb4-f758-11ea-0888-9d7ce10db48f
 # ╠═38677642-f1dd-11ea-2537-59511c140dab
 # ╠═5d9316ec-f1dd-11ea-1c0d-0d8566ab3a90
-# ╠═d12eb360-f1ea-11ea-1a2f-fd69805cb4b4
+# ╟─d12eb360-f1ea-11ea-1a2f-fd69805cb4b4
 # ╟─c265df40-f1de-11ea-3eaf-795a1560b5af
 # ╟─0bf971c6-f1df-11ea-1f57-41937efd2e21
 # ╠═5da2632c-f1dd-11ea-2d50-9d80cda7b1ed
@@ -186,4 +259,10 @@ md"## End of intros/intro-stan.jl"
 # ╠═d00180d8-f1ec-11ea-0d29-350fac31122f
 # ╟─d00c24de-f1ec-11ea-1c83-cb2584421f6f
 # ╠═0e3309b2-f1ed-11ea-0d57-2f0e5b83c8dd
+# ╠═45929f5a-f759-11ea-1955-67ba740778e6
+# ╟─e27ece36-f756-11ea-250c-99d909d390f9
+# ╟─8819279a-f757-11ea-37ee-f7b0a267d351
+# ╟─55ed2bde-f756-11ea-1f1d-7fbdf76c1b76
+# ╟─2e4c633e-f75a-11ea-2bcb-fb9800e518af
+# ╟─b82e2e82-f757-11ea-2696-6f294e3070f5
 # ╟─5de8c1c8-f1dd-11ea-1b97-5bbb6c6316ae

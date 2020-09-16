@@ -1,14 +1,13 @@
-# Load Julia packages (libraries) needed.
+# Clip-05-00s.jl
 
+using Pkg, DrWatson
+@quickactivate "StatisticalRethinkingStan"
+using StanSample
 using StatisticalRethinking
-
-ProjDir = @__DIR__
 
 # ### snippet 5.1
 
-println()
-df = CSV.read(rel_path("..", "data", "WaffleDivorce.csv"), delim=';');
-first(df, 5) |> display
+df = CSV.read(sr_datadir("WaffleDivorce.csv"), DataFrame);
 
 # ### snippet 5.1
 
@@ -63,7 +62,7 @@ if success(rc)
     df, :WaffleHouses, :Divorce,
     dfs, [:a, :bA, :sigma];
     bounds=[:predicted, :sample, :hpdi],
-    fig="$ProjDir/Fig-00.png",
+    fig=plotsdir("05", "Fig-00.png"),
     title="Divorce rate vs. waffle houses per million" * "\nshowing predicted and hpd range",
     xlab="WaffleHouses per million",
     ylab="Divorce rate"

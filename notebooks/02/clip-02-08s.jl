@@ -43,12 +43,12 @@ begin
 end
 
 # ╔═╡ 7f05a540-f2e1-11ea-0d4a-f7c33efa0832
-md"##### Create an MCMCChains.Chains object. This Chains object has length(p) samples, one varable and a single chain."
+md"##### Create an MCMCChains.Chains object. This Chains object has 10000 samples, one variable and a single chain."
 
 # ╔═╡ 7f0651fe-f2e1-11ea-00f7-79322fafaaf9
 begin
 	a3d[:, 1, 1] = p
-	chns = MCMCChains.Chains(a3d, ["toss"])
+	chns = MCMCChains.Chains(a3d, [:p])
 end
 
 # ╔═╡ 7f0bac38-f2e1-11ea-0817-093aba68676d

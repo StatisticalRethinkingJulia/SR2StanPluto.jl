@@ -1,17 +1,13 @@
-# Load Julia packages (libraries) needed for clip
+# Clip-04-50-52s.jl
 
-cd(@__DIR__)
-using DrWatson
+using Pkg, DrWatson
 @quickactivate "StatisticalRethinkingStan"
-using StatisticalRethinking
 using StanSample
-
-include(projectdir("src", "quap.jl"))
+using StatisticalRethinking
 
 # ### Preliminary snippets
 
-df = CSV.read(sr_path("..", "data", "Howell1.csv"),
-  DataFrame; delim=';')
+df = CSV.read(sr_datadir("Howell1.csv"), DataFrame; delim=';')
 
 # Use only adults
 
@@ -119,4 +115,4 @@ if success(rc)
 
 end
 
-# End of `04/clip-48-54.jl`
+# End of clip-04-48-54s.jl

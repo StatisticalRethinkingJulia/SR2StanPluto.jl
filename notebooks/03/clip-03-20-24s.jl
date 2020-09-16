@@ -42,7 +42,7 @@ begin
 
 	d = rand(Binomial(9, 0.7), N);
 	h1 = histogram([filter(e -> e == i, d) for i in 0:9];
-	 bins=-0.5:1:9.5, color=:lightblue, leg=false, xticks=0:9)
+	 bins=-0.5:1:9.5, color=:lightblue, leg=false, xticks=0:9, bar_width=0.2)
 end
 
 # ╔═╡ 3cbca094-f504-11ea-3dbb-c7d342341fb2

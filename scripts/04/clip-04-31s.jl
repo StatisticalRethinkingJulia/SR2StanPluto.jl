@@ -1,13 +1,9 @@
-# Load Julia packages (libraries) needed for clip
+# Clip-04-31s.jl
 
 using Pkg, DrWatson
 @quickactivate "StatisticalRethinkingStan"
 using StanSample
 using StatisticalRethinking
-
-# CmdStan uses a tmp directory to store the output of cmdstan
-
-ProjDir = @__DIR__
 
 df = CSV.read(sr_datadir("Howell1.csv"), DataFrame)
 
@@ -48,4 +44,4 @@ if success(rc)
   q |> display
 end
 
-# End of `clip-31.jl`
+# End of clip-04-31s.jl`

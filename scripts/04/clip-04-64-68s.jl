@@ -1,13 +1,13 @@
-# Load Julia packages (libraries) needed for clip
+# Clip-04-64-68s.jl
 
+using Pkg, DrWatson
+@quickactivate "StatisticalRethinkingStan"
+using StanSample
 using StatisticalRethinking
-
-ProjDir = @__DIR__
-cd(ProjDir) #do
 
 # ### Preliminary snippets
 
-df = CSV.read(rel_path("..", "data", "Howell1.csv"), delim=';')
+df = CSV.read(sr_datadir("Howell1.csv"), DataFrame)
 scale!(df, [:height, :weight])
 df[!, :weight_sq_s] = df[:, :weight_s].^2
 #scale!(df, [:weight_sq])
@@ -94,7 +94,7 @@ if success(rc)
     end
   end
   scatter!(df[:, :weight_s], df[:, :height])
-  savefig("$(ProjDir)/Fig-64-68a.png")
+  savefig(plotsdir("04", "Fig-64-68a.png"))
 
   plot(xlab="weight_s", ylab="height", leg=:bottomright)
   fheight(weight, a, b1, b2) = a + weight * b1 + weight^2 * b2
@@ -106,10 +106,8 @@ if success(rc)
   upper = [q[2] - m for (q, m) in zip(quantiles, m)]
   scatter!(df[:, :weight_s], df[:, :height], lab="Observations")
   plot!(testweights, m, ribbon = [lower, upper], lab="(0.055, 0.945) quantiles of mean")
-  savefig("$(ProjDir)/Fig-64-68.png")
+  savefig(plotsdir("04", "Fig-64-68.png"))
 
 end
 
-#end # cd .. do
-
-# End of `04/clip-53-58.jl`
+# End of clip-04-64-68s.jl`

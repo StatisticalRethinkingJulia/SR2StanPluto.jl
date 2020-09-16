@@ -1,17 +1,13 @@
-# Load Julia packages (libraries) needed for clip
+# Clip-04-53-58s.jl
 
-cd(@__DIR__)
-using DrWatson
+using Pkg, DrWatson
 @quickactivate "StatisticalRethinkingStan"
-using StatisticalRethinking
 using StanSample
-
-include(projectdir("src", "quap.jl"))
+using StatisticalRethinking
 
 # ### Preliminary snippets
 
-df = CSV.read(sr_path("..", "data", "Howell1.csv"),
-  DataFrame, delim=';')
+df = CSV.read(sr_datadir("Howell1.csv"), DataFrame, delim=';')
 df = filter(row -> row[:age] >= 18, df);
 scale!(df, [:height, :weight])
 
@@ -108,4 +104,4 @@ if success(rc)
 
 end
 
-# End of `04/clip-53-58.jl`
+# End of clip-04-53-58s.jl`

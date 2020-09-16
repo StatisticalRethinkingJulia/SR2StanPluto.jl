@@ -15,7 +15,7 @@ begin
 end
 
 # ╔═╡ 9edef554-f36c-11ea-2444-8536e9175c46
-md"## Clip-03-17s.jl"
+md"## Clip-03-10s.jl"
 
 # ╔═╡ 4ebc87e8-f36d-11ea-14c9-8fad71a03e64
 md"##### Define the Stan language model."
@@ -75,9 +75,6 @@ if success(rc)
   chn = read_samples(sm; output_format=:mcmcchains)
 end
 
-# ╔═╡ 701f04ae-f379-11ea-2da0-e3a680787a00
-md"##### Describe the chains."
-
 # ╔═╡ 4f0dfa7c-f36d-11ea-3722-833781504c3b
 chn
 
@@ -99,10 +96,10 @@ md"##### Look at area of hpd."
 MCMCChains.hpd(chn)
 
 # ╔═╡ 4f2f785c-f36d-11ea-3049-4ddfd1351684
-md"## End of clip-03-17s.jl"
+md"## End of clip-03-10s.jl"
 
 # ╔═╡ Cell order:
-# ╠═9edef554-f36c-11ea-2444-8536e9175c46
+# ╟─9edef554-f36c-11ea-2444-8536e9175c46
 # ╠═4ebbc48e-f36d-11ea-1539-f9eba321e104
 # ╠═4ebc01ba-f36d-11ea-09d2-133c45fe6ef6
 # ╠═4ebc87e8-f36d-11ea-14c9-8fad71a03e64
@@ -116,7 +113,6 @@ md"## End of clip-03-17s.jl"
 # ╠═4efc3d98-f36d-11ea-2bc4-b3ffb525c8f2
 # ╠═4f040028-f36d-11ea-0331-991166e4f38f
 # ╠═4f06f9e0-f36d-11ea-3bcf-51b2ce61f1a5
-# ╟─701f04ae-f379-11ea-2da0-e3a680787a00
 # ╠═4f0dfa7c-f36d-11ea-3722-833781504c3b
 # ╠═4f268cc4-f36d-11ea-2311-817925108b74
 # ╠═4f281e9a-f36d-11ea-176e-8d42517d499b
