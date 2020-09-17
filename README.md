@@ -1,8 +1,8 @@
-## Purpose of StatisticalRethingStan.jl
+## Purpose of StatisticalRethinkingStan.jl
 
 As stated many times by the author in his [online lectures](https://www.youtube.com/watch?v=ENxTrFf9a7c&list=PLDcUM9US4XdNM4Edgs7weiyIguLSToZRI), StatisticalRethinking is a hands-on course. This project is intended to assist with the hands-on aspect of learning the key ideas in StatisticalRethinking. 
 
-StatisticalRethingStan is a Julia project that uses Pluto notebooks for this purpose. Each notebook demonstrates Julia versions of `code snippets` and `mcmc models` contained in the R package "rethinking" associated with the book [Statistical Rethinking](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath.
+StatisticalRethinkingStan is a Julia project that uses Pluto notebooks for this purpose. Each notebook demonstrates Julia versions of `code snippets` and `mcmc models` contained in the R package "rethinking" associated with the book [Statistical Rethinking](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath.
 
 This Julia project uses Stan (the `cmdstan` executable) as the underlying mcmc implementation.
 
@@ -11,10 +11,10 @@ This Julia project uses Stan (the `cmdstan` executable) as the underlying mcmc i
 StatisticalRethinkingStan.jl is a DrWatson project, with some added/re-purposed subdirectories:
 
 1. `models`, which contains Stan language model scripts needed repeatedly,
-2. `notebooks`, used to store Pluto notebooks and
+2. `notebooks`, used to store the Pluto notebooks and
 3. `exercises`, can be used to store the exercises (not stored in the StatisticalRethinkingStan.jl repository)
 
-The `data` directory, in DrWatson accessible though `datadir()`, is only used for locally generated data, exercises, etc. All "rethinking" data files are stored and maintained in StatisticalRethinking.jl and can be accessed via `sr_datadir()`. 
+The `data` directory, in DrWatson accessible through `datadir()`, is only used for locally generated data, exercises, etc. All "rethinking" data files are stored and maintained in StatisticalRethinking.jl and can be accessed via `sr_datadir(...)`. 
 
 This leads to a typical set of opening lines in each notebook:
 ```
@@ -39,15 +39,26 @@ To (locally) reproduce and use this project, do the following:
 1. Download this [project](https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingStan.jl) from Github.
 2. Move to the downloaded directory.
 3. Start a Pluto notebook server.
-4. Open a notebook.
+4. Open a notebook in a browser.
 
 This assumes your Julia setup includes `Pkg`, `DrWatson`, `Pluto`, `PlutoUI`, `StanSample` and `StanOptimize`.
+
+Step 3 usually can be done by:
+```
+$ julia
+
+julia> using Pluto
+julia> Pluto.run()
+```
+
+By default the Pluto server uses port 1234. In your browser go to
+`http://localhost:1234`.
 
 Each notebook will activate the project `StatisticalrethinkingStan`.
 
 ## Setup
 
-All R snippets (fragments) have been organized in clips. Each clip is a self standing notebook. Clips are named as `clip-cc-fs-ls[s|t|d].jl` where
+All R snippets (fragments) have been organized in clips. Each clip is a notebook. Clips are named as `clip-cc-fs-ls[s|t|d].jl` where
 
 `cc`      : Chapter number
 `fs`      : First snippet in clip
@@ -59,7 +70,7 @@ Note: `d` is reserved for a combination Soss/DynamicHMC and `sl` is reserved for
 The notebooks containing the clips are stored by chapter.
 
 Special introductory notebooks have been included in `notebooks/intros`, e.g.
-`intro-stan/intro-stan-01.jl` and `intro-R-users/distributions.jl`.
+`intro-stan/intro-stan-01s.jl` and `intro-R-users/distributions.jl`.
 
 In addition to clips, in the early notebook chapters (0-3) it is shown how to create the figures in the book, e.g. `Fig2.5s.jl` in `notebooks/chapter/02`.
 

@@ -18,6 +18,9 @@ end
 # ╔═╡ c7dd5b98-f1dd-11ea-168c-07c643e283a7
 md"## Introduction to a Stan Language program"
 
+# ╔═╡ 57f0ec9a-f913-11ea-2e7e-ad16a359b82d
+md"## Intro-stan-01s.jl"
+
 # ╔═╡ e1794cb4-f758-11ea-0888-9d7ce10db48f
 md"Additional context can be found in the cells at the end of this notebook."
 
@@ -141,7 +144,10 @@ chn = read_samples(sm; output_format=:mcmcchains)
 md"##### Plot the chains."
 
 # ╔═╡ d00180d8-f1ec-11ea-0d29-350fac31122f
-plot(chn)
+plot(chn; seriestype=:traceplot)
+
+# ╔═╡ 3db08936-f914-11ea-1d74-d33b946ef534
+plot(chn; seriestype=:density)
 
 # ╔═╡ d00c24de-f1ec-11ea-1c83-cb2584421f6f
 md"##### Display the stansummary result"
@@ -219,10 +225,11 @@ Examples and comparisons of different ways of computing a quap approximation can
 md"The increasing use of Particles to represent quap approximations is possible thanks to the package [MonteCarloMeasurements.jl](https://github.com/baggepinnen/MonteCarloMeasurements.jl). [Soss.jl](https://github.com/cscherrer/Soss.jl) and [related write-ups](https://cscherrer.github.io) introduced me to that option."
 
 # ╔═╡ 5de8c1c8-f1dd-11ea-1b97-5bbb6c6316ae
-md"## End of intros/intro-stan-01.jl"
+md"## End of intros/intro-stan-01s.jl"
 
 # ╔═╡ Cell order:
 # ╟─c7dd5b98-f1dd-11ea-168c-07c643e283a7
+# ╟─57f0ec9a-f913-11ea-2e7e-ad16a359b82d
 # ╟─e1794cb4-f758-11ea-0888-9d7ce10db48f
 # ╠═38677642-f1dd-11ea-2537-59511c140dab
 # ╠═5d9316ec-f1dd-11ea-1c0d-0d8566ab3a90
@@ -257,9 +264,10 @@ md"## End of intros/intro-stan-01.jl"
 # ╠═1ce58ec6-f1ed-11ea-1c05-99a463481fd8
 # ╟─2c465b0a-f1ed-11ea-35e3-017075244cd8
 # ╠═d00180d8-f1ec-11ea-0d29-350fac31122f
+# ╠═3db08936-f914-11ea-1d74-d33b946ef534
 # ╟─d00c24de-f1ec-11ea-1c83-cb2584421f6f
 # ╠═0e3309b2-f1ed-11ea-0d57-2f0e5b83c8dd
-# ╠═45929f5a-f759-11ea-1955-67ba740778e6
+# ╟─45929f5a-f759-11ea-1955-67ba740778e6
 # ╟─e27ece36-f756-11ea-250c-99d909d390f9
 # ╟─8819279a-f757-11ea-37ee-f7b0a267d351
 # ╟─55ed2bde-f756-11ea-1f1d-7fbdf76c1b76

@@ -15,7 +15,7 @@ begin
 end
 
 # ╔═╡ b8fd857a-f206-11ea-1271-fbc8487b17dc
-md"## Intro-stan-02.jl"
+md"## Intro-stan-02s.jl"
 
 # ╔═╡ aa1296ea-f206-11ea-225c-156cb017cef6
 md"###### Re-execute relevant parts of intro_stan/intro-stan-01.jl"
@@ -79,7 +79,7 @@ if success(rc)
 end
 
 # ╔═╡ 5661e96a-f206-11ea-2e9b-8fbcf856371c
-md"## End of intro-stan/intro-stan-02.jl"
+md"## End of intro-stan/intro-stan-02s.jl"
 
 # ╔═╡ Cell order:
 # ╟─b8fd857a-f206-11ea-1271-fbc8487b17dc

@@ -16,7 +16,7 @@ begin
 end
 
 # ╔═╡ c705c7c4-f209-11ea-3651-a72bfc0f1756
-md"## Intro-stan-03.jl"
+md"## Intro-stan-03s.jl"
 
 # ╔═╡ 113f96ac-f20b-11ea-36c1-9b9b901c7af9
 md"##### Define the Stan language model and input data"
@@ -66,7 +66,7 @@ if success(rc)
 end
 
 # ╔═╡ 1160f5d8-f20b-11ea-317b-012bdf4d331f
-md"## End of intro/intro-stan-03.jl"
+md"## End of intro/intro-stan-03s.jl"
 
 # ╔═╡ Cell order:
 # ╟─c705c7c4-f209-11ea-3651-a72bfc0f1756

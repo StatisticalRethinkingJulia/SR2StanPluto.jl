@@ -16,7 +16,7 @@ begin
 end
 
 # ╔═╡ bf795c3e-f20c-11ea-3be2-f53326c31bcf
-md"## Intro-stan-04.jl"
+md"## Intro-stan-04s.jl"
 
 # ╔═╡ ba7b3448-f211-11ea-2ba3-eda3b6c0a146
 	m1_1 = "
@@ -145,10 +145,10 @@ end
 md"In this example usually most approximations are similar. Other examples are less clear. In StatisticalRethinking.jl we have the actual Stan samples, quap() uses this to fit a Normal distribution with mean equal to the sample MAP."
 
 # ╔═╡ 90032db0-f217-11ea-33a9-8fa3202cd2f8
-md"## End of intro-stan/intro-stan-04.jl"
+md"## End of intro-stan/intro-stan-04s.jl"
 
 # ╔═╡ Cell order:
-# ╠═bf795c3e-f20c-11ea-3be2-f53326c31bcf
+# ╟─bf795c3e-f20c-11ea-3be2-f53326c31bcf
 # ╠═8101d726-f20f-11ea-0bc2-17fa288e23b5
 # ╠═81020e56-f20f-11ea-362b-27053dc41cdb
 # ╠═ba7b3448-f211-11ea-2ba3-eda3b6c0a146
