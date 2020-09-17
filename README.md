@@ -2,7 +2,7 @@
 
 As stated many times by the author in his [online lectures](https://www.youtube.com/watch?v=ENxTrFf9a7c&list=PLDcUM9US4XdNM4Edgs7weiyIguLSToZRI), StatisticalRethinking is a hands-on course. This project is intended to assist with the hands-on aspect of learning the key ideas in StatisticalRethinking. 
 
-StatisticalRethingStan is a Julia project that usesPluto notebooks for this purpose. Each notebook contains Julia versions of `code snippets` and `mcmc models` contained in the R package "rethinking" associated with the book [Statistical Rethinking](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath.
+StatisticalRethingStan is a Julia project that uses Pluto notebooks for this purpose. Each notebook demonstrates Julia versions of `code snippets` and `mcmc models` contained in the R package "rethinking" associated with the book [Statistical Rethinking](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath.
 
 This Julia project uses Stan (the `cmdstan` executable) as the underlying mcmc implementation.
 
@@ -41,26 +41,27 @@ To (locally) reproduce and use this project, do the following:
 3. Start a Pluto notebook server.
 4. Open a notebook.
 
-This assumes your Julia setup includes `Pkg`, `DrWatson`, `Pluto` and `PlutoUI`.
+This assumes your Julia setup includes `Pkg`, `DrWatson`, `Pluto`, `PlutoUI`, `StanSample` and `StanOptimize`.
+
 Each notebook will activate the project `StatisticalrethinkingStan`.
 
 ## Setup
 
-All R snippets (fragments) have been organized in clips. Each clip is a self standing script. Clips are named as `clip-cc-fs-ls[s|t|d].jl` where
+All R snippets (fragments) have been organized in clips. Each clip is a self standing notebook. Clips are named as `clip-cc-fs-ls[s|t|d].jl` where
 
 `cc`      : Chapter number
 `fs`      : First snippet in clip
-`ls`      : Last snippet in clip
+`ls`      : Last snippet in cli
 `[s|t|d]` : Mcmc flavor used (s : Stan, t : Turing)
 
-Note: `d` is reserved for a combination Soss/DynamicHMC. 
+Note: `d` is reserved for a combination Soss/DynamicHMC and `sl` is reserved for Stan models using the `logpdf` formulation.
 
-Scripts containing the clips are stored by chapter.
-
-The Pluto notebooks directory is organized by chapter. In addition to clips some notebook chapters also demonstrate how to create some figures in the book.
+The notebooks containing the clips are stored by chapter.
 
 Special introductory notebooks have been included in `notebooks/intros`, e.g.
 `intro-stan/intro-stan-01.jl` and `intro-R-users/distributions.jl`.
+
+In addition to clips, in the early notebook chapters (0-3) it is shown how to create the figures in the book, e.g. `Fig2.5s.jl` in `notebooks/chapter/02`.
 
 ## Status
 
@@ -68,7 +69,7 @@ StatisticalRethinkingStan.jl is compatible with the 2nd edition of the book.
 
 Expanded coverage of chapters 7 and beyond of the book will likely happen while working on StatisticalRethinkingStan.jl.
 
-StructuralCausalModels.jl is included as en experimental dependency in the StatisticalRethinking.jl v3.0.0 package.
+StructuralCausalModels.jl is included as en experimental dependency in the StatisticalRethinking.jl v3 package.
 
 Any feedback is appreciated. Please open an issue.
 
@@ -76,7 +77,7 @@ Any feedback is appreciated. Please open an issue.
 
 This repository and format is derived from work by Karajan, previous versions of StatisticalRethinking.jl and many other contributors.
 
-The huge progress made by the Turing.jl team over the last 2 years, the availability of Julia `projects` in addition to Julia `packages` and the novel approach to notebooks in Pluto.jl were a few of the ideas that triggered exploring a new setup for the StatisticalRethinkingJulia.
+The availability of DynamicHMC, the huge progress made by the Turing.jl team over the last 2 years, the availability of Julia `projects` in addition to Julia `packages` and the novel approach to notebooks in Pluto.jl were a few of the ideas that triggered exploring a new setup for the StatisticalRethinkingJulia.
 
 ## Versions
 

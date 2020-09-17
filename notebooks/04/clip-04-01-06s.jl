@@ -1,8 +1,17 @@
 ### A Pluto.jl notebook ###
-# v0.11.13
+# v0.11.14
 
 using Markdown
 using InteractiveUtils
+
+# This Pluto notebook uses @bind for interactivity. When running this notebook outside of Pluto, the following 'mock version' of @bind gives bound variables a default value (instead of an error).
+macro bind(def, element)
+    quote
+        local el = $(esc(element))
+        global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : missing
+        el
+    end
+end
 
 # ╔═╡ 3bd0847c-f2b4-11ea-35d8-c7657a170cf9
 using DrWatson
@@ -11,6 +20,7 @@ using DrWatson
 begin
 	@quickactivate "StatisticalRethinkingStan"
 	using StatisticalRethinking
+	using PlutoUI
 end
 
 # ╔═╡ 28342aca-f2b1-11ea-342d-95590e306ff4
@@ -22,10 +32,12 @@ md"### snippet 4.1"
 # ╔═╡ 3be20a12-f2b4-11ea-2179-2995ca45302f
 md"###### No attempt has been made to condense this too fewer lines of code."
 
+# ╔═╡ 4114e7b0-f85f-11ea-248a-e1c6723d2f1a
+@bind noofwalks Slider(5:200, default=9)
+
 # ╔═╡ 3be2d1ea-f2b4-11ea-09ce-1db161f69c7e
 begin
 	noofsteps = 20;
-	noofwalks = 15;
 	pos = Array{Float64, 2}(rand(Uniform(-1, 1), noofsteps, noofwalks));
 	pos[1, :] = zeros(noofwalks);
 	csum = cumsum(pos, dims=1);
@@ -35,7 +47,10 @@ end;
 # ╔═╡ 3bf08696-f2b4-11ea-0fae-815209e20f46
 md"###### Plot and annotate the random walks."
 
-# ╔═╡ 3bf14c66-f2b4-11ea-2ce7-35fa3a3dcc87
+# ╔═╡ 3bfe421a-f2b4-11ea-12c7-f7f775c210a9
+md"###### Generate 3 plots of densities at 3 different step numbers (4, 8 and 16)."
+
+# ╔═╡ 3bff112a-f2b4-11ea-338a-791bc65b719f
 begin
 	f = Plots.font("DejaVu Sans", 6)
 	p1 = plot(csum, leg=false, title="Random walks ($(noofwalks))")
@@ -46,23 +61,17 @@ begin
 	annotate!(9, mx, text("step 8", f, :left))
 	plot!(p1, [17], seriestype="vline")
 	annotate!(17, mx, text("step 16", f, :left))
-end
 
-# ╔═╡ 3bfe421a-f2b4-11ea-12c7-f7f775c210a9
-md"###### Generate 3 plots of densities at 3 different step numbers (4, 8 and 16)."
-
-# ╔═╡ 3bff112a-f2b4-11ea-338a-791bc65b719f
-begin
 	p2 = Vector{Plots.Plot{Plots.GRBackend}}(undef, 3);
 	plt = 1
 	for step in [4, 8, 16]
-	  indx = step + 1 # We aadded the first line of zeros
-	  global plt
-	  global fitl = fit_mle(Normal, csum[indx, :])
-	  lx = (fitl.μ-4*fitl.σ):0.01:(fitl.μ+4*fitl.σ)
-	  p2[plt] = density(csum[indx, :], legend=false, title="$(step) steps")
-	  plot!( p2[plt], lx, pdf.(Normal( fitl.μ , fitl.σ ) , lx ), fill=(0, .5,:orange))
-	  plt += 1
+		indx = step + 1 								# We added the first line of zeros
+		global plt
+	  	fitl = fit_mle(Normal, csum[indx, :])
+	  	lx = (fitl.μ-4*fitl.σ):0.01:(fitl.μ+4*fitl.σ)
+	  	p2[plt] = density(csum[indx, :], legend=false, title="$(step) steps")
+	 	plot!( p2[plt], lx, pdf.(Normal( fitl.μ , fitl.σ ) , lx ), fill=(0, .5,:orange))
+	  	plt += 1
 	end
 	p3 = plot(p2..., layout=(1, 3))
 	plot(p1, p3, layout=(2,1))
@@ -72,14 +81,14 @@ end
 md"## snippet 4.2"
 
 # ╔═╡ 3c1b683e-f2b4-11ea-206b-b9178296ec19
-prod(1 .+ rand(Uniform(0, 0.1), 10))
+prod(1 .+ rand(Uniform(0, 0.1), 12))
 
 # ╔═╡ 3c248840-f2b4-11ea-1397-9f2c313a2676
 md"## snippet 4.3"
 
 # ╔═╡ 3c26427c-f2b4-11ea-23f9-6303c62de7f6
 begin
-	growth = [prod(1 .+ rand(Uniform(0, 0.1), 10)) for i in 1:10000];
+	growth = [prod(1 .+ rand(Uniform(0, 0.1), 12)) for i in 1:10000];
 	fit2 = fit_mle(Normal, growth)
 	plot(Normal(fit2.μ , fit2.σ ), fill=(0, .5,:orange), lab="Normal distribution")
 	density!(growth, lab="'sample' distribution")
@@ -185,9 +194,9 @@ md"## End of clip-04-01-06s.jl"
 # ╠═3bd0c52c-f2b4-11ea-09e6-05dbd556433f
 # ╟─3bd18872-f2b4-11ea-2271-470ff5d51737
 # ╟─3be20a12-f2b4-11ea-2179-2995ca45302f
+# ╠═4114e7b0-f85f-11ea-248a-e1c6723d2f1a
 # ╠═3be2d1ea-f2b4-11ea-09ce-1db161f69c7e
 # ╟─3bf08696-f2b4-11ea-0fae-815209e20f46
-# ╠═3bf14c66-f2b4-11ea-2ce7-35fa3a3dcc87
 # ╟─3bfe421a-f2b4-11ea-12c7-f7f775c210a9
 # ╠═3bff112a-f2b4-11ea-338a-791bc65b719f
 # ╟─3c10cb0e-f2b4-11ea-210f-1f6986fbb7d8
