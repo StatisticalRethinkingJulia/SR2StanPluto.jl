@@ -22,7 +22,7 @@ using Pkg, DrWatson
 
 # Note: Below sequence is important. First activate the project
 # followed by `using` or `import` statements. Pretty much all
-# scripts use StatisticalRethinkingStan. If mcmc sampling is
+# scripts use StatisticalRethinking. If mcmc sampling is
 # needed, it must be loaded before StatisticalRethinking:
 
 @quickactivate "StatisticalRethinkingStan"
