@@ -63,9 +63,9 @@ All R snippets (fragments) have been organized in clips. Each clip is a notebook
 * `cc`      : Chapter number
 * `fs`      : First snippet in clip
 * `ls`      : Last snippet in cli
-* `[s|t|d]` : Mcmc flavor used (s : Stan, t : Turing)
+* `[s|sl|t|d|m]` : Mcmc flavor used (s : Stan, t : Turing)
 
-Note: `d` is reserved for a combination Soss/DynamicHMC and `sl` is reserved for Stan models using the `logpdf` formulation.
+Note: `d` is reserved for a combination Soss/DynamicHMC, `sl` is reserved for Stan models using the `logpdf` formulation and `m` for Mamba.
 
 The notebooks containing the clips are stored by chapter.
 
