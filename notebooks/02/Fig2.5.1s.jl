@@ -58,7 +58,7 @@ model {
 ";
 
 # ╔═╡ 2331e85c-df48-11ea-1551-b54d9e48188c
-m2_0s = SampleModel("m2.0s", m2_0; tmpdir=projectdir("tmp"));
+m2_0s = SampleModel("m2.0s", m2_0);
 
 # ╔═╡ c07942f0-ec64-11ea-0002-e734a075766d
 md"### 2. Generate observed data."
