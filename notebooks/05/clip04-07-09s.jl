@@ -35,7 +35,7 @@ begin
 end;
 
 # ╔═╡ 2db49e3c-fd04-11ea-2343-0d29f51022cc
-basis_set(DMA_dag_1).bs
+Text(pluto_string(basis_set(DMA_dag_1)))
 
 # ╔═╡ 2db8f448-fd04-11ea-0ee9-1ff203ccb3cb
 adjustment_sets(DMA_dag_1, :a, :d)
@@ -57,14 +57,8 @@ begin
 	Sys.isapple() && run(`open -a GraphViz.app $(fname2)`)
 end;
 
-# ╔═╡ 2dce7442-fd04-11ea-1f21-d17fbe9d1f8a
-bs = basis_set(DMA_dag_2)
-
 # ╔═╡ 18f56d12-fd10-11ea-02a2-c77de8c1416b
-pluto_string(basis_set(DMA_dag_2))
-
-# ╔═╡ 9a5bffb6-fd14-11ea-069e-29515517c616
-pkg"up"
+Text(pluto_string(basis_set(DMA_dag_2)))
 
 # ╔═╡ 2dd8856a-fd04-11ea-1486-2f3c7dd650bb
 adjustment_sets(DMA_dag_2, :a, :d)
@@ -84,8 +78,6 @@ md"## End of clip-05-07-09s.jl"
 # ╠═2dbfc582-fd04-11ea-2086-e1f761ff9365
 # ╠═2dc0543e-fd04-11ea-39c9-6d3da3587f12
 # ╠═2dcccbba-fd04-11ea-104d-797e2b94ebbb
-# ╠═2dce7442-fd04-11ea-1f21-d17fbe9d1f8a
 # ╠═18f56d12-fd10-11ea-02a2-c77de8c1416b
-# ╠═9a5bffb6-fd14-11ea-069e-29515517c616
 # ╠═2dd8856a-fd04-11ea-1486-2f3c7dd650bb
 # ╟─2de11e4e-fd04-11ea-3d2a-3b1a3dbaeb63
