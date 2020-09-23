@@ -41,8 +41,6 @@ Text(pluto_string(basis_set(DMA_dag_1)))
 adjustment_sets(DMA_dag_1, :a, :d)
 
 # ╔═╡ 2dbfc582-fd04-11ea-2086-e1f761ff9365
-# DMA_dag2:
-
 DMA_2 = OrderedDict(
   [:d, :m] => :a
 )

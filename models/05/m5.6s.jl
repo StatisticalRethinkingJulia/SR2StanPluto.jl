@@ -1,24 +1,20 @@
-# Load Julia packages (libraries) needed.
+# m5.6s.jl
 
+using Pkg, DrWatson
+
+@quickactivate "StatisticalRethinkingStan"
+using StanSample
 using StatisticalRethinking
-
-ProjDir = @__DIR__
 
 # ### snippet 5.29
 
-println()
-df = CSV.read(rel_path("..", "data", "milk.csv"), delim=';');
+df = CSV.read(sr_datadir("milk.csv"), DataFrame; delim=';');
 df = filter(row -> !(row[:neocortex_perc] == "NA"), df);
 df[!, :neocortex_perc] = parse.(Float64, df[:, :neocortex_perc])
 df[!, :lmass] = log.(df[:, :mass])
-#first(df, 5) |> display
-
-# ### snippet 5.1
-
 scale!(df, [:kcal_per_g, :neocortex_perc, :lmass])
-println()
 
-m_5_6 = "
+m5_6 = "
 data {
  int < lower = 1 > N; // Sample size
  vector[N] K; // Outcome
@@ -43,7 +39,7 @@ model {
 
 # Define the SampleModel and set the output format to :mcmcchains.
 
-m5_6s = SampleModel("m5.6", m_5_6);
+m5_6s = SampleModel("m5.6", m5_6);
 
 # Input data for cmdstan
 
