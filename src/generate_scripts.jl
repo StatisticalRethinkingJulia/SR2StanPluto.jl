@@ -1,3 +1,4 @@
+
 using Pkg, DrWatson
 
 @quickactivate "StatisticalRethinkingStan"
@@ -35,19 +36,36 @@ cd(indir) do
   nbsubdirs = readdir()
   for nbsubdir in nbsubdirs
     if isdir(nbsubdir) && nbsubdir !== "scripts"
-      !isdir(joinpath(outdir, nbsubdir)) && mkdir(joinpath(outdir, nbsubdir))
-
-      # Find all notebooks holding nbsubdir
-
-      nbs = readdir(nbsubdir)
-      println("$(nbsubdir): $(nbs)")
-
-      # Copy the notebooks to the scripts dir
-
-      for nb in nbs
-        copy_file(nb, joinpath(indir, nbsubdir), joinpath(outdir, nbsubdir))
+      if !isdir(joinpath(outdir, nbsubdir))
+        mkdir(joinpath(outdir, nbsubdir))
       end
-
+      # Find all notebooks in nbsubdir, skip subdir "intros"
+      if !(nbsubdir == "intros")
+        nbs = readdir(nbsubdir)
+        println("$(nbsubdir): $(nbs)\n")
+        # Copy the notebooks to the scripts dir
+        for nb in nbs
+          nb == ".DS_Store" && continue
+          copy_file(nb, joinpath(indir, nbsubdir), joinpath(outdir, nbsubdir))
+        end
+      else # Handle subdirs in "intros"
+        nb_intro_dirs = readdir(nbsubdir)
+        println("$(nbsubdir): $(nb_intro_dirs)\n")
+        # Copy the notebooks to the scripts dir
+        for nb_intro_dir in nb_intro_dirs
+          nb_intro_dir == ".DS_Store" && continue
+          intro_nbs = readdir(joinpath(indir, nbsubdir, nb_intro_dir))
+          println("$(nbsubdir)/$(nb_intro_dir): $(intro_nbs)\n")
+          for nb in intro_nbs
+            nb == ".DS_Store" && continue
+            #println("Checking for $(joinpath(outdir, nbsubdir, nb_intro_dir))")
+            !isdir(joinpath(outdir, nbsubdir, nb_intro_dir)) &&
+              mkdir(joinpath(outdir, nbsubdir, nb_intro_dir))
+            copy_file(nb, joinpath(indir, nbsubdir, nb_intro_dir),
+              joinpath(outdir, nbsubdir, nb_intro_dir))
+          end
+        end
+      end
     else
       println(("$(nbsubdir) ignored"))
     end

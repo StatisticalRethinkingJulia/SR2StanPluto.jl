@@ -47,7 +47,6 @@ end
 
 md"### snippet 0.3"
 
-
 [log(0.01^200) 200 * log(0.01)]
 
 md"## End of clip-00-01-03s.jl"
