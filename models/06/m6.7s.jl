@@ -1,10 +1,20 @@
-# Load Julia packages
+# m6.7s.jl
+# Clip-06-06-09s.jl
 
+using Pkg, DrWatson
+@quickactivate "StatisticalRethinkingStan"
+using StanSample
 using StatisticalRethinking
 
-ProjDir = @__DIR__
+N = 100
+df = DataFrame(
+  :h0 => rand(Normal(10,2 ), N),
+  :treatment => vcat(zeros(Int, Int(N/2)), ones(Int, Int(N/2)))
+);
+df[!, :fungus] = [rand(Binomial(1, 0.5 - 0.4 * df[i, :treatment]), 1)[1] for i in 1:N]
+df[!, :h1] = [df[i, :h0] + rand(Normal(5 - 3 * df[i, :fungus]), 1)[1] for i in 1:N]
 
-m6_7s = "
+m6_7 = "
 data {
   int <lower=1> N;
   vector[N] h0;
@@ -41,12 +51,13 @@ m6_7_data = Dict(
   :treatment => df[:, :treatment]
 )
 
-m6_7 = SampleModel("m6.7", m6_7s)
-rc = stan_sample(m6_7; data=m6_7_data)
+m6_7s = SampleModel("m6.7", m6_7)
+
+rc = stan_sample(m6_7s; data=m6_7_data)
 
 if success(rc)
-
-  p = read_samples(m6_7; output_format=:particles);
-  display(p)
-  
+  dfa6_7 = read_samples(m6_7s; output_format=:dataframe);
+  p6_7 = Particles(dfa6_7)
 end
+
+# End of m6.7s.jl

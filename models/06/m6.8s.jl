@@ -1,10 +1,19 @@
+# m6.8s.jl
+
+using Pkg, DrWatson
+@quickactivate "StatisticalRethinkingStan"
+using StanSample
 using StatisticalRethinking
 
-ProjDir = @__DIR__
+N = 100
+df = DataFrame(
+  :h0 => rand(Normal(10,2 ), N),
+  :treatment => vcat(zeros(Int, Int(N/2)), ones(Int, Int(N/2)))
+);
+df[!, :fungus] = [rand(Binomial(1, 0.5 - 0.4 * df[i, :treatment]), 1)[1] for i in 1:N]
+df[!, :h1] = [df[i, :h0] + rand(Normal(5 - 3 * df[i, :fungus]), 1)[1] for i in 1:N]
 
-include("$(ProjDir)/m6.7.jl")
-
-m6_8s = "
+m6_8 = "
 data {
   int <lower=1> N;
   vector[N] h0;
@@ -37,14 +46,13 @@ m6_8_data = Dict(
   :treatment => df[:, :treatment]
 )
 
-m6_8 = SampleModel("m6.8", m6_8s)
+m6_8s = SampleModel("m6.8s", m6_8)
 
-rc = stan_sample(m6_8; data=m6_8_data)
+rc = stan_sample(m6_8s; data=m6_8_data)
 
 if success(rc)
-
-  dfa = read_samples(m6_8; output_format=:dataframe);
-  p = Particles(dfa)
-  display(p)
-  
+  dfa6_8 = read_samples(m6_8s; output_format=:dataframe);
+  p6_8 = Particles(dfa6_8)
 end
+
+# End of m6.8s.jl
