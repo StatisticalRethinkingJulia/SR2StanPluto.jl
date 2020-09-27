@@ -80,7 +80,7 @@ success(rc6_7s) && (Text(precis(dfa6_7s; io=String)))
 
 # ╔═╡ b4b8301e-ff30-11ea-2a3c-a11e3745616e
 if success(rc6_7s)
-	(s6_7s, p6_7s) = plotcoef([m6_7s], [:a, :bt, :bf], "", "")
+	(s6_7s, p6_7s) = plotcoef([m6_7s], [:a, :bt, :bf])
 	p6_7s
 end
 

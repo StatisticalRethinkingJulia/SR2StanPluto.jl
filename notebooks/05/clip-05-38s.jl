@@ -77,18 +77,27 @@ success(rc) && Particles(dfa7)
 success(rc) && quap(dfa7)
 
 # ╔═╡ 0bc2f976-fdaa-11ea-0212-29e5fd84c264
-(s1, p1) = plotcoef([m5_5s, m5_6s, m5_7s], [:a, :bN, :bM], "",
-  "Masked relationships: bN & bM Normal estimates")
+begin
+	(s1, p1) = plotcoef([m5_5s, m5_6s, m5_7s], [:a, :bN, :bM];
+		title="Masked relationships: bN & bM Normal estimates")
+	p1
+end
+
+# ╔═╡ e74a9ef6-00eb-11eb-3520-a75d0472d1d9
+s1
 
 # ╔═╡ 240a2114-fdb2-11ea-370a-81c8b32ddbc4
 plot(p1)
 
 # ╔═╡ 0bc6882a-fdaa-11ea-0714-0baec236fdc3
-(s2, p2) = plotcoef([m5_5s, m5_6s, m5_7s], [:a, :bN, :bM], "",
-	"Masked relationships: bN & bM Quap estimates", quap)
+begin
+	(s2, p2) = plotcoef([m5_5s, m5_6s, m5_7s], [:a, :bN, :bM];
+		title="Masked relationships: bN & bM Quap estimates", func=quap)
+	p2
+end
 
 # ╔═╡ 30858154-fdb2-11ea-2096-db053629c188
-plot(p2)
+s2
 
 # ╔═╡ 0bce9330-fdaa-11ea-03be-395a30d110ea
 md"## End of clip-05-38s.jl"
@@ -105,6 +114,7 @@ md"## End of clip-05-38s.jl"
 # ╠═0bb730c8-fdaa-11ea-13f4-65a4d5d6081c
 # ╠═0bb8537c-fdaa-11ea-3eb2-3fba4b89dedf
 # ╠═0bc2f976-fdaa-11ea-0212-29e5fd84c264
+# ╠═e74a9ef6-00eb-11eb-3520-a75d0472d1d9
 # ╠═240a2114-fdb2-11ea-370a-81c8b32ddbc4
 # ╠═0bc6882a-fdaa-11ea-0714-0baec236fdc3
 # ╠═30858154-fdb2-11ea-2096-db053629c188

@@ -51,7 +51,8 @@ md"##### Normal estimates:"
 
 # ╔═╡ ce8e68c0-fc77-11ea-30eb-3fcbdd292d2c
 if success(rc)
-	(s1, p1) = plotcoef([m5_1s, m5_2s, m5_3s], [:bA, :bM], "", "Particles (Normal) estimates")
+	(s1, p1) = plotcoef([m5_1s, m5_2s, m5_3s], [:bA, :bM]; 
+		title="Particles (Normal) estimates")
 	p1
 end
 
@@ -63,7 +64,8 @@ md"##### Quap estimates:"
 
 # ╔═╡ ce97d09a-fc77-11ea-22c5-1da0cf5c001d
 if success(rc)
-	(s2, p2) = plotcoef([m5_1s, m5_2s, m5_3s], [:bA, :bM], "", "Quap estimates", quap)
+	(s2, p2) = plotcoef([m5_1s, m5_2s, m5_3s], [:bA, :bM];
+		title="Quap estimates", func=quap)
 	p2
 end
 

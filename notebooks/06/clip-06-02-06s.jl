@@ -76,9 +76,16 @@ end
 
 # ╔═╡ eb921ad4-fe50-11ea-2450-7dfe19847755
 if success(rc)
-	(s0, p0) = plotcoef([m6_1s], [:a, :bL, :bR, :sigma], "", "Multicollinearity between bL and bR", quap)
-	plot(p0)
+	(s0, p0) = plotcoef([m6_1s], [:a, :bL, :bR, :sigma];
+		title="Multicollinearity between bL and bR", func=quap)
+	p0
 end
+
+# ╔═╡ b825edf6-00eb-11eb-039c-cfcb859dc43d
+s0
+
+# ╔═╡ b79bb30c-00eb-11eb-1269-11956fb25a2b
+
 
 # ╔═╡ 985265b0-fe50-11ea-0594-05ac311d2e87
 if success(rc)
@@ -113,5 +120,7 @@ md"## End of clip-06-02-06s.jl"
 # ╠═9842dbb8-fe50-11ea-158e-cbc2873c64bd
 # ╠═9851b4a8-fe50-11ea-083b-17e3c182a55a
 # ╠═eb921ad4-fe50-11ea-2450-7dfe19847755
+# ╠═b825edf6-00eb-11eb-039c-cfcb859dc43d
+# ╠═b79bb30c-00eb-11eb-1269-11956fb25a2b
 # ╠═985265b0-fe50-11ea-0594-05ac311d2e87
 # ╟─9862bdb4-fe50-11ea-1402-bbac3257c25d

@@ -53,14 +53,13 @@ md"###### Generate 3 plots of densities at 3 different step numbers (4, 8 and 16
 # ╔═╡ 3bff112a-f2b4-11ea-338a-791bc65b719f
 begin
 	f = Plots.font("DejaVu Sans", 6)
-	p1 = plot(csum, leg=false, xticks=false, title="Random walks ($(noofwalks))")
+	xtick_pos = [5,9,17]
+	xtick_labels = ("step 4","step 8","step 16")
+	p1 = plot(csum, leg=false, xticks=(xtick_pos,xtick_labels), title="Random walks ($(noofwalks))")
 	plot!(p1, csum[:, Int(floor(noofwalks/2))], leg=false, title="Random walks ($(noofwalks))", 				color=:black)
-	plot!(p1, [5], seriestype="vline")
-	annotate!(5, mx, text("step 4", f, :left))
-	plot!(p1, [9], seriestype="vline")
-	annotate!(9, mx, text("step 8", f, :left))
-	plot!(p1, [17], seriestype="vline")
-	annotate!(17, mx, text("step 16", f, :left))
+	for (i,pos) in enumerate(xtick_pos)
+		plot!(p1, [pos], seriestype="vline")
+	end
 
 	p2 = Vector{Plots.Plot{Plots.GRBackend}}(undef, 3);
 	plt = 1

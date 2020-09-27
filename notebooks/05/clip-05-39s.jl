@@ -26,18 +26,24 @@ md"## Clip-05-39s.jl"
 md"### snippet 5.39"
 
 # ╔═╡ 3108f92a-fdb3-11ea-0959-9b1b6d094a4c
-(s1, p1) = plotcoef([m5_5s, m5_6s, m5_7s], [:a, :bN, :bM], "",
-	"Masked relationships: bN & bM Normal estimates")
+begin
+	(s1, p1) = plotcoef([m5_5s, m5_6s, m5_7s], [:a, :bN, :bM];
+		title="Masked relationships: bN & bM Normal estimates")
+	p1
+end
 
 # ╔═╡ 310f3100-fdb3-11ea-0c35-b3014ae7e73d
-plot(p1)
+s1
 
 # ╔═╡ 3115a60c-fdb3-11ea-16d2-75f8753f7f0f
-(s2, p2) = plotcoef([m5_5s, m5_6s, m5_7s], [:a, :bN, :bM], "",
-	"Masked relationships: bN & bM Normal estimates", quap)
+begin
+	(s2, p2) = plotcoef([m5_5s, m5_6s, m5_7s], [:a, :bN, :bM];
+		title="Masked relationships: bN & bM Normal estimates", func=quap)
+	p2
+end
 
 # ╔═╡ 31163fc2-fdb3-11ea-03a4-9dc90236e2d6
-plot(p2)
+s2
 
 # ╔═╡ 312018a0-fdb3-11ea-171d-49ed6fe7bbcb
 md"## End of clip-05-39s.jl"
