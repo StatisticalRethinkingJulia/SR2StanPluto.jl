@@ -55,12 +55,12 @@ begin
 	f = Plots.font("DejaVu Sans", 6)
 	p1 = plot(csum, leg=false, title="Random walks ($(noofwalks))")
 	plot!(p1, csum[:, Int(floor(noofwalks/2))], leg=false, title="Random walks ($(noofwalks))", 				color=:black)
-	plot!(p1, [5], seriestype="vline")
-	annotate!(5, mx, text("step 4", f, :left))
-	plot!(p1, [9], seriestype="vline")
-	annotate!(9, mx, text("step 8", f, :left))
-	plot!(p1, [17], seriestype="vline")
-	annotate!(17, mx, text("step 16", f, :left))
+	plot!(p1, [4], seriestype="vline")
+	annotate!(4, mx, text("step 4", f, :left))
+	plot!(p1, [8], seriestype="vline")
+	annotate!(8, mx, text("step 8", f, :left))
+	plot!(p1, [16], seriestype="vline")
+	annotate!(16, mx, text("step 16", f, :left))
 
 	p2 = Vector{Plots.Plot{Plots.GRBackend}}(undef, 3);
 	plt = 1

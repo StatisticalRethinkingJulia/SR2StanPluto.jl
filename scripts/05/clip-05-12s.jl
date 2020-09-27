@@ -39,7 +39,8 @@ md"##### D (Divorce rate), M (Marriage rate) and A (MediumAgeMarriage) are all s
 md"##### Normal estimates:"
 
 if success(rc)
-	(s1, p1) = plotcoef([m5_1s, m5_2s, m5_3s], [:bA, :bM], "", "Particles (Normal) estimates")
+	(s1, p1) = plotcoef([m5_1s, m5_2s, m5_3s], [:bA, :bM];
+    title="Particles (Normal) estimates")
 	p1
 end
 
@@ -48,7 +49,8 @@ s1
 md"##### Quap estimates:"
 
 if success(rc)
-	(s2, p2) = plotcoef([m5_1s, m5_2s, m5_3s], [:bA, :bM], "", "Quap estimates", quap)
+	(s2, p2) = plotcoef([m5_1s, m5_2s, m5_3s], [:bA, :bM];
+    title="Quap estimates", func=quap)
 	p2
 end
 
