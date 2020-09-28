@@ -53,27 +53,28 @@ md"###### Generate 3 plots of densities at 3 different step numbers (4, 8 and 16
 # ╔═╡ 3bff112a-f2b4-11ea-338a-791bc65b719f
 begin
 	f = Plots.font("DejaVu Sans", 6)
-	xtick_pos = [5,9,17]
+	xtick_pos = [5, 9, 17]
 	xtick_labels = ("step 4","step 8","step 16")
-	p1 = plot(csum, leg=false, xticks=(xtick_pos,xtick_labels), title="Random walks ($(noofwalks))")
-	plot!(p1, csum[:, Int(floor(noofwalks/2))], leg=false, title="Random walks ($(noofwalks))", 				color=:black)
-	for (i,pos) in enumerate(xtick_pos)
-		plot!(p1, [pos], seriestype="vline")
+	fig1 = plot(csum, leg=false, xticks=(xtick_pos,xtick_labels),
+		title="No of random walks = $(noofwalks)")
+	plot!(fig1, csum[:, Int(floor(noofwalks/2))], leg=false, color=:black)
+	for (i, tick_pos) in enumerate(xtick_pos)
+		plot!(fig1, [tick_pos], seriestype="vline")
 	end
 
-	p2 = Vector{Plots.Plot{Plots.GRBackend}}(undef, 3);
+	fig2 = Vector{Plots.Plot{Plots.GRBackend}}(undef, 3);
 	plt = 1
 	for step in [4, 8, 16]
 		indx = step + 1 								# We added the first line of zeros
 		global plt
 	  	fitl = fit_mle(Normal, csum[indx, :])
 	  	lx = (fitl.μ-4*fitl.σ):0.01:(fitl.μ+4*fitl.σ)
-	  	p2[plt] = density(csum[indx, :], legend=false, title="$(step) steps")
-	 	plot!( p2[plt], lx, pdf.(Normal( fitl.μ , fitl.σ ) , lx ), fill=(0, .5,:orange))
+	  	fig2[plt] = density(csum[indx, :], legend=false, title="$(step) steps")
+	 	plot!( fig2[plt], lx, pdf.(Normal( fitl.μ , fitl.σ ) , lx ), fill=(0, .5,:orange))
 	  	plt += 1
 	end
-	p3 = plot(p2..., layout=(1, 3))
-	plot(p1, p3, layout=(2,1))
+	fig3 = plot(fig2..., layout=(1, 3))
+	plot(fig1, fig3, layout=(2,1))
 end
 
 # ╔═╡ 3c10cb0e-f2b4-11ea-210f-1f6986fbb7d8
@@ -159,8 +160,8 @@ md"###### Sample using the computed posterior values as weights. In this example
 # ╔═╡ 3cdd29a6-f2b4-11ea-071d-fb6328c01d5f
 begin
 	samples = sample(p_grid, Weights(posterior), length(p_grid));
-	p = Vector{Plots.Plot{Plots.GRBackend}}(undef, 2)
-	p[1] = scatter(1:length(p_grid), samples, markersize = 2, ylim=(0.0, 1.3), lab="Draws")
+	figs = Vector{Plots.Plot{Plots.GRBackend}}(undef, 2)
+	figs[1] = scatter(1:length(p_grid), samples, markersize = 2, ylim=(0.0, 1.3), lab="Draws")
 end
 
 # ╔═╡ 3ce9eac4-f2b4-11ea-0bf6-9f130255ec5a
@@ -171,8 +172,8 @@ begin
 	w = 6
 	n = 9
 	x = 0:0.01:1
-	p[2] = density(samples, ylim=(0.0, 5.0), lab="Sample density")
-	p[2] = plot!( x, pdf.(Beta( w+1 , n-w+1 ) , x ), lab="Conjugate solution")
+	figs[2] = density(samples, ylim=(0.0, 5.0), lab="Sample density")
+	figs[2] = plot!( x, pdf.(Beta( w+1 , n-w+1 ) , x ), lab="Conjugate solution")
 end
 
 # ╔═╡ 3d03bb5c-f2b4-11ea-315e-6fac666895eb
@@ -180,8 +181,9 @@ md"###### Quadratic approximation."
 
 # ╔═╡ 3d11472c-f2b4-11ea-3bf6-9d517b13b291
 begin
-	plot!( p[2], x, pdf.(Normal( 0.67 , 0.16 ) , x ), lab="Normal approximation", fill=(0, .5,:orange))
-	plot(p..., layout=(1, 2))
+	plot!( figs[2], x, pdf.(Normal( 0.67 , 0.16 ) , x ), lab="Normal approximation",
+		fill=(0, .5,:orange))
+	plot(figs..., layout=(1, 2))
 end
 
 # ╔═╡ 3d1db2f0-f2b4-11ea-3bde-29b8f0be3087
@@ -202,9 +204,9 @@ md"## End of clip-04-01-06s.jl"
 # ╠═3c1b683e-f2b4-11ea-206b-b9178296ec19
 # ╠═3c248840-f2b4-11ea-1397-9f2c313a2676
 # ╠═3c26427c-f2b4-11ea-23f9-6303c62de7f6
-# ╠═3c37aa58-f2b4-11ea-2e87-a11117582011
+# ╟─3c37aa58-f2b4-11ea-2e87-a11117582011
 # ╠═3c390506-f2b4-11ea-3232-296f6952aaa7
-# ╠═3c4245ee-f2b4-11ea-2add-750014544e83
+# ╟─3c4245ee-f2b4-11ea-2add-750014544e83
 # ╠═3c4be516-f2b4-11ea-086b-f1461fa2e55e
 # ╟─3c567b9a-f2b4-11ea-2798-b5b3bffc3f84
 # ╟─3c60487a-f2b4-11ea-32f7-abda1ad883cf
@@ -215,9 +217,9 @@ md"## End of clip-04-01-06s.jl"
 # ╠═3c9436d8-f2b4-11ea-3b46-fbfefa79d535
 # ╟─3ca753ee-f2b4-11ea-21f5-93f4fee09437
 # ╠═3cab5208-f2b4-11ea-0cff-ddab2410c607
-# ╠═3cb6dac6-f2b4-11ea-0c94-a109c74c2d22
+# ╟─3cb6dac6-f2b4-11ea-0c94-a109c74c2d22
 # ╠═3cc23a06-f2b4-11ea-3dd3-c5ca6ebe71c3
-# ╠═3cd03f70-f2b4-11ea-1877-11b0102993c8
+# ╟─3cd03f70-f2b4-11ea-1877-11b0102993c8
 # ╠═3cdd29a6-f2b4-11ea-071d-fb6328c01d5f
 # ╟─3ce9eac4-f2b4-11ea-0bf6-9f130255ec5a
 # ╠═3cf665a6-f2b4-11ea-29ad-19ecaf1f423a

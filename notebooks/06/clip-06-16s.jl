@@ -26,7 +26,10 @@ begin
 	);
 	df.fungus = [rand(Binomial(1, 0.5 - 0.4 * df[i, :treatment]), 1)[1] for i in 1:N]
 	df.h1 = [df[i, :h0] + rand(Normal(5 - 3 * df[i, :fungus]), 1)[1] for i in 1:N]
-end
+end;
+
+# ╔═╡ 221f1e8a-00f6-11eb-3504-a91f4659a8a6
+Text(precis(df; io=String))
 
 # ╔═╡ b4a2fe56-ff30-11ea-255b-bbe592530dac
 m6_7 = "
@@ -73,19 +76,16 @@ begin
 end;
 
 # ╔═╡ b4a98408-ff30-11ea-2918-9b5d39692695
-success(rc6_7s) && (p = Particles(dfa6_7s))
+success(rc6_7s) && Particles(dfa6_7s)
 
 # ╔═╡ b4b7702a-ff30-11ea-169a-159df3080e8b
 success(rc6_7s) && (Text(precis(dfa6_7s; io=String)))
 
 # ╔═╡ b4b8301e-ff30-11ea-2a3c-a11e3745616e
 if success(rc6_7s)
-	(s6_7s, p6_7s) = plotcoef([m6_7s], [:a, :bt, :bf])
-	p6_7s
+	(part6_7s, fig6_7s) = plotcoef([m6_7s], [:a, :bt, :bf])
+	fig6_7s
 end
-
-# ╔═╡ b4bdad32-ff30-11ea-18ab-0574f0304674
-success(rc6_7s) && s6_7s
 
 # ╔═╡ b4c852fa-ff30-11ea-18d0-47dfe321ba8a
 md"## End of clip-06-16s.jl"
@@ -95,10 +95,10 @@ md"## End of clip-06-16s.jl"
 # ╠═b4949654-ff30-11ea-225c-2ffc47a35a31
 # ╠═b494da42-ff30-11ea-25d2-37857c757c9f
 # ╠═b495756a-ff30-11ea-378a-236707f95773
+# ╠═221f1e8a-00f6-11eb-3504-a91f4659a8a6
 # ╠═b4a2fe56-ff30-11ea-255b-bbe592530dac
 # ╠═b4a44e3c-ff30-11ea-0868-93935a280415
 # ╠═b4a98408-ff30-11ea-2918-9b5d39692695
 # ╠═b4b7702a-ff30-11ea-169a-159df3080e8b
 # ╠═b4b8301e-ff30-11ea-2a3c-a11e3745616e
-# ╠═b4bdad32-ff30-11ea-18ab-0574f0304674
 # ╟─b4c852fa-ff30-11ea-18d0-47dfe321ba8a

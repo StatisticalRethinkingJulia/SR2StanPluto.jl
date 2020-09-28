@@ -38,18 +38,18 @@ begin
 end;
 
 # ╔═╡ 2f00f65e-f76f-11ea-1f90-a743b56587ff
-p = Vector{Plots.Plot{Plots.GRBackend}}(undef, 9);
+figs = Vector{Plots.Plot{Plots.GRBackend}}(undef, 9);
 
 # ╔═╡ 2f0af1d6-f76f-11ea-0663-5fd115ec0389
 for i in 1:3
   j = (i-1)*3 + 1
-  p[j] = plot(p_grid, prior[i], leg=false, ylims=(0, 1), title="Prior")
-  p[j+1] = plot(p_grid, likelihood, leg=false, title="Likelihood")
-  p[j+2] = plot(p_grid, prior[i].*likelihood, leg=false, title="Posterior")
+  figs[j] = plot(p_grid, prior[i], leg=false, ylims=(0, 1), title="Prior")
+  figs[j+1] = plot(p_grid, likelihood, leg=false, title="Likelihood")
+  figs[j+2] = plot(p_grid, prior[i].*likelihood, leg=false, title="Posterior")
 end
 
 # ╔═╡ 2f0b7958-f76f-11ea-20fa-5187eb219ed2
-plot(p..., layout=(3, 3))
+plot(figs..., layout=(3, 3))
 
 # ╔═╡ 2f16fcf6-f76f-11ea-134c-2d98715fdf6f
 md"## End of Fig2.6s.jl"

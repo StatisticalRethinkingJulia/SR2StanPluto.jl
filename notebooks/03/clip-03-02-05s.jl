@@ -56,13 +56,13 @@ chn
 md"##### Plot the chain."
 
 # ╔═╡ 17aece92-f2e5-11ea-311a-1b4591b1172a
-p1 = plot(chn)
+plot(chn; seriestype=:traceplot)
 
 # ╔═╡ 17bdf552-f2e5-11ea-28e5-1f5f22b43146
 md"### snippet 3.4"
 
-# ╔═╡ 17c6af64-f2e5-11ea-0b28-c55bf548b3ea
-density(samples, lab="Sample density")
+# ╔═╡ fd82a95a-0124-11eb-02a7-c5d4189f6a3a
+plot(chn; seriestype=:density)
 
 # ╔═╡ 17cf1094-f2e5-11ea-1a80-858534e81348
 md"### snippet 3.5"
@@ -106,9 +106,9 @@ md"## End of clip-03-02-05s.jl"
 # ╟─17a70c16-f2e5-11ea-2e3f-2dc8006c1ee7
 # ╠═17aece92-f2e5-11ea-311a-1b4591b1172a
 # ╟─17bdf552-f2e5-11ea-28e5-1f5f22b43146
-# ╠═17c6af64-f2e5-11ea-0b28-c55bf548b3ea
+# ╠═fd82a95a-0124-11eb-02a7-c5d4189f6a3a
 # ╟─17cf1094-f2e5-11ea-1a80-858534e81348
-# ╠═17d80aa0-f2e5-11ea-1c8f-01770152e142
+# ╟─17d80aa0-f2e5-11ea-1c8f-01770152e142
 # ╠═17e08cca-f2e5-11ea-31a6-8931f98059ba
 # ╠═17f4a430-f2e5-11ea-048a-73ae33e192ed
 # ╟─17fecdb6-f2e5-11ea-2c5b-7bc56e8b1360

@@ -51,13 +51,16 @@ begin
 	chns = MCMCChains.Chains(a3d, [:p])
 end
 
+# ╔═╡ 277a17b0-00fe-11eb-289b-c3e1f6288e53
+md"### snippet 2.9"
+
 # ╔═╡ 7f0bac38-f2e1-11ea-0817-093aba68676d
 md"##### Show density and computed conjugate solution."
 
 # ╔═╡ 7f16b116-f2e1-11ea-14fb-1ffcca62978a
 begin
 	x = 0:0.01:1
-	density(chns, lab="Samples")
+	density(chns, lab="Samples", leg=:topleft)
 	plot!( x, pdf.(Beta( w+1 , n-w+1 ) , x ), lab="Conjugate solution")
 end
 
@@ -73,6 +76,7 @@ md"## End of clip-02-08s.jl"
 # ╠═7ef91c84-f2e1-11ea-1ed4-c3ef76963769
 # ╟─7f05a540-f2e1-11ea-0d4a-f7c33efa0832
 # ╠═7f0651fe-f2e1-11ea-00f7-79322fafaaf9
+# ╟─277a17b0-00fe-11eb-289b-c3e1f6288e53
 # ╟─7f0bac38-f2e1-11ea-0817-093aba68676d
 # ╠═7f16b116-f2e1-11ea-14fb-1ffcca62978a
 # ╟─7f175f44-f2e1-11ea-31bf-0fbdc4545246

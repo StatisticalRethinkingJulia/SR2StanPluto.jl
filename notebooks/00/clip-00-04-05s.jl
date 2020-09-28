@@ -14,7 +14,7 @@ begin
 end
 
 # ╔═╡ c5bf8a48-de64-11ea-0be8-cd41ff1e44aa
-md"### clip-00-04-05s.jl"
+md"## Clip-00-04-05s.jl"
 
 # ╔═╡ b85b1474-de64-11ea-089d-b947253b7bb7
 md"##### Load packages."
@@ -49,7 +49,7 @@ scatter( howell1.height, residuals(m), xlab="Height",
 md"## End of clip-00-04-05s.jl"
 
 # ╔═╡ Cell order:
-# ╟─c5bf8a48-de64-11ea-0be8-cd41ff1e44aa
+# ╠═c5bf8a48-de64-11ea-0be8-cd41ff1e44aa
 # ╟─b85b1474-de64-11ea-089d-b947253b7bb7
 # ╠═ead8af44-dfef-11ea-104e-d7b1bc038f70
 # ╠═0b586340-de65-11ea-39a9-1be72fd535d5

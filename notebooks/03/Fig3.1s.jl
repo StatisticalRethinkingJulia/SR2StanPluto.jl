@@ -29,15 +29,15 @@ end;
 
 # ╔═╡ 9e43adc0-f785-11ea-2b6a-f11004009094
 begin
-	p1 = scatter(samples, ylim=(0, 1), xlab="Sample number",
+	fig1 = scatter(samples, ylim=(0, 1), xlab="Sample number", markersize=0.1,
 	  ylab="Proportion water(p)", leg=false)
-	p2 = density(samples, xlim=(0.0, 1.0), ylim=(0.0, 3.0),
+	fig2 = density(samples, xlim=(0.0, 1.0), ylim=(0.0, 3.0),
 	  xlab="Proportion water (p)",
 	  ylab="Density", leg=false)
 end;
 
 # ╔═╡ d13a98ea-f785-11ea-0cb5-e51b20ddcdac
-plot(p1, p2, layout=(1,2))
+plot(fig1, fig2, layout=(1,2))
 
 # ╔═╡ 9e520366-f785-11ea-1d50-8f7ab0c29c9c
 md"## End of Fig3.1s.jl"

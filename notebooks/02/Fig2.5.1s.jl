@@ -28,7 +28,7 @@ end
 md"## Fig 2.5.1s"
 
 # ╔═╡ f65a77d8-df47-11ea-271a-41999fd773fb
-md"###### This clip is only intended to generate part of Fig 2.5 using a PlutoUI slider. It is not intended to show how to use Stan (yet)! This notebook also demonstrates simple PlutoUI interactivity."
+md"###### This notebook demonstrates simple PlutoUI interactivity. This clip is only intended to generate part of Fig 2.5 using a PlutoUI slider. It is not intended to show how to use Stan (yet)! "
 
 # ╔═╡ 147b737a-df48-11ea-3679-77200acb11f0
 md"##### The Stan language model:"
@@ -68,8 +68,8 @@ md"##### Slider variable `n` can go from 1:9"
 begin
 	k = [1,0,1,1,1,0,1,0,1,1,0,1,1,1,0,1,0,1][1:n]
   	m2_0_data = Dict("n" => n, "k" => sum(k[1:n]));
-	rc = stan_sample(m2_0s, data=m2_0_data)
-	if success(rc)
+	rc2_0s = stan_sample(m2_0s, data=m2_0_data)
+	if success(rc2_0s)
 		dfa2_0s = read_samples(m2_0s; output_format=:dataframe)
 		Text(precis(dfa2_0s; io=String))
 	end
@@ -90,7 +90,7 @@ md"## End of Fig2.5.1s.jl"
 
 # ╔═╡ Cell order:
 # ╟─cb3b80f4-df47-11ea-18e1-dd4b1f2b5cde
-# ╠═f65a77d8-df47-11ea-271a-41999fd773fb
+# ╟─f65a77d8-df47-11ea-271a-41999fd773fb
 # ╠═cd2366c0-e0c5-11ea-287a-abc0804397c8
 # ╠═9fb491f0-df47-11ea-3cf9-6fa3cee85c33
 # ╟─147b737a-df48-11ea-3679-77200acb11f0

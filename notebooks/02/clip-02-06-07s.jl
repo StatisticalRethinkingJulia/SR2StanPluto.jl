@@ -62,13 +62,13 @@ end
 md"##### Sample using stan_sample(,,,)."
 
 # ╔═╡ f5209456-f2de-11ea-106c-79586c01a530
-rc = stan_sample(m2_0s, data=m2_0s_data);
+rc2_0s = stan_sample(m2_0s, data=m2_0s_data);
 
 # ╔═╡ f521d852-f2de-11ea-2ed5-2bd626644c7c
 md"### snippet 2.7"
 
 # ╔═╡ f52f5d6a-f2de-11ea-2bf4-5175c412ef56
-if success(rc)
+if success(rc2_0s)
 	x = 0.0:0.01:1.0
  	df = read_samples(m2_0s; output_format=:dataframe)
  	quapfit = quap(df)

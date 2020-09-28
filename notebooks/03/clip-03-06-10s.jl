@@ -56,7 +56,7 @@ chn
 md"##### Plot the chain."
 
 # ╔═╡ 5c369870-f36b-11ea-3eae-3b11cc0614fa
-plot(chn)
+plot(chn; seriestype=:density)
 
 # ╔═╡ a53cf4ac-f36a-11ea-075d-ffcf6547d4b0
 md"### snippet 3.6"
@@ -90,15 +90,15 @@ b4 = quantile(samples, [0.1, 0.9])
 
 # ╔═╡ 42631124-f6d3-11ea-2155-9703136d8189
 begin
-	p1 = plot_density_interval(samples, [0.0, 0.5],
+	fig1 = plot_density_interval(samples, [0.0, 0.5],
 	  xlab="Proportion water (p)");
-	p2 = plot_density_interval(samples, [0.5, 0.75],
+	fig2 = plot_density_interval(samples, [0.5, 0.75],
 	  xlab="Proportion water (p)");
-	p3 = plot_density_interval(samples, [0.0, b3], 
+	fig3 = plot_density_interval(samples, [0.0, b3], 
 	  xlab="Proportion water (p)");
-	p4 = plot_density_interval(samples, b4, 
+	fig4 = plot_density_interval(samples, b4, 
 	  xlab="Proportion water (p)");
-	plot(p1, p2, p3, p4, layout=(2, 2))
+	plot(fig1, fig2, fig3, fig4, layout=(2, 2))
 end
 
 # ╔═╡ a57a49ec-f36a-11ea-167c-e1d90e858751

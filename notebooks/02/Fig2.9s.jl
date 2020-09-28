@@ -90,7 +90,7 @@ md"##### Fit quadratic approximation."
 quapfit = [qmap[1], std(samples, mean=qmap[1])]
 
 # ╔═╡ 9f2aa07c-f771-11ea-1725-1134b6105e6a
-p = Vector{Plots.Plot{Plots.GRBackend}}(undef, 4);
+figs = Vector{Plots.Plot{Plots.GRBackend}}(undef, 4);
 
 # ╔═╡ 9f3619ca-f771-11ea-24c4-39ec211debfc
 md"##### Analytical calculation."
@@ -100,9 +100,9 @@ begin
 	w = 6
 	n = 9
 	x = 0:0.01:1
-	p[1] = plot( x, pdf.(Beta( w+1 , n-w+1 ) , x ), xlims=(-0.5, 1.0), 
+	figs[1] = plot( x, pdf.(Beta( w+1 , n-w+1 ) , x ), xlims=(-0.5, 1.0), 
 	  lab="Conjugate solution", leg=:topleft)
-	density!(p[1], samples, lab="Sample density")
+	density!(figs[1], samples, lab="Sample density")
 
 	# Distribution estimates copied from a Turing quap()
 	
@@ -110,33 +110,33 @@ begin
 
 	# quadratic approximation using Optim
 
-	p[2] = plot( x, pdf.(Beta( w+1 , n-w+1 ) , x ), xlims=(-0.5, 1.0),
+	figs[2] = plot( x, pdf.(Beta( w+1 , n-w+1 ) , x ), xlims=(-0.5, 1.0),
 	  lab="Conjugate solution", leg=:topleft)
-	plot!( p[2], x, pdf.(Normal( quapfit[1], quapfit[2] ) , x ),
+	plot!( figs[2], x, pdf.(Normal( quapfit[1], quapfit[2] ) , x ),
 	  lab="Optim logpdf approx.")
-	plot!(p[2], x, pdf.(d, x), lab="Turing quap approx.")
+	plot!(figs[2], x, pdf.(d, x), lab="Turing quap approx.")
 
 	# quadratic approximation using StatisticalRethinking.jl quap()
 
 	df = DataFrame(:toss => samples)
 	q = quap(df)
-	p[3] = plot( x, pdf.(Beta( w+1 , n-w+1 ) , x ), xlims=(-0.5, 1.0),
+	figs[3] = plot( x, pdf.(Beta( w+1 , n-w+1 ) , x ), xlims=(-0.5, 1.0),
 	  lab="Conjugate solution", leg=:topleft)
-	plot!( p[3], x, pdf.(Normal(mean(q.toss), std(q.toss) ) , x ),
+	plot!( figs[3], x, pdf.(Normal(mean(q.toss), std(q.toss) ) , x ),
 	  lab="Stan quap approx.")
-	plot!(p[3], x, pdf.(d, x), lab="Turing quap approx.")
+	plot!(figs[3], x, pdf.(d, x), lab="Turing quap approx.")
 
 	# ### snippet 2.7
 
 	w = 6; n = 9; x = 0:0.01:1
-	p[4] = plot( x, pdf.(Beta( w+1 , n-w+1 ) , x ), xlims=(-0.5, 1.0),
+	figs[4] = plot( x, pdf.(Beta( w+1 , n-w+1 ) , x ), xlims=(-0.5, 1.0),
 	  lab="Conjugate solution", leg=:topleft)
 	f = fit(Normal, samples)
-	plot!(p[4], x, pdf.(Normal( f.μ , f.σ ) , x ), lab="Normal MLE approx.")
+	plot!(figs[4], x, pdf.(Normal( f.μ , f.σ ) , x ), lab="Normal MLE approx.")
 end
 
 # ╔═╡ 9f4b6bae-f771-11ea-0e74-832e38739a30
-plot(p..., layout=(2, 2))
+plot(figs..., layout=(2, 2))
 
 # ╔═╡ 9f55638e-f771-11ea-348b-1b39f9b07e41
 md"## End of Fig2.9s.jl"
@@ -146,7 +146,7 @@ md"## End of Fig2.9s.jl"
 # ╟─730ca458-f772-11ea-37b7-3b1c57b1cf3c
 # ╠═9e7c03f0-f771-11ea-37c6-7bb5bdfee6b3
 # ╠═9e7c4612-f771-11ea-18ab-53b0327f84f9
-# ╠═9e7cd226-f771-11ea-16ff-5f359383d3df
+# ╟─9e7cd226-f771-11ea-16ff-5f359383d3df
 # ╠═9e8b4d24-f771-11ea-13d9-53d4d897b6f9
 # ╟─9e8bebee-f771-11ea-19bb-45a7a7d0d1c7
 # ╠═9e9831d8-f771-11ea-1f51-0f8f67412b1a
