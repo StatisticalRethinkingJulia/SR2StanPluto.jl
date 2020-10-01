@@ -14,9 +14,6 @@ begin
 	using StatisticalRethinking
 end
 
-# ╔═╡ a9f53360-fc34-11ea-3ed0-77692fb60271
-include(projectdir("models", "05", "m5.1s.jl"))
-
 # ╔═╡ 864e52fc-fc39-11ea-2c30-43e6b888bf60
 include(projectdir("models", "05", "m5.2s.jl"))
 
@@ -26,10 +23,13 @@ md"## Clip-05-01-02s.jl"
 # ╔═╡ a9e54766-fc34-11ea-1246-93a25f748d1d
 md"### snippet 5.1"
 
+# ╔═╡ 10471c94-fc55-11ea-0fec-656bd563d513
+md"##### D (Divorce rate), A (MediumAgeMarriage) and M (Marriage rate) are all standardized."
+
 # ╔═╡ a9f32456-fc34-11ea-3af8-c7e0de78a85d
 begin
 	df = CSV.read(sr_datadir("WaffleDivorce.csv"), DataFrame);
-	scale!(df, [:MedianAgeMarriage, :Marriage])
+	scale!(df, [:Divorce, :MedianAgeMarriage, :Marriage])
 end;
 
 # ╔═╡ 4d0ca900-fc53-11ea-0f6c-e7d09d775387
@@ -49,8 +49,64 @@ model {
 ```
 "
 
-# ╔═╡ 10471c94-fc55-11ea-0fec-656bd563d513
-md"##### Both D (Divorce rate) and A (MediumAgeMarriage) are standardized."
+# ╔═╡ b8ae47cc-01af-11eb-3cbd-a749b6e3d327
+md"##### The Stan language model."
+
+# ╔═╡ b5431248-01af-11eb-03ac-ed6a17e17e39
+m5_1 = "
+	data {
+	 int < lower = 1 > N; // Sample size
+	 vector[N] D; // Outcome
+	 vector[N] A; // Predictor
+	}
+
+	parameters {
+	 real a; // Intercept
+	 real bA; // Slope (regression coefficients)
+	 real < lower = 0 > sigma;    // Error SD
+	}
+
+	model {
+	  vector[N] mu;               // mu is a vector
+	  a ~ normal(0, 0.2);         // Priors
+	  bA ~ normal(0, 0.5);
+	  sigma ~ exponential(1);
+	  mu = a + bA * A;
+	  D ~ normal(mu , sigma);   // Likelihood
+	}
+";
+
+# ╔═╡ cbd5fe10-01af-11eb-055b-bd009d0dca55
+begin
+	m5_1s = SampleModel("m5.1s", m5_1)
+	m5_1_data = Dict("N" => size(df, 1), "D" => df.Divorce_s, "A" => df.MedianAgeMarriage_s)
+	rc5_1s = stan_sample(m5_1s, data=m5_1_data)
+	success(rc5_1s) && (part5_1s = read_samples(m5_1s; output_format=:particles))
+end
+
+# ╔═╡ 9547a2a0-01c4-11eb-169c-17d6dbace4d9
+md"##### Compare below figure with the corresponding figure in clip-05-01-05s.jl."
+
+# ╔═╡ 07cfcaec-01c4-11eb-38b7-31dca6cafefb
+if success(rc5_1s)
+	begin
+
+		# Plot regression line using means and observations
+
+		dfa5_1s = read_samples(m5_1s; output_format=:dataframe)
+		xi = -3.0:0.1:3.0
+		plot(xlab="Medium age marriage (scaled)", ylab="Divorce rate (scaled)",
+			title="Showing 50 regression lines")
+		for i in 1:50
+			local yi = mean(dfa5_1s[i, :a]) .+ dfa5_1s[i, :bA] .* xi
+			plot!(xi, yi, color=:lightgrey, leg=false)
+		end
+
+		scatter!(df[:, :MedianAgeMarriage_s], df[!, :Divorce_s], color=:darkblue)
+
+	end
+
+end
 
 # ╔═╡ 683093dc-fc54-11ea-3be9-fdad0a8812f6
 md"##### The model m5.2s represents a regression of Divorce on Marriage and is defined as:"
@@ -79,12 +135,11 @@ md"### snippet 5.2"
 std(df.MedianAgeMarriage)
 
 # ╔═╡ aa1901d2-fc34-11ea-1d5b-df9e9eb109ec
-if success(rc)
+if success(rc5_2s)
 
 	# Compute quap approximation.
 
-	dfa1 = read_samples(m5_1s; output_format=:dataframe)
-	q_m_5_1 = quap(dfa1)
+	quap5_1s = quap(dfa5_1s)
 end
 
 # ╔═╡ aa241f5e-fc34-11ea-21d5-1b03dfafd34f
@@ -99,38 +154,38 @@ sigma  0.79 0.08  0.66  0.91
 ";
 
 # ╔═╡ aa36edc8-fc34-11ea-3701-434917b6f7a3
-if success(rc)
+if success(rc5_1s)
 
 	# Plot regression line D on A
 
 	title1 = "Divorce rate vs. median age at marriage" * "\nshowing predicted and quantile range"
-	p1 = plotbounds(
+	fig1 = plotbounds(
 		df, :MedianAgeMarriage, :Divorce,
-		dfa1, [:a, :bA, :sigma];
+		dfa5_1s, [:a, :bA, :sigma];
 		title=title1,
 		colors=[:lightblue, :darkgrey]
 	)
 end
 
 # ╔═╡ c206cdc6-fc55-11ea-2835-71c3067485f8
-if success(rc)
+if success(rc5_2s)
 
 	# Compute quap approximation.
 
-	dfa2 = read_samples(m5_2s; output_format=:dataframe)
-	q_m_5_2 = quap(dfa2)
+	dfa5_2s = read_samples(m5_2s; output_format=:dataframe)
+	quap5_2s = quap(dfa5_2s)
 end
 
 # ╔═╡ 279006d8-fc56-11ea-2792-d1c2678a1e08
-if success(rc)
+if success(rc5_2s)
 
 	# Plot regression line D on M
 
 
 	title2 = "Divorce rate vs. marriage rate" * "\nshowing predicted and hpdi range"
-	p2 = plotbounds(
+	fig2 = plotbounds(
 		df, :Marriage, :Divorce,
-		dfa2, [:a, :bM, :sigma];
+		dfa5_2s, [:a, :bM, :sigma];
 		title=title2,
 		colors=[:lightblue, :darkgrey]
 	)
@@ -138,7 +193,7 @@ if success(rc)
 end
 
 # ╔═╡ 41bc0716-fc56-11ea-1cfe-3db82349a2d2
-	plot(p2, p1, layout=(1,2), title="")
+	plot(fig2, fig1, layout=(1,2), title="")
 
 # ╔═╡ aa37b78a-fc34-11ea-11e5-7d1ef7bdf603
 md"## End of clip-05-01-02s.jl"
@@ -148,13 +203,17 @@ md"## End of clip-05-01-02s.jl"
 # ╠═a9bbd3ea-fc34-11ea-282a-43f4fc159d39
 # ╠═a9e16b46-fc34-11ea-36de-ef647e4e4f6f
 # ╟─a9e54766-fc34-11ea-1246-93a25f748d1d
-# ╠═a9f32456-fc34-11ea-3af8-c7e0de78a85d
-# ╠═4d0ca900-fc53-11ea-0f6c-e7d09d775387
-# ╠═25c70d5a-fc54-11ea-3910-a9276dc7b696
 # ╟─10471c94-fc55-11ea-0fec-656bd563d513
-# ╠═a9f53360-fc34-11ea-3ed0-77692fb60271
+# ╠═a9f32456-fc34-11ea-3af8-c7e0de78a85d
+# ╟─4d0ca900-fc53-11ea-0f6c-e7d09d775387
+# ╟─25c70d5a-fc54-11ea-3910-a9276dc7b696
+# ╟─b8ae47cc-01af-11eb-3cbd-a749b6e3d327
+# ╠═b5431248-01af-11eb-03ac-ed6a17e17e39
+# ╠═cbd5fe10-01af-11eb-055b-bd009d0dca55
+# ╟─9547a2a0-01c4-11eb-169c-17d6dbace4d9
+# ╠═07cfcaec-01c4-11eb-38b7-31dca6cafefb
 # ╟─683093dc-fc54-11ea-3be9-fdad0a8812f6
-# ╠═77cb9670-fc54-11ea-38fe-3b8c48e2ce09
+# ╟─77cb9670-fc54-11ea-38fe-3b8c48e2ce09
 # ╟─3c3888ec-fc55-11ea-3542-c7df3ecc74b4
 # ╠═864e52fc-fc39-11ea-2c30-43e6b888bf60
 # ╟─aa064588-fc34-11ea-2153-59bc6c7f18a8

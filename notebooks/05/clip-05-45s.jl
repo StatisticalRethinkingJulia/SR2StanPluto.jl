@@ -64,28 +64,28 @@ begin
 	m5_8_data = Dict("N" => size(df, 1), "male" => df[:, :male],
 		"weight" => df[:, :weight], "height" => df[:, :height], 
 		"age" => df[:, :age], "sex" => df[:, :sex])
-	rc = stan_sample(m5_8s, data=m5_8_data)
-	dfa = read_samples(m5_8s; output_format=:dataframe)
+	rc5_8s = stan_sample(m5_8s, data=m5_8_data)
+	dfa5_8s = read_samples(m5_8s; output_format=:dataframe)
 end;
 
 # ╔═╡ d2f648e8-fdc0-11ea-11a6-8d47151362d8
-if success(rc)
-  p = Particles(dfa)
+if success(rc5_8s)
+  part5_8s = Particles(dfa5_8s)
 end
 
 # ╔═╡ d2fade12-fdc0-11ea-33a5-fb6aea0df159
-if success(rc)
-	q = quap(dfa)
+if success(rc5_8s)
+	quap5_8s = quap(dfa5_8s)
 end
 
 # ╔═╡ d30451e0-fdc0-11ea-2c62-9f4cfd82f8fd
-if success(rc)
+if success(rc5_8s)
   plot(title="Densities by sex")
   density!(df_m[:, :height], lab="Male")
   density!(df_f[:, :height], lab="Female")
-  vline!([mean(p[Symbol("a.1")])], lab="Female mean estimate")
-  vline!([mean(p[Symbol("a.2")])], lab="Male mean estimate")
-  vline!([mean(q[Symbol("a.2")])], lab="Male (quap) mean estimate")
+  vline!([mean(part5_8s[Symbol("a.1")])], lab="Female mean estimate")
+  vline!([mean(part5_8s[Symbol("a.2")])], lab="Male mean estimate")
+  vline!([mean(quap5_8s[Symbol("a.2")])], lab="Male (quap) mean estimate")
 end
 
 # ╔═╡ d304f5a0-fdc0-11ea-2651-4db63a66bd53

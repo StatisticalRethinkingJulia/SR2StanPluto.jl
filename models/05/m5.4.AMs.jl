@@ -53,18 +53,17 @@ m5_4_data = Dict(
 
 # Sample using cmdstan
 
-rc = stan_sample(m5_4_AMs, data=m5_4_data);
+rc5_4_AMs = stan_sample(m5_4_AMs, data=m5_4_data);
 
-if success(rc)
+if success(rc5_4_AMs)
 
   # Describe the draws
 
-  dfs_AM = read_samples(m5_4_AMs; output_format=:dataframe)
+  dfa5_4_AMs = read_samples(m5_4_AMs; output_format=:dataframe)
+  part5_4_AMs = Particles(dfa5_4_AMs)
+  quap5_4_AMs = quap(dfa5_4_AMs)
 
-  p_AM = Particles(dfs_AM)
-  q_AM = quap(dfs_AM)
-
-  p_AM |> display
+  part5_4_AMs |> display
 
 end
 

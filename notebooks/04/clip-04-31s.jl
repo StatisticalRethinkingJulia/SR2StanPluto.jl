@@ -46,10 +46,10 @@ model {
 
 # ╔═╡ 057a5a8a-fb70-11ea-087f-7f1562f46764
 begin
-m4_2s = SampleModel("heights", m4_2);
-heightsdata = Dict("N" => length(df.height), "h" => df.height);
-rc = stan_sample(m4_2s, data=heightsdata);
-success(rc) && (q = read_samples(m4_2s; output_format=:particles))
+	m4_2s = SampleModel("heights", m4_2);
+	m4_2_data = Dict("N" => length(df.height), "h" => df.height);
+	rc4_2s = stan_sample(m4_2s, data=m4_2_data);
+	success(rc4_2s) && (quap4_2s = read_samples(m4_2s; output_format=:particles))
 end
 
 # ╔═╡ 058373e2-fb70-11ea-2fbe-634f17946677
@@ -62,4 +62,4 @@ md"## End of clip-04-31s.jl"
 # ╠═056e751e-fb70-11ea-0d8c-0f392d4231ac
 # ╠═0579eaa2-fb70-11ea-1646-095d244514f3
 # ╠═057a5a8a-fb70-11ea-087f-7f1562f46764
-# ╠═058373e2-fb70-11ea-2fbe-634f17946677
+# ╟─058373e2-fb70-11ea-2fbe-634f17946677

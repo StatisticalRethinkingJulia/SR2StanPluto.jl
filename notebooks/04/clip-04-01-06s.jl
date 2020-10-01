@@ -181,6 +181,9 @@ md"###### Quadratic approximation."
 
 # ╔═╡ 3d11472c-f2b4-11ea-3bf6-9d517b13b291
 begin
+	figs[2] = density(samples, ylim=(0.0, 5.0), lab="Sample density")
+	figs[2] = plot!( x, pdf.(Beta( w+1 , n-w+1 ) , x ), lab="Conjugate solution")
+
 	plot!( figs[2], x, pdf.(Normal( 0.67 , 0.16 ) , x ), lab="Normal approximation",
 		fill=(0, .5,:orange))
 	plot(figs..., layout=(1, 2))

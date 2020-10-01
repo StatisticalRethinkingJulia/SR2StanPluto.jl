@@ -69,7 +69,7 @@ Text(precis(df; io=String))
 md"##### Our model:"
 
 # ╔═╡ 26bc65ae-f826-11ea-1a73-035c3f4beff9
-m4_1_book = "
+m4_1_rethinking_1 = "
   height ~ Normal(μ, σ) # likelihood
   μ ~ Normal(178,20) # prior
   σ ~ Uniform(0, 50) # prior
@@ -79,7 +79,7 @@ m4_1_book = "
 md"##### Plot the prior densities."
 
 # ╔═╡ 26c847aa-f826-11ea-2051-93748f099c87
-p = Vector{Plots.Plot{Plots.GRBackend}}(undef, 4);
+figs = Vector{Plots.Plot{Plots.GRBackend}}(undef, 4);
 
 # ╔═╡ 26d1052a-f826-11ea-14ec-db479de75f85
 md"### snippet 4.12"
@@ -91,7 +91,7 @@ md"##### μ prior."
 d1 = Normal(178, 20)
 
 # ╔═╡ 26ee436a-f826-11ea-2b51-553109976eeb
-p[1] = plot(100:250, [pdf(d1, μ) for μ in 100:250],
+figs[1] = plot(100:250, [pdf(d1, μ) for μ in 100:250],
 	xlab="mu",
 	ylab="density",
 	lab="Prior on mu");
@@ -105,7 +105,7 @@ md"##### Show σ  prior."
 # ╔═╡ 270cde42-f826-11ea-25f3-71a99eae18e2
 begin
 	d2 = Uniform(0, 50)
-	p[2] = plot(-5:0.1:55, [pdf(d2, σ) for σ in 0-5:0.1:55],
+	figs[2] = plot(-5:0.1:55, [pdf(d2, σ) for σ in 0-5:0.1:55],
 		xlab="sigma",
 		ylab="density",
 		lab="Prior on sigma")
@@ -123,7 +123,7 @@ begin
 	sample_mu_100 = rand(d3, 10000)
 
 	prior_height_20 = [rand(Normal(sample_mu_20[i], sample_sigma[i]), 1)[1] for i in 1:10000]
-	p[3] = density(prior_height_20,
+	figs[3] = density(prior_height_20,
 		xlab="height",
 		ylab="density",
 		lab="Prior predictive height")
@@ -132,14 +132,14 @@ end;
 # ╔═╡ 272c9e2e-f826-11ea-221d-afb68d7bd316
 begin
 	prior_height_100 = [rand(Normal(sample_mu_100[i], sample_sigma[i]), 1)[1] for i in 1:10000]
-	p[4] = density(prior_height_100,
+	figs[4] = density(prior_height_100,
 		xlab="height",
 		ylab="density",
 		lab="Prior predictive mu")
 end;
 
 # ╔═╡ 2737cdaa-f826-11ea-2c70-c5c3d16d5a36
-plot(p..., layout=(2,2))
+plot(figs..., layout=(2,2))
 
 # ╔═╡ 274bc54e-f826-11ea-026e-9f45eeb84c1b
 md"##### Store in a DataFrame."
@@ -209,13 +209,13 @@ m4_1s = SampleModel("heights", m4_1);
 md"##### Package the data:"
 
 # ╔═╡ 27cfa486-f826-11ea-0083-3fcaa67feb12
-heightsdata = Dict("N" => length(df[:, :height]), "h" => df[:, :height]);
+m4_1_data = Dict("N" => length(df[:, :height]), "h" => df[:, :height]);
 
 # ╔═╡ 27dbd2a6-f826-11ea-2e23-59d7c6d2aac9
 md"##### Run Stan's cmdstan:"
 
 # ╔═╡ 27e9d8ea-f826-11ea-3cbe-31d9a7852345
-rc = stan_sample(m4_1s, data=heightsdata);
+rc4_1s = stan_sample(m4_1s, data=m4_1_data);
 
 # ╔═╡ 27f78c12-f826-11ea-1cd1-eda91d47196f
 md"##### Check if sampling went ok:"
@@ -224,25 +224,25 @@ md"##### Check if sampling went ok:"
 md"##### Read in the samples and show a chain summary."
 
 # ╔═╡ dc3a5122-f82c-11ea-1eff-c745d65ab11b
-success(rc) && (chn = read_samples(m4_1s; output_format=:mcmcchains))
+success(rc4_1s) && (chn4_1s = read_samples(m4_1s; output_format=:mcmcchains))
 
 # ╔═╡ dc3af532-f82c-11ea-3212-f1b3c852513b
 md"##### Plot the sampling trace."
 
 # ╔═╡ 044a19a2-f866-11ea-2b89-a51866d89a50
-plot(chn, seriestype = :traceplot)
+plot(chn4_1s, seriestype = :traceplot)
 
 # ╔═╡ dc476376-f82c-11ea-10ac-97fcb8c78627
 md"##### Plot the density of posterior draws."
 
 # ╔═╡ 25318e22-f866-11ea-015b-d736c83ebfaa
-plot(chn, seriestype = :density)
+plot(chn4_1s, seriestype = :density)
 
 # ╔═╡ 2814f2fc-f826-11ea-3fbc-0541fe904b97
 md"## End of clip-04-07-15s.jl"
 
 # ╔═╡ Cell order:
-# ╠═d5b82444-f824-11ea-015a-9b79e6e41731
+# ╟─d5b82444-f824-11ea-015a-9b79e6e41731
 # ╠═263e3c4c-f826-11ea-246e-db6675dc4719
 # ╠═263e7f5c-f826-11ea-1794-2daccdb57f16
 # ╟─263f6d54-f826-11ea-292b-517d8fe29e05
@@ -278,7 +278,7 @@ md"## End of clip-04-07-15s.jl"
 # ╠═274bc54e-f826-11ea-026e-9f45eeb84c1b
 # ╠═2755d188-f826-11ea-0f5f-e11a4ffec021
 # ╠═2763c7ac-f826-11ea-13ce-61b6a5ee2379
-# ╠═276f9e94-f826-11ea-2421-218735527bc2
+# ╟─276f9e94-f826-11ea-2421-218735527bc2
 # ╟─277b474c-f826-11ea-1816-e518c1ed26eb
 # ╠═278ac238-f826-11ea-0f32-799e4c8f10f5
 # ╠═2797fe8e-f826-11ea-3f7b-b50d4cb27e92

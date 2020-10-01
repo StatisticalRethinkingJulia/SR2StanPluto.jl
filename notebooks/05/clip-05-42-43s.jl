@@ -74,8 +74,8 @@ begin
 	  "M" => df[:, :M_s],
 	  "NC" => df[:, :NC_s] 
 	);
-	rc = stan_sample(m5_7_As, data=m5_7_A_data);
-	dfa = read_samples(m5_7_As,; output_format=:dataframe);
+	rc5_7_As = stan_sample(m5_7_As, data=m5_7_A_data);
+	dfa5_7_As = read_samples(m5_7_As,; output_format=:dataframe);
 end;
 
 # ╔═╡ ea213eae-fdbd-11ea-17f4-1309b4bd31da
@@ -88,14 +88,14 @@ a_seq = range(-2, stop=2, length=100);
 md"### Snippet 5.23"
 
 # ╔═╡ ea33f1ac-fdbd-11ea-06e1-e98d93f9fa4b
-m_sim, d_sim = simulate(dfa, [:aNC, :bMNC, :sigma_NC], a_seq, [:bM, :sigma]);
+m_sim, d_sim = simulate(dfa5_7_As, [:aNC, :bMNC, :sigma_NC], a_seq, [:bM, :sigma]);
 
 # ╔═╡ ea3ddca0-fdbd-11ea-1c96-2dc2f71a1fd5
 md"### Snippet 5.24"
 
 # ╔═╡ ea42399c-fdbd-11ea-3d76-435c05a5b479
 begin
-	p1 = plot(xlab="Manipulated M", ylab="Counterfactual K",
+	fig1 = plot(xlab="Manipulated M", ylab="Counterfactual K",
 	  title="Total counterfactual effect of M on K")
 	plot!(a_seq, mean(d_sim, dims=1)[1, :], leg=false)
 	hpdi_array1 = zeros(length(a_seq), 2)
@@ -107,7 +107,7 @@ end
 
 # ╔═╡ ea49dbf2-fdbd-11ea-08a5-eb8b6c521a7b
 begin
-	p2 = plot(xlab="Manipulated M", ylab="Counterfactual NC",
+	fig2 = plot(xlab="Manipulated M", ylab="Counterfactual NC",
 	  title="Counterfactual effect of M on NC")
 	plot!(a_seq, mean(m_sim, dims=1)[1, :], leg=false)
 	hpdi_array2 = zeros(length(a_seq), 2)
@@ -123,14 +123,14 @@ md"##### NC -> K"
 # ╔═╡ ea5f64a4-fdbd-11ea-12ea-f5c71ba97e3c
 begin
 	nc_seq = range(-2, stop=2, length=100)
-	nc_k_sim = zeros(size(dfa, 1), length(nc_seq))
-	for j in 1:size(dfa, 1)
+	nc_k_sim = zeros(size(dfa5_7_As, 1), length(nc_seq))
+	for j in 1:size(dfa5_7_As, 1)
 	  for i in 1:length(nc_seq)
-		d = Normal(dfa[j, :a] + dfa[j, :bN] * nc_seq[i], dfa[j, :sigma])
+		d = Normal(dfa5_7_As[j, :a] + dfa5_7_As[j, :bN] * nc_seq[i], dfa5_7_As[j, :sigma])
 		nc_k_sim[j, i] = rand(d, 1)[1]
 	  end
 	end
-	p3 = plot(xlab="Manipulated NC", ylab="Counterfactual K",
+	fig3 = plot(xlab="Manipulated NC", ylab="Counterfactual K",
 	  title="Counterfactual effect of NC on K")
 	plot!(nc_seq, mean(nc_k_sim, dims=1)[1, :], leg=false)
 	hpdi_array3 = zeros(length(nc_seq), 2)
@@ -141,7 +141,7 @@ begin
 end
 
 # ╔═╡ ea617c6c-fdbd-11ea-210d-61484d081bd5
-plot(p1, p2, p3, layout=(3, 1))
+plot(fig1, fig2, fig3, layout=(3, 1))
 
 # ╔═╡ ea6d1c7a-fdbd-11ea-3998-91787bc3c0d9
 md"## End of clip-05-42-43s.jl"

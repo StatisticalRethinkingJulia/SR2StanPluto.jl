@@ -61,14 +61,14 @@ md"##### Define the SampleModel, etc,"
 
 # ╔═╡ 4b0b60fa-fc0b-11ea-3929-0f0077415fc7
 begin
-	m4_9s = SampleModel("weights", m4_9);
-	heightsdata = Dict(
+	m4_9s = SampleModel("m4.9s", m4_9);
+	m4_9_data = Dict(
 		"N" => size(df, 1), 
 		"height" => df.height, 
 		"weight" => df.weight_s,
 		"weight_sq" => df.weight_sq_s
 	);
-	rc = stan_sample(m4_9s, data=heightsdata);
+	rc4_9s = stan_sample(m4_9s, data=m4_9_data);
 end;
 
 # ╔═╡ 4b0c03f2-fc0b-11ea-262d-a517e75a5b6b
@@ -81,17 +81,17 @@ sigma   5.77 0.18   5.49   6.06
 ";
 
 # ╔═╡ 4b2030de-fc0b-11ea-3bce-0b80a6338b7e
-if success(rc)
-  sdf = read_summary(m4_9s)
+if success(rc4_9s)
+  sdf4_9s = read_summary(m4_9s)
 end
 
 # ╔═╡ 4b2109c8-fc0b-11ea-0aed-2b80f6b14188
 md"### Snippet 4.53 - 4.67"
 
 # ╔═╡ 4b30dc0e-fc0b-11ea-30c4-05c83cf73fda
-if success(rc)
+if success(rc4_9s)
 	begin
-		dfa = read_samples(m4_9s; output_format=:dataframe)
+		dfa4_9s = read_samples(m4_9s; output_format=:dataframe)
 
 		function link_poly(dfa::DataFrame, xrange)
 			vars = Symbol.(names(dfa))
@@ -101,7 +101,7 @@ if success(rc)
 		mu_range = -2:0.1:2
 
 		xbar = mean(df[:, :weight])
-		mu = link_poly(dfa, mu_range);
+		mu = link_poly(dfa4_9s, mu_range);
 
 		plot(xlab="weight_s", ylab="height")
 		for (indx, mu_val) in enumerate(mu_range)
@@ -114,11 +114,11 @@ if success(rc)
 end
 
 # ╔═╡ 4b39d052-fc0b-11ea-2d21-755ffb969e42
-if success(rc)
+if success(rc4_9s)
 	plot(xlab="weight_s", ylab="height", leg=:bottomright)
 	fheight(weight, a, b1, b2) = a + weight * b1 + weight^2 * b2
 	testweights = -2:0.01:2
-	arr = [fheight.(w, dfa.alpha, dfa.beta1, dfa.beta2) for w in testweights]
+	arr = [fheight.(w, dfa4_9s.alpha, dfa4_9s.beta1, dfa4_9s.beta2) for w in testweights]
 	m = [mean(v) for v in arr]
 	quantiles = [quantile(v, [0.055, 0.945]) for v in arr]
 	lower = [q[1] - m for (q, m) in zip(quantiles, m)]
@@ -136,7 +136,7 @@ md"## End of clip-04-64-68s.jl"
 # ╠═4ade84b6-fc0b-11ea-06ff-9517579c812c
 # ╟─4adf1662-fc0b-11ea-18b7-2f80e0a2d4f4
 # ╠═4af00a44-fc0b-11ea-080c-e9f7bc30a1b1
-# ╠═4af06c94-fc0b-11ea-128c-89bea7c3af63
+# ╟─4af06c94-fc0b-11ea-128c-89bea7c3af63
 # ╠═4afd2eb8-fc0b-11ea-2f26-7329e44823a5
 # ╟─4afec1ea-fc0b-11ea-1674-b59e51b9f027
 # ╠═4b0b60fa-fc0b-11ea-3929-0f0077415fc7

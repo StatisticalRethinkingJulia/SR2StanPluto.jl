@@ -43,18 +43,18 @@ m5_1s = SampleModel("m5.1", m5_1);
 
 # Input data for cmdstan
 
-ad_data = Dict("N" => size(df, 1), "D" => df[!, :Divorce_s],
+m5_1_data = Dict("N" => size(df, 1), "D" => df[!, :Divorce_s],
     "A" => df[!, :MedianAgeMarriage_s]);
 
 # Sample using StanSample
 
-rc = stan_sample(m5_1s, data=ad_data);
+rc5_1s = stan_sample(m5_1s, data=m5_1_data);
 
-if success(rc)
+if success(rc5_1s)
 
   # Describe the draws
 
-  dfa1 = read_samples(m5_1s; output_format=:dataframe)
+  dfa5_1s = read_samples(m5_1s; output_format=:dataframe)
 
   # Result rethinking
 
@@ -65,6 +65,7 @@ if success(rc)
     sigma  0.79 0.08  0.66  0.91
   "
 
-  Particles(dfa1)
+  part5_1s = Particles(dfa5_1s)
+  part5_1s |> display
 
 end

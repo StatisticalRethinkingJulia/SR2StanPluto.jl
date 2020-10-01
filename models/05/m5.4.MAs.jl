@@ -52,13 +52,13 @@ m5_4_data = Dict(
 
 # Sample using cmdstan
 
-rc = stan_sample(m5_4_MAs, data=m5_4_data);
+rc5_4_MAs = stan_sample(m5_4_MAs, data=m5_4_data);
 
-if success(rc)
+if success(rc5_4_MAs)
 
   # Describe the draws
 
-  dfs_MA = read_samples(m5_4_MAs; output_format=:dataframe)
+  dfa5_4_MAs = read_samples(m5_4_MAs; output_format=:dataframe)
 
   # Rethinking results
 
@@ -69,10 +69,9 @@ if success(rc)
     sigma  0.68 0.07  0.57  0.79
   ";
 
-  p_MA = Particles(dfs_MA)
-  q_MA = quap(dfs_MA)
-
-  p_MA |> display
+  part5_4_MAs = Particles(dfa5_4_MAs)
+  quap5_4_MAs = quap(dfa5_4_MAs)
+  part5_4_MAs |> display
 
 end
 

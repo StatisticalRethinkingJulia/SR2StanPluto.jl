@@ -36,7 +36,7 @@ rethinking_results = "
 ";
 
 # ╔═╡ b9af5a04-fd49-11ea-07ba-fb61574aed90
-p = Particles(dfa)
+part5_3_As = Particles(dfa5_3_As)
 
 # ╔═╡ 988ca05a-fd46-11ea-2ae3-910f7baa2b3f
 md"## Snippet 5.25"
@@ -48,12 +48,12 @@ a_seq = range(-2, stop=2, length=100)
 md"## Snippet 5.26"
 
 # ╔═╡ e46cd1dc-fd48-11ea-0802-4d13a4981a23
-m_sim = zeros(size(dfa, 1), length(a_seq));
+m_sim = zeros(size(dfa5_3_As, 1), length(a_seq));
 
 # ╔═╡ 9899e134-fd46-11ea-0499-b94859cad8d1
-for j in 1:size(dfa, 1)
+for j in 1:size(dfa5_3_As, 1)
   for i in 1:length(a_seq)
-    d = Normal(p.aM[j] + p.bAM[j]*a_seq[i], p.sigma_M[j])
+    d = Normal(part5_3_As.aM[j] + part5_3_As.bAM[j]*a_seq[i], part5_3_As.sigma_M[j])
     m_sim[j, i] = rand(d, 1)[1]
   end
 end
@@ -62,12 +62,12 @@ end
 md"## Snippet 5.27"
 
 # ╔═╡ eee2e318-fd48-11ea-2433-e1f6e65a082a
-d_sim = zeros(size(dfa, 1), length(a_seq));
+d_sim = zeros(size(dfa5_3_As, 1), length(a_seq));
 
 # ╔═╡ 98a9de04-fd46-11ea-1a1b-b7512b456dc6
-for j in 1:size(dfa, 1)
+for j in 1:size(dfa5_3_As, 1)
   for i in 1:length(a_seq)
-    d = Normal(p.a[j] + p.bA[j]*a_seq[i] + p.bM[j]*m_sim[j, i], p.sigma[j])
+    d = Normal(part5_3_As.a[j] + part5_3_As.bA[j]*a_seq[i] + part5_3_As.bM[j]*m_sim[j, i], part5_3_As.sigma[j])
     d_sim[j, i] = rand(d, 1)[1]
   end
 end

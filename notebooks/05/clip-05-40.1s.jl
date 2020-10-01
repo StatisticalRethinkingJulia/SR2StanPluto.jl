@@ -26,50 +26,51 @@ md"## Clip-05-40.1s.jl"
 md"### snippet 5.39"
 
 # ╔═╡ 62a988b4-fdb8-11ea-0cdd-1759b8567402
-if success(rc)
-	dfa5 = read_samples(m5_5s; output_format=:dataframe)
-	title5 = "Kcal_per_g vs. neocortex_perc" * "\n89% predicted and mean rangep1 = plotbounds(
+if success(rc5_5s)
+	dfa5_5s = read_samples(m5_5s; output_format=:dataframe)
+	title5 = "Kcal_per_g vs. neocortex_perc" * "\n89% predicted and mean range"
+	fig1 = plotbounds(
 		df, :neocortex_perc, :kcal_per_g,
-		dfa5, [:a, :bN, :sigma];
+		dfa5_5s, [:a, :bN, :sigma];
 		title=title5
 	)
 end
 
 # ╔═╡ 62b4472e-fdb8-11ea-3bf0-8b453a2872a9
-if success(rc)
-	dfa6 = read_samples(m5_6s; output_format=:dataframe)
+if success(rc5_6s)
+	dfa5_6s = read_samples(m5_6s; output_format=:dataframe)
 	title6 = "Kcal_per_g vs. log mass" * "\n89% predicted and mean range"
-	p2 = plotbounds(
+	fig2 = plotbounds(
 		df, :lmass, :kcal_per_g,
-		dfa6, [:a, :bM, :sigma];
+		dfa5_6s, [:a, :bM, :sigma];
 		title=title6
 	)
 end
 
 # ╔═╡ 62b4cd64-fdb8-11ea-38d9-8d6810b1a4d4
-if success(rc)
-	dfa7 = read_samples(m5_7s; output_format=:dataframe)
+if success(rc5_7s)
+	dfa5_7s = read_samples(m5_7s; output_format=:dataframe)
 	title7 = "Counterfactual,\nholding M=0.0"
-	p3 = plotbounds(
+	fig3 = plotbounds(
 		df, :neocortex_perc, :kcal_per_g,
-		dfa7, [:a, :bN, :sigma];
+		dfa5_7s, [:a, :bN, :sigma];
 		title=title7
 	)
 end
 
 # ╔═╡ 62be59ce-fdb8-11ea-2278-8732aa168e50
-if success(rc)
+if success(rc5_7s)
 	title8 = "Counterfactual,\nholding N=0.0"
-	p4 = plotbounds(
+	fig4 = plotbounds(
 		df, :lmass, :kcal_per_g,
-		dfa7, [:a, :bM, :sigma];
+		dfa5_7s, [:a, :bM, :sigma];
 		title=title8,
 		xlab="log(mass)"
 	)
 end
 
 # ╔═╡ 62beccba-fdb8-11ea-32e6-0fff022ac3fe
-plot(p1, p2, p3, p4, layout=(2, 2))
+plot(fig1, fig2, fig3, fig4, layout=(2, 2))
 
 # ╔═╡ 62c8c1fc-fdb8-11ea-32c1-b9d03576a104
 md"## End of clip-05-40.1s.jl"

@@ -21,14 +21,13 @@ include(projectdir("models", "05", "m5.2s.jl"))
 md"## Clip-05-06-09s.jl"
 
 # ╔═╡ 9f1dddee-fcec-11ea-2328-dbd9ddc2be94
-if success(rc)
-	dfs = read_samples(m5_2s; output_format=:dataframe)
-	p_m_5_2 = Particles(dfs) 
-	p_m_5_2
+if success(rc5_2s)
+	dfa5_2s = read_samples(m5_2s; output_format=:dataframe)
+	part5_2s = Particles(dfa5_2s) 
 end
 
 # ╔═╡ 9f1e7e82-fcec-11ea-203c-bf2312bf2fc6
-success(rc) && quap(dfs)
+success(rc5_2s) && quap(dfa5_2s)
 
 # ╔═╡ 9f27c84a-fcec-11ea-005e-97c59812d16e
 # Rethinking results
@@ -41,12 +40,12 @@ sigma 0.91 0.09  0.77  1.05
 ";
 
 # ╔═╡ 9f284e50-fcec-11ea-3eec-4160f696255c
-if success(rc)
+if success(rc5_2s)
 	begin
 		title = "Divorce rate vs. Marriage rate" * "\nshowing sample and hpd range"
 		plotbounds(
 			df, :Marriage, :Divorce,
-			dfs, [:a, :bM, :sigma];
+			dfa5_2s, [:a, :bM, :sigma];
 			title=title,
 			colors=[:lightgrey, :darkgrey]
 		)

@@ -31,7 +31,7 @@ end;
 md"##### Define the Stan language model."
 
 # ╔═╡ 6123f1a8-fc09-11ea-2354-b5650434c87d
-weightsmodel = "
+m4_8 = "
 data{
     int N;
     real xbar;
@@ -60,14 +60,14 @@ md"##### Define the SampleModel, input data and samples."
 
 # ╔═╡ 61309cbc-fc09-11ea-173d-cb33d7b82e8d
 begin
-	sm = SampleModel("weights", weightsmodel);
-	heightsdata = Dict(
+	m4_8s = SampleModel("m4.8s", m4_8);
+	m4_8_data = Dict(
 	  "N" => size(df, 1), 
 	  "height" => df.height_s, 
 	  "weight" => df.weight_s,
 	  "xbar" => mean(df.weight)
 	);
-	rc = stan_sample(sm, data=heightsdata)
+	rc4_8s = stan_sample(m4_8s, data=m4_8_data)
 end;
 
 # ╔═╡ 61313e88-fc09-11ea-3da3-2f1cfc0eb392
@@ -79,8 +79,8 @@ sigma   5.07 0.19   4.77   5.38
 ";
 
 # ╔═╡ 613e2b7a-fc09-11ea-37df-c3957f1dcb86
-if success(rc)
-  sdf = read_summary(sm)
+if success(rc4_8s)
+  sdf4_8s = read_summary(m4_8s)
 end
 
 # ╔═╡ 6145d0be-fc09-11ea-183e-13fdf81ae7d0
@@ -88,15 +88,14 @@ md"### Snippet 4.53"
 
 # ╔═╡ 614e8dc6-fc09-11ea-16c9-19a4d2eed3e6
 begin
-	dfs = read_samples(sm; output_format=:dataframe)
+	dfa4_8s = read_samples(m4_8s; output_format=:dataframe)
 
 	title = "Height vs. Weight, regions are" * "\nshowing 89% of predicted heights (lightgrey)" *
 		"\nand 89% hpd interval around the mean line (darkgrey)"
 	plotbounds(
 		df, :weight, :height,
-		dfs, [:a, :b, :sigma];
+		dfa4_8s, [:a, :b, :sigma];
 		bounds=[:predicted, :hpdi],
-		#fig=plotsdir("04", "Fig-56-63.png"),
 		title=title,
 		colors=[:lightblue, :darkgrey]
 	)
@@ -117,6 +116,6 @@ md"## End of clip-04-53-58s.jl"
 # ╠═61309cbc-fc09-11ea-173d-cb33d7b82e8d
 # ╠═61313e88-fc09-11ea-3da3-2f1cfc0eb392
 # ╠═613e2b7a-fc09-11ea-37df-c3957f1dcb86
-# ╠═6145d0be-fc09-11ea-183e-13fdf81ae7d0
+# ╟─6145d0be-fc09-11ea-183e-13fdf81ae7d0
 # ╠═614e8dc6-fc09-11ea-16c9-19a4d2eed3e6
 # ╟─61580018-fc09-11ea-2b83-f77bffee0fff

@@ -46,8 +46,8 @@ md"##### Generate approximate probabilities."
 
 # ╔═╡ 423d4938-fb4e-11ea-2cd2-77f2ed237c3a
 begin
-	#mu_list = repeat(range(150, 170, length=200), 200);
-	#sigma_list = repeat(range(4, 20, length=200), inner=200);
+	mu_list_1 = repeat(range(150, 170, length=200), 200);
+	sigma_list_1 = repeat(range(4, 20, length=200), inner=200);
 end;
 
 # ╔═╡ 424ac14e-fb4e-11ea-0098-81d7c95323f5
@@ -131,13 +131,13 @@ md"# End of clip-04-23-25s.jl"
 # ╟─4226b72c-fb4e-11ea-29ab-8d5266cbdd37
 # ╠═42315646-fb4e-11ea-3ebd-bff0b0c3fc7f
 # ╟─4231d58a-fb4e-11ea-13fb-334f25a29dfc
-# ╠═423cb2f2-fb4e-11ea-1d8e-13f34d558440
+# ╟─423cb2f2-fb4e-11ea-1d8e-13f34d558440
 # ╠═423d4938-fb4e-11ea-2cd2-77f2ed237c3a
 # ╠═424ac14e-fb4e-11ea-0098-81d7c95323f5
 # ╠═424c95e6-fb4e-11ea-207a-a58e1c37bcb8
 # ╟─425aa7b2-fb4e-11ea-07cb-d5aa2e567741
 # ╠═42633bc0-fb4e-11ea-3b62-57f0abb05a9b
 # ╟─426542bc-fb4e-11ea-077c-e909400c772e
-# ╠═426cb358-fb4e-11ea-1c1c-2783f97b46f4
+# ╟─426cb358-fb4e-11ea-1c1c-2783f97b46f4
 # ╠═427ae8f6-fb4e-11ea-0fa1-5f187ce01ac6
 # ╟─427c0f92-fb4e-11ea-3cc8-774ea42fee82

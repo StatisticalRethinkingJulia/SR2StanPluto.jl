@@ -17,9 +17,7 @@ end
 # ╔═╡ 6fdbe2ac-fc0d-11ea-0253-5fcd59eb669f
 md"## Fig5.1s.jl"
 
-# ╔═╡ 1586b558-fc0e-11ea-06b2-b3e43ef8b3e8
-# ### snippet 5.1
-
+# ╔═╡ 33c69ba4-01af-11eb-337e-19ecbe1fe80b
 begin
 	df = CSV.read(sr_datadir("WaffleDivorce.csv"), DataFrame)
 	
@@ -126,7 +124,7 @@ md"## End of Fig5.1s.jl"
 # ╟─6fdbe2ac-fc0d-11ea-0253-5fcd59eb669f
 # ╠═1585e592-fc0e-11ea-09b3-85bd83e3893e
 # ╠═15862766-fc0e-11ea-160b-09995fb8e8fc
-# ╠═1586b558-fc0e-11ea-06b2-b3e43ef8b3e8
+# ╠═33c69ba4-01af-11eb-337e-19ecbe1fe80b
 # ╠═db17d86a-fc0e-11ea-2df9-716728b916e6
 # ╠═15937fa4-fc0e-11ea-0aaf-e7049b6392bf
 # ╟─15952660-fc0e-11ea-0820-a350ee0a6326

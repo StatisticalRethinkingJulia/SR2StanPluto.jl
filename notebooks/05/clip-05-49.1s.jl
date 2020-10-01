@@ -70,15 +70,15 @@ begin
 	m5_9s = SampleModel("m5.9", m5_9)
 	m5_9_data = Dict("N" => size(df, 1), "clade_id" => df[:, :clade_id],
     "K" => df[!, :kcal_per_g_s], "k" => length(unique(df[:, :clade])))
-	rc = stan_sample(m5_9s, data=m5_9_data)
-	if success(rc)
-		dfa9 = read_samples(m5_9s; output_format=:dataframe)
-		p = Particles(dfa9)
+	rc5_9s = stan_sample(m5_9s, data=m5_9_data)
+	if success(rc5_9s)
+		dfa5_9s = read_samples(m5_9s; output_format=:dataframe)
+		part5_9s = Particles(dfa5_9s)
 	end
 end
 
 # ╔═╡ 7e7479dc-fdc2-11ea-2644-a75204ec3851
-success(rc) && quap(dfa9)
+success(rc5_9s) && quap(dfa5_9s)
 
 # ╔═╡ 7e7528a0-fdc2-11ea-1031-973876c110eb
 rethinking = "
@@ -91,19 +91,19 @@ sigma  0.81 0.11  0.64  0.98   477     1
 ";
 
 # ╔═╡ 7e7bf644-fdc2-11ea-3322-871214a78eaf
-success(rc) && mean(df[:, :lmass])
+success(rc5_9s) && mean(df[:, :lmass])
 
 # ╔═╡ 7e89657a-fdc2-11ea-33a9-779fdfd53519
 md"## End of clip-05-49.1s.jl"
 
 # ╔═╡ Cell order:
-# ╠═5b3cfe6e-fdc2-11ea-2462-cb4109cb77ee
+# ╟─5b3cfe6e-fdc2-11ea-2462-cb4109cb77ee
 # ╠═5fe9a49a-fdc2-11ea-3ff9-01e000224b3a
 # ╠═5fe9db1c-fdc2-11ea-0c8c-7db1e606cbcb
 # ╠═5fea720a-fdc2-11ea-2dde-493a3df79ff2
 # ╠═5ff9b7ba-fdc2-11ea-3031-21fe01c50969
 # ╠═5ffa4cfc-fdc2-11ea-0dd3-659a65ad4949
-# ╠═0233ffa6-fdc1-11ea-202f-d18f84a47bb1
+# ╟─0233ffa6-fdc1-11ea-202f-d18f84a47bb1
 # ╠═90cf5430-fdc2-11ea-279a-19fbadfdf16b
 # ╠═7e7479dc-fdc2-11ea-2644-a75204ec3851
 # ╠═7e7528a0-fdc2-11ea-1031-973876c110eb

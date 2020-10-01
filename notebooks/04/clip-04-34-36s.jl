@@ -54,67 +54,67 @@ md"### Snippet 4.31"
 m4_1s = SampleModel("m4_1", m4_1);
 
 # ╔═╡ 8bbb60a0-fb7a-11ea-203d-6135be4c3a02
-heightsdata = Dict("N" => length(df.height), "h" => df.height);
+m4_1_data = Dict("N" => length(df.height), "h" => df.height);
 
 # ╔═╡ 8bbbe62e-fb7a-11ea-1016-577ddb595990
-rc = stan_sample(m4_1s, data=heightsdata);
+rc4_1s = stan_sample(m4_1s, data=m4_1_data);
 
 # ╔═╡ 8bc24488-fb7a-11ea-1ba1-770c5a7ebc55
-if success(rc)
-	p = read_samples(m4_1s; output_format=:particles)
+if success(rc4_1s)
+	part4_1s = read_samples(m4_1s; output_format=:particles)
 end
 
 # ╔═╡ 8bcdd60e-fb7a-11ea-3a73-2ff8064e7814
-md"## Stan quap estimate."
+md"##### Stan quap estimate."
 
 # ╔═╡ 8bd83964-fb7a-11ea-2a5f-9b23b6992c80
 begin
-  dfa = read_samples(m4_1s; output_format=:dataframe)
-  q = quap(dfa)
+  dfa4_1s = read_samples(m4_1s; output_format=:dataframe)
+  quap4_1s = quap(dfa4_1s)
 end
 
 # ╔═╡ 8bd90fa6-fb7a-11ea-3c81-59fc91debe8b
-md"## Check equivalence of Stan samples and Particles."
+md"##### Check equivalence of Stan samples and Particles."
 
 # ╔═╡ 8be87b94-fb7a-11ea-0cad-1948f391d2bf
 begin
 	mu_range = 152.0:0.01:157.0
-	plot(mu_range, ecdf(sample(dfa.mu, 10000))(mu_range),
+	plot(mu_range, ecdf(sample(dfa4_1s.mu, 10000))(mu_range),
 		xlabel="ecdf", ylabel="mu", lab="Stan samples")
 end
 
 # ╔═╡ 8bf180ac-fb7a-11ea-3f23-5d0f84019beb
-md"## Sampling from quap result:"
+md"##### Sampling from quap result:"
 
 # ╔═╡ bf59164a-fb7b-11ea-36b6-759b714a61ee
-q
+quap4_1s
 
 # ╔═╡ 8bfa2cc4-fb7a-11ea-3885-198c3330b7b0
 begin
-	d = Normal(mean(q.mu), std(q.mu))
+	d = Normal(mean(quap4_1s.mu), std(quap4_1s.mu))
 	plot!(mu_range, ecdf(rand(d, 10000))(mu_range), lab="Quap samples")
-	plot!(mu_range, ecdf(sample(dfa.mu, 10000))(mu_range), lab="Particles samples")
+	plot!(mu_range, ecdf(sample(dfa4_1s.mu, 10000))(mu_range), lab="Particles samples")
 end
 
 # ╔═╡ 8bfcef7a-fb7a-11ea-1b75-890ae0af98b2
 begin
-	dfas = read_samples(m4_1s; output_format=:dataframes)
-	plts = Vector{Plots.Plot{Plots.GRBackend}}(undef, size(dfas[1], 2))
+	dfs4_1s = read_samples(m4_1s; output_format=:dataframes)
+	figs = Vector{Plots.Plot{Plots.GRBackend}}(undef, size(dfs4_1s[1], 2))
 
-	for (indx, par) in enumerate(names(dfas[1]))
-		for i in 1:size(dfas,1)
+	for (indx, par) in enumerate(names(dfs4_1s[1]))
+		for i in 1:size(dfs4_1s,1)
 			if i == 1
-				plts[indx] = plot()
+				figs[indx] = plot()
 	  		end
-			e = ecdf(dfas[i][:, par])
+			e = ecdf(dfs4_1s[i][:, par])
 			r = range(minimum(e), stop=maximum(e), length=length(e.sorted_values))
-			plts[indx] = plot!(plts[indx], r, e(r), lab = "ECDF $(par) in chain $i")
+			figs[indx] = plot!(figs[indx], r, e(r), lab = "ECDF $(par) in chain $i")
 		end
 	end
 end
 
 # ╔═╡ 8c0b72b6-fb7a-11ea-2476-bbb194b0fb05
-plot(plts..., layout=(2,1))
+plot(figs..., layout=(2,1))
 
 # ╔═╡ 8c0d58ae-fb7a-11ea-0e3e-87081ac98c12
 md"## End of clip-04-34-36s.jl"
@@ -135,7 +135,7 @@ md"## End of clip-04-34-36s.jl"
 # ╠═8bd83964-fb7a-11ea-2a5f-9b23b6992c80
 # ╟─8bd90fa6-fb7a-11ea-3c81-59fc91debe8b
 # ╠═8be87b94-fb7a-11ea-0cad-1948f391d2bf
-# ╠═8bf180ac-fb7a-11ea-3f23-5d0f84019beb
+# ╟─8bf180ac-fb7a-11ea-3f23-5d0f84019beb
 # ╠═bf59164a-fb7b-11ea-36b6-759b714a61ee
 # ╠═8bfa2cc4-fb7a-11ea-3885-198c3330b7b0
 # ╠═8bfcef7a-fb7a-11ea-1b75-890ae0af98b2

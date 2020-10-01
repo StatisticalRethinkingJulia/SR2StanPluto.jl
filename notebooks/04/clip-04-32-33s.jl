@@ -54,19 +54,19 @@ md"### Snippet 4.31"
 m4_2s = SampleModel("heights", m4_2);
 
 # ╔═╡ 62b97556-fb76-11ea-2914-cf968082c17b
-heightsdata = Dict("N" => length(df.height), "h" => df.height);
+m4_2_data = Dict("N" => length(df.height), "h" => df.height);
 
 # ╔═╡ 62c0286a-fb76-11ea-0db1-91794ac99ae6
-rc = stan_sample(m4_2s, data=heightsdata);
+rc4_2s = stan_sample(m4_2s, data=m4_2_data);
 
 # ╔═╡ 62c16610-fb76-11ea-36d5-51093f07a76a
-if success(rc)
-	dfa = read_samples(m4_2s; output_format=:dataframe)
-	q = quap(dfa)
+if success(rc4_2s)
+	dfa4_2s = read_samples(m4_2s; output_format=:dataframe)
+	quap4_2s = quap(dfa4_2s)
 end
 
 # ╔═╡ 6ba0d690-fb77-11ea-2678-ab0839ca8210
-Particles(dfa)
+Particles(dfa4_2s)
 
 # ╔═╡ 62d7694e-fb76-11ea-28c4-4d1e78f54b82
 md"### snippet 4.32"
@@ -75,7 +75,7 @@ md"### snippet 4.32"
 md"##### Compute covariance matrix."
 
 # ╔═╡ 62e6d8f2-fb76-11ea-1f70-a9c8b2002ca4
-cov(Array(dfa))
+cov(Array(dfa4_2s))
 
 # ╔═╡ 62ef3826-fb76-11ea-2369-c157a18c626c
 md"### snippet 4.33"
@@ -84,7 +84,7 @@ md"### snippet 4.33"
 md"##### Compute correlation matrix."
 
 # ╔═╡ 62feda92-fb76-11ea-32a4-454502ca4488
-cor(Array(dfa))
+cor(Array(dfa4_2s))
 
 # ╔═╡ 6306bcf8-fb76-11ea-2feb-af94851021ba
 md"## End of clip-04-32-34s.jl"

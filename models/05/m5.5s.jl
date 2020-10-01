@@ -49,15 +49,15 @@ m5_5_data = Dict("N" => size(df, 1), "NC" => df[!, :neocortex_perc_s],
 
 # Sample using StanSample
 
-rc = stan_sample(m5_5s, data=m5_5_data);
+rc5_5s = stan_sample(m5_5s, data=m5_5_data);
 
-if success(rc)
+if success(rc5_5s)
 
   # Describe the draws
 
-  dfa5 = read_samples(m5_5s; output_format=:dataframe)
-  p = Particles(dfa5)
-  quap(dfa5) |> display
+  dfa5_5s = read_samples(m5_5s; output_format=:dataframe)
+  part5_5s = Particles(dfa5_5s)
+  quap(dfa5_5s) |> display
 
   retinking = "
             mean   sd  5.5% 94.5%

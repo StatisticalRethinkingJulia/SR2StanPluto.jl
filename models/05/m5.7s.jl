@@ -51,18 +51,17 @@ m5_7_data = Dict("N" => size(df, 1), "M" => df[!, :lmass_s],
 
 # Sample using StanSample
 
-rc = stan_sample(m5_7s, data=m5_7_data);
+rc5_7s = stan_sample(m5_7s, data=m5_7_data);
 
-if success(rc)
+if success(rc5_7s)
 
   # Describe the draws
 
-  dfa7 = read_samples(m5_7s; output_format=:dataframe)
-  println("Normal estimate:")
-  p = Particles(dfa7) |> display
-  println("Quap estimates:")
-  quap(dfa7) |> display
-
+  dfa5_7s = read_samples(m5_7s; output_format=:dataframe)
+  part5_7s = Particles(dfa5_7s)
+  quap5_7s = quap(dfa5_7s)
+  part5_7s |> display
+  
   rethinking = "
              mean   sd  5.5% 94.5%
     a      0.07 0.13 -0.15  0.28

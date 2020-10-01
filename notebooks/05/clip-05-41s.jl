@@ -74,8 +74,8 @@ begin
 	  "M" => df[:, :M_s],
 	  "NC" => df[:, :NC_s] 
 	);
-	rc = stan_sample(m5_7_As, data=m5_7_A_data);
-	dfa = read_samples(m5_7_As,; output_format=:dataframe);
+	rc5_7_As = stan_sample(m5_7_As, data=m5_7_A_data);
+	dfa5_7_As = read_samples(m5_7_As,; output_format=:dataframe);
 end;
 
 # ╔═╡ cd977756-fdba-11ea-0b92-79d3b2439454
@@ -85,7 +85,7 @@ md"### Snippet 5.22"
 a_seq = range(-2, stop=2, length=100)
 
 # ╔═╡ cda9c6f4-fdba-11ea-359b-a5464143c8a6
-m_sim, d_sim = simulate(dfa, [:aNC, :bMNC, :sigma_NC], a_seq, [:bM, :sigma]);
+m_sim, d_sim = simulate(dfa5_7_As, [:aNC, :bMNC, :sigma_NC], a_seq, [:bM, :sigma]);
 
 # ╔═╡ cdab170c-fdba-11ea-1c9b-17e26c5d30f5
 md"### Snippet 5.24"

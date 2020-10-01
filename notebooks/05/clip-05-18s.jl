@@ -55,13 +55,16 @@ model {
 begin
 	m5_4_RSs = SampleModel("m5.4", m5_4_RS);
 	m5_4_RS_data = Dict("N" => size(df, 1), "R" => df[:, :R_s], "S" => df[:, :S_s]);
-	rc1 = stan_sample(m5_4_RSs, data=m5_4_RS_data);
-	if success(rc1)
-		dfs_RS = read_samples(m5_4_RSs; output_format=:dataframe)
-		p_RS = Particles(dfs_RS)
-		q_RS = quap(dfs_RS)
+	rc5_4_RSs = stan_sample(m5_4_RSs, data=m5_4_RS_data);
+	if success(rc5_4_RSs)
+		dfa5_4_RSs = read_samples(m5_4_RSs; output_format=:dataframe)
+		part5_4_RSs = Particles(dfa5_4_RSs)
+		quap5_4_RSs = quap(dfa5_4_RSs)
 	end
 end
+
+# ╔═╡ f82d0d84-0286-11eb-08f1-756c6a319279
+
 
 # ╔═╡ 89ee52d2-fd1e-11ea-3c23-dfea31e14847
 # Define the Stan language model
@@ -90,51 +93,51 @@ model {
 begin
 	m5_4_SRs = SampleModel("m5.4", m5_4_SR);
 	m5_4_SR_data = Dict("N" => size(df, 1),  "R" => df[:, :R_s], "S" => df[:, :S_s]);
-	rc2 = stan_sample(m5_4_SRs, data=m5_4_SR_data)
-	if success(rc2)
-		dfs_SR = read_samples(m5_4_SRs; output_format=:dataframe)
-		p_SR = Particles(dfs_SR)
-		q_SR = quap(dfs_SR)
+	rc5_4_SRs = stan_sample(m5_4_SRs, data=m5_4_SR_data)
+	if success(rc5_4_SRs)
+		dfa5_4_SRs = read_samples(m5_4_SRs; output_format=:dataframe)
+		part5_4_SRs = Particles(dfa5_4_SRs)
+		quap5_4_SRs = quap(dfa5_4_SRs)
 	end
 end
 
 # ╔═╡ e7cb19ce-fd1b-11ea-2ca5-e5f14a1e1d8b
-if success(rc1)
-	pRS = plotbounds(df, :R, :S, dfs_RS, [:a, :bRS, :sigma])
+if success(rc5_4_RSs)
+	pRS = plotbounds(df, :R, :S, dfa5_4_RSs, [:a, :bRS, :sigma])
 end;
 
 # ╔═╡ e7d70126-fd1b-11ea-16ad-31564fc648de
-if success(rc2)
-	pSR = plotbounds(df, :S, :R, dfs_SR, [:a, :bSR, :sigma])
+if success(rc5_4_SRs)
+	pSR = plotbounds(df, :S, :R, dfa5_4_SRs, [:a, :bSR, :sigma])
 end;
 
 # ╔═╡ e7d799e2-fd1b-11ea-27c6-7f2c85fb9b62
 plot(pRS, pSR, layout=(1, 2))
 
 # ╔═╡ e7e35a5c-fd1b-11ea-33da-a32b17168eb2
-if success(rc1) && success(rc2)
+if success(rc5_4_RSs) && success(rc5_4_SRs)
   # Compute standardized residuals
 
-  p = Vector{Plots.Plot{Plots.GRBackend}}(undef, 4)
+  figs = Vector{Plots.Plot{Plots.GRBackend}}(undef, 4)
   
   r = -2.0:0.1:3.0
-  mu_SR = mean(p_SR.a) .+ mean(p_SR.bSR)*r
+  mu_SR = mean(part5_4_SRs.a) .+ mean(part5_4_SRs.bSR)*r
 
-  p[2] = plot(xlab="R (std)", ylab="S (std)", leg=false)
+  figs[2] = plot(xlab="R (std)", ylab="S (std)", leg=false)
   plot!(r, mu_SR)
   scatter!(df[:, :S_s], df[:, :R_s])
   
-  mu_RS_obs = mean(p_RS.a) .+ mean(p_RS.bRS)*df[:, :S_s]
+  mu_RS_obs = mean(part5_4_RSs.a) .+ mean(part5_4_RSs.bRS)*df[:, :S_s]
   res_RS = df[:, :R_s] - mu_RS_obs
 
   s = -2.0:0.1:3.0
-  mu_RS = mean(p_RS.a) .+ mean(p_RS.bRS)*s
+  mu_RS = mean(part5_4_RSs.a) .+ mean(part5_4_RSs.bRS)*s
 
-  p[1] = plot(xlab="S (std)", ylab="R (std)", leg=false)
+  figs[1] = plot(xlab="S (std)", ylab="R (std)", leg=false)
   plot!(s, mu_RS)
   scatter!(df[:, :R_s], df[:, :S_s])
   
-  mu_SR_obs = mean(p_SR.a) .+ mean(p_SR.bSR)*df[:, :R_s]
+  mu_SR_obs = mean(part5_4_SRs.a) .+ mean(part5_4_SRs.bSR)*df[:, :R_s]
   res_SR = df[:, :S_s] - mu_SR_obs
 
   df2 = DataFrame(
@@ -145,12 +148,12 @@ if success(rc1) && success(rc2)
   m1 = lm(@formula(y ~ r), df2)
   #coef(m1) |> display
 
-  p[4] = plot(xlab="R residuals", ylab="Y (std)", leg=false)
+  figs[4] = plot(xlab="R residuals", ylab="Y (std)", leg=false)
   plot!(s, coef(m1)[1] .+ coef(m1)[2]*s)
   scatter!(res_RS, df[:, :Y_s])
   vline!([0.0], line=:dash, color=:black)
 
-  mu_SR_obs = mean(p_SR.a) .+ mean(p_SR.bSR)*df[:, :R_s]
+  mu_SR_obs = mean(part5_4_SRs.a) .+ mean(part5_4_SRs.bSR)*df[:, :R_s]
   res_SR = df[:, :S_s] - mu_SR_obs
 
   df3 = DataFrame(
@@ -161,14 +164,14 @@ if success(rc1) && success(rc2)
   m2 = lm(@formula(y ~ s), df3)
   #coef(m2) |> display
 
-  p[3] = plot(xlab="S residuals", ylab="Y (std)", leg=false)
+  figs[3] = plot(xlab="S residuals", ylab="Y (std)", leg=false)
   plot!(r, coef(m2)[1] .+ coef(m2)[2]*r)
   scatter!(res_SR, df[:, :Y_s])
   vline!([0.0], line=:dash, color=:black)
 end;
 
 # ╔═╡ e7e3f4ec-fd1b-11ea-10db-abd67cab2161
-plot(p..., layout=(2,2))
+plot(figs..., layout=(2,2))
 
 # ╔═╡ e7f2ca0a-fd1b-11ea-2f47-ad5208060cbd
 md"## End of clip-05-18s.jl"
@@ -181,6 +184,7 @@ md"## End of clip-05-18s.jl"
 # ╠═9fc481be-fd1c-11ea-24fc-b5ee354e8434
 # ╠═e7c914b2-fd1b-11ea-3cf6-2bf799ff7370
 # ╠═e58a4fa4-fd20-11ea-3e5e-a518a746f06a
+# ╠═f82d0d84-0286-11eb-08f1-756c6a319279
 # ╠═89ee52d2-fd1e-11ea-3c23-dfea31e14847
 # ╠═be0e0f32-fd3a-11ea-0d07-6f89080d556f
 # ╠═e7cb19ce-fd1b-11ea-2ca5-e5f14a1e1d8b

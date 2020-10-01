@@ -15,10 +15,13 @@ begin
 end
 
 # ╔═╡ e875dcfc-fc57-11ea-27e5-c56f1f9d5370
-md"## clip-05-03-05s.jl"
+md"## clip-05-01-05s.jl"
 
 # ╔═╡ d65e1360-fc58-11ea-11c0-5928313bb9a0
 md"### snippet 5.1"
+
+# ╔═╡ cfa44fec-01c5-11eb-14bf-338eed7e2c9d
+md"##### Notice that in below Stan language model we ignore the observed data (the likelihood is commented out). The draws show sampled regression lines implied by the priors."
 
 # ╔═╡ d65e98dc-fc58-11ea-25e1-9fab97b6125a
 begin
@@ -57,29 +60,30 @@ md"### snippet 5.3 - 5.4"
 md"## Define the SampleModel, etc."
 
 # ╔═╡ d67e0602-fc58-11ea-3a27-31d03e1c2318
-m5_1s = SampleModel("MedianAgeMarriage", m5_1);
+begin
+	m5_1s = SampleModel("MedianAgeMarriage", m5_1)
+	m5_1_data = Dict("N" => size(df, 1), "D" => df.Divorce_s, "A" => df.MedianAgeMarriage_s)
+	rc5_1s = stan_sample(m5_1s, data=m5_1_data)
+	success(rc5_1s) && (dfa5_1s = read_samples(m5_1s; output_format=:dataframe))
+end;
 
-# ╔═╡ d67ea35c-fc58-11ea-2f14-a34cdc172628
-m5_1_data = Dict("N" => size(df, 1), "D" => df.Divorce_s, "A" => df.MedianAgeMarriage_s);
-
-# ╔═╡ d689eb54-fc58-11ea-146f-edd32afb6cf6
-rc = stan_sample(m5_1s, data=m5_1_data);
+# ╔═╡ a4a9351a-01c6-11eb-28d0-71f8fb243719
+Text(precis(dfa5_1s; io=String))
 
 # ╔═╡ 12fedbca-fc5a-11ea-2d4d-1d5ac93ac4fa
 md"### snippet 5.5"
 
+# ╔═╡ 45b2b002-01c6-11eb-3f86-3f9586afcc8b
+md"##### Plot regression lines using sampled values of the intercept (`:a`) and the slope (`:bA`)."
+
 # ╔═╡ d68ab980-fc58-11ea-342d-31e66a8e7559
-if success(rc)
+if success(rc5_1s)
 	begin
-
-		# Plot regression line using means and observations
-
-		dfa = read_samples(m5_1s; output_format=:dataframe)
 		xi = -3.0:0.1:3.0
 		plot(xlab="Medium age marriage (scaled)", ylab="Divorce rate (scaled)",
 			title="Showing 50 regression lines")
 		for i in 1:50
-			local yi = mean(dfa[i, :a]) .+ dfa[i, :bA] .* xi
+			local yi = mean(dfa5_1s[i, :a]) .+ dfa5_1s[i, :bA] .* xi
 			plot!(xi, yi, color=:lightgrey, leg=false)
 		end
 
@@ -90,20 +94,21 @@ if success(rc)
 end
 
 # ╔═╡ d69533ba-fc58-11ea-3378-e512a1d55d27
-md"## End of clip-05-03-05.jl"
+md"## End of clip-05-01-05.jl"
 
 # ╔═╡ Cell order:
-# ╠═e875dcfc-fc57-11ea-27e5-c56f1f9d5370
+# ╟─e875dcfc-fc57-11ea-27e5-c56f1f9d5370
 # ╠═16ddb41a-fc59-11ea-1631-153e3466c75c
 # ╠═d65dd2b2-fc58-11ea-2300-4db47ec9a789
 # ╟─d65e1360-fc58-11ea-11c0-5928313bb9a0
+# ╟─cfa44fec-01c5-11eb-14bf-338eed7e2c9d
 # ╠═d65e98dc-fc58-11ea-25e1-9fab97b6125a
 # ╠═d66f515e-fc58-11ea-3fae-cbb82f1a1a6a
 # ╟─f4602d4a-fc59-11ea-0d9d-9f58c73c119f
 # ╟─d670aefa-fc58-11ea-1c56-4bfb66e1cab2
 # ╠═d67e0602-fc58-11ea-3a27-31d03e1c2318
-# ╠═d67ea35c-fc58-11ea-2f14-a34cdc172628
-# ╠═d689eb54-fc58-11ea-146f-edd32afb6cf6
+# ╠═a4a9351a-01c6-11eb-28d0-71f8fb243719
 # ╟─12fedbca-fc5a-11ea-2d4d-1d5ac93ac4fa
+# ╟─45b2b002-01c6-11eb-3f86-3f9586afcc8b
 # ╠═d68ab980-fc58-11ea-342d-31e66a8e7559
 # ╟─d69533ba-fc58-11ea-3378-e512a1d55d27

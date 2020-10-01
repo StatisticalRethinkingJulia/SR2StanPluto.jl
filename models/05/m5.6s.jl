@@ -48,15 +48,16 @@ m5_6_data = Dict("N" => size(df, 1), "M" => df[!, :lmass_s],
 
 # Sample using StanSample
 
-rc = stan_sample(m5_6s, data=m5_6_data);
+rc5_6s = stan_sample(m5_6s, data=m5_6_data);
 
-if success(rc)
+if success(rc5_6s)
 
   # Describe the draws
 
-  dfa6 = read_samples(m5_6s; output_format=:dataframe)
-  p = Particles(dfa6)
-  quap(dfa6) |> display
+  dfa5_6s = read_samples(m5_6s; output_format=:dataframe)
+  part5_6s = Particles(dfa5_6s)
+  quap5_6s = quap(dfa5_6s)
+  part5_6s |> display
 
   rethinking = "
              mean   sd  5.5% 94.5%

@@ -45,13 +45,13 @@ m5_2_data = Dict(
 
 # Sample using cmdstan
 
-rc = stan_sample(m5_2s, data=m5_2_data);
+rc5_2s = stan_sample(m5_2s, data=m5_2_data);
 
-if success(rc)
+if success(rc5_2s)
 
   # Describe the draws
 
-  dfa2 = read_samples(m5_2s; output_format=:dataframe)
+  dfa5_2s = read_samples(m5_2s; output_format=:dataframe)
 
   # Result rethinking
 
@@ -62,7 +62,8 @@ if success(rc)
     sigma 0.91 0.09  0.77  1.05
   "
 
-  Particles(dfa2)
+  part5_2s = Particles(dfa5_2s)
+  part5_2s |> display
   
 end
 

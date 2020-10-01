@@ -39,7 +39,7 @@ rethinking_results = "
 ";
 
 # ╔═╡ 55f8123e-fd40-11ea-375c-6df3d346a96f
-p = Particles(dfa)
+part5_3_As = Particles(dfa5_3_As)
 
 # ╔═╡ 55fefeaa-fd40-11ea-2c88-a910f049dcf0
 md"## Snippet 5.22"
@@ -51,14 +51,14 @@ a_seq = range(-2, stop=2, length=100);
 md"## Snippet 5.23"
 
 # ╔═╡ 560dcb42-fd40-11ea-0b2e-f14e70a7425a
-m_sim, d_sim = simulate(dfa, [:aM, :bAM, :sigma_M], a_seq, [:bM, :sigma]);
+m_sim, d_sim = simulate(dfa5_3_As, [:aM, :bAM, :sigma_M], a_seq, [:bM, :sigma]);
 
 # ╔═╡ 5618ec0c-fd40-11ea-3a0f-85fb3e33f1b1
 md"## Snippet 5.24"
 
 # ╔═╡ 5621e8fc-fd40-11ea-2f52-095b7196c40c
 begin
-	p1 = plot(xlab="Manipulated A", ylab="Counterfactual D",
+	fig1 = plot(xlab="Manipulated A", ylab="Counterfactual D",
 		title="Total counterfactual effect of A on D")
 	plot!(a_seq, mean(d_sim, dims=1)[1, :], leg=false)
 	hpdi_array = zeros(length(a_seq), 2)
@@ -70,7 +70,7 @@ end
 
 # ╔═╡ 56236592-fd40-11ea-2be2-b9b04f0ce30c
 begin
-	p2 = plot(xlab="Manipulated A", ylab="Counterfactual M",
+	fig2 = plot(xlab="Manipulated A", ylab="Counterfactual M",
 		title="Counterfactual effect of A on M")
 	plot!(a_seq, mean(m_sim, dims=1)[1, :], leg=false)
 	hpdi_array1 = zeros(length(a_seq), 2)
@@ -86,14 +86,14 @@ md"##### M -> D"
 # ╔═╡ 56339584-fd40-11ea-3c75-4f679d500b1c
 begin
 	m_seq = range(-2, stop=2, length=100)
-	md_sim = zeros(size(dfa, 1), length(m_seq))
-	for j in 1:size(dfa, 1)
+	md_sim = zeros(size(dfa5_3_As, 1), length(m_seq))
+	for j in 1:size(dfa5_3_As, 1)
 		for i in 1:length(m_seq)
-			d = Normal(dfa[j, :a] + dfa[j, :bM] * m_seq[i], dfa[j, :sigma])
+			d = Normal(dfa5_3_As[j, :a] + dfa5_3_As[j, :bM] * m_seq[i], dfa5_3_As[j, :sigma])
 			md_sim[j, i] = rand(d, 1)[1]
 		end
 	end
-	p3 = plot(xlab="Manipulated M", ylab="Counterfactual D",
+	fig3 = plot(xlab="Manipulated M", ylab="Counterfactual D",
 		title="Counterfactual effect of M on D")
 	plot!(m_seq, mean(md_sim, dims=1)[1, :], leg=false)
 	hpdi_array2 = zeros(length(m_seq), 2)
@@ -104,7 +104,7 @@ begin
 end
 
 # ╔═╡ 563b3f8c-fd40-11ea-1d4b-3fc4eec893fa
-plot(p1, p2, p3, layout=(3, 1))
+plot(fig1, fig2, fig3, layout=(3, 1))
 
 # ╔═╡ 56426262-fd40-11ea-22a7-5bbc6089cb07
 md"## End of clip-05-19-24s.jl"

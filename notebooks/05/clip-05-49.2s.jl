@@ -56,13 +56,13 @@ begin
 	m5_9s = SampleModel("m5.9", m5_9);
 	m5_9_data = Dict("N" => size(df, 1), "clade_id" => c_id,
 		"K" => df[:, :K_s], "k" => 4);
-	rc = stan_sample(m5_9s, data=m5_9_data);
-	dfa9 = read_samples(m5_9s; output_format=:dataframe)
-	p = Particles(dfa9)
+	rc5_9s = stan_sample(m5_9s, data=m5_9_data);
+	dfa5_9s = read_samples(m5_9s; output_format=:dataframe)
+	part5_9s = Particles(dfa5_9s)
 end
 
 # ╔═╡ e61eadb8-fdc3-11ea-19bc-e30e128c1dbb
-success(rc) && quap(dfa9)
+success(rc5_9s) && quap(dfa5_9s)
 
 # ╔═╡ e62ae894-fdc3-11ea-3de4-2b3cce9dd0bb
 rethinking_result = "

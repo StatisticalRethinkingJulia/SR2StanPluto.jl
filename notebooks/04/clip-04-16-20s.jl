@@ -93,7 +93,7 @@ post_df = grid_prob(mu_list, sigma_list, prior_mu, prior_sigma,
 	df2[:, :height]);
 
 # ╔═╡ f70b8194-f8e8-11ea-1418-698e93000714
-p1 = contour(mu_list, sigma_list, post_df[:, :prob],
+fig1 = contour(mu_list, sigma_list, post_df[:, :prob],
 	xlim = (153.5, 155.7),
 	ylim = (7.0, 8.5),
 	xlab="height",
@@ -104,7 +104,7 @@ p1 = contour(mu_list, sigma_list, post_df[:, :prob],
 md"### snippet 4.18"
 
 # ╔═╡ f720c22a-f8e8-11ea-34ca-3ffd4eb34e01
-p2 = heatmap(mu_list, sigma_list, transpose(reshape(post_df[:, :prob], 100,100)),
+fig2 = heatmap(mu_list, sigma_list, transpose(reshape(post_df[:, :prob], 100,100)),
 	xlim = (153.5, 155.7),
 	ylim = (7.0, 8.5),
 	xlab="height",
@@ -148,13 +148,13 @@ md"##### Density of mu."
 
 # ╔═╡ f7844f52-f8e8-11ea-3b84-4d57615c237b
 begin
-	p3 = density(samples[:, :mu],
+	fig3 = density(samples[:, :mu],
 		xlab="height",
 		ylab="density",
 		lab="mu",
 		title="posterior mu")
-	vline!(p3, [bnds[:mu, :upper]], line=:dash, lab="Lower bound")
-	vline!(p3, [bnds[:mu, :lower]], line=:dash, lab="Upper bound")
+	vline!([bnds[:mu, :upper]], line=:dash, lab="Lower bound")
+	vline!([bnds[:mu, :lower]], line=:dash, lab="Upper bound")
 end;
 
 # ╔═╡ f78e0d58-f8e8-11ea-1a60-87fc0b4e2625
@@ -162,17 +162,17 @@ md"##### Density of sigma."
 
 # ╔═╡ f7982d94-f8e8-11ea-3b9d-9d9542626cc1
 begin
-	p4 = density(samples[:, :sigma],
+	fig4 = density(samples[:, :sigma],
 		xlab="sigma",
 		ylab="density",
 		lab="sigma",
 		title="posterior sigma")
-	vline!(p4, [bnds[:sigma, :upper]], line=:dash, lab="Lower bound")
-	vline!(p4, [bnds[:sigma, :lower]], line=:dash, lab="Upper bound")
+	vline!([bnds[:sigma, :upper]], line=:dash, lab="Lower bound")
+	vline!([bnds[:sigma, :lower]], line=:dash, lab="Upper bound")
 end;
 
 # ╔═╡ f7a39178-f8e8-11ea-06f9-13204fc0c56f
-plot(p1, p2, p3, p4, layout=(2,2))
+plot(fig1, fig2, fig3, fig4, layout=(2,2))
 
 # ╔═╡ f7adf87a-f8e8-11ea-36e1-d95fd1feb4c6
 md"## End of clip-04-16-20s.jl"
@@ -194,13 +194,13 @@ md"## End of clip-04-16-20s.jl"
 # ╟─f6fc86b2-f8e8-11ea-3155-b13066e21ab6
 # ╠═f704264e-f8e8-11ea-24ad-2f534da03d56
 # ╠═f70b8194-f8e8-11ea-1418-698e93000714
-# ╠═f713c0ca-f8e8-11ea-3fb6-95068a226a6d
+# ╟─f713c0ca-f8e8-11ea-3fb6-95068a226a6d
 # ╠═f720c22a-f8e8-11ea-34ca-3ffd4eb34e01
-# ╠═f7240cf0-f8e8-11ea-224a-89543e618960
-# ╠═f72d36f4-f8e8-11ea-3659-3f9ce23635d2
+# ╟─f7240cf0-f8e8-11ea-224a-89543e618960
+# ╟─f72d36f4-f8e8-11ea-3659-3f9ce23635d2
 # ╠═f7359696-f8e8-11ea-04b4-add413a60b41
 # ╟─f73e1758-f8e8-11ea-1812-8d4723d20456
-# ╠═f74778c0-f8e8-11ea-31b2-2b4adb0f865b
+# ╟─f74778c0-f8e8-11ea-31b2-2b4adb0f865b
 # ╠═f751b452-f8e8-11ea-33a1-23bf97c35a18
 # ╟─f75b7bf6-f8e8-11ea-3702-7df2f3263677
 # ╠═f7661370-f8e8-11ea-0af3-97ae384db28c

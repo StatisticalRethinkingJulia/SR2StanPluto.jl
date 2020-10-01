@@ -59,12 +59,12 @@ begin
 	m5_5_drafts = SampleModel("m5.5.draft", m_5_5_draft);
 	m5_5_data = Dict("N" => size(df, 1), "NC" => df.neocortex_perc_s,
 		"K" => df.kcal_per_g_s);
-	rc = stan_sample(m5_5_drafts, data=m5_5_data)
+	rc5_5_drafts = stan_sample(m5_5_drafts, data=m5_5_data)
 end;
 
 # ╔═╡ 407845b4-fd4a-11ea-1ed5-65581b68ccda
-if success(rc)
-  dfa5 = read_samples(m5_5_drafts; output_format=:dataframe)
+if success(rc5_5_drafts)
+  dfa5_5_drafts = read_samples(m5_5_drafts; output_format=:dataframe)
 end;
 
 # ╔═╡ d8d01f36-fda3-11ea-2b26-59b86a4e23ca
@@ -79,14 +79,14 @@ rethinking = "
 ";
 
 # ╔═╡ d8d8a4e4-fda3-11ea-3bda-0b8c90e63d65
-Particles(dfa5)
+Particles(dfa5_5_drafts)
 
 # ╔═╡ d8db84ca-fda3-11ea-35c2-1f671cea8a32
-if success(rc)
-  p = plot(title="m5.5.draft: a ~ Normal(0, 1), bN ~ Normal(0, 1)")
+if success(rc5_5_drafts)
+  p = plot(title="m5.5.drafts: a ~ Normal(0, 1), bN ~ Normal(0, 1)")
   x = -2:0.01:2
   for j in 1:100
-    y = dfa5[j, :a] .+ dfa5[j, :bN]*x
+    y = dfa5_5_drafts[j, :a] .+ dfa5_5_drafts[j, :bN]*x
     plot!(p, x, y, color=:lightgrey, leg=false)
   end
 	plot(p)
@@ -105,7 +105,7 @@ md"## End of clip-05-28-34s.jl"
 # ╟─d65e8eea-fda3-11ea-0f78-6d8a183f5818
 # ╠═d65ec40a-fda3-11ea-2e15-2f55dd308dd9
 # ╠═407845b4-fd4a-11ea-1ed5-65581b68ccda
-# ╠═d8d01f36-fda3-11ea-2b26-59b86a4e23ca
+# ╟─d8d01f36-fda3-11ea-2b26-59b86a4e23ca
 # ╠═d8d1b594-fda3-11ea-2bae-e1be39ef751e
 # ╠═d8d8a4e4-fda3-11ea-3bda-0b8c90e63d65
 # ╠═d8db84ca-fda3-11ea-35c2-1f671cea8a32
