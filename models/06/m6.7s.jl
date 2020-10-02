@@ -53,11 +53,11 @@ m6_7_data = Dict(
 
 m6_7s = SampleModel("m6.7", m6_7)
 
-rc = stan_sample(m6_7s; data=m6_7_data)
+rc6_7s = stan_sample(m6_7s; data=m6_7_data)
 
-if success(rc)
-  dfa6_7 = read_samples(m6_7s; output_format=:dataframe);
-  p6_7 = Particles(dfa6_7)
+if success(rc6_7s)
+  dfa6_7s = read_samples(m6_7s; output_format=:dataframe);
+  part6_7s = Particles(dfa6_7s)
 end
 
 # End of m6.7s.jl

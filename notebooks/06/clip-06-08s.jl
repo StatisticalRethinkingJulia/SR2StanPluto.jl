@@ -19,9 +19,9 @@ md"## Clip-06-08s.jl"
 
 # ╔═╡ 822c0d84-fe75-11ea-27b2-cb1e8fa46fb1
 begin
-df = CSV.read(sr_datadir("milk.csv"), DataFrame; delim=';');
-scale!(df, [:kcal_per_g, :perc_fat, :perc_lactose])
-end
+	df = CSV.read(sr_datadir("milk.csv"), DataFrame; delim=';');
+	scale!(df, [:kcal_per_g, :perc_fat, :perc_lactose])
+end;
 
 # ╔═╡ 823966f0-fe75-11ea-3c37-25437bd882cd
 m6_3 = "
@@ -46,23 +46,21 @@ model{
 ";
 
 # ╔═╡ 82435d7e-fe75-11ea-3f52-7daa1879898d
-# Define the SampleModel, etc..
-
 begin
 	m6_3s = SampleModel("m6.3", m6_3);
 	m6_3_data = Dict("N" => size(df, 1), "F" => df.perc_fat_s, "K" => df.kcal_per_g_s);
-	rc = stan_sample(m6_3s, data=m6_3_data);
-	success(rc) && (dfa6_3 = read_samples(m6_3s; output_format=:dataframe))
-end
+	rc6_3s = stan_sample(m6_3s, data=m6_3_data);
+	success(rc6_3s) && (dfa6_3s = read_samples(m6_3s; output_format=:dataframe))
+end;
 
 # ╔═╡ 82456bc6-fe75-11ea-3e9a-256e1fb9844f
-success(rc) && (p = Particles(dfa6_3))
+success(rc6_3s) && (part6_3s = Particles(dfa6_3s))
 
 # ╔═╡ 82509064-fe75-11ea-16cb-e506f49efd72
-success(rc) && quap(dfa6_3)
+success(rc6_3s) && quap(dfa6_3s)
 
 # ╔═╡ 8251194e-fe75-11ea-1403-d743608a5169
-hpdi(p.bF.particles, alpha=0.11)
+hpdi(part6_3s.bF.particles, alpha=0.11)
 
 # ╔═╡ 825cb330-fe75-11ea-2df5-a92dca779683
 md"## End of clip-06-08s.jl"

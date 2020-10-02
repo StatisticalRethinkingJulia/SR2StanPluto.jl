@@ -56,7 +56,7 @@ model {
   }
   h1 ~ normal(mu, sigma);
 }
-"
+";
 
 # ╔═╡ d2b75bc2-feb7-11ea-1a1c-19917ffb69d4
 begin
@@ -68,18 +68,18 @@ begin
 	  :fungus => df[:, :fungus],
 	  :treatment => df[:, :treatment]
 	)
-	rc = stan_sample(m6_7s; data=m6_7_data)
-	success(rc) && (dfa6_7 = read_samples(m6_7s; output_format=:dataframe))
+	rc6_7s = stan_sample(m6_7s; data=m6_7_data)
+	success(rc6_7s) && (dfa6_7s = read_samples(m6_7s; output_format=:dataframe))
 end;
 
 # ╔═╡ d2c2b71c-feb7-11ea-124d-6114c352b17b
-success(rc) && (p6_7 = Particles(dfa6_7))
+success(rc6_7s) && (part6_7s = Particles(dfa6_7s))
 
 # ╔═╡ d2c34824-feb7-11ea-3c22-f91f4df2b0f5
-success(rc) && (Text(precis(dfa6_7; io=String)))
+success(rc6_7s) && (Text(precis(dfa6_7s; io=String)))
 
 # ╔═╡ d2cebcf4-feb7-11ea-2d6a-798f2e408ddf
-if success(rc)
+if success(rc6_7s)
 	(s1, p1) = plotcoef([m6_7s], [:a, :bt, :bf])
 	p1
 end
@@ -101,4 +101,4 @@ md"## End of clip-06-06-09s.jl"
 # ╠═d2c34824-feb7-11ea-3c22-f91f4df2b0f5
 # ╠═d2cebcf4-feb7-11ea-2d6a-798f2e408ddf
 # ╠═36092dde-00ec-11eb-2149-ad44ba127c89
-# ╠═d2cf9264-feb7-11ea-08c7-b1bf1379fa13
+# ╟─d2cf9264-feb7-11ea-08c7-b1bf1379fa13

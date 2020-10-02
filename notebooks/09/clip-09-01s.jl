@@ -55,11 +55,11 @@ end;
 # Plot the first 100 weeks and a histogram of weeks per iosland
 
 begin
-	p = Vector{Plots.Plot{Plots.GRBackend}}(undef, 2)
-	p[1] = plot(walk[1:100], leg=false, xlabel="Week", ylabel="Island", title="First 100 steps")
-	p[2] = histogram(walk, leg=false, xlabel="Island", ylabel="Number of weeks",
+	fig = Vector{Plots.Plot{Plots.GRBackend}}(undef, 2)
+	fig[1] = plot(walk[1:100], leg=false, xlabel="Week", ylabel="Island", title="First 100 steps")
+	fig[2] = histogram(walk, leg=false, xlabel="Island", ylabel="Number of weeks",
 	  title="$N steps")
-	plot(p..., layout=(1, 2))
+	plot(fig..., layout=(1, 2))
 end
 
 # ╔═╡ 34fa3306-ff65-11ea-395b-5b35170d0099

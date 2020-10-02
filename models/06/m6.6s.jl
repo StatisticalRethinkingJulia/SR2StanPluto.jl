@@ -46,11 +46,11 @@ m6_6_data = Dict(
   :h1 => df[:, :h1]
 )
 m6_6s = SampleModel("m6.6s", m6_6)
-rc = stan_sample(m6_6s; data=m6_6_data)
+rc6_6s = stan_sample(m6_6s; data=m6_6_data)
 
-if success(rc)
-  dfa6_6 = read_samples(m6_6s; output_format=:dataframe);
-  p6_6 = Particles(dfa6_6)
+if success(rc6_6s)
+  dfa6_6s = read_samples(m6_6s; output_format=:dataframe);
+  part6_6s = Particles(dfa6_6s)
 end
 
 # End of m6.6s.jl

@@ -67,25 +67,25 @@ begin
 	  :tw => selected_df.tw_s,
 	  :N => size(selected_df, 1)
 	)
-	rc = stan_sample(m6_0s, data=m_6_0_data)
-	success(rc) && (p = read_samples(m6_0s, output_format=:particles))
+	rc6_0s = stan_sample(m6_0s, data=m_6_0_data)
+	success(rc6_0s) && (part6_0s = read_samples(m6_0s, output_format=:particles))
 end
 
 # ╔═╡ c0e0cf76-fe4b-11ea-0130-3f2bb12f36a0
-if success(rc)
+if success(rc6_0s)
   x = -2.0:0.01:3.0
   plot(xlabel="newsworthiness", ylabel="trustworthiness",
     title="Science distortion")
   scatter!(selected_df[:, :nw], selected_df[:, :tw], color=:blue, lab="selected")
   scatter!(unselected_df[:, :nw], unselected_df[:, :tw], color=:lightgrey, lab="unselected")
-  plot!(x, mean(p.a) .+ mean(p.aS) .* x, lab="Regression line")
+  plot!(x, mean(part6_0s.a) .+ mean(part6_0s.aS) .* x, lab="Regression line")
 end
 
 # ╔═╡ 5bfe710c-fe4c-11ea-16c2-fdb21351103b
-if success(rc)
-  dfa = read_samples(m6_0s, output_format=:dataframe)
-  p1 = plotbounds(df, :nw, :tw, dfa , [:a, :aS, :sigma])
-  scatter!(p1, unselected_df[:, :nw], unselected_df[:, :tw], color=:lightgrey, lab="unselected")
+if success(rc6_0s)
+  dfa6_0s = read_samples(m6_0s, output_format=:dataframe)
+  fig1 = plotbounds(df, :nw, :tw, dfa6_0s , [:a, :aS, :sigma])
+  scatter!(unselected_df[:, :nw], unselected_df[:, :tw], color=:lightgrey, lab="unselected")
 end
 
 # ╔═╡ c0eed12a-fe4b-11ea-2f8c-3f4aed9007fd

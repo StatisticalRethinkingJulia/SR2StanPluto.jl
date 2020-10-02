@@ -48,11 +48,11 @@ m6_8_data = Dict(
 
 m6_8s = SampleModel("m6.8s", m6_8)
 
-rc = stan_sample(m6_8s; data=m6_8_data)
+rc6_8s = stan_sample(m6_8s; data=m6_8_data)
 
-if success(rc)
-  dfa6_8 = read_samples(m6_8s; output_format=:dataframe);
-  p6_8 = Particles(dfa6_8)
+if success(rc6_8s)
+  dfa6_8s = read_samples(m6_8s; output_format=:dataframe);
+  part6_8s = Particles(dfa6_8s)
 end
 
 # End of m6.8s.jl

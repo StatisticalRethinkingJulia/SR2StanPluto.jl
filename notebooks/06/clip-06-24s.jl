@@ -62,7 +62,7 @@ end
 
 # ╔═╡ ba2125ac-ff3e-11ea-257c-3974d8044dd8
 begin
-	p = plot(xlab="age", ylab="happiness", leg=false, title="unmarried (grey), married (blue)")
+	fig = plot(xlab="age", ylab="happiness", leg=false, title="unmarried (grey), married (blue)")
 	for i in 1:nrow(df)
 		if df[i, :married] == 1
 			scatter!([df[i, :age]], [df[i, :happiness]], color=:darkblue)
@@ -70,7 +70,7 @@ begin
 			scatter!([df[i, :age]], [df[i, :happiness]], color=:lightgrey)
 		end
 	end
-	p
+	fig
 end
 
 # ╔═╡ ba2a9f2e-ff3e-11ea-0c3c-1b46b3ab931f

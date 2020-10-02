@@ -34,9 +34,9 @@ model{
 begin
   m6_3s = SampleModel("m6.3", m6_3);
   m6_3_data = Dict("N" => size(df, 1), "F" => df.perc_fat_s, "K" => df.kcal_per_g_s);
-  rc = stan_sample(m6_3s, data=m6_3_data);
-  success(rc) && (dfa6_3 = read_samples(m6_3s; output_format=:dataframe))
+  rc6_3s = stan_sample(m6_3s, data=m6_3_data);
+  success(rc6_3s) && (dfa6_3s = read_samples(m6_3s; output_format=:dataframe))
 end
 
-success(rc) && (p6_3 = Particles(dfa6_3))
+success(rc6_3s) && (part6_3s = Particles(dfa6_3s))
 # End of 6.3s.jl

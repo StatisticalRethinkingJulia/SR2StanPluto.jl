@@ -37,14 +37,14 @@ md"##### Plot densities."
 
 # ╔═╡ 97ad992a-ff65-11ea-1e52-43039c4f5462
 begin
-	p = density(xlabel="Radial distance from mode", ylabel="Density")
+	fig = density(xlabel="Radial distance from mode", ylabel="Density")
 	for d in [1, 10, 100, 1000]
 		m = MvNormal(zeros(d), Diagonal(ones(d)))
 		local y = rand(m, T)
 		rd = [rad_dist( y[:, i] ) for i in 1:T] 
-		density!(p, rd, lab="d=$d")
+		density!(rd, lab="d=$d")
 	end
-	p
+	fig
 end
 
 # ╔═╡ 97b95942-ff65-11ea-1da3-23a8c109072b

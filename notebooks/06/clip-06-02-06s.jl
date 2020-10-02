@@ -17,21 +17,19 @@ end
 # ╔═╡ c5f141c2-fe4f-11ea-03d2-e5eb5d2349f6
 md"## Clip-06-02-06s.jl"
 
-# ╔═╡ 982197d4-fe50-11ea-18d9-21f65525f829
-N = 100
-
 # ╔═╡ 9831d8b8-fe50-11ea-38fd-c99a2b5fd0bc
 md"### Snippet 6.1"
 
 # ╔═╡ 98328740-fe50-11ea-3008-27d3dda98cd2
 begin
+	N = 100
 	df = DataFrame(
 		height = rand(Normal(10, 2), N),
 		leg_prop = rand(Uniform(0.4, 0.5), N),
 	)
 	df.leg_left = df.leg_prop .* df.height + rand(Normal(0, 0.02), N)
 	df.leg_right = df.leg_prop .* df.height + rand(Normal(0, 0.02), N)
-end
+end;
 
 # ╔═╡ 9842396a-fe50-11ea-217d-2bba5fa44fb5
 md"### Snippet 6.2"
@@ -70,12 +68,12 @@ begin
 	  :LR => df[:, :leg_right],
 	  :N => size(df, 1)
 	)
-	rc = stan_sample(m6_1s, data=m_6_1_data)
-	success(rc) && (p = read_samples(m6_1s, output_format=:particles))
+	rc6_1s = stan_sample(m6_1s, data=m_6_1_data)
+	success(rc6_1s) && (part6_1s = read_samples(m6_1s, output_format=:particles))
 end
 
 # ╔═╡ eb921ad4-fe50-11ea-2450-7dfe19847755
-if success(rc)
+if success(rc6_1s)
 	(s0, p0) = plotcoef([m6_1s], [:a, :bL, :bR, :sigma];
 		title="Multicollinearity between bL and bR", func=quap)
 	p0
@@ -84,26 +82,23 @@ end
 # ╔═╡ b825edf6-00eb-11eb-039c-cfcb859dc43d
 s0
 
-# ╔═╡ b79bb30c-00eb-11eb-1269-11956fb25a2b
-
-
 # ╔═╡ 985265b0-fe50-11ea-0594-05ac311d2e87
-if success(rc)
-	dfa = read_samples(m6_1s, output_format=:dataframe)
+if success(rc6_1s)
+	dfa6_1s = read_samples(m6_1s, output_format=:dataframe)
 
 	# Fit a linear regression
 
-	m = lm(@formula(bL ~ bR), dfa)
+	m = lm(@formula(bL ~ bR), dfa6_1s)
 
 	# estimated coefficients from the model
 
 	coefs = coef(m)
 
-	p1 = plot(xlabel="bR", ylabel="bL", lab="bL ~ bR")
-	plot!(p1, dfa[:, :bR], dfa[:, :bL])
-	p2 = density(p.bR.particles + p.bL.particles, xlabel="sum of bL and bR",
+	fig1 = plot(xlabel="bR", ylabel="bL", lab="bL ~ bR")
+	plot!(dfa6_1s[:, :bR], dfa6_1s[:, :bL])
+	fig2 = density(part6_1s.bR.particles + part6_1s.bL.particles, xlabel="sum of bL and bR",
 		ylabel="Density", lab="bL + bR")
-	plot(p1, p2, layout=(1, 2))
+	plot(fig1, fig2, layout=(1, 2))
 end
 
 # ╔═╡ 9862bdb4-fe50-11ea-1402-bbac3257c25d
@@ -113,7 +108,6 @@ md"## End of clip-06-02-06s.jl"
 # ╟─c5f141c2-fe4f-11ea-03d2-e5eb5d2349f6
 # ╠═9820cc3a-fe50-11ea-3fb6-991358edb7ff
 # ╠═98210cc2-fe50-11ea-0fec-cfe81a89d0cb
-# ╠═982197d4-fe50-11ea-18d9-21f65525f829
 # ╟─9831d8b8-fe50-11ea-38fd-c99a2b5fd0bc
 # ╠═98328740-fe50-11ea-3008-27d3dda98cd2
 # ╟─9842396a-fe50-11ea-217d-2bba5fa44fb5
@@ -121,6 +115,5 @@ md"## End of clip-06-02-06s.jl"
 # ╠═9851b4a8-fe50-11ea-083b-17e3c182a55a
 # ╠═eb921ad4-fe50-11ea-2450-7dfe19847755
 # ╠═b825edf6-00eb-11eb-039c-cfcb859dc43d
-# ╠═b79bb30c-00eb-11eb-1269-11956fb25a2b
 # ╠═985265b0-fe50-11ea-0594-05ac311d2e87
 # ╟─9862bdb4-fe50-11ea-1402-bbac3257c25d

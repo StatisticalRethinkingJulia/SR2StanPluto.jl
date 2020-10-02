@@ -60,7 +60,7 @@ begin
 	m6_9s = SampleModel("m6.9s", m6_9)
 	m6_9_data = Dict(:N => nrow(df), :k => 2, :happiness => df.happiness, :A => df.A, :mid => df.mid)
 	rc6_9s = stan_sample(m6_9s, data=m6_9_data)
-	success(rc6_9s) && (p6_9s = read_samples(m6_9s, output_format=:particles))
+	success(rc6_9s) && (part6_9s = read_samples(m6_9s, output_format=:particles))
 end
 
 # ╔═╡ 027d15e4-ff3b-11ea-3c1d-73ab679b7357

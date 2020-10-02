@@ -43,11 +43,11 @@ m6_5_data = Dict("N" => size(df, 1), "L" => df[:, :perc_lactose_s],
 
 # Sample using StanSample
 
-rc = stan_sample(m6_5s, data=m6_5_data);
+rc6_5s = stan_sample(m6_5s, data=m6_5_data);
 
-if success(rc)
-  dfa6_5 = read_samples(m6_5s; output_format=:dataframe)
-  p6_5 = Particles(dfa6_5)
+if success(rc6_5s)
+  dfa6_5s = read_samples(m6_5s; output_format=:dataframe)
+  part6_5s = Particles(dfa6_5s)
 end
 
 # End of m6.5s.jl

@@ -59,8 +59,8 @@ model {
 begin
 	m6_11s = SampleModel("m6.11s", m6_11)
 	m6_11_data = Dict(:N => nrow(df), :C => df.c, :P => df.p, :G => df.g)
-	rc = stan_sample(m6_11s, data=m6_11_data)
-	if success(rc)
+	rc6_11s = stan_sample(m6_11s, data=m6_11_data)
+	if success(rc6_11s)
 		dfa6_11s = read_samples(m6_11s, output_format=:dataframe)
 		Text(precis(dfa6_11s; io=String))
 	end
