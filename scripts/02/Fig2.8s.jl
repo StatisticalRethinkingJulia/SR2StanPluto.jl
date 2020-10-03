@@ -13,7 +13,7 @@ end
 md"## Fig2.8s.jl"
 
 begin
-	p = Vector{Plots.Plot{Plots.GRBackend}}(undef, 3)
+	figs = Vector{Plots.Plot{Plots.GRBackend}}(undef, 3)
 	x = 0:0.01:1
 
 	for (j, i) in enumerate([1, 2, 4])
@@ -31,19 +31,19 @@ begin
 
 	  # Analytical calculation
 
-	  p[j] = plot( x, pdf.(Beta( w+1 , n-w+1 ) , x ), xlims=(0.0, 1.0), 
+	  figs[j] = plot( x, pdf.(Beta( w+1 , n-w+1 ) , x ), xlims=(0.0, 1.0), 
 		lab="exact", leg=:topleft, title="n = $n")
 
 	  # Quadratic approximation using StatisticalRethinking.jl quap()
 
 	  df = DataFrame(:toss => samples)
 	  q = quap(df)
-	  plot!( p[j], x, pdf.(Normal(mean(q.toss), std(q.toss) ) , x ),
+	  plot!( figs[j], x, pdf.(Normal(mean(q.toss), std(q.toss) ) , x ),
 		lab="quap")
 	end
 end
 
-plot(p..., layout=(1, 3))
+plot(figs..., layout=(1, 3))
 
 md"## End of Fig2.8s.jl"
 

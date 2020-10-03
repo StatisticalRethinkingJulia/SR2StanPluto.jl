@@ -25,14 +25,14 @@ rad_dist(x) = sqrt(sum(x .^ 2))
 md"##### Plot densities."
 
 begin
-	p = density(xlabel="Radial distance from mode", ylabel="Density")
+	fig = density(xlabel="Radial distance from mode", ylabel="Density")
 	for d in [1, 10, 100, 1000]
 		m = MvNormal(zeros(d), Diagonal(ones(d)))
 		local y = rand(m, T)
 		rd = [rad_dist( y[:, i] ) for i in 1:T] 
-		density!(p, rd, lab="d=$d")
+		density!(rd, lab="d=$d")
 	end
-	p
+	fig
 end
 
 md"## End of clip-09-02s.jl"

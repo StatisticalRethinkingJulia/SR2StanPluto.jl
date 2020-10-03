@@ -49,7 +49,7 @@ model {
   }
   h1 ~ normal(mu, sigma);
 }
-"
+";
 
 begin
 	m6_7s = SampleModel("m6.7s", m6_7)
@@ -60,15 +60,20 @@ begin
 	  :fungus => df[:, :fungus],
 	  :treatment => df[:, :treatment]
 	)
-	rc = stan_sample(m6_7s; data=m6_7_data)
-	success(rc) && (dfa6_7 = read_samples(m6_7s; output_format=:dataframe))
+	rc6_7s = stan_sample(m6_7s; data=m6_7_data)
+	success(rc6_7s) && (dfa6_7s = read_samples(m6_7s; output_format=:dataframe))
+end;
+
+success(rc6_7s) && (part6_7s = Particles(dfa6_7s))
+
+success(rc6_7s) && (Text(precis(dfa6_7s; io=String)))
+
+if success(rc6_7s)
+	(s1, p1) = plotcoef([m6_7s], [:a, :bt, :bf])
+	p1
 end
 
-success(rc) && (p6_7 = Particles(dfa6_7))
-
-success(rc) && (Text(precis(dfa6_7; io=String)))
-
-success(rc) && plotcoef([m6_7s], [:a, :bt, :bf], "", "")
+s1
 
 md"## End of clip-06-06-09s.jl"
 

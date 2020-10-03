@@ -5,7 +5,6 @@ using Pkg, DrWatson
 
 indir = projectdir("notebooks")
 outdir = projectdir("scripts")
-
 !isdir(outdir) && mkdir(outdir)
 
 function copy_file(

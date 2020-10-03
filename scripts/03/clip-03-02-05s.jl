@@ -39,11 +39,11 @@ chn
 
 md"##### Plot the chain."
 
-p1 = plot(chn)
+plot(chn; seriestype=:traceplot)
 
 md"### snippet 3.4"
 
-density(samples, lab="Sample density")
+plot(chn; seriestype=:density)
 
 md"### snippet 3.5"
 

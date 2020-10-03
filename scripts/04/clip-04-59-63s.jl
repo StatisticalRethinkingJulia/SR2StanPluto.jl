@@ -22,7 +22,7 @@ end;
 
 md"##### Define the Stan language model."
 
-weightsmodel = "
+m4_8 = "
 data{
     int N;
     real xbar;
@@ -49,14 +49,14 @@ model{
 md"##### Define the SampleModel, input data and samples."
 
 begin
-	sm = SampleModel("weights", weightsmodel);
-	heightsdata = Dict(
+	m4_8s = SampleModel("m4.8s", m4_8);
+	m4_8_data = Dict(
 	  "N" => size(df, 1), 
 	  "height" => df.height_s, 
 	  "weight" => df.weight_s,
 	  "xbar" => mean(df.weight)
 	);
-	rc = stan_sample(sm, data=heightsdata)
+	rc4_8s = stan_sample(m4_8s, data=m4_8_data)
 end;
 
 rethinking = "
@@ -66,22 +66,21 @@ b       0.90 0.04   0.84   0.97
 sigma   5.07 0.19   4.77   5.38
 ";
 
-if success(rc)
-  sdf = read_summary(sm)
+if success(rc4_8s)
+  sdf4_8s = read_summary(m4_8s)
 end
 
 md"### Snippet 4.53"
 
 begin
-	dfs = read_samples(sm; output_format=:dataframe)
+	dfa4_8s = read_samples(m4_8s; output_format=:dataframe)
 
 	title = "Height vs. Weight, regions are" * "\nshowing 89% of predicted heights (lightgrey)" *
 		"\nand 89% hpd interval around the mean line (darkgrey)"
 	plotbounds(
 		df, :weight, :height,
-		dfs, [:a, :b, :sigma];
+		dfa4_8s, [:a, :b, :sigma];
 		bounds=[:predicted, :hpdi],
-		#fig=plotsdir("04", "Fig-56-63.png"),
 		title=title,
 		colors=[:lightblue, :darkgrey]
 	)

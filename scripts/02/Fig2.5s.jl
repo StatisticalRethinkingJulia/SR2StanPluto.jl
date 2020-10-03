@@ -6,15 +6,13 @@ using Pkg, DrWatson
 
 begin
 	@quickactivate "StatisticalRethinkingStan"
-  using StanSample
+	using StanSample
 	using StatisticalRethinking
 end
 
-md"## # Fig 2.5s"
+md"## Fig 2.5s"
 
-md"""
-
-It is not intended to show how to use Stan (yet)!"""
+md"##### This clip is only intended to generate Fig 2.5. It is not intended to show how to use Stan!"
 
 m2_0 = "
 // Inferring a rate
@@ -34,23 +32,23 @@ model {
 }
 ";
 
-md"### 1. Create a SampleModel object:"
+md"##### Create a SampleModel object:"
 
 m2_0s = SampleModel("m2.0s", m2_0);
 
-md"##### n will go from 1:9"
+md"##### In below loop, n will go from 1:9"
 
 begin
-	k = [1,0,1,1,1,0,1,0,1]       # Sequence observed
+	k = [1,0,1,1,1,0,1,0,1]               # Sequence actually observed is in k[1:n]
 	x = range(0, stop=9, length=10)
-end
+end;
 
 begin
-	p = Vector{Plots.Plot{Plots.GRBackend}}(undef, 9)
+	figs = Vector{Plots.Plot{Plots.GRBackend}}(undef, 9)
 	dens = Vector{DataFrame}(undef, 10)
 	for n in 1:9
 
-		p[n] = plot(xlims=(0.0, 1.0), ylims=(0.0, 3.0), leg=false)
+		figs[n] = plot(xlims=(0.0, 1.0), ylims=(0.0, 3.0), leg=false)
 		m2_0_data = Dict("n" => n, "k" => sum(k[1:n]));
 		rc = stan_sample(m2_0s, data=m2_0_data);
 		dfs = read_samples(m2_0s; output_format=:dataframe)
@@ -65,7 +63,7 @@ begin
 	end
 end
 
-plot(p..., layout=(3, 3))
+plot(figs..., layout=(3, 3))
 
 md"## End of Fig2.5s.jl"
 

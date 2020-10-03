@@ -53,13 +53,15 @@ model {
 begin
 	m6_2s = SampleModel("m6.2s", m6_2)
 	m6_2_data = Dict(:H => df.height, :LL => df.leg_left, :N => size(df, 1))
-	rc = stan_sample(m6_2s, data=m6_2_data)
-	success(rc) && (p = read_samples(m6_2s, output_format=:particles))
+	rc6_2s = stan_sample(m6_2s, data=m6_2_data)
+	success(rc6_2s) && (part6_2s = read_samples(m6_2s, output_format=:particles))
 end
 
-success(rc) && (chns = read_samples(m6_2s, output_format=:mcmcchains))
+success(rc6_2s) && (chns6_2s = read_samples(m6_2s, output_format=:mcmcchains))
 
-success(rc) && plot(chns)
+success(rc6_2s) && plot(chns6_2s; seriestype=:traceplot)
+
+success(rc6_2s) && plot(chns6_2s; seriestype=:density)
 
 md"## End of clip-06-07s.jl"
 

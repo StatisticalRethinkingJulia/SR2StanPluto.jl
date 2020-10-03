@@ -71,7 +71,7 @@ begin
 end
 
 if success(rc6_12s)
-	(s6_12s, p6_12s) = plotcoef([m6_11s, m6_12s], [:a, :b_PC, :b_GC, :b_U], "", "")
+	(s6_12s, p6_12s) = plotcoef([m6_11s, m6_12s], [:a, :b_PC, :b_GC, :b_U])
 	p6_12s
 end
 

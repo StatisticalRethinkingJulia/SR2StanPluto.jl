@@ -17,11 +17,11 @@ md"### Snippet 4.26"
 begin
 	df = CSV.read(sr_datadir("Howell1.csv"), DataFrame; delim=';')
 	df = filter(row -> row[:age] >= 18, df);
-end
+end;
 
 md"### Snippet 4.27"
 
-heightsmodel = "
+m4_1 = "
 // Inferring the mean and std
 data {
   int N;
@@ -41,33 +41,33 @@ model {
 }
 ";
 
-sm = SampleModel("heights", heightsmodel);
+begin
+	m4_1s = SampleModel("m4_1s", m4_1)
+	m4_1_data = Dict("N" => length(df.height), "h" => df.height)
+	rc4_1s = stan_sample(m4_1s, data=m4_1_data)
+end;
 
-heightsdata = Dict("N" => length(df.height), "h" => df.height);
-
-rc = stan_sample(sm, data=heightsdata);
-
-if success(rc)
+if success(rc4_1s)
 
 	# Array od DataFrames, 1 Dataframe/chain
 	
-	dfas = read_samples(sm; output_format=:dataframes)
-	plts = Vector{Plots.Plot{Plots.GRBackend}}(undef, size(dfas[1], 2))
+	dfs4_1s = read_samples(m4_1s; output_format=:dataframes)
+	figs = Vector{Plots.Plot{Plots.GRBackend}}(undef, size(dfs4_1s[1], 2))
 
-	for (indx, par) in enumerate(names(dfas[1]))
-		for i in 1:size(dfas,1)
+	for (indx, par) in enumerate(names(dfs4_1s[1]))
+		for i in 1:size(dfs4_1s,1)
 			if i == 1
-				plts[indx] = plot()
+				figs[indx] = plot()
 			end
-			e = ecdf(dfas[i][:, par])
+			e = ecdf(dfs4_1s[i][:, par])
 			r = range(minimum(e), stop=maximum(e), length=length(e.sorted_values))
-			plts[indx] = plot!(plts[indx], r, e(r), lab = "ECDF $(par) in chain $i")
+			figs[indx] = plot!(figs[indx], r, e(r), lab = "ECDF $(par) in chain $i")
 		end
 	end
-	plot(plts..., layout=(2,1))
+	plot(figs..., layout=(2,1))
 end
 
-success(rc) && (p = read_samples(sm; output_format=:particles))
+success(rc4_1s) && (part4_1s = read_samples(m4_1s; output_format=:particles))
 
 md"### Snippet 4.28 & 4.29"
 
@@ -75,11 +75,11 @@ begin
 	
 	# Append all chains in a single DataFrame
 
-	dfa = read_samples(sm; output_format=:dataframe)
+	dfa4_1s = read_samples(m4_1s; output_format=:dataframe)
 	
 	# Stan quap estimate
 	
-	q = quap(dfa)
+	quap4_1s = quap(dfa4_1s)
 end
 
 md"### Snippet 4.30"

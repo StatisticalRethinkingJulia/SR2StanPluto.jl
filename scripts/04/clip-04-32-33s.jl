@@ -43,28 +43,28 @@ md"### Snippet 4.31"
 
 m4_2s = SampleModel("heights", m4_2);
 
-heightsdata = Dict("N" => length(df.height), "h" => df.height);
+m4_2_data = Dict("N" => length(df.height), "h" => df.height);
 
-rc = stan_sample(m4_2s, data=heightsdata);
+rc4_2s = stan_sample(m4_2s, data=m4_2_data);
 
-if success(rc)
-	dfa = read_samples(m4_2s; output_format=:dataframe)
-	q = quap(dfa)
+if success(rc4_2s)
+	dfa4_2s = read_samples(m4_2s; output_format=:dataframe)
+	quap4_2s = quap(dfa4_2s)
 end
 
-Particles(dfa)
+Particles(dfa4_2s)
 
 md"### snippet 4.32"
 
 md"##### Compute covariance matrix."
 
-cov(Array(dfa))
+cov(Array(dfa4_2s))
 
 md"### snippet 4.33"
 
 md"##### Compute correlation matrix."
 
-cor(Array(dfa))
+cor(Array(dfa4_2s))
 
 md"## End of clip-04-32-34s.jl"
 

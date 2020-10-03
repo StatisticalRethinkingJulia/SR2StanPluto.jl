@@ -56,23 +56,31 @@ begin
 	m5_7s = SampleModel("m5.7", m5_7);
 	m5_7_data = Dict("N" => size(df, 1), "M" => df[!, :lmass_s],
 		"K" => df[!, :kcal_per_g_s], "NC" => df[!, :neocortex_perc_s]);
-	rc = stan_sample(m5_7s, data=m5_7_data);
-	success(rc) && (dfa7 = read_samples(m5_7s; output_format=:dataframe))
+	rc5_7s = stan_sample(m5_7s, data=m5_7_data);
+	success(rc5_7s) && (dfa5_7s = read_samples(m5_7s; output_format=:dataframe))
 end;
 
-success(rc) && Particles(dfa7)
+success(rc5_7s) && Particles(dfa5_7s)
 
-success(rc) && quap(dfa7)
+success(rc5_7s) && quap(dfa5_7s)
 
-(s1, p1) = plotcoef([m5_5s, m5_6s, m5_7s], [:a, :bN, :bM], "",
-  "Masked relationships: bN & bM Normal estimates")
+begin
+	(s1, p1) = plotcoef([m5_5s, m5_6s, m5_7s], [:a, :bN, :bM];
+		title="Masked relationships: bN & bM Normal estimates")
+	p1
+end
+
+s1
 
 plot(p1)
 
-(s2, p2) = plotcoef([m5_5s, m5_6s, m5_7s], [:a, :bN, :bM], "",
-	"Masked relationships: bN & bM Quap estimates", quap)
+begin
+	(s2, p2) = plotcoef([m5_5s, m5_6s, m5_7s], [:a, :bN, :bM];
+		title="Masked relationships: bN & bM Quap estimates", func=quap)
+	p2
+end
 
-plot(p2)
+s2
 
 md"## End of clip-05-38s.jl"
 

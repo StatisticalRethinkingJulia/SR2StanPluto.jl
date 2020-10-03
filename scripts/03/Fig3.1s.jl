@@ -22,14 +22,14 @@ begin
 end;
 
 begin
-	p1 = scatter(samples, ylim=(0, 1), xlab="Sample number",
+	fig1 = scatter(samples, ylim=(0, 1), xlab="Sample number", markersize=0.1,
 	  ylab="Proportion water(p)", leg=false)
-	p2 = density(samples, xlim=(0.0, 1.0), ylim=(0.0, 3.0),
+	fig2 = density(samples, xlim=(0.0, 1.0), ylim=(0.0, 3.0),
 	  xlab="Proportion water (p)",
 	  ylab="Density", leg=false)
 end;
 
-plot(p1, p2, layout=(1,2))
+plot(fig1, fig2, layout=(1,2))
 
 md"## End of Fig3.1s.jl"
 

@@ -51,15 +51,15 @@ model {
 begin
 	m6_6s = SampleModel("m6.6s", m6_6)
 	m6_6_data = Dict(:N => nrow(df), :h0 => df.h0, :h1 => df.h1)
-	rc = stan_sample(m6_6s; data=m6_6_data)
-	success(rc) && (dfa = read_samples(m6_6s; output_format=:dataframe))
+	rc6_6s = stan_sample(m6_6s; data=m6_6_data)
+	success(rc6_6s) && (dfa6_6s = read_samples(m6_6s; output_format=:dataframe))
 end;
 
-if success(rc)
-	p = Particles(dfa)
+if success(rc6_6s)
+	part6_6s = Particles(dfa6_6s)
 end
 
-success(rc) && (Text(precis(dfa; io=String)))
+success(rc6_6s) && (Text(precis(dfa6_6s; io=String)))
 
 md"## End of clip-06-13-15s.jl"
 

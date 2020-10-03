@@ -52,19 +52,19 @@ md"## Define the SampleModel, etc."
 begin
 	m5_6s = SampleModel("m5.6", m5_6);
 	m5_6_data = Dict("N" => size(df, 1), "M" => df.lmass_s, "K" => df.kcal_per_g_s);
-	rc = stan_sample(m5_6s, data=m5_6_data);
+	rc5_6s = stan_sample(m5_6s, data=m5_6_data);
 end;
 
-if success(rc)
+if success(rc5_6s)
 
   # Describe the draws
 
-  dfa6 = read_samples(m5_6s; output_format=:dataframe)
+  dfa5_6s = read_samples(m5_6s; output_format=:dataframe)
 
   title = "Kcal_per_g vs. log mass" * "\nshowing 89% predicted and hpd range"
   plotbounds(
     df, :lmass, :kcal_per_g,
-    dfa6, [:a, :bM, :sigma];
+    dfa5_6s, [:a, :bM, :sigma];
     title=title
   )
 end

@@ -20,7 +20,9 @@ begin
 	);
 	df.fungus = [rand(Binomial(1, 0.5 - 0.4 * df[i, :treatment]), 1)[1] for i in 1:N]
 	df.h1 = [df[i, :h0] + rand(Normal(5 - 3 * df[i, :fungus]), 1)[1] for i in 1:N]
-end
+end;
+
+Text(precis(df; io=String))
 
 m6_7 = "
 data {
@@ -64,16 +66,14 @@ begin
 	success(rc6_7s) && (dfa6_7s = read_samples(m6_7s; output_format=:dataframe))
 end;
 
-success(rc6_7s) && (p = Particles(dfa6_7s))
+success(rc6_7s) && Particles(dfa6_7s)
 
 success(rc6_7s) && (Text(precis(dfa6_7s; io=String)))
 
 if success(rc6_7s)
-	(s6_7s, p6_7s) = plotcoef([m6_7s], [:a, :bt, :bf], "", "")
-	p6_7s
+	(part6_7s, fig6_7s) = plotcoef([m6_7s], [:a, :bt, :bf])
+	fig6_7s
 end
-
-success(rc6_7s) && s6_7s
 
 md"## End of clip-06-16s.jl"
 

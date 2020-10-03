@@ -14,15 +14,16 @@ include(projectdir("models", "05", "m5.3s.jl"))
 
 md"## Clip-05-15-17s.jl"
 
-if success(rc)
+if success(rc5_3s)
 	begin
-		p = Particles(dfa3)
+		part5_3s = Particles(dfa5_3s)
 		N = size(df, 1)
 		plot(xlab="Observed divorce", ylab="Predicted divorce",
 			title="Posterior predictive plot")
 		v = zeros(size(df, 1), 4);
 		for i in 1:N
-			mu = mean(p.bM) * df[i, :Marriage_s] + mean(p.bA) * df[i, :MedianAgeMarriage_s]
+			mu = mean(part5_3s.bM) * df[i, :Marriage_s] + 
+				mean(part5_3s.bA) * df[i, :MedianAgeMarriage_s]
 			if i == 13
 				annotate!([(df[i, :Divorce_s]-0.05, mu, Plots.text("ID", 6, :red, :right))])
 			end
@@ -30,7 +31,7 @@ if success(rc)
 				annotate!([(df[i, :Divorce_s]-0.05, mu, Plots.text("RI", 6, :red, :right))])
 			end
 			scatter!([df[i, :Divorce_s]], [mu], color=:red)
-			s = rand(Normal(mu, mean(p.sigma)), 1000)
+			s = rand(Normal(mu, mean(part5_3s.sigma)), 1000)
 			v[i, :] = [maximum(s), hpdi(s, alpha=0.11)[2], hpdi(s, alpha=0.11)[1], minimum(s)]
 		end
 		for i in 1:N
@@ -41,8 +42,8 @@ if success(rc)
 		end
 		df2 = DataFrame(
 			:x => df.Divorce_s,
-			:y => [mean(p.bM) * df[i, :Marriage_s] + 
-				mean(p.bA) * df[i, :MedianAgeMarriage_s] for i in 1:N]
+			:y => [mean(part5_3s.bM) * df[i, :Marriage_s] + 
+				mean(part5_3s.bA) * df[i, :MedianAgeMarriage_s] for i in 1:N]
 		)
 		m1 = lm(@formula(y ~ x), df2)
 		x = -2.1:0.1:2.2

@@ -33,8 +33,8 @@ md"### Snippet 4.24"
 md"##### Generate approximate probabilities."
 
 begin
-	#mu_list = repeat(range(150, 170, length=200), 200);
-	#sigma_list = repeat(range(4, 20, length=200), inner=200);
+	mu_list_1 = repeat(range(150, 170, length=200), 200);
+	sigma_list_1 = repeat(range(4, 20, length=200), inner=200);
 end;
 
 function grid_prob(x, y, prior_x, prior_y, obs)

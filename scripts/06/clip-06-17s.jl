@@ -63,7 +63,7 @@ end
 success(rc6_8s) && (Text(precis(dfa6_8s; io=String)))
 
 if success(rc6_8s)
-	(s1, p1) = plotcoef([m6_7s, m6_8s], [:a, :bt, :bf], "", "")
+	(s1, p1) = plotcoef([m6_7s, m6_8s], [:a, :bt, :bf])
 	p1
 end
 

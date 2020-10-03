@@ -50,14 +50,14 @@ model{
 md"##### Define the SampleModel, etc,"
 
 begin
-	m4_9s = SampleModel("weights", m4_9);
-	heightsdata = Dict(
+	m4_9s = SampleModel("m4.9s", m4_9);
+	m4_9_data = Dict(
 		"N" => size(df, 1), 
 		"height" => df.height, 
 		"weight" => df.weight_s,
 		"weight_sq" => df.weight_sq_s
 	);
-	rc = stan_sample(m4_9s, data=heightsdata);
+	rc4_9s = stan_sample(m4_9s, data=m4_9_data);
 end;
 
 rethinking = "
@@ -68,15 +68,15 @@ b2     -7.80 0.27  -8.24  -7.36
 sigma   5.77 0.18   5.49   6.06
 ";
 
-if success(rc)
-  sdf = read_summary(m4_9s)
+if success(rc4_9s)
+  sdf4_9s = read_summary(m4_9s)
 end
 
 md"### Snippet 4.53 - 4.67"
 
-if success(rc)
+if success(rc4_9s)
 	begin
-		dfa = read_samples(m4_9s; output_format=:dataframe)
+		dfa4_9s = read_samples(m4_9s; output_format=:dataframe)
 
 		function link_poly(dfa::DataFrame, xrange)
 			vars = Symbol.(names(dfa))
@@ -86,7 +86,7 @@ if success(rc)
 		mu_range = -2:0.1:2
 
 		xbar = mean(df[:, :weight])
-		mu = link_poly(dfa, mu_range);
+		mu = link_poly(dfa4_9s, mu_range);
 
 		plot(xlab="weight_s", ylab="height")
 		for (indx, mu_val) in enumerate(mu_range)
@@ -98,11 +98,11 @@ if success(rc)
 	end
 end
 
-if success(rc)
+if success(rc4_9s)
 	plot(xlab="weight_s", ylab="height", leg=:bottomright)
 	fheight(weight, a, b1, b2) = a + weight * b1 + weight^2 * b2
 	testweights = -2:0.01:2
-	arr = [fheight.(w, dfa.alpha, dfa.beta1, dfa.beta2) for w in testweights]
+	arr = [fheight.(w, dfa4_9s.alpha, dfa4_9s.beta1, dfa4_9s.beta2) for w in testweights]
 	m = [mean(v) for v in arr]
 	quantiles = [quantile(v, [0.055, 0.945]) for v in arr]
 	lower = [q[1] - m for (q, m) in zip(quantiles, m)]

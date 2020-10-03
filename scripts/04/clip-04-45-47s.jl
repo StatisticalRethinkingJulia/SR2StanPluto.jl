@@ -43,16 +43,16 @@ model {
 
 md"##### Define the SampleModel and sample."
 
-m4_5s = SampleModel("weights", m4_5);
-
-heightsdata = Dict("N" => length(df.height), "height" => df.height, "weight" => df.weight_c);
-
-rc = stan_sample(m4_5s, data=heightsdata);
+begin
+	m4_5s = SampleModel("m4.5s", m4_5)
+	m4_5_data = Dict("N" => length(df.height), "height" => df.height, "weight" => df.weight_c)
+	rc4_5s = stan_sample(m4_5s, data=m4_5_data)
+end;
 
 md"###### Plot estimates using the N = [10, 50, 150, 352] observations."
 
 begin
-	p = Vector{Plots.Plot{Plots.GRBackend}}(undef, 4)
+	figs = Vector{Plots.Plot{Plots.GRBackend}}(undef, 4)
 	nvals = [10, 50, 150, 352]
 	for i in 1:length(nvals)
 		N = nvals[i]
@@ -62,27 +62,27 @@ begin
 			"weight" => df[1:N, :weight]
 		)
 
-		sm = SampleModel("weights", m4_5)
-		rc = stan_sample(m4_5s, data=heightsdataN)
+		m4_5s = SampleModel("m4.5s", m4_5)
+		rc4_5s = stan_sample(m4_5s, data=heightsdataN)
 
-		if success(rc)
+		if success(rc4_5s)
 
 			local xi = 30.0:0.1:65.0
 			sample_df = read_samples(m4_5s; output_format=:dataframe)
-			p[i] = scatter(df[1:N, :weight], df[1:N, :height], 
+			figs[i] = scatter(df[1:N, :weight], df[1:N, :height], 
 				leg=false, xlab="weight_c")
 			for j in 1:N
 				local yi = sample_df[j, :alpha] .+ sample_df[j, :beta]*xi
-				plot!(p[i], xi, yi, title="N = $N")
+				plot!(figs[i], xi, yi, title="N = $N")
 			end
 
-		scatter!(p[i], df[1:N, :weight], df[1:N, :height], leg=false,
+		scatter!(figs[i], df[1:N, :weight], df[1:N, :height], leg=false,
 			color=:darkblue, xlab="weight")
 		end
 	end
 end
 
-plot(p..., layout=(2, 2))
+plot(figs..., layout=(2, 2))
 
 md"## End of clip-04-45-47a.jl"
 

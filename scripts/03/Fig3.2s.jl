@@ -25,23 +25,26 @@ begin
 	samples2 = sample(p_grid, Weights(posterior), N)
 end;
 
-begin
-	b1 = mapreduce(p -> p < 0.5 ? 1 : 0, +, samples2) / N
-	b2 = mapreduce(p -> (p > 0.5 && p < 0.75) ? 1 : 0, +, samples2) / N
-	b3 = quantile(samples2, 0.8)
-	b4 = quantile(samples2, [0.1, 0.9])
+b1 = mapreduce(p -> p < 0.5 ? 1 : 0, +, samples2) / N
 
-	p1 = plot_density_interval(samples2, [0.0, 0.5],
+b2 = mapreduce(p -> (p > 0.5 && p < 0.75) ? 1 : 0, +, samples2) / N
+
+b3 = quantile(samples2, 0.8)
+
+b4 = quantile(samples2, [0.1, 0.9])
+
+begin
+	fig1 = plot_density_interval(samples2, [0.0, 0.5],
 	  xlab="Proportion water (p)");
-	p2 = plot_density_interval(samples2, [0.5, 0.75],
+	fig2 = plot_density_interval(samples2, [0.5, 0.75],
 	  xlab="Proportion water (p)");
-	p3 = plot_density_interval(samples2, [0.0, b3], 
+	fig3 = plot_density_interval(samples2, [0.0, b3], 
 	  xlab="Proportion water (p)");
-	p4 = plot_density_interval(samples2, b4, 
+	fig4 = plot_density_interval(samples2, b4, 
 	  xlab="Proportion water (p)")
 end;
 
-plot(p1, p2, p3, p4, layout=(2, 2))
+plot(fig1, fig2, fig3, fig4, layout=(2, 2))
 
 md"## End of Fig3.2s.jl"
 

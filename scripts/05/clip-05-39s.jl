@@ -18,15 +18,21 @@ md"## Clip-05-39s.jl"
 
 md"### snippet 5.39"
 
-(s1, p1) = plotcoef([m5_5s, m5_6s, m5_7s], [:a, :bN, :bM], "",
-	"Masked relationships: bN & bM Normal estimates")
+begin
+	(s1, p1) = plotcoef([m5_5s, m5_6s, m5_7s], [:a, :bN, :bM];
+		title="Masked relationships: bN & bM Normal estimates")
+	p1
+end
 
-plot(p1)
+s1
 
-(s2, p2) = plotcoef([m5_5s, m5_6s, m5_7s], [:a, :bN, :bM], "",
-	"Masked relationships: bN & bM Normal estimates", quap)
+begin
+	(s2, p2) = plotcoef([m5_5s, m5_6s, m5_7s], [:a, :bN, :bM];
+		title="Masked relationships: bN & bM Normal estimates", func=quap)
+	p2
+end
 
-plot(p2)
+s2
 
 md"## End of clip-05-39s.jl"
 

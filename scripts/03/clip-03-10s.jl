@@ -14,7 +14,7 @@ md"## Clip-03-10s.jl"
 
 md"##### Define the Stan language model."
 
-m_17s = "
+m3_1 = "
 // Inferring a Rate
 data {
   int N;
@@ -37,7 +37,7 @@ model {
 
 md"##### Define the SampleModel."
 
-sm = SampleModel("m_17s", m_17s);
+m3_1s = SampleModel("m3_1ss", m3_1);
 
 md"##### Use 4 observations."
 
@@ -49,14 +49,14 @@ end
 
 md"##### Input data for stan_sample()."
 
-m_17s_data = Dict("N" => length(n2), "n" => n2, "k" => k2);
+m3_1_data = Dict("N" => length(n2), "n" => n2, "k" => k2);
 
 md"##### Sample using stan_sample()."
 
-rc = stan_sample(sm, data=m_17s_data)
+rc3_1s = stan_sample(m3_1s, data=m3_1_data);
 
-if success(rc)
-  chn = read_samples(sm; output_format=:mcmcchains)
+if success(rc3_1s)
+  chn = read_samples(m3_1s; output_format=:mcmcchains)
 end
 
 chn

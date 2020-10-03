@@ -12,18 +12,17 @@ end
 
 md"## Clip-06-02-06s.jl"
 
-N = 100
-
 md"### Snippet 6.1"
 
 begin
+	N = 100
 	df = DataFrame(
 		height = rand(Normal(10, 2), N),
 		leg_prop = rand(Uniform(0.4, 0.5), N),
 	)
 	df.leg_left = df.leg_prop .* df.height + rand(Normal(0, 0.02), N)
 	df.leg_right = df.leg_prop .* df.height + rand(Normal(0, 0.02), N)
-end
+end;
 
 md"### Snippet 6.2"
 
@@ -59,31 +58,34 @@ begin
 	  :LR => df[:, :leg_right],
 	  :N => size(df, 1)
 	)
-	rc = stan_sample(m6_1s, data=m_6_1_data)
-	success(rc) && (p = read_samples(m6_1s, output_format=:particles))
+	rc6_1s = stan_sample(m6_1s, data=m_6_1_data)
+	success(rc6_1s) && (part6_1s = read_samples(m6_1s, output_format=:particles))
 end
 
-if success(rc)
-	(s0, p0) = plotcoef([m6_1s], [:a, :bL, :bR, :sigma], "", "Multicollinearity between bL and bR", quap)
-	plot(p0)
+if success(rc6_1s)
+	(s0, p0) = plotcoef([m6_1s], [:a, :bL, :bR, :sigma];
+		title="Multicollinearity between bL and bR", func=quap)
+	p0
 end
 
-if success(rc)
-	dfa = read_samples(m6_1s, output_format=:dataframe)
+s0
+
+if success(rc6_1s)
+	dfa6_1s = read_samples(m6_1s, output_format=:dataframe)
 
 	# Fit a linear regression
 
-	m = lm(@formula(bL ~ bR), dfa)
+	m = lm(@formula(bL ~ bR), dfa6_1s)
 
 	# estimated coefficients from the model
 
 	coefs = coef(m)
 
-	p1 = plot(xlabel="bR", ylabel="bL", lab="bL ~ bR")
-	plot!(p1, dfa[:, :bR], dfa[:, :bL])
-	p2 = density(p.bR.particles + p.bL.particles, xlabel="sum of bL and bR",
+	fig1 = plot(xlabel="bR", ylabel="bL", lab="bL ~ bR")
+	plot!(dfa6_1s[:, :bR], dfa6_1s[:, :bL])
+	fig2 = density(part6_1s.bR.particles + part6_1s.bL.particles, xlabel="sum of bL and bR",
 		ylabel="Density", lab="bL + bR")
-	plot(p1, p2, layout=(1, 2))
+	plot(fig1, fig2, layout=(1, 2))
 end
 
 md"## End of clip-06-02-06s.jl"

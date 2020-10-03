@@ -51,19 +51,19 @@ begin
 	m6_5s = SampleModel("m6.5s", m6_5);
 	m6_5_data = Dict("N" => size(df, 1), "L" => df.perc_lactose_s, "F" => df.perc_fat_s,
 		"K" => 	df.kcal_per_g_s);
-	rc = stan_sample(m6_5s, data=m6_5_data)
-	success(rc) && (dfa6_5 = read_samples(m6_5s; output_format=:dataframe))
+	rc6_5s = stan_sample(m6_5s, data=m6_5_data)
+	success(rc6_5s) && (dfa6_5 = read_samples(m6_5s; output_format=:dataframe))
 end;
 
-success(rc) && (p = Particles(dfa6_5))
+success(rc6_5s) && (p6_5s = Particles(dfa6_5))
 
-if success(rc)
-	(r1, p1) = plotcoef([m6_3s, m6_4s, m6_5s], [:a, :bF, :bL, :sigma], "",
-		"Multicollinearity for milk model using quap()", quap)
-	p1
+if success(rc6_5s)
+	(s6_5s, f6_5s) = plotcoef([m6_3s, m6_4s, m6_5s], [:a, :bF, :bL, :sigma];
+		title="Multicollinearity for milk model using quap()", func=quap)
+	f6_5s
 end
 
-success(rc) && r1
+success(rc6_5s) && s6_5s
 
 md"### Snippet 6.11"
 

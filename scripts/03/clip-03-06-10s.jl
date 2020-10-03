@@ -40,7 +40,7 @@ chn
 
 md"##### Plot the chain."
 
-plot(chn)
+plot(chn; seriestype=:density)
 
 md"### snippet 3.6"
 
@@ -63,15 +63,15 @@ md"### snippet 3.10"
 b4 = quantile(samples, [0.1, 0.9])
 
 begin
-	p1 = plot_density_interval(samples, [0.0, 0.5],
+	fig1 = plot_density_interval(samples, [0.0, 0.5],
 	  xlab="Proportion water (p)");
-	p2 = plot_density_interval(samples, [0.5, 0.75],
+	fig2 = plot_density_interval(samples, [0.5, 0.75],
 	  xlab="Proportion water (p)");
-	p3 = plot_density_interval(samples, [0.0, b3], 
+	fig3 = plot_density_interval(samples, [0.0, b3], 
 	  xlab="Proportion water (p)");
-	p4 = plot_density_interval(samples, b4, 
+	fig4 = plot_density_interval(samples, b4, 
 	  xlab="Proportion water (p)");
-	plot(p1, p2, p3, p4, layout=(2, 2))
+	plot(fig1, fig2, fig3, fig4, layout=(2, 2))
 end
 
 md"## End of clip-03-06-10s.jl"

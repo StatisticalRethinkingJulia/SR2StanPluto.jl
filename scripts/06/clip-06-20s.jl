@@ -32,10 +32,11 @@ end
 md"##### Execute m6.7s & m6.8s."
 
 begin
-	(s, p) = plotcoef([m6_7s, m6_8s], [:a, :bt, :bf], "")
+	(s, p) = plotcoef([m6_7s, m6_8s], [:a, :bt, :bf])
 	p
 end
 
 s
 
+md"## End of clip-06-20s.jl"
 

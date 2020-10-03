@@ -28,16 +28,16 @@ begin
 	likelihood = pdf.(Binomial.(9, p_grid), 6)
 end;
 
-p = Vector{Plots.Plot{Plots.GRBackend}}(undef, 9);
+figs = Vector{Plots.Plot{Plots.GRBackend}}(undef, 9);
 
 for i in 1:3
   j = (i-1)*3 + 1
-  p[j] = plot(p_grid, prior[i], leg=false, ylims=(0, 1), title="Prior")
-  p[j+1] = plot(p_grid, likelihood, leg=false, title="Likelihood")
-  p[j+2] = plot(p_grid, prior[i].*likelihood, leg=false, title="Posterior")
+  figs[j] = plot(p_grid, prior[i], leg=false, ylims=(0, 1), title="Prior")
+  figs[j+1] = plot(p_grid, likelihood, leg=false, title="Likelihood")
+  figs[j+2] = plot(p_grid, prior[i].*likelihood, leg=false, title="Posterior")
 end
 
-plot(p..., layout=(3, 3))
+plot(figs..., layout=(3, 3))
 
 md"## End of Fig2.6s.jl"
 

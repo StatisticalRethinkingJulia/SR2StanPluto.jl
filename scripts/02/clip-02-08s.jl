@@ -41,11 +41,13 @@ begin
 	chns = MCMCChains.Chains(a3d, [:p])
 end
 
+md"### snippet 2.9"
+
 md"##### Show density and computed conjugate solution."
 
 begin
 	x = 0:0.01:1
-	density(chns, lab="Samples")
+	density(chns, lab="Samples", leg=:topleft)
 	plot!( x, pdf.(Beta( w+1 , n-w+1 ) , x ), lab="Conjugate solution")
 end
 

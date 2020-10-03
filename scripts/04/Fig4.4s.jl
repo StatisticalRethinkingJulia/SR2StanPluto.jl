@@ -60,7 +60,7 @@ begin
 	post_df = grid_prob(mu_list, sigma_list, prior_mu, prior_sigma,
 	  df[:, :height])
 
-	p1 = contour(mu_list, sigma_list, post_df[:, :prob],
+	fig1 = contour(mu_list, sigma_list, post_df[:, :prob],
 	  xlim = (153.5, 155.7),
 	  ylim = (7.0, 8.5),
 	  xlab="height",
@@ -70,7 +70,7 @@ end
 
 md"### snippet 4.18"
 
-p2 = heatmap(mu_list, sigma_list, transpose(reshape(post_df[:, :prob], 100,100)),
+fig2 = heatmap(mu_list, sigma_list, transpose(reshape(post_df[:, :prob], 100,100)),
   xlim = (153.5, 155.7),
   ylim = (7.0, 8.5),
   xlab="height",
@@ -102,28 +102,28 @@ md"### Snippet 4.21"
 md"##### Density of mu."
 
 begin
-	p3 = density(samples[:, :mu],
+	fig3 = density(samples[:, :mu],
 	  xlab="height",
 	  ylab="density",
 	  lab="mu",
 	  title="posterior mu")
-	vline!(p3, [bnds[:mu, :upper]], line=:dash, lab="Lower bound")
-	vline!(p3, [bnds[:mu, :lower]], line=:dash, lab="Upper bound")
+	vline!([bnds[:mu, :upper]], line=:dash, lab="Lower bound")
+	vline!([bnds[:mu, :lower]], line=:dash, lab="Upper bound")
 end
 
 md"##### Density of sigma."
 
 begin
-	p4 = density(samples[:, :sigma],
+	fig4 = density(samples[:, :sigma],
 	  xlab="sigma",
 	  ylab="density",
 	  lab="sigma",
 	  title="posterior sigma")
-	vline!(p4, [bnds[:sigma, :upper]], line=:dash, lab="Lower bound")
-	vline!(p4, [bnds[:sigma, :lower]], line=:dash, lab="Upper bound")
+	vline!([bnds[:sigma, :upper]], line=:dash, lab="Lower bound")
+	vline!([bnds[:sigma, :lower]], line=:dash, lab="Upper bound")
 end
 
-plot(p1, p2, p3, p4, layout=(2,2))
+plot(fig1, fig2, fig3, fig4, layout=(2,2))
 
 md"## End of Fig4.4s.jl"
 

@@ -47,7 +47,7 @@ Text(precis(df; io=String))
 
 md"##### Our model:"
 
-m4_1_book = "
+m4_1_rethinking_1 = "
   height ~ Normal(μ, σ) # likelihood
   μ ~ Normal(178,20) # prior
   σ ~ Uniform(0, 50) # prior
@@ -55,7 +55,7 @@ m4_1_book = "
 
 md"##### Plot the prior densities."
 
-p = Vector{Plots.Plot{Plots.GRBackend}}(undef, 4);
+figs = Vector{Plots.Plot{Plots.GRBackend}}(undef, 4);
 
 md"### snippet 4.12"
 
@@ -63,7 +63,7 @@ md"##### μ prior."
 
 d1 = Normal(178, 20)
 
-p[1] = plot(100:250, [pdf(d1, μ) for μ in 100:250],
+figs[1] = plot(100:250, [pdf(d1, μ) for μ in 100:250],
 	xlab="mu",
 	ylab="density",
 	lab="Prior on mu");
@@ -74,7 +74,7 @@ md"##### Show σ  prior."
 
 begin
 	d2 = Uniform(0, 50)
-	p[2] = plot(-5:0.1:55, [pdf(d2, σ) for σ in 0-5:0.1:55],
+	figs[2] = plot(-5:0.1:55, [pdf(d2, σ) for σ in 0-5:0.1:55],
 		xlab="sigma",
 		ylab="density",
 		lab="Prior on sigma")
@@ -90,7 +90,7 @@ begin
 	sample_mu_100 = rand(d3, 10000)
 
 	prior_height_20 = [rand(Normal(sample_mu_20[i], sample_sigma[i]), 1)[1] for i in 1:10000]
-	p[3] = density(prior_height_20,
+	figs[3] = density(prior_height_20,
 		xlab="height",
 		ylab="density",
 		lab="Prior predictive height")
@@ -98,13 +98,13 @@ end;
 
 begin
 	prior_height_100 = [rand(Normal(sample_mu_100[i], sample_sigma[i]), 1)[1] for i in 1:10000]
-	p[4] = density(prior_height_100,
+	figs[4] = density(prior_height_100,
 		xlab="height",
 		ylab="density",
 		lab="Prior predictive mu")
 end;
 
-plot(p..., layout=(2,2))
+plot(figs..., layout=(2,2))
 
 md"##### Store in a DataFrame."
 
@@ -163,25 +163,25 @@ m4_1s = SampleModel("heights", m4_1);
 
 md"##### Package the data:"
 
-heightsdata = Dict("N" => length(df[:, :height]), "h" => df[:, :height]);
+m4_1_data = Dict("N" => length(df[:, :height]), "h" => df[:, :height]);
 
 md"##### Run Stan's cmdstan:"
 
-rc = stan_sample(m4_1s, data=heightsdata);
+rc4_1s = stan_sample(m4_1s, data=m4_1_data);
 
 md"##### Check if sampling went ok:"
 
 md"##### Read in the samples and show a chain summary."
 
-success(rc) && (chn = read_samples(m4_1s; output_format=:mcmcchains))
+success(rc4_1s) && (chn4_1s = read_samples(m4_1s; output_format=:mcmcchains))
 
 md"##### Plot the sampling trace."
 
-plot(chn, seriestype = :traceplot)
+plot(chn4_1s, seriestype = :traceplot)
 
 md"##### Plot the density of posterior draws."
 
-plot(chn, seriestype = :density)
+plot(chn4_1s, seriestype = :density)
 
 md"## End of clip-04-07-15s.jl"
 

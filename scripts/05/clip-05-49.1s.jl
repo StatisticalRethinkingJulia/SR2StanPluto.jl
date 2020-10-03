@@ -60,14 +60,14 @@ begin
 	m5_9s = SampleModel("m5.9", m5_9)
 	m5_9_data = Dict("N" => size(df, 1), "clade_id" => df[:, :clade_id],
     "K" => df[!, :kcal_per_g_s], "k" => length(unique(df[:, :clade])))
-	rc = stan_sample(m5_9s, data=m5_9_data)
-	if success(rc)
-		dfa9 = read_samples(m5_9s; output_format=:dataframe)
-		p = Particles(dfa9)
+	rc5_9s = stan_sample(m5_9s, data=m5_9_data)
+	if success(rc5_9s)
+		dfa5_9s = read_samples(m5_9s; output_format=:dataframe)
+		part5_9s = Particles(dfa5_9s)
 	end
 end
 
-success(rc) && quap(dfa9)
+success(rc5_9s) && quap(dfa5_9s)
 
 rethinking = "
 	   mean   sd  5.5% 94.5% n_eff Rhat4
@@ -78,7 +78,7 @@ a[4]  -0.53 0.29 -0.97 -0.05   357     1
 sigma  0.81 0.11  0.64  0.98   477     1
 ";
 
-success(rc) && mean(df[:, :lmass])
+success(rc5_9s) && mean(df[:, :lmass])
 
 md"## End of clip-05-49.1s.jl"
 

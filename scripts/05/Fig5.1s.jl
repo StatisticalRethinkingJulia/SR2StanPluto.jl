@@ -12,7 +12,6 @@ end
 
 md"## Fig5.1s.jl"
 
-
 begin
 	df = CSV.read(sr_datadir("WaffleDivorce.csv"), DataFrame)
 	
