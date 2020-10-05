@@ -10,6 +10,7 @@ using Pkg, DrWatson
 # ╔═╡ 62916bce-fb76-11ea-1d36-77a8b156aabb
 begin
 	@quickactivate "StatisticalRethinkingStan"
+	using LinearAlgebra
 	using StanSample
 	using StatisticalRethinking
 end
@@ -77,6 +78,9 @@ md"##### Compute covariance matrix."
 # ╔═╡ 62e6d8f2-fb76-11ea-1f70-a9c8b2002ca4
 cov(Array(dfa4_2s))
 
+# ╔═╡ ddef1ab6-0646-11eb-1ede-fb64cff966ac
+diag(cov(Array(dfa4_2s))) .|> sqrt
+
 # ╔═╡ 62ef3826-fb76-11ea-2369-c157a18c626c
 md"### snippet 4.33"
 
@@ -85,6 +89,15 @@ md"##### Compute correlation matrix."
 
 # ╔═╡ 62feda92-fb76-11ea-32a4-454502ca4488
 cor(Array(dfa4_2s))
+
+# ╔═╡ 79bff28a-0647-11eb-001c-df98d869f083
+mean(quap4_2s.mu)
+
+# ╔═╡ 1a0549ee-0647-11eb-21e4-c90ded497bf1
+post = rand(MvNormal([mean(quap4_2s.mu), mean(quap4_2s.sigma)], cov(Array(dfa4_2s))), 10000)
+
+# ╔═╡ c61d538e-0647-11eb-19c9-0bf01d06810c
+cov(post')
 
 # ╔═╡ 6306bcf8-fb76-11ea-2feb-af94851021ba
 md"## End of clip-04-32-34s.jl"
@@ -105,7 +118,11 @@ md"## End of clip-04-32-34s.jl"
 # ╟─62d7694e-fb76-11ea-28c4-4d1e78f54b82
 # ╟─62e3e746-fb76-11ea-327a-21f83959bb7c
 # ╠═62e6d8f2-fb76-11ea-1f70-a9c8b2002ca4
+# ╠═ddef1ab6-0646-11eb-1ede-fb64cff966ac
 # ╟─62ef3826-fb76-11ea-2369-c157a18c626c
 # ╟─62f79ff0-fb76-11ea-323d-074b61eb40f0
 # ╠═62feda92-fb76-11ea-32a4-454502ca4488
+# ╠═79bff28a-0647-11eb-001c-df98d869f083
+# ╠═1a0549ee-0647-11eb-21e4-c90ded497bf1
+# ╠═c61d538e-0647-11eb-19c9-0bf01d06810c
 # ╟─6306bcf8-fb76-11ea-2feb-af94851021ba
