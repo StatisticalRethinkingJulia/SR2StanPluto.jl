@@ -36,14 +36,16 @@ d2 = d[d.age .>= 18, :]
 
 To (locally) reproduce and use this project, do the following:
 
-1. Download this [project](https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingStan.jl) from Github.
-2. Move to the downloaded directory.
-3. Start a Pluto notebook server.
-4. Open a notebook in a browser.
+1. Download this [project](https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingStan.jl) from Github and move to the downloaded directory, e.g.:
 
-This assumes your Julia setup includes `Pkg`, `DrWatson`, `Pluto`, `PlutoUI`, `StanSample` and `StanOptimize`.
+```
+git clone https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingStan.jl
+cd StatisticalRethinkingStan.jl
+```
 
-Step 3 usually can be done by:
+The next step assumes your Julia setup includes `Pkg`, `DrWatson`, `Pluto` and `PlutoUI`.
+
+2. Start a Pluto notebook server and open a notebook in a browser.
 ```
 $ julia
 
@@ -51,10 +53,25 @@ julia> using Pluto
 julia> Pluto.run()
 ```
 
+
 By default the Pluto server uses port 1234. In your browser go to
 `http://localhost:1234`.
 
 Each notebook will activate the project `StatisticalrethinkingStan`.
+
+Results of simulations are stored as follows:
+
+0. m5_1              : Stan language program
+1. m5_1s             : The Stan model based on m5_1 with data
+3. prior5_1s         : Prior samples (DataFrame)
+4. post5_1s          : Posterior Stan samples (DataFrame)
+5. postq5_1s         : Posterior samples using quap approximation (DataFrame)
+6. chns5_1s          : MCMCChains object (4000 samples collected from 4 chains)
+7. chnsq15_1s        : MCMCChains object (10000 quap samples)
+
+As before, the `s` at the end indicates Stan.
+
+All models in the `models` subdirectory return 1, 2 and 6.
 
 ## Setup
 
