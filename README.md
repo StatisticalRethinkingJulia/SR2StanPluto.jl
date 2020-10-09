@@ -53,7 +53,6 @@ julia> using Pluto
 julia> Pluto.run()
 ```
 
-
 By default the Pluto server uses port 1234. In your browser go to
 `http://localhost:1234`.
 
