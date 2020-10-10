@@ -58,20 +58,6 @@ By default the Pluto server uses port 1234. In your browser go to
 
 Each notebook will activate the project `StatisticalrethinkingStan`.
 
-Results of simulations are stored as follows:
-
-0. m5_1              : Stan language program
-1. m5_1s             : The Stan model based on m5_1 with data
-3. prior5_1s         : Prior samples (DataFrame)
-4. post5_1s          : Posterior Stan samples (DataFrame)
-5. postq5_1s         : Posterior samples using quap approximation (DataFrame)
-6. chns5_1s          : MCMCChains object (4000 samples collected from 4 chains)
-7. chnsq15_1s        : MCMCChains object (10000 quap samples)
-
-As before, the `s` at the end indicates Stan.
-
-All models in the `models` subdirectory return 1, 2 and 6.
-
 ## Setup
 
 All R snippets (fragments) have been organized in clips. Each clip is a notebook.
@@ -91,6 +77,23 @@ Special introductory notebooks have been included in `notebooks/intros`, e.g.
 `intro-stan/intro-stan-01s.jl` and `intro-R-users/distributions.jl`.
 
 In addition to clips, in the early notebook chapters (0-3) it is shown how to create the figures in the book, e.g. `Fig2.5s.jl` in `notebooks/chapter/02`.
+
+Results of simulations are stored as follows:
+
+0. stan5_1           : Stan language program
+1. m5_1s             : The sampled StanSample model
+2. q5_1s             : The Stan quap model (Particle notation)
+3. 
+3. prior5_1s         : Prior samples (DataFrame)
+4. post5_1s          : Posterior samples (DataFrame)
+5. quap5_1s          : Quap approximation to posterior smaples (DataFrame)
+6. 
+6. chns5_1s          : MCMCChains object (4000 samples collected from 4 chains)
+7. chns15_1qs        : MCMCChains object (10000 Stan `quap()` samples)
+
+As before, the `s` at the end indicates Stan.
+
+All models in the `models` subdirectory return 1, 2 and 6.
 
 ## Status
 
