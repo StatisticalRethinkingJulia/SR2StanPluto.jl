@@ -83,11 +83,11 @@ Results of simulations are stored as follows:
 0. stan5_1           : Stan language program
 1. m5_1s             : The sampled StanSample model
 2. q5_1s             : The Stan quap model (Particle notation)
-3. 
+ 
 3. prior5_1s         : Prior samples (DataFrame)
 4. post5_1s          : Posterior samples (DataFrame)
 5. quap5_1s          : Quap approximation to posterior smaples (DataFrame)
-6. 
+ 
 6. chns5_1s          : MCMCChains object (4000 samples collected from 4 chains)
 7. chns15_1qs        : MCMCChains object (10000 Stan `quap()` samples)
 
