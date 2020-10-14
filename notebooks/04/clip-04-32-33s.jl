@@ -61,18 +61,15 @@ rc4_2s = stan_sample(m4_2s, data=m4_2_data);
 
 # ╔═╡ 62c16610-fb76-11ea-36d5-51093f07a76a
 if success(rc4_2s)
-	dfa4_2s = read_samples(m4_2s; output_format=:dataframe)
-	q4_2s = quap(dfa4_2s)
-end
+	post4_2s = read_samples(m4_2s; output_format=:dataframe)
+	q4_2s = quap(m4_2s)
+end;
 
 # ╔═╡ 69c7b810-0e21-11eb-19c1-af43d12c84dd
-Particles(q4_2s)
+quap4_2s = sample(q4_2s);
 
 # ╔═╡ 243a9eea-0e22-11eb-0e83-2d7bbd03f78a
-Text(precis(q4_2s; io=String))
-
-# ╔═╡ 6ba0d690-fb77-11ea-2678-ab0839ca8210
-part4_2s = Particles(dfa4_2s)
+Text(precis(quap4_2s; io=String))
 
 # ╔═╡ 62d7694e-fb76-11ea-28c4-4d1e78f54b82
 md"### snippet 4.32"
@@ -80,23 +77,29 @@ md"### snippet 4.32"
 # ╔═╡ 62e3e746-fb76-11ea-327a-21f83959bb7c
 md"##### Compute covariance matrix."
 
-# ╔═╡ 62e6d8f2-fb76-11ea-1f70-a9c8b2002ca4
-cmat1 = cov(Array(dfa4_2s))
-
 # ╔═╡ b2a052e4-0bd7-11eb-3bf9-8744c41a97b8
-cmat = Statistics.covm(Array(dfa4_2s), [mean(quap4_2s.sigma) mean(quap4_2s.mu)])
+cmat = Statistics.covm(Array(post4_2s), [mean(quap4_2s.sigma) mean(quap4_2s.mu)])
+
+# ╔═╡ 8f2d8f32-0e54-11eb-31f2-5b6cce920727
+cmat1 = Statistics.covm(Array(quap4_2s), [mean(quap4_2s.sigma) mean(quap4_2s.mu)])
+
+# ╔═╡ 62e6d8f2-fb76-11ea-1f70-a9c8b2002ca4
+cmat2 = cov(Array(post4_2s))
+
+# ╔═╡ 0857073c-0bd8-11eb-0c3c-777cd67bac01
+diag(cmat) .|> sqrt
 
 # ╔═╡ ddef1ab6-0646-11eb-1ede-fb64cff966ac
 diag(cmat1) .|> sqrt
 
-# ╔═╡ 0857073c-0bd8-11eb-0c3c-777cd67bac01
-diag(cmat) .|> sqrt
+# ╔═╡ 0b7850a4-0e55-11eb-32cb-6f339e6ec9f7
+diag(cmat2) .|> sqrt
 
 # ╔═╡ 03c38850-0b68-11eb-3045-d1d65f44f4c4
 md"##### Use Particles."
 
 # ╔═╡ fcb54d46-0b67-11eb-221d-87a459b88a94
- part_sim = Particles(4000, MvNormal([mean(part4_2s.mu), mean(part4_2s.sigma)], cmat))
+ part_sim = Particles(4000, MvNormal([mean(quap4_2s.mu), mean(quap4_2s.sigma)], cmat1))
 
 # ╔═╡ 4fb21aa6-0be5-11eb-3ff7-d55646170d94
 begin
@@ -112,16 +115,7 @@ md"### snippet 4.33"
 md"##### Compute correlation matrix."
 
 # ╔═╡ 62feda92-fb76-11ea-32a4-454502ca4488
-cor(Array(dfa4_2s))
-
-# ╔═╡ 79bff28a-0647-11eb-001c-df98d869f083
-mean(quap4_2s.mu)
-
-# ╔═╡ 1a0549ee-0647-11eb-21e4-c90ded497bf1
-post = rand(MvNormal([mean(quap4_2s.mu), mean(quap4_2s.sigma)], cov(Array(dfa4_2s))), 10000)
-
-# ╔═╡ c61d538e-0647-11eb-19c9-0bf01d06810c
-cov(post')
+cor(Array(sample(q4_2s)))
 
 # ╔═╡ 6306bcf8-fb76-11ea-2feb-af94851021ba
 md"## End of clip-04-32-34s.jl"
@@ -140,20 +134,18 @@ md"## End of clip-04-32-34s.jl"
 # ╠═62c16610-fb76-11ea-36d5-51093f07a76a
 # ╠═69c7b810-0e21-11eb-19c1-af43d12c84dd
 # ╠═243a9eea-0e22-11eb-0e83-2d7bbd03f78a
-# ╠═6ba0d690-fb77-11ea-2678-ab0839ca8210
 # ╟─62d7694e-fb76-11ea-28c4-4d1e78f54b82
 # ╟─62e3e746-fb76-11ea-327a-21f83959bb7c
-# ╠═62e6d8f2-fb76-11ea-1f70-a9c8b2002ca4
 # ╠═b2a052e4-0bd7-11eb-3bf9-8744c41a97b8
-# ╠═ddef1ab6-0646-11eb-1ede-fb64cff966ac
+# ╠═8f2d8f32-0e54-11eb-31f2-5b6cce920727
+# ╠═62e6d8f2-fb76-11ea-1f70-a9c8b2002ca4
 # ╠═0857073c-0bd8-11eb-0c3c-777cd67bac01
+# ╠═ddef1ab6-0646-11eb-1ede-fb64cff966ac
+# ╠═0b7850a4-0e55-11eb-32cb-6f339e6ec9f7
 # ╟─03c38850-0b68-11eb-3045-d1d65f44f4c4
 # ╠═fcb54d46-0b67-11eb-221d-87a459b88a94
 # ╠═4fb21aa6-0be5-11eb-3ff7-d55646170d94
 # ╟─62ef3826-fb76-11ea-2369-c157a18c626c
 # ╟─62f79ff0-fb76-11ea-323d-074b61eb40f0
 # ╠═62feda92-fb76-11ea-32a4-454502ca4488
-# ╠═79bff28a-0647-11eb-001c-df98d869f083
-# ╠═1a0549ee-0647-11eb-21e4-c90ded497bf1
-# ╠═c61d538e-0647-11eb-19c9-0bf01d06810c
 # ╟─6306bcf8-fb76-11ea-2feb-af94851021ba
