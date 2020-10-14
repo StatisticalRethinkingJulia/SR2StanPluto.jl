@@ -10,7 +10,6 @@ using Pkg, DrWatson
 # ╔═╡ 62916bce-fb76-11ea-1d36-77a8b156aabb
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using LinearAlgebra
 	using StanSample
 	using StatisticalRethinking
 end
