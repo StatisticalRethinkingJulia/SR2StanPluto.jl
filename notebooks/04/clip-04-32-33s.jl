@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.3
 
 using Markdown
 using InteractiveUtils
@@ -52,7 +52,7 @@ model {
 md"### Snippet 4.31"
 
 # ╔═╡ 62af493c-fb76-11ea-3fb8-15cf5f21732b
-m4_2s = SampleModel("heights", m4_2);
+m4_2s = SampleModel("m4.2s", m4_2);
 
 # ╔═╡ 62b97556-fb76-11ea-2914-cf968082c17b
 m4_2_data = Dict("N" => length(df.height), "h" => df.height);
@@ -63,11 +63,17 @@ rc4_2s = stan_sample(m4_2s, data=m4_2_data);
 # ╔═╡ 62c16610-fb76-11ea-36d5-51093f07a76a
 if success(rc4_2s)
 	dfa4_2s = read_samples(m4_2s; output_format=:dataframe)
-	quap4_2s = quap(dfa4_2s)
+	q4_2s = quap(dfa4_2s)
 end
 
+# ╔═╡ 69c7b810-0e21-11eb-19c1-af43d12c84dd
+Particles(q4_2s)
+
+# ╔═╡ 243a9eea-0e22-11eb-0e83-2d7bbd03f78a
+Text(precis(q4_2s; io=String))
+
 # ╔═╡ 6ba0d690-fb77-11ea-2678-ab0839ca8210
-Particles(dfa4_2s)
+part4_2s = Particles(dfa4_2s)
 
 # ╔═╡ 62d7694e-fb76-11ea-28c4-4d1e78f54b82
 md"### snippet 4.32"
@@ -76,10 +82,29 @@ md"### snippet 4.32"
 md"##### Compute covariance matrix."
 
 # ╔═╡ 62e6d8f2-fb76-11ea-1f70-a9c8b2002ca4
-cov(Array(dfa4_2s))
+cmat1 = cov(Array(dfa4_2s))
+
+# ╔═╡ b2a052e4-0bd7-11eb-3bf9-8744c41a97b8
+cmat = Statistics.covm(Array(dfa4_2s), [mean(quap4_2s.sigma) mean(quap4_2s.mu)])
 
 # ╔═╡ ddef1ab6-0646-11eb-1ede-fb64cff966ac
-diag(cov(Array(dfa4_2s))) .|> sqrt
+diag(cmat1) .|> sqrt
+
+# ╔═╡ 0857073c-0bd8-11eb-0c3c-777cd67bac01
+diag(cmat) .|> sqrt
+
+# ╔═╡ 03c38850-0b68-11eb-3045-d1d65f44f4c4
+md"##### Use Particles."
+
+# ╔═╡ fcb54d46-0b67-11eb-221d-87a459b88a94
+ part_sim = Particles(4000, MvNormal([mean(part4_2s.mu), mean(part4_2s.sigma)], cmat))
+
+# ╔═╡ 4fb21aa6-0be5-11eb-3ff7-d55646170d94
+begin
+	fig1 = plot(part_sim[1], lab="mu")
+	fig2 = plot(part_sim[2], lab="sigma")
+	plot(fig1, fig2, layout=(1, 2))
+end
 
 # ╔═╡ 62ef3826-fb76-11ea-2369-c157a18c626c
 md"### snippet 4.33"
@@ -114,11 +139,18 @@ md"## End of clip-04-32-34s.jl"
 # ╠═62b97556-fb76-11ea-2914-cf968082c17b
 # ╠═62c0286a-fb76-11ea-0db1-91794ac99ae6
 # ╠═62c16610-fb76-11ea-36d5-51093f07a76a
+# ╠═69c7b810-0e21-11eb-19c1-af43d12c84dd
+# ╠═243a9eea-0e22-11eb-0e83-2d7bbd03f78a
 # ╠═6ba0d690-fb77-11ea-2678-ab0839ca8210
 # ╟─62d7694e-fb76-11ea-28c4-4d1e78f54b82
 # ╟─62e3e746-fb76-11ea-327a-21f83959bb7c
 # ╠═62e6d8f2-fb76-11ea-1f70-a9c8b2002ca4
+# ╠═b2a052e4-0bd7-11eb-3bf9-8744c41a97b8
 # ╠═ddef1ab6-0646-11eb-1ede-fb64cff966ac
+# ╠═0857073c-0bd8-11eb-0c3c-777cd67bac01
+# ╟─03c38850-0b68-11eb-3045-d1d65f44f4c4
+# ╠═fcb54d46-0b67-11eb-221d-87a459b88a94
+# ╠═4fb21aa6-0be5-11eb-3ff7-d55646170d94
 # ╟─62ef3826-fb76-11ea-2369-c157a18c626c
 # ╟─62f79ff0-fb76-11ea-323d-074b61eb40f0
 # ╠═62feda92-fb76-11ea-32a4-454502ca4488

@@ -33,16 +33,19 @@ begin
 	  // Observed Counts
 	  k ~ binomial(n, theta);
 	}"
-	N = 25                              # 25 experiments
-	d = Binomial(9, 0.66)               # 9 tosses (simulate 2/3 is water)
-	k = rand(d, N)                      # Simulate 15 trial results
-	n = 9                               # Each experiment has 9 tosses
-	m1_1_data = Dict("N" => N, "n" => n, "k" => k)
 end;
 
 md"##### Create an OptimizeModel"
 
 sm = OptimizeModel("m1.1s", m1_1);
+
+begin
+	N = 20                              # 25 experiments
+	d = Binomial(9, 0.66)               # 9 tosses (simulate 2/3 is water)
+	k = rand(d, N)                      # Simulate 15 trial results
+	n = 9                               # Each experiment has 9 tosses
+	m1_1_data = Dict("N" => N, "n" => n, "k" => k)
+end
 
 rc = stan_optimize(sm, data=m1_1_data);
 

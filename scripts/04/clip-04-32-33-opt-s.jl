@@ -7,6 +7,7 @@ using Pkg, DrWatson
 begin
 	@quickactivate "StatisticalRethinkingStan"
 	using StanSample
+  using StanOptimize
 	using StatisticalRethinking
 end
 
@@ -41,35 +42,16 @@ model {
 
 md"### Snippet 4.31"
 
-m4_2s = SampleModel("heights", m4_2);
+m4_2s = OptimizeModel("heights", m4_2);
 
 m4_2_data = Dict("N" => length(df.height), "h" => df.height);
+m4_2_init = Dict("mu" => 174.0, "sigma" => 5.0)
+rc = stan_optimize(m4_2s; data=m4_2_data, init=m4_2_init);
 
-rc4_2s = stan_sample(m4_2s, data=m4_2_data);
-
-if success(rc4_2s)
-	dfa4_2s = read_samples(m4_2s; output_format=:dataframe)
-	quap4_2s = quap(dfa4_2s)
-
-  q4_2s = quap(m4_2s)
-  Particles(q4_2s) |> display
-  precis(q4_2s) |> display
-
+if success(rc)
+  optim_stan, cnames = read_optimize(m4_2s)
+  optim_stan |> display
 end
-
-part4_2s = Particles(dfa4_2s)
-
-md"### snippet 4.32"
-
-md"##### Compute covariance matrix."
-
-cov(Array(dfa4_2s))
-
-md"### snippet 4.33"
-
-md"##### Compute correlation matrix."
-
-cor(Array(dfa4_2s))
 
 md"## End of clip-04-32-34s.jl"
 

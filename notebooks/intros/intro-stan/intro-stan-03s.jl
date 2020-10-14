@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.3
 
 using Markdown
 using InteractiveUtils
@@ -19,7 +19,7 @@ end
 md"## Intro-stan-03s.jl"
 
 # ╔═╡ 113f96ac-f20b-11ea-36c1-9b9b901c7af9
-md"##### Define the Stan language model and input data"
+md"##### Define the Stan language model."
 
 # ╔═╡ 114947f6-f20b-11ea-0ea5-0dfa3ef8191f
 begin
@@ -40,11 +40,6 @@ begin
 	  // Observed Counts
 	  k ~ binomial(n, theta);
 	}"
-	N = 25                              # 25 experiments
-	d = Binomial(9, 0.66)               # 9 tosses (simulate 2/3 is water)
-	k = rand(d, N)                      # Simulate 15 trial results
-	n = 9                               # Each experiment has 9 tosses
-	m1_1_data = Dict("N" => N, "n" => n, "k" => k)
 end;
 
 # ╔═╡ 620e650e-f20b-11ea-1157-a3b90612c017
@@ -52,6 +47,15 @@ md"##### Create an OptimizeModel"
 
 # ╔═╡ 114a04d4-f20b-11ea-0c10-e5c266f4ea8d
 sm = OptimizeModel("m1.1s", m1_1);
+
+# ╔═╡ 29feebbc-0d8a-11eb-0cfe-fd90ac26ca49
+begin
+	N = 25                              # 25 experiments
+	d = Binomial(9, 0.66)               # 9 tosses (simulate 2/3 is water)
+	k = rand(d, N)                      # Simulate 15 trial results
+	n = 9                               # Each experiment has 9 tosses
+	m1_1_data = Dict("N" => N, "n" => n, "k" => k)
+end;
 
 # ╔═╡ 1153163c-f20b-11ea-3632-5beebd6994b8
 rc = stan_optimize(sm, data=m1_1_data);
@@ -72,10 +76,11 @@ md"## End of intro/intro-stan-03s.jl"
 # ╟─c705c7c4-f209-11ea-3651-a72bfc0f1756
 # ╠═113eb996-f20b-11ea-297f-95379839995f
 # ╠═113efaf8-f20b-11ea-343f-b39e12c4d457
-# ╟─113f96ac-f20b-11ea-36c1-9b9b901c7af9
+# ╠═113f96ac-f20b-11ea-36c1-9b9b901c7af9
 # ╠═114947f6-f20b-11ea-0ea5-0dfa3ef8191f
 # ╟─620e650e-f20b-11ea-1157-a3b90612c017
 # ╠═114a04d4-f20b-11ea-0c10-e5c266f4ea8d
+# ╠═29feebbc-0d8a-11eb-0cfe-fd90ac26ca49
 # ╠═1153163c-f20b-11ea-3632-5beebd6994b8
 # ╟─115537b2-f20b-11ea-030c-478dea20fdbe
 # ╠═11602dea-f20b-11ea-1243-fd37bbd57993

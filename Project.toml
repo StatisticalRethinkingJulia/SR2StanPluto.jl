@@ -2,6 +2,7 @@ name = "StatisticalRethinkingStan"
 authors = ["Rob J. Goedman <goedman@icloud.com>"]
 
 [deps]
+CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 DocStringExtensions = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
 DrWatson = "634d3b9d-ee7a-5ddf-bec9-22491ea816e1"
 StanOptimize = "fbd8da12-e93d-5a64-9231-612a0707ab99"
