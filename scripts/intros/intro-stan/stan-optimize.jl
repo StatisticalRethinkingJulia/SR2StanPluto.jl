@@ -7,13 +7,11 @@ using Pkg, DrWatson
 begin
 	@quickactivate "StatisticalRethinkingStan"
 	using StanSample
-  using StanOptimize
+	using StanOptimize
 	using StatisticalRethinking
 end
 
-md"## Clip-04-32-33s.jl"
-
-md"### Snippet 4.26"
+md"## Stan-optimize.jl"
 
 begin
 	df = CSV.read(sr_datadir("Howell1.csv"), DataFrame; delim=';')
@@ -40,18 +38,18 @@ model {
 }
 ";
 
-md"### Snippet 4.31"
-
 m4_2s = OptimizeModel("heights", m4_2);
 
 m4_2_data = Dict("N" => length(df.height), "h" => df.height);
+
 m4_2_init = Dict("mu" => 174.0, "sigma" => 5.0)
+
 rc = stan_optimize(m4_2s; data=m4_2_data, init=m4_2_init);
 
 if success(rc)
   optim_stan, cnames = read_optimize(m4_2s)
-  optim_stan |> display
+  optim_stan
 end
 
-md"## End of clip-04-32-34s.jl"
+md"## End of Stan optimize intro"
 

@@ -41,35 +41,52 @@ model {
 
 md"### Snippet 4.31"
 
-m4_2s = SampleModel("heights", m4_2);
+m4_2s = SampleModel("m4.2s", m4_2);
 
 m4_2_data = Dict("N" => length(df.height), "h" => df.height);
 
 rc4_2s = stan_sample(m4_2s, data=m4_2_data);
 
 if success(rc4_2s)
-	dfa4_2s = read_samples(m4_2s; output_format=:dataframe)
-	quap4_2s = quap(dfa4_2s)
+	post4_2s = read_samples(m4_2s; output_format=:dataframe)
+	q4_2s = quap(m4_2s)
+end;
 
-  q4_2s = quap(m4_2s)
-  Particles(q4_2s) |> display
-  precis(q4_2s) |> display
+quap4_2s = sample(q4_2s);
 
-end
-
-part4_2s = Particles(dfa4_2s)
+Text(precis(quap4_2s; io=String))
 
 md"### snippet 4.32"
 
 md"##### Compute covariance matrix."
 
-cov(Array(dfa4_2s))
+cmat = Statistics.covm(Array(post4_2s), [mean(quap4_2s.sigma) mean(quap4_2s.mu)])
+
+cmat1 = Statistics.covm(Array(quap4_2s), [mean(quap4_2s.sigma) mean(quap4_2s.mu)])
+
+cmat2 = cov(Array(post4_2s))
+
+diag(cmat) .|> sqrt
+
+diag(cmat1) .|> sqrt
+
+diag(cmat2) .|> sqrt
+
+md"##### Use Particles."
+
+ part_sim = Particles(4000, MvNormal([mean(quap4_2s.mu), mean(quap4_2s.sigma)], cmat1))
+
+begin
+	fig1 = plot(part_sim[1], lab="mu")
+	fig2 = plot(part_sim[2], lab="sigma")
+	plot(fig1, fig2, layout=(1, 2))
+end
 
 md"### snippet 4.33"
 
 md"##### Compute correlation matrix."
 
-cor(Array(dfa4_2s))
+cor(Array(sample(q4_2s)))
 
 md"## End of clip-04-32-34s.jl"
 

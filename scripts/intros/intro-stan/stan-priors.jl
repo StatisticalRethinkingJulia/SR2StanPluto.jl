@@ -11,9 +11,7 @@ begin
 	using StatisticalRethinking
 end
 
-md"## Clip-04-32-33s.jl"
-
-md"### Snippet 4.26"
+md"## stan-priors.jl"
 
 begin
 	df = CSV.read(sr_datadir("Howell1.csv"), DataFrame; delim=';')
@@ -40,17 +38,16 @@ model {
 }
 ";
 
-md"### Snippet 4.31"
-
 m4_2s = SampleModel("p4_2s", m4_2);
 
 prior4_2_data = Dict("N" => 0, "h" => []);
+
 rc = stan_sample(m4_2s; data=prior4_2_data);
 
 if success(rc)
   priors4_2s = read_samples(m4_2s; output_format=:dataframe)
-  precis(priors4_2s)
+  Text(precis(priors4_2s; io=String))
 end
 
-md"## End of clip-04-32-34s.jl"
+md"## End of stan-priors.jl"
 
