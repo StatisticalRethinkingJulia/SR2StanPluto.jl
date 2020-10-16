@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.4
 
 using Markdown
 using InteractiveUtils
@@ -26,8 +26,7 @@ md"### snippet 0.4"
 begin
 	df = (CSV.read(sr_path("..", "data", "Howell1.csv"), DataFrame; delim=';'))
 	howell1 = filter(row -> row[:age] >= 18, df);
-	first(howell1, 5)
-end
+end;
 
 # ╔═╡ adfe9074-df14-11ea-38a2-a1e45e0b41e4
 Text(precis(howell1; io = String))

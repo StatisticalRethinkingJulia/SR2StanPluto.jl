@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.4
 
 using Markdown
 using InteractiveUtils
@@ -67,7 +67,7 @@ md"##### Describe the chain."
 chn
 
 # ╔═╡ 9ee425c0-f771-11ea-1eec-2966da179664
-md"##### Compute the MAP (maximum_a_posteriori) estimate."
+md"##### Compute the MAP (Maximum A Posteriori) estimate."
 
 # ╔═╡ 9eebf08e-f771-11ea-0b37-e39eae2dfac4
 function loglik(x)

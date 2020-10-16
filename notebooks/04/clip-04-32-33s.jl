@@ -77,29 +77,17 @@ md"### snippet 4.32"
 # ╔═╡ 62e3e746-fb76-11ea-327a-21f83959bb7c
 md"##### Compute covariance matrix."
 
-# ╔═╡ b2a052e4-0bd7-11eb-3bf9-8744c41a97b8
-cmat = Statistics.covm(Array(post4_2s), [mean(quap4_2s.sigma) mean(quap4_2s.mu)])
-
-# ╔═╡ 8f2d8f32-0e54-11eb-31f2-5b6cce920727
-cmat1 = Statistics.covm(Array(quap4_2s), [mean(quap4_2s.sigma) mean(quap4_2s.mu)])
-
-# ╔═╡ 62e6d8f2-fb76-11ea-1f70-a9c8b2002ca4
-cmat2 = cov(Array(post4_2s))
+# ╔═╡ bf7e6a2e-0ef6-11eb-3753-d5cddb8365c2
+q4_2s.vcov
 
 # ╔═╡ 0857073c-0bd8-11eb-0c3c-777cd67bac01
-diag(cmat) .|> sqrt
-
-# ╔═╡ ddef1ab6-0646-11eb-1ede-fb64cff966ac
-diag(cmat1) .|> sqrt
-
-# ╔═╡ 0b7850a4-0e55-11eb-32cb-6f339e6ec9f7
-diag(cmat2) .|> sqrt
+diag(q4_2s.vcov) .|> sqrt
 
 # ╔═╡ 03c38850-0b68-11eb-3045-d1d65f44f4c4
 md"##### Use Particles."
 
 # ╔═╡ fcb54d46-0b67-11eb-221d-87a459b88a94
- part_sim = Particles(4000, MvNormal([mean(quap4_2s.mu), mean(quap4_2s.sigma)], cmat1))
+ part_sim = Particles(4000, MvNormal([mean(quap4_2s.mu), mean(quap4_2s.sigma)], q4_2s.vcov))
 
 # ╔═╡ 4fb21aa6-0be5-11eb-3ff7-d55646170d94
 begin
@@ -136,12 +124,8 @@ md"## End of clip-04-32-34s.jl"
 # ╠═243a9eea-0e22-11eb-0e83-2d7bbd03f78a
 # ╟─62d7694e-fb76-11ea-28c4-4d1e78f54b82
 # ╟─62e3e746-fb76-11ea-327a-21f83959bb7c
-# ╠═b2a052e4-0bd7-11eb-3bf9-8744c41a97b8
-# ╠═8f2d8f32-0e54-11eb-31f2-5b6cce920727
-# ╠═62e6d8f2-fb76-11ea-1f70-a9c8b2002ca4
+# ╠═bf7e6a2e-0ef6-11eb-3753-d5cddb8365c2
 # ╠═0857073c-0bd8-11eb-0c3c-777cd67bac01
-# ╠═ddef1ab6-0646-11eb-1ede-fb64cff966ac
-# ╠═0b7850a4-0e55-11eb-32cb-6f339e6ec9f7
 # ╟─03c38850-0b68-11eb-3045-d1d65f44f4c4
 # ╠═fcb54d46-0b67-11eb-221d-87a459b88a94
 # ╠═4fb21aa6-0be5-11eb-3ff7-d55646170d94
