@@ -39,7 +39,7 @@ cd(indir) do
         mkdir(joinpath(outdir, nbsubdir))
       end
       # Find all notebooks in nbsubdir, skip subdir "intros"
-      if !(nbsubdir == "intros")
+      if !(nbsubdir in ["intros"])
         nbs = readdir(nbsubdir)
         println("$(nbsubdir): $(nbs)\n")
         # Copy the notebooks to the scripts dir

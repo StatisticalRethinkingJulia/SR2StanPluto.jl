@@ -6,7 +6,6 @@ using Pkg, DrWatson
 
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample
 	using StructuralCausalModels
 	using StatisticalRethinking
 end

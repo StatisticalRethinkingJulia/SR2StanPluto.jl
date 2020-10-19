@@ -41,7 +41,7 @@ begin
 	m4_2s = SampleModel("heights", m4_2);
 	m4_2_data = Dict("N" => length(df.height), "h" => df.height);
 	rc4_2s = stan_sample(m4_2s, data=m4_2_data);
-	success(rc4_2s) && (quap4_2s = read_samples(m4_2s; output_format=:particles))
+	success(rc4_2s) && (part4_2s = read_samples(m4_2s; output_format=:particles))
 end
 
 md"## End of clip-04-31s.jl"

@@ -14,7 +14,7 @@ md"## Clip-03-05s.jl"
 
 md"##### Define the Stan language model."
 
-model_05s = "
+m3_5 = "
 // Inferring a Rate
 data {
   int N;
@@ -37,7 +37,7 @@ model {
 
 md"##### Define the Stanmodel and set the output format to :mcmcchains."
 
-sm = SampleModel("m_05s", model_05s);
+m3_5s = SampleModel("m3_5s", m3_5);
 
 md"###### Use 16 observations."
 
@@ -50,30 +50,30 @@ end
 
 md"##### Input data for cmdstan."
 
-m_05s_data = Dict("N" => length(n2), "n" => n2, "k" => k2);
+m3_5_data = Dict("N" => length(n2), "n" => n2, "k" => k2);
 
 md"##### Sample using cmdstan."
 
-rc = stan_sample(sm, data=m_05s_data);
+rc3_5s = stan_sample(m3_5s, data=m3_5_data);
 
 md"##### Retrieve samples as an MCMCChains.Chain object and as a Particles summary.."
 
-if success(rc)
-  chn = read_samples(sm; output_format=:mcmcchains)
-  dict = read_samples(sm; output_format=:particles)
+if success(rc3_5s)
+  chns3_5s = read_samples(m3_5s; output_format=:mcmcchains)
+  part3_5s = read_samples(m3_5s; output_format=:particles)
 end;
 
 md"##### Describe the chains."
 
-chn
+chns3_5s
 
 md"##### Plot the chains."
 
-plot(chn)
+plot(chns3_5s)
 
 md"##### Particles summary of the chains,"
 
-dict
+part3_5s
 
 md"##### Notice in this example that the prior theta (thetaprior), the `unconditioned-on-the data theta`, shows a mean of 0.5 and a std of 0.29."
 

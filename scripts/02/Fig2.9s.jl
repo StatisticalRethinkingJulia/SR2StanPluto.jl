@@ -48,7 +48,7 @@ md"##### Describe the chain."
 
 chn
 
-md"##### Compute the MAP (maximum_a_posteriori) estimate."
+md"##### Compute the MAP (Maximum A Posteriori) estimate."
 
 function loglik(x)
   ll = 0.0

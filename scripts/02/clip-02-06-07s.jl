@@ -38,6 +38,13 @@ md"##### Define the SampleMdel."
 
 m2_0s = SampleModel("m2_0s", m2_0);
 
+q2_0s = quap(m2_0s)
+
+begin
+	quap2_0s = sample(q2_0s)
+	Text(precis(quap2_0s; io=String))
+end
+
 md"##### Use 9 observations as input data for stan_sample."
 
 begin
@@ -59,6 +66,7 @@ if success(rc2_0s)
  	density(df.theta, lab="Stan samples")
  	plot!( x, pdf.(Beta( w+1 , l+1 ) , x ), lab="Conjugate solution")
  	plot!( x, pdf.(Normal(mean(quapfit.theta), std(quapfit.theta)) , x ), lab="Stan quap solution")
+	density!(quap2_0s.theta, lab="Particle quap solution")
 end
 
 md"## End of clip-02-06-07s.jl"

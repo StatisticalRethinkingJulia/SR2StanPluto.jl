@@ -41,22 +41,22 @@ model {
 
 md"### Snippet 4.31"
 
-m4_1s = SampleModel("m4_1", m4_1);
-
-m4_1_data = Dict("N" => length(df.height), "h" => df.height);
-
-rc4_1s = stan_sample(m4_1s, data=m4_1_data);
-
-if success(rc4_1s)
-	part4_1s = read_samples(m4_1s; output_format=:particles)
+begin
+	m4_1s = SampleModel("m4_1", m4_1)
+	m4_1_data = Dict("N" => length(df.height), "h" => df.height)
+	rc4_1s = stan_sample(m4_1s, data=m4_1_data)
+	if success(rc4_1s)
+		part4_1s = read_samples(m4_1s; output_format=:particles)
+	end
 end
 
 md"##### Stan quap estimate."
 
 begin
-  dfa4_1s = read_samples(m4_1s; output_format=:dataframe)
-  quap4_1s = quap(dfa4_1s)
-end
+	dfa4_1s = read_samples(m4_1s; output_format=:dataframe)
+	q4_1s = quap(m4_1s)
+	quap4_1s = sample(q4_1s)
+end;
 
 md"##### Check equivalence of Stan samples and Particles."
 
@@ -68,12 +68,10 @@ end
 
 md"##### Sampling from quap result:"
 
-quap4_1s
-
 begin
 	d = Normal(mean(quap4_1s.mu), std(quap4_1s.mu))
 	plot!(mu_range, ecdf(rand(d, 10000))(mu_range), lab="Quap samples")
-	plot!(mu_range, ecdf(sample(dfa4_1s.mu, 10000))(mu_range), lab="Particles samples")
+	plot!(mu_range, ecdf(quap4_1s.mu)(mu_range), lab="Particles samples")
 end
 
 begin

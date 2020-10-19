@@ -60,21 +60,13 @@ md"### snippet 4.32"
 
 md"##### Compute covariance matrix."
 
-cmat = Statistics.covm(Array(post4_2s), [mean(quap4_2s.sigma) mean(quap4_2s.mu)])
+q4_2s.vcov
 
-cmat1 = Statistics.covm(Array(quap4_2s), [mean(quap4_2s.sigma) mean(quap4_2s.mu)])
-
-cmat2 = cov(Array(post4_2s))
-
-diag(cmat) .|> sqrt
-
-diag(cmat1) .|> sqrt
-
-diag(cmat2) .|> sqrt
+diag(q4_2s.vcov) .|> sqrt
 
 md"##### Use Particles."
 
- part_sim = Particles(4000, MvNormal([mean(quap4_2s.mu), mean(quap4_2s.sigma)], cmat1))
+ part_sim = Particles(4000, MvNormal([mean(quap4_2s.mu), mean(quap4_2s.sigma)], q4_2s.vcov))
 
 begin
 	fig1 = plot(part_sim[1], lab="mu")

@@ -72,20 +72,10 @@ success(rc4_1s) && (part4_1s = read_samples(m4_1s; output_format=:particles))
 md"### Snippet 4.28 & 4.29"
 
 begin
-	
-	# Append all chains in a single DataFrame
-
-	dfa4_1s = read_samples(m4_1s; output_format=:dataframe)
-	
-	# Stan quap estimate
-	
-	quap4_1s = quap(dfa4_1s)
+	q4_1s = quap(m4_1s)
+	quap4_1s = sample(q4_1s)
+	Text(precis(quap4_1s; io=String))
 end
-
-md"### Snippet 4.30"
-
-md"##### If required, starting values can be passed in to `stan_sample()`.
-Open `Live docs` and click on `stan_sample` in a cell."
 
 md"# End of clip-04-26-30s.jl"
 

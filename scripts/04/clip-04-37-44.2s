@@ -68,7 +68,7 @@ if success(rc4_4s)
 
 	# Use an appended dataframe
 
-	dfa4_4s = read_samples(m4_4s; output_format=:dataframe)
+	post4_4s = read_samples(m4_4s; output_format=:dataframe)
 end;
 
 md"### snippet 4.37"
@@ -80,7 +80,7 @@ if success(rc4_4s)
 	scatter(df.weight_c, df.height, lab="Observations",
 	  ylab="height [cm]", xlab="weight[kg]")
 	xi = -16.0:0.1:18.0
-	yi = mean(dfa4_4s[:, :alpha]) .+ mean(dfa4_4s[:, :beta])*xi;
+	yi = mean(post4_4s[:, :alpha]) .+ mean(post4_4s[:, :beta])*xi;
 	plot!(xi, yi, lab="Regression line")
 end
 
@@ -88,7 +88,7 @@ md"### snippet 4.44"
 
 if success(rc4_4s)
 
-	quap4_4s = quap(dfa4_4s)
+	quap4_4s = quap(post4_4s)
 end
 
 plot(plot(quap4_4s.alpha, lab="\\alpha"), plot(quap4_4s.beta, lab="\\beta"), layout=(2, 1))

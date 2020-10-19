@@ -18,8 +18,7 @@ md"### snippet 0.4"
 begin
 	df = (CSV.read(sr_path("..", "data", "Howell1.csv"), DataFrame; delim=';'))
 	howell1 = filter(row -> row[:age] >= 18, df);
-	first(howell1, 5)
-end
+end;
 
 Text(precis(howell1; io = String))
 

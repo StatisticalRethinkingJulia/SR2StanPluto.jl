@@ -22,13 +22,13 @@ md"##### Show a summary of the  DataFrame."
 
 Particles(d)
 
-md"### snippet 4.9"
-
-Text(precis(d; io=String))
-
 md"##### Compare with describe():"
 
 describe(d, :all)
+
+md"### snippet 4.9"
+
+Text(precis(d; io=String))
 
 md"### snippet 4.10"
 

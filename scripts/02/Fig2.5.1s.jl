@@ -56,8 +56,8 @@ begin
   	m2_0_data = Dict("n" => n, "k" => sum(k[1:n]));
 	rc2_0s = stan_sample(m2_0s, data=m2_0_data)
 	if success(rc2_0s)
-		dfa2_0s = read_samples(m2_0s; output_format=:dataframe)
-		Text(precis(dfa2_0s; io=String))
+		post2_0s = read_samples(m2_0s; output_format=:dataframe)
+		Text(precis(post2_0s; io=String))
 	end
 end
 
@@ -66,7 +66,7 @@ md"#### 6. Show the posterior."
 begin
   plot(xlims=(0.0, 1.0), ylims=(0.0, 4.0), leg=false)
   hline!([1.0], line=(:dash))
-  density!(dfa2_0s.theta, line=(:dash))
+  density!(post2_0s.theta, line=(:dash))
  end
 
 md"## End of Fig2.5.1s.jl"
