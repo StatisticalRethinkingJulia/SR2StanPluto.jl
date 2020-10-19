@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.4
 
 using Markdown
 using InteractiveUtils
@@ -51,17 +51,13 @@ model {
 md"### Snippet 4.31"
 
 # ╔═╡ 8bb0861c-fb7a-11ea-1482-fd704f9ad02e
-m4_1s = SampleModel("m4_1", m4_1);
-
-# ╔═╡ 8bbb60a0-fb7a-11ea-203d-6135be4c3a02
-m4_1_data = Dict("N" => length(df.height), "h" => df.height);
-
-# ╔═╡ 8bbbe62e-fb7a-11ea-1016-577ddb595990
-rc4_1s = stan_sample(m4_1s, data=m4_1_data);
-
-# ╔═╡ 8bc24488-fb7a-11ea-1ba1-770c5a7ebc55
-if success(rc4_1s)
-	part4_1s = read_samples(m4_1s; output_format=:particles)
+begin
+	m4_1s = SampleModel("m4_1", m4_1)
+	m4_1_data = Dict("N" => length(df.height), "h" => df.height)
+	rc4_1s = stan_sample(m4_1s, data=m4_1_data)
+	if success(rc4_1s)
+		part4_1s = read_samples(m4_1s; output_format=:particles)
+	end
 end
 
 # ╔═╡ 8bcdd60e-fb7a-11ea-3a73-2ff8064e7814
@@ -69,9 +65,10 @@ md"##### Stan quap estimate."
 
 # ╔═╡ 8bd83964-fb7a-11ea-2a5f-9b23b6992c80
 begin
-  dfa4_1s = read_samples(m4_1s; output_format=:dataframe)
-  quap4_1s = quap(dfa4_1s)
-end
+	dfa4_1s = read_samples(m4_1s; output_format=:dataframe)
+	q4_1s = quap(m4_1s)
+	quap4_1s = sample(q4_1s)
+end;
 
 # ╔═╡ 8bd90fa6-fb7a-11ea-3c81-59fc91debe8b
 md"##### Check equivalence of Stan samples and Particles."
@@ -86,14 +83,11 @@ end
 # ╔═╡ 8bf180ac-fb7a-11ea-3f23-5d0f84019beb
 md"##### Sampling from quap result:"
 
-# ╔═╡ bf59164a-fb7b-11ea-36b6-759b714a61ee
-quap4_1s
-
 # ╔═╡ 8bfa2cc4-fb7a-11ea-3885-198c3330b7b0
 begin
 	d = Normal(mean(quap4_1s.mu), std(quap4_1s.mu))
 	plot!(mu_range, ecdf(rand(d, 10000))(mu_range), lab="Quap samples")
-	plot!(mu_range, ecdf(sample(dfa4_1s.mu, 10000))(mu_range), lab="Particles samples")
+	plot!(mu_range, ecdf(quap4_1s.mu)(mu_range), lab="Particles samples")
 end
 
 # ╔═╡ 8bfcef7a-fb7a-11ea-1b75-890ae0af98b2
@@ -126,17 +120,13 @@ md"## End of clip-04-34-36s.jl"
 # ╠═8b9312e4-fb7a-11ea-288c-75f07f76b347
 # ╠═8ba13c5c-fb7a-11ea-3cf9-71e790d5a555
 # ╠═8ba870bc-fb7a-11ea-0076-85e2db61cc2a
-# ╠═8bafe478-fb7a-11ea-07bd-f585de346063
+# ╟─8bafe478-fb7a-11ea-07bd-f585de346063
 # ╠═8bb0861c-fb7a-11ea-1482-fd704f9ad02e
-# ╠═8bbb60a0-fb7a-11ea-203d-6135be4c3a02
-# ╠═8bbbe62e-fb7a-11ea-1016-577ddb595990
-# ╠═8bc24488-fb7a-11ea-1ba1-770c5a7ebc55
 # ╟─8bcdd60e-fb7a-11ea-3a73-2ff8064e7814
 # ╠═8bd83964-fb7a-11ea-2a5f-9b23b6992c80
 # ╟─8bd90fa6-fb7a-11ea-3c81-59fc91debe8b
 # ╠═8be87b94-fb7a-11ea-0cad-1948f391d2bf
 # ╟─8bf180ac-fb7a-11ea-3f23-5d0f84019beb
-# ╠═bf59164a-fb7b-11ea-36b6-759b714a61ee
 # ╠═8bfa2cc4-fb7a-11ea-3885-198c3330b7b0
 # ╠═8bfcef7a-fb7a-11ea-1b75-890ae0af98b2
 # ╠═8c0b72b6-fb7a-11ea-2476-bbb194b0fb05

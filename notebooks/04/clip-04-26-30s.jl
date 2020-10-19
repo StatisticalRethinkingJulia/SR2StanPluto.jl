@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.3
+# v0.12.4
 
 using Markdown
 using InteractiveUtils
@@ -86,22 +86,10 @@ md"### Snippet 4.28 & 4.29"
 
 # ╔═╡ 8560d76c-fb5f-11ea-0bc6-2b249358d29f
 begin
-	
-	# Append all chains in a single DataFrame
-
-	dfa4_1s = read_samples(m4_1s; output_format=:dataframe)
-	
-	# Stan quap estimate
-	
-	quap4_1s = quap(dfa4_1s)
+	q4_1s = quap(m4_1s)
+	quap4_1s = sample(q4_1s)
+	Text(precis(quap4_1s; io=String))
 end
-
-# ╔═╡ 856acb96-fb5f-11ea-0158-43294ff1757c
-md"### Snippet 4.30"
-
-# ╔═╡ 856beda2-fb5f-11ea-2681-0942a973cf86
-md"##### If required, starting values can be passed in to `stan_sample()`.
-Open `Live docs` and click on `stan_sample` in a cell."
 
 # ╔═╡ 8573377e-fb5f-11ea-05ef-1b6568304ef8
 md"# End of clip-04-26-30s.jl"
@@ -119,6 +107,4 @@ md"# End of clip-04-26-30s.jl"
 # ╠═855315e8-fb5f-11ea-1be3-fd3515317471
 # ╟─855512da-fb5f-11ea-3166-39b8cbfc82d7
 # ╠═8560d76c-fb5f-11ea-0bc6-2b249358d29f
-# ╟─856acb96-fb5f-11ea-0158-43294ff1757c
-# ╟─856beda2-fb5f-11ea-2681-0942a973cf86
 # ╟─8573377e-fb5f-11ea-05ef-1b6568304ef8

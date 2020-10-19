@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.4
 
 using Markdown
 using InteractiveUtils
@@ -32,17 +32,17 @@ md"##### Show a summary of the  DataFrame."
 # ╔═╡ 265e60ce-f826-11ea-38f7-cfeb5f92ea85
 Particles(d)
 
-# ╔═╡ 266ac76a-f826-11ea-2d0e-03c06ea11c56
-md"### snippet 4.9"
-
-# ╔═╡ 8efcd538-f863-11ea-1677-111b9890814e
-Text(precis(d; io=String))
-
 # ╔═╡ 266b8554-f826-11ea-26c9-ffc3b0ab57d6
 md"##### Compare with describe():"
 
 # ╔═╡ 267b9d68-f826-11ea-0d91-e117f7f4b66e
 describe(d, :all)
+
+# ╔═╡ 266ac76a-f826-11ea-2d0e-03c06ea11c56
+md"### snippet 4.9"
+
+# ╔═╡ 8efcd538-f863-11ea-1677-111b9890814e
+Text(precis(d; io=String))
 
 # ╔═╡ 267d089e-f826-11ea-1788-a3cf9d04a192
 md"### snippet 4.10"
@@ -250,10 +250,10 @@ md"## End of clip-04-07-15s.jl"
 # ╟─265325d8-f826-11ea-25c5-51983ce8514f
 # ╟─265d006c-f826-11ea-05b8-016f5f9e15da
 # ╠═265e60ce-f826-11ea-38f7-cfeb5f92ea85
-# ╟─266ac76a-f826-11ea-2d0e-03c06ea11c56
-# ╠═8efcd538-f863-11ea-1677-111b9890814e
 # ╟─266b8554-f826-11ea-26c9-ffc3b0ab57d6
 # ╠═267b9d68-f826-11ea-0d91-e117f7f4b66e
+# ╟─266ac76a-f826-11ea-2d0e-03c06ea11c56
+# ╠═8efcd538-f863-11ea-1677-111b9890814e
 # ╟─267d089e-f826-11ea-1788-a3cf9d04a192
 # ╠═268c8e40-f826-11ea-2499-132b929e08ac
 # ╟─268d5b18-f826-11ea-23e1-fdd6f004869c

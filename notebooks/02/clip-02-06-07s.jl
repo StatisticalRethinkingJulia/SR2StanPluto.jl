@@ -48,6 +48,15 @@ md"##### Define the SampleMdel."
 # ╔═╡ f5051912-f2de-11ea-0dde-9966ea7b7a1a
 m2_0s = SampleModel("m2_0s", m2_0);
 
+# ╔═╡ c5583734-1006-11eb-090b-8161869b3887
+q2_0s = quap(m2_0s)
+
+# ╔═╡ e0bb5132-1006-11eb-3136-3bbc6301f8c2
+begin
+	quap2_0s = sample(q2_0s)
+	Text(precis(quap2_0s; io=String))
+end
+
 # ╔═╡ f50bbb1c-f2de-11ea-0a71-f5dc72196881
 md"##### Use 9 observations as input data for stan_sample."
 
@@ -75,6 +84,7 @@ if success(rc2_0s)
  	density(df.theta, lab="Stan samples")
  	plot!( x, pdf.(Beta( w+1 , l+1 ) , x ), lab="Conjugate solution")
  	plot!( x, pdf.(Normal(mean(quapfit.theta), std(quapfit.theta)) , x ), lab="Stan quap solution")
+	density!(quap2_0s.theta, lab="Particle quap solution")
 end
 
 # ╔═╡ f5377072-f2de-11ea-3703-05a2357a9cfa
@@ -89,6 +99,8 @@ md"## End of clip-02-06-07s.jl"
 # ╠═f4fa0a5c-f2de-11ea-0c13-67e466b46681
 # ╟─f4fa9a76-f2de-11ea-0adf-cd14695dc705
 # ╠═f5051912-f2de-11ea-0dde-9966ea7b7a1a
+# ╠═c5583734-1006-11eb-090b-8161869b3887
+# ╠═e0bb5132-1006-11eb-3136-3bbc6301f8c2
 # ╟─f50bbb1c-f2de-11ea-0a71-f5dc72196881
 # ╠═f50cd894-f2de-11ea-2246-33ef06f78d3c
 # ╟─f51904de-f2de-11ea-34ef-3d416146dfba

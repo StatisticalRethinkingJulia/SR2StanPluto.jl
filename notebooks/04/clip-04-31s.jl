@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.4
 
 using Markdown
 using InteractiveUtils
@@ -49,7 +49,7 @@ begin
 	m4_2s = SampleModel("heights", m4_2);
 	m4_2_data = Dict("N" => length(df.height), "h" => df.height);
 	rc4_2s = stan_sample(m4_2s, data=m4_2_data);
-	success(rc4_2s) && (quap4_2s = read_samples(m4_2s; output_format=:particles))
+	success(rc4_2s) && (part4_2s = read_samples(m4_2s; output_format=:particles))
 end
 
 # ╔═╡ 058373e2-fb70-11ea-2fbe-634f17946677

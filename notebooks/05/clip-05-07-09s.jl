@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.4
 
 using Markdown
 using InteractiveUtils
@@ -10,7 +10,6 @@ using Pkg, DrWatson
 # ╔═╡ 2d9bd37a-fd04-11ea-2509-4b297c013e6d
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample
 	using StructuralCausalModels
 	using StatisticalRethinking
 end
@@ -97,13 +96,13 @@ md"## End of clip-05-07-09s.jl"
 # ╠═2db49e3c-fd04-11ea-2343-0d29f51022cc
 # ╟─a8f18662-01d4-11eb-01d1-197483e27bd0
 # ╠═2db8f448-fd04-11ea-0ee9-1ff203ccb3cb
-# ╠═cbdb6fea-01d5-11eb-0ce3-131585c3339b
+# ╟─cbdb6fea-01d5-11eb-0ce3-131585c3339b
 # ╟─4458c102-01d7-11eb-3d8c-93f9129401fc
 # ╠═2dbfc582-fd04-11ea-2086-e1f761ff9365
 # ╠═2dc0543e-fd04-11ea-39c9-6d3da3587f12
 # ╠═2dcccbba-fd04-11ea-104d-797e2b94ebbb
 # ╠═18f56d12-fd10-11ea-02a2-c77de8c1416b
-# ╠═f199e5a2-01d5-11eb-3b15-95701444ac4d
+# ╟─f199e5a2-01d5-11eb-3b15-95701444ac4d
 # ╠═2dd8856a-fd04-11ea-1486-2f3c7dd650bb
 # ╟─104634ec-01d6-11eb-186a-7f870a0f4cb8
 # ╟─2de11e4e-fd04-11ea-3d2a-3b1a3dbaeb63
