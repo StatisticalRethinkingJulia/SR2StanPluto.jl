@@ -64,10 +64,10 @@ All R snippets (fragments) have been organized in clips. Each clip is a notebook
 
 Clips are named as `clip-cc-fs-ls[s|t|d].jl` where
 
-* `cc`      : Chapter number
-* `fs`      : First snippet in clip
-* `ls`      : Last snippet in cli
-* `[s|sl|t|d|m]` : Mcmc flavor used (s : Stan, t : Turing)
+* `cc`               : Chapter number
+* `fs`               : First snippet in clip
+* `ls`               : Last snippet in cli
+* `[s|sl|t|d|m]`     : Mcmc flavor used (s : Stan, t : Turing)
 
 Note: `d` is reserved for a combination Soss/DynamicHMC, `sl` is reserved for Stan models using the `logpdf` formulation and `m` for Mamba.
 
@@ -78,22 +78,27 @@ Special introductory notebooks have been included in `notebooks/intros`, e.g.
 
 In addition to clips, in the early notebook chapters (0-3) it is shown how to create the figures in the book, e.g. `Fig2.5s.jl` in `notebooks/chapter/02`.
 
-Results of simulations are stored as follows:
+The models and the results of simulations are stored as follows:
 
 0. stan5_1           : Stan language program
 1. m5_1s             : The sampled StanSample model
-2. q5_1s             : The Stan quap model (Particle notation)
+2. q5_1s             : Stan QuapModel 
  
-3. prior5_1s         : Prior samples (DataFrame)
-4. post5_1s          : Posterior samples (DataFrame)
-5. quap5_1s          : Quap approximation to posterior smaples (DataFrame)
- 
-6. chns5_1s          : MCMCChains object (4000 samples collected from 4 chains)
-7. chns15_1qs        : MCMCChains object (10000 Stan `quap()` samples)
+3. chns5_1s          : MCMCChains object (4000 samples from 4 chains)
+4. quap5_1s          : Stan quap() samples (Particles notation)
+4. pred15_1s         : MCMCChains object (10000 Stan `quap()` samples)
+
+5. prior5_1s_df      : Prior samples (DataFrame)
+6. post5_1s_df       : Posterior samples (DataFrame)
+7. quap5_1s_df       : Quap approximation to posterior smaples (DataFrame)
+8. pred5_1s_df       : Posterior predictions (DataFrame)
+9. pred5_1s_sum_df   : Posterior prediction summary
+
+10. m5_1s_results    : Rethinking precis() results
 
 As before, the `s` at the end indicates Stan.
 
-All models in the `models` subdirectory return 1, 2 and 6.
+All models in the `models` subdirectory return 0, 1 and 6.
 
 ## Status
 
