@@ -1,4 +1,4 @@
-# Model m4.1s.jl
+# Model m4.2s.jl
 
 using Pkg, DrWatson
 
@@ -13,7 +13,7 @@ begin
     df = filter(row -> row[:age] >= 18, df);
 end;
 
-stan4_1 = "
+stan4_2 = "
 data {
   int N;
   real<lower=0> height[N];
@@ -24,7 +24,7 @@ parameters {
 }
 model {
   // Priors for mu and sigma
-  mu ~ normal(178, 20);
+  mu ~ normal(178, 0.1);
   sigma ~ uniform(0 , 50);
 
   // Observed heights
@@ -32,16 +32,16 @@ model {
 }
 ";
 
-m4_1s = SampleModel("m4_1s", stan4_1)
-m4_1_data = Dict("N" => length(df.height), "height" => df.height)
-rc4_1s = stan_sample(m4_1s, data=m4_1_data)
+m4_2s = SampleModel("m4_2s", stan4_2)
+m4_2_data = Dict("N" => length(df.height), "height" => df.height)
+rc4_2s = stan_sample(m4_2s, data=m4_2_data)
 
-if success(rc4_1s)
-  chns4_1s = read_samples(m4_1s; output_format=:mcmcchains)
-  chns4_1s
-  q4_1s = quap(m4_1s);                 # Stan QuapModel
-  quap4_1s = Particles(q4_1s)          # Samples from a QuapModel (Particles)
-  quap4_1s_df = sample(q4_1s)          # DataFrame with samples
+if success(rc4_2s)
+  chns4_2s = read_samples(m4_2s; output_format=:mcmcchains)
+  chns4_2s
+  q4_2s = quap(m4_2s);                 # Stan QuapModel
+  quap4_2s = Particles(q4_2s)          # Samples from a QuapModel (Particles)
+  quap4_2s_df = sample(q4_2s)          # DataFrame with samples
 end
 
-# End of m4.1s.jl
+# End of m4.2s.jl
