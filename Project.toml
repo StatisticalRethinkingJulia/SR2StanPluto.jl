@@ -5,6 +5,7 @@ authors = ["Rob J. Goedman <goedman@icloud.com>"]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 DocStringExtensions = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
 DrWatson = "634d3b9d-ee7a-5ddf-bec9-22491ea816e1"
+Formatting = "59287772-0a20-5a39-b81b-1366585eb4c0"
 MLJ = "add582a8-e3ab-11e8-2d5e-e98b27df1bc7"
 PrettyTables = "08abe8d2-0d0c-5749-adfa-8a2ac140af0d"
 StanOptimize = "fbd8da12-e93d-5a64-9231-612a0707ab99"
