@@ -185,9 +185,9 @@ version = "1.0.0"
 
 [[Contour]]
 deps = ["StaticArrays"]
-git-tree-sha1 = "d05a3a25b762720d40246d5bedf518c9c2614ef5"
+git-tree-sha1 = "0d128f9c2d9560349dc46f60c42036e244271d72"
 uuid = "d38c429a-6771-53c6-b99e-75d170b6e991"
-version = "0.5.5"
+version = "0.5.6"
 
 [[CpuId]]
 deps = ["Markdown", "Test"]
@@ -750,9 +750,9 @@ version = "1.0.3"
 
 [[MbedTLS_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
-git-tree-sha1 = "c7166979cd9193dbaf32392b83f166ebf6154033"
+git-tree-sha1 = "47e19f64fc939b86dea2b9b5e38c29c787f0d581"
 uuid = "c8ffd9c3-330d-5841-b78e-0817d7145fa1"
-version = "2.24.0+0"
+version = "2.24.0+1"
 
 [[Measures]]
 git-tree-sha1 = "e498ddeee6f9fdb4551ce855a46f54dbd900245f"
@@ -1136,9 +1136,9 @@ version = "1.0.0"
 
 [[StanBase]]
 deps = ["CSV", "DataFrames", "DelimitedFiles", "Distributed", "DocStringExtensions", "Documenter", "Parameters", "Random", "StanDump", "Unicode"]
-git-tree-sha1 = "7e51bc2fdae2e4066d6b7bacd4a47273adcabb39"
+git-tree-sha1 = "28d1a260abe08630e5f9d7f31a4cb5bd13513c29"
 uuid = "d0ee94f6-a23d-54aa-bbe9-7f572d6da7f5"
-version = "2.1.1"
+version = "2.1.2"
 
 [[StanDump]]
 deps = ["ArgCheck", "DocStringExtensions"]
@@ -1148,9 +1148,9 @@ version = "0.2.0"
 
 [[StanOptimize]]
 deps = ["CSV", "DataFrames", "DelimitedFiles", "Distributed", "DocStringExtensions", "Documenter", "Random", "StanBase", "Statistics", "Test", "Unicode"]
-git-tree-sha1 = "63665c1670c041ec194881702a26383bbc20414b"
+git-tree-sha1 = "5cf5fe3a917552c96af88542794f5841a925a515"
 uuid = "fbd8da12-e93d-5a64-9231-612a0707ab99"
-version = "2.1.1"
+version = "2.1.2"
 
 [[StanSample]]
 deps = ["CSV", "DataFrames", "DelimitedFiles", "Distributed", "DocStringExtensions", "MonteCarloMeasurements", "Reexport", "Requires", "StanBase", "Unicode"]
@@ -1214,7 +1214,7 @@ version = "1.1.0"
 deps = ["CSV", "Combinatorics", "DataFrames", "DataStructures", "Distributions", "DocStringExtensions", "LinearAlgebra", "NamedArrays", "Reexport", "Statistics"]
 path = "/Users/rob/.julia/dev/StructuralCausalModels"
 uuid = "a41e6734-49ce-4065-8b83-aff084c01dfd"
-version = "0.1.5"
+version = "0.1.6"
 
 [[SuiteSparse]]
 deps = ["Libdl", "LinearAlgebra", "Serialization", "SparseArrays"]
