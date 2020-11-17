@@ -12,7 +12,7 @@ scale!(df, [:Marriage, :MedianAgeMarriage, :Divorce])
 
 # Define the Stan language model
 
-m5_3 = "
+stan5_3 = "
 data {
   int N;
   vector[N] divorce_s;
@@ -36,7 +36,7 @@ model {
 ";
 
 # Define the SampleModel
-m5_3s = SampleModel("m5.3", m5_3);
+m5_3s = SampleModel("m5.3", stan5_3);
 
 # Input data
 
@@ -53,10 +53,6 @@ rc5_3s = stan_sample(m5_3s, data=m5_3_data);
 
 if success(rc5_3s)
 
-  # Describe the draws
-
-  dfa5_3s = read_samples(m5_3s; output_format=:dataframe)
-
   # Rethinking results
 
   rethinking_results = "
@@ -67,7 +63,7 @@ if success(rc5_3s)
     sigma  0.79 0.08  0.66  0.91
   ";
 
-  part5_3s = Particles(dfa5_3s)
+  part5_3s = read_samples(m5_3s; output_format=:particles)
   part5_3s |> display
 
 end

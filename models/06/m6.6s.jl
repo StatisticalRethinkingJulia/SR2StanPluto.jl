@@ -21,7 +21,7 @@ end
 
 sim_p = DataFrame(:sim_p => rand(LogNormal(0, 0.25), 10000))
 
-m6_6 = "
+stan6_6 = "
 data {
   int <lower=1> N;
   vector[N] h0;
@@ -45,12 +45,12 @@ m6_6_data = Dict(
   :h0 => df[:, :h0],
   :h1 => df[:, :h1]
 )
-m6_6s = SampleModel("m6.6s", m6_6)
+m6_6s = SampleModel("m6.6s", stan6_6)
 rc6_6s = stan_sample(m6_6s; data=m6_6_data)
 
 if success(rc6_6s)
-  dfa6_6s = read_samples(m6_6s; output_format=:dataframe);
-  part6_6s = Particles(dfa6_6s)
+  part6_6s = read_samples(m6_6s; output_format=:particles);
+  part6_6s |> display
 end
 
 # End of m6.6s.jl

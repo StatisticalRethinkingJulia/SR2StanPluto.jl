@@ -16,7 +16,7 @@ m4.2 <- quap(
     ) , data=d2 )
 
 ## R code 4.42
-m4.3a <- quap(
+m4.3 <- quap(
     alist(
         height ~ dnorm( mu , sigma ) ,
         mu <- a + b*( weight - xbar ) ,

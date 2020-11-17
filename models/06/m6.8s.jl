@@ -13,7 +13,7 @@ df = DataFrame(
 df[!, :fungus] = [rand(Binomial(1, 0.5 - 0.4 * df[i, :treatment]), 1)[1] for i in 1:N]
 df[!, :h1] = [df[i, :h0] + rand(Normal(5 - 3 * df[i, :fungus]), 1)[1] for i in 1:N]
 
-m6_8 = "
+stan6_8 = "
 data {
   int <lower=1> N;
   vector[N] h0;
@@ -46,13 +46,13 @@ m6_8_data = Dict(
   :treatment => df[:, :treatment]
 )
 
-m6_8s = SampleModel("m6.8s", m6_8)
+m6_8s = SampleModel("m6.8s", stan6_8)
 
 rc6_8s = stan_sample(m6_8s; data=m6_8_data)
 
 if success(rc6_8s)
-  dfa6_8s = read_samples(m6_8s; output_format=:dataframe);
-  part6_8s = Particles(dfa6_8s)
+  part6_8s = read_samples(m6_8s; output_format=:particles);
+  part6_8s |> display
 end
 
 # End of m6.8s.jl

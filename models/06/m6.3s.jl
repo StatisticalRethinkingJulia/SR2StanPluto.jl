@@ -8,7 +8,7 @@ using StatisticalRethinking
 df = CSV.read(sr_datadir("milk.csv"), DataFrame; delim=';');
 scale!(df, [:kcal_per_g, :perc_fat, :perc_lactose])
 
-m6_3 = "
+stan6_3 = "
 data{
   int <lower=1> N;              // Sample size
   vector[N] K;
@@ -32,11 +32,14 @@ model{
 # Define the SampleModel and set the output format to :mcmcchains.
 
 begin
-  m6_3s = SampleModel("m6.3", m6_3);
+  m6_3s = SampleModel("m6.3", stan6_3);
   m6_3_data = Dict("N" => size(df, 1), "F" => df.perc_fat_s, "K" => df.kcal_per_g_s);
   rc6_3s = stan_sample(m6_3s, data=m6_3_data);
-  success(rc6_3s) && (dfa6_3s = read_samples(m6_3s; output_format=:dataframe))
 end
 
-success(rc6_3s) && (part6_3s = Particles(dfa6_3s))
+if success(rc6_3s)
+  part6_3s = read_samples(m6_3s; output_format=:particles)
+  part6_3s |> display
+end
+
 # End of 6.3s.jl

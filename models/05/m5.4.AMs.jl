@@ -19,7 +19,7 @@ scale!(df, [:M, :A, :D])
 
 # Define the Stan language model
 
-m_5_4_AM = "
+stan5_4_AM = "
 data {
   int N;
   vector[N] A;
@@ -41,7 +41,7 @@ model {
 
 # Define the SampleModel
 #tmpdir=ProjDir*"/tmp"
-m5_4_AMs = SampleModel("m5.4.AM", m_5_4_AM);
+m5_4_AMs = SampleModel("m5.4.AM", stan5_4_AM);
 
 # Input data
 
@@ -57,12 +57,7 @@ rc5_4_AMs = stan_sample(m5_4_AMs, data=m5_4_data);
 
 if success(rc5_4_AMs)
 
-  # Describe the draws
-
-  dfa5_4_AMs = read_samples(m5_4_AMs; output_format=:dataframe)
-  part5_4_AMs = Particles(dfa5_4_AMs)
-  quap5_4_AMs = quap(dfa5_4_AMs)
-
+  part5_4_AMs = read_samples(m5_4_AMs; output_format=:particles)
   part5_4_AMs |> display
 
 end

@@ -14,7 +14,7 @@ df = CSV.read(sr_datadir("WaffleDivorce.csv"), DataFrame);
 scale!(df, [:Marriage, :MedianAgeMarriage, :Divorce])
 println()
 
-m5_1 = "
+stan5_1 = "
 data {
  int < lower = 1 > N; // Sample size
  vector[N] D; // Outcome
@@ -39,7 +39,7 @@ model {
 
 # Define the SampleModel and set the output format to :mcmcchains.
 
-m5_1s = SampleModel("m5.1", m5_1);
+m5_1s = SampleModel("m5.1", stan5_1);
 
 # Input data for cmdstan
 
@@ -52,10 +52,6 @@ rc5_1s = stan_sample(m5_1s, data=m5_1_data);
 
 if success(rc5_1s)
 
-  # Describe the draws
-
-  dfa5_1s = read_samples(m5_1s; output_format=:dataframe)
-
   # Result rethinking
 
   rethinking = "
@@ -65,7 +61,7 @@ if success(rc5_1s)
     sigma  0.79 0.08  0.66  0.91
   "
 
-  part5_1s = Particles(dfa5_1s)
+  part5_1s = read_samples(m5_1s; output_format=:particles)
   part5_1s |> display
 
 end

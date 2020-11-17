@@ -14,7 +14,7 @@ df[!, :neocortex_perc] = parse.(Float64, df[:, :neocortex_perc])
 df[!, :lmass] = log.(df[:, :mass])
 scale!(df, [:kcal_per_g, :neocortex_perc, :lmass])
 
-m5_7 = "
+stan5_7 = "
 data {
  int < lower = 1 > N; // Sample size
  vector[N] K; // Outcome
@@ -42,7 +42,7 @@ model {
 
 # Define the SampleModel and set the output format to :mcmcchains.
 
-m5_7s = SampleModel("m5.7", m5_7);
+m5_7s = SampleModel("m5.7", stan5_7);
 
 # Input data for cmdstan
 
@@ -55,11 +55,7 @@ rc5_7s = stan_sample(m5_7s, data=m5_7_data);
 
 if success(rc5_7s)
 
-  # Describe the draws
-
-  dfa5_7s = read_samples(m5_7s; output_format=:dataframe)
-  part5_7s = Particles(dfa5_7s)
-  quap5_7s = quap(dfa5_7s)
+  part5_7s = read_samples(m5_7s; output_format=:particles)
   part5_7s |> display
   
   rethinking = "
