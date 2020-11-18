@@ -65,7 +65,7 @@ Clips are named as `clip-cc-fs-ls[s|t|d].jl` where
 
 * `cc`               : Chapter number
 * `fs`               : First snippet in clip
-* `ls`               : Last snippet in cli
+* `ls`               : Last snippet in clip
 * `[s|sl|t|d|m]`     : Mcmc flavor used (s : Stan, t : Turing)
 
 Note: `d` is reserved for a combination Soss/DynamicHMC, `sl` is reserved for Stan models using the `logpdf` formulation and `m` for Mamba.
