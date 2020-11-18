@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.6
+# v0.12.10
 
 using Markdown
 using InteractiveUtils
@@ -34,7 +34,7 @@ md"###### This notebook demonstrates simple PlutoUI interactivity. This clip is 
 md"##### The Stan language model:"
 
 # ╔═╡ 0b3fbb40-df48-11ea-08f2-479bc2292d46
-m2_0 = "
+stan2_0 = "
 // Inferring a rate
 data {
   int n;
@@ -52,8 +52,11 @@ model {
 }
 ";
 
+# ╔═╡ 3fe31da0-29d1-11eb-305e-3d653dc813e7
+md"##### Create a SampleModel object and compile the Stan language program."
+
 # ╔═╡ 2331e85c-df48-11ea-1551-b54d9e48188c
-m2_0s = SampleModel("m2.0s", m2_0);
+m2_0s = SampleModel("m2.0s", stan2_0);
 
 # ╔═╡ c07942f0-ec64-11ea-0002-e734a075766d
 md"#### 2. Generate observed data, sample and display."
@@ -70,8 +73,8 @@ begin
   	m2_0_data = Dict("n" => n, "k" => sum(k[1:n]));
 	rc2_0s = stan_sample(m2_0s, data=m2_0_data)
 	if success(rc2_0s)
-		post2_0s = read_samples(m2_0s; output_format=:dataframe)
-		Text(precis(post2_0s; io=String))
+		post2_0s_df = read_samples(m2_0s; output_format=:dataframe)
+		Text(precis(post2_0s_df; io=String))
 	end
 end
 
@@ -82,7 +85,7 @@ md"#### 6. Show the posterior."
 begin
   plot(xlims=(0.0, 1.0), ylims=(0.0, 4.0), leg=false)
   hline!([1.0], line=(:dash))
-  density!(post2_0s.theta, line=(:dash))
+  density!(post2_0s_df.theta, line=(:dash))
  end
 
 # ╔═╡ 13851f4a-dfc8-11ea-0933-cb4f026bcf42
@@ -95,6 +98,7 @@ md"## End of Fig2.5.1s.jl"
 # ╠═9fb491f0-df47-11ea-3cf9-6fa3cee85c33
 # ╟─147b737a-df48-11ea-3679-77200acb11f0
 # ╠═0b3fbb40-df48-11ea-08f2-479bc2292d46
+# ╟─3fe31da0-29d1-11eb-305e-3d653dc813e7
 # ╠═2331e85c-df48-11ea-1551-b54d9e48188c
 # ╟─c07942f0-ec64-11ea-0002-e734a075766d
 # ╟─2f43c3b0-df48-11ea-2d13-99adeddbe90a

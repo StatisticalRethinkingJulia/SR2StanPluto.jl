@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.4
+# v0.12.10
 
 using Markdown
 using InteractiveUtils
@@ -172,7 +172,7 @@ m4_1_rethinking = "
 ";
 
 # ╔═╡ 2797fe8e-f826-11ea-3f7b-b50d4cb27e92
-m4_1 = "
+stan4_1 = "
 // Inferring the mean and std
 data {
   int N;
@@ -203,7 +203,7 @@ model {
 md"##### Create a StanSample SampleModel:"
 
 # ╔═╡ 27b38be8-f826-11ea-19d6-fd7d10c22e6f
-m4_1s = SampleModel("heights", m4_1);
+m4_1s = SampleModel("heights", stan4_1);
 
 # ╔═╡ 27c90360-f826-11ea-0d57-a10c128fca32
 md"##### Package the data:"
@@ -224,19 +224,22 @@ md"##### Check if sampling went ok:"
 md"##### Read in the samples and show a chain summary."
 
 # ╔═╡ dc3a5122-f82c-11ea-1eff-c745d65ab11b
-success(rc4_1s) && (chn4_1s = read_samples(m4_1s; output_format=:mcmcchains))
+if success(rc4_1s)
+	chns4_1s = read_samples(m4_1s; output_format=:mcmcchains)
+	Text(sprint(show, "text/plain", chns4_1s))
+end
 
 # ╔═╡ dc3af532-f82c-11ea-3212-f1b3c852513b
 md"##### Plot the sampling trace."
 
 # ╔═╡ 044a19a2-f866-11ea-2b89-a51866d89a50
-plot(chn4_1s, seriestype = :traceplot)
+plot(chns4_1s, seriestype = :traceplot)
 
 # ╔═╡ dc476376-f82c-11ea-10ac-97fcb8c78627
 md"##### Plot the density of posterior draws."
 
 # ╔═╡ 25318e22-f866-11ea-015b-d736c83ebfaa
-plot(chn4_1s, seriestype = :density)
+plot(chns4_1s, seriestype = :density)
 
 # ╔═╡ 2814f2fc-f826-11ea-3fbc-0541fe904b97
 md"## End of clip-04-07-15s.jl"

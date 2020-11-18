@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.4
+# v0.12.10
 
 using Markdown
 using InteractiveUtils
@@ -21,7 +21,7 @@ md"## Clip-03-05s.jl"
 md"##### Define the Stan language model."
 
 # ╔═╡ 77e2a9b6-f365-11ea-3d05-4d23a5ce0eed
-m3_5 = "
+stan3_5 = "
 // Inferring a Rate
 data {
   int N;
@@ -46,7 +46,7 @@ model {
 md"##### Define the Stanmodel and set the output format to :mcmcchains."
 
 # ╔═╡ 77ef18f4-f365-11ea-17f7-5b75918ed324
-m3_5s = SampleModel("m3_5s", m3_5);
+m3_5s = SampleModel("m3_5s", stan3_5);
 
 # ╔═╡ 77efb390-f365-11ea-16f0-23312c3610e3
 md"###### Use 16 observations."
@@ -84,7 +84,7 @@ end;
 md"##### Describe the chains."
 
 # ╔═╡ 9e931692-f368-11ea-2359-4b617b0cd65c
-chns3_5s
+Text(sprint(show, "text/plain", chns3_5s))
 
 # ╔═╡ 781b804c-f365-11ea-21d8-25088dbbbceb
 md"##### Plot the chains."

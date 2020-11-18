@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.4
+# v0.12.10
 
 using Markdown
 using InteractiveUtils
@@ -24,7 +24,7 @@ begin
 end;
 
 # ╔═╡ 0579eaa2-fb70-11ea-1646-095d244514f3
-m4_2 = "
+stan4_2 = "
 // Inferring the mean and std
 data {
   int N;
@@ -46,7 +46,7 @@ model {
 
 # ╔═╡ 057a5a8a-fb70-11ea-087f-7f1562f46764
 begin
-	m4_2s = SampleModel("heights", m4_2);
+	m4_2s = SampleModel("heights", stan4_2);
 	m4_2_data = Dict("N" => length(df.height), "h" => df.height);
 	rc4_2s = stan_sample(m4_2s, data=m4_2_data);
 	success(rc4_2s) && (part4_2s = read_samples(m4_2s; output_format=:particles))

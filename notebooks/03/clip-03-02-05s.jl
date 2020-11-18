@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.4
+# v0.12.10
 
 using Markdown
 using InteractiveUtils
@@ -50,7 +50,7 @@ chn = MCMCChains.Chains(reshape(samples, N, 1, 1), [:p]);
 md"##### Describe the chain."
 
 # ╔═╡ 17a5374c-f2e5-11ea-1bfe-3fb1cce48d48
-chn
+Text(sprint(show, "text/plain", chn))
 
 # ╔═╡ 17a70c16-f2e5-11ea-2e3f-2dc8006c1ee7
 md"##### Plot the chain."

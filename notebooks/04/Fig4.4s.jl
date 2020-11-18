@@ -111,26 +111,17 @@ begin
 	a2d = hcat(samples[:, :mu], samples[:, :sigma])
 	a3d = reshape(a2d, (size(a2d, 1), size(a2d, 2), 1))
 	chn = convert_a3d(a3d, ["mu", "sigma"], Val(:mcmcchains); start=1)
-	Text(summary(chn))
+	Text(sprint(show, "text/plain", chn))
 end
-
-# ╔═╡ 311c5faa-2852-11eb-04a4-352986beca28
-parm_df = summarize(chn, sections=[:parameters]);
-
-# ╔═╡ d878d4ac-2854-11eb-1877-2bdff2677240
-typeof(parm_df)
-
-# ╔═╡ 34903238-282f-11eb-25f1-4116948a9ddb
-Text(chn; io=String)
-
-# ╔═╡ f36b7cf6-2854-11eb-325d-0d717ef5e322
-Text(show(parm_df); io=String)
 
 # ╔═╡ 7aa6ebee-fb58-11ea-18e2-5dad90457b46
 md"##### hpd regions."
 
 # ╔═╡ a91331ac-fb5a-11ea-30f1-17727fb4b4e3
-bnds = MCMCChains.hpd(chn)
+begin
+	bnds = MCMCChains.hpd(chn)
+	Text(sprint(show, "text/plain", bnds))
+end
 
 # ╔═╡ a9138058-fb5a-11ea-107f-49a1e879a358
 md"### Snippet 4.21"
@@ -188,10 +179,6 @@ md"## End of Fig4.4s.jl"
 # ╟─9574982a-fb5a-11ea-2b18-3ddcf8f9d439
 # ╟─9575608e-fb5a-11ea-0872-451639a07f80
 # ╠═9586946e-fb5a-11ea-306e-edb148625f90
-# ╠═311c5faa-2852-11eb-04a4-352986beca28
-# ╠═d878d4ac-2854-11eb-1877-2bdff2677240
-# ╠═34903238-282f-11eb-25f1-4116948a9ddb
-# ╠═f36b7cf6-2854-11eb-325d-0d717ef5e322
 # ╟─7aa6ebee-fb58-11ea-18e2-5dad90457b46
 # ╠═a91331ac-fb5a-11ea-30f1-17727fb4b4e3
 # ╟─a9138058-fb5a-11ea-107f-49a1e879a358

@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.4
+# v0.12.10
 
 using Markdown
 using InteractiveUtils
@@ -21,7 +21,7 @@ md"## Clip-03-10s.jl"
 md"##### Define the Stan language model."
 
 # ╔═╡ 4ecc9aa2-f36d-11ea-29da-1983a79088fb
-m3_1 = "
+stan3_1 = "
 // Inferring a Rate
 data {
   int N;
@@ -46,7 +46,7 @@ model {
 md"##### Define the SampleModel."
 
 # ╔═╡ 4ed9d668-f36d-11ea-2c95-cd9558ee7092
-m3_1s = SampleModel("m3_1ss", m3_1);
+m3_1s = SampleModel("m3_1ss", stan3_1);
 
 # ╔═╡ 4edf444a-f36d-11ea-39d9-e1df7c43daad
 md"##### Use 4 observations."
@@ -56,7 +56,7 @@ begin
 	N2 = 4
 	n2 = Int.(9 * ones(Int, N2))
 	k2 = [6, 5, 7, 6]
-end
+end;
 
 # ╔═╡ 4ee6d05c-f36d-11ea-3176-21129362bd4a
 md"##### Input data for stan_sample()."
@@ -72,11 +72,9 @@ rc3_1s = stan_sample(m3_1s, data=m3_1_data);
 
 # ╔═╡ 4f06f9e0-f36d-11ea-3bcf-51b2ce61f1a5
 if success(rc3_1s)
-  chn = read_samples(m3_1s; output_format=:mcmcchains)
+	chn = read_samples(m3_1s; output_format=:mcmcchains)
+	Text(sprint(show, "text/plain", chn))
 end
-
-# ╔═╡ 4f0dfa7c-f36d-11ea-3722-833781504c3b
-chn
 
 # ╔═╡ 4f268cc4-f36d-11ea-2311-817925108b74
 md"##### Plot the chains."
@@ -93,7 +91,7 @@ end
 md"##### Look at area of hpd."
 
 # ╔═╡ 4f1b93dc-f36d-11ea-1b30-f7529e8874e3
-MCMCChains.hpd(chn)
+Text(sprint(show, "text/plain", MCMCChains.hpd(chn)))
 
 # ╔═╡ 4f2f785c-f36d-11ea-3049-4ddfd1351684
 md"## End of clip-03-10s.jl"
@@ -113,7 +111,6 @@ md"## End of clip-03-10s.jl"
 # ╟─4efc3d98-f36d-11ea-2bc4-b3ffb525c8f2
 # ╠═4f040028-f36d-11ea-0331-991166e4f38f
 # ╠═4f06f9e0-f36d-11ea-3bcf-51b2ce61f1a5
-# ╠═4f0dfa7c-f36d-11ea-3722-833781504c3b
 # ╟─4f268cc4-f36d-11ea-2311-817925108b74
 # ╠═4f281e9a-f36d-11ea-176e-8d42517d499b
 # ╟─4f14609e-f36d-11ea-22a7-89986a572741

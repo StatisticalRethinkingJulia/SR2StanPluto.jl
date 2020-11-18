@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.4
+# v0.12.10
 
 using Markdown
 using InteractiveUtils
@@ -10,7 +10,6 @@ using Pkg, DrWatson
 # ╔═╡ de612664-f76f-11ea-32f9-493c9b688096
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample
 	using StatisticalRethinking
 end
 

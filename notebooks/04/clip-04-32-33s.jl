@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.4
+# v0.12.10
 
 using Markdown
 using InteractiveUtils
@@ -27,7 +27,7 @@ begin
 end;
 
 # ╔═╡ 62a7bf82-fb76-11ea-3ad9-6bcc0a1b1be3
-m4_2 = "
+stan4_2 = "
 // Inferring the mean and std
 data {
   int N;
@@ -51,7 +51,7 @@ model {
 md"### Snippet 4.31"
 
 # ╔═╡ 62af493c-fb76-11ea-3fb8-15cf5f21732b
-m4_2s = SampleModel("m4.2s", m4_2);
+m4_2s = SampleModel("m4.2s", stan4_2);
 
 # ╔═╡ 62b97556-fb76-11ea-2914-cf968082c17b
 m4_2_data = Dict("N" => length(df.height), "h" => df.height);
@@ -66,10 +66,10 @@ if success(rc4_2s)
 end;
 
 # ╔═╡ 69c7b810-0e21-11eb-19c1-af43d12c84dd
-quap4_2s = sample(q4_2s);
+quap4_2s_df = sample(q4_2s);
 
 # ╔═╡ 243a9eea-0e22-11eb-0e83-2d7bbd03f78a
-Text(precis(quap4_2s; io=String))
+Text(precis(quap4_2s_df; io=String))
 
 # ╔═╡ 62d7694e-fb76-11ea-28c4-4d1e78f54b82
 md"### snippet 4.32"
@@ -87,7 +87,7 @@ diag(q4_2s.vcov) .|> sqrt
 md"##### Use Particles."
 
 # ╔═╡ fcb54d46-0b67-11eb-221d-87a459b88a94
- part_sim = Particles(4000, MvNormal([mean(quap4_2s.mu), mean(quap4_2s.sigma)], q4_2s.vcov))
+ part_sim = Particles(4000, MvNormal([mean(quap4_2s_df.mu), mean(quap4_2s_df.sigma)], q4_2s.vcov))
 
 # ╔═╡ 4fb21aa6-0be5-11eb-3ff7-d55646170d94
 begin

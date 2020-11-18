@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.10
 
 using Markdown
 using InteractiveUtils
@@ -32,7 +32,7 @@ end;
 md"##### Define the Stan language model."
 
 # ╔═╡ 4afd2eb8-fc0b-11ea-2f26-7329e44823a5
-m4_9 = "
+stan4_9 = "
 data{
     int N;
     vector[N] height;
@@ -61,7 +61,7 @@ md"##### Define the SampleModel, etc,"
 
 # ╔═╡ 4b0b60fa-fc0b-11ea-3929-0f0077415fc7
 begin
-	m4_9s = SampleModel("m4.9s", m4_9);
+	m4_9s = SampleModel("m4.9s", stan4_9);
 	m4_9_data = Dict(
 		"N" => size(df, 1), 
 		"height" => df.height, 
@@ -91,7 +91,7 @@ md"### Snippet 4.53 - 4.67"
 # ╔═╡ 4b30dc0e-fc0b-11ea-30c4-05c83cf73fda
 if success(rc4_9s)
 	begin
-		dfa4_9s = read_samples(m4_9s; output_format=:dataframe)
+		post4_9s_df = read_samples(m4_9s; output_format=:dataframe)
 
 		function link_poly(dfa::DataFrame, xrange)
 			vars = Symbol.(names(dfa))
@@ -101,7 +101,7 @@ if success(rc4_9s)
 		mu_range = -2:0.1:2
 
 		xbar = mean(df[:, :weight])
-		mu = link_poly(dfa4_9s, mu_range);
+		mu = link_poly(post4_9s_df, mu_range);
 
 		plot(xlab="weight_s", ylab="height")
 		for (indx, mu_val) in enumerate(mu_range)
@@ -118,7 +118,7 @@ if success(rc4_9s)
 	plot(xlab="weight_s", ylab="height", leg=:bottomright)
 	fheight(weight, a, b1, b2) = a + weight * b1 + weight^2 * b2
 	testweights = -2:0.01:2
-	arr = [fheight.(w, dfa4_9s.alpha, dfa4_9s.beta1, dfa4_9s.beta2) for w in testweights]
+	arr = [fheight.(w, post4_9s_df.alpha, post4_9s_df.beta1, post4_9s_df.beta2) for w in testweights]
 	m = [mean(v) for v in arr]
 	quantiles = [quantile(v, [0.055, 0.945]) for v in arr]
 	lower = [q[1] - m for (q, m) in zip(quantiles, m)]

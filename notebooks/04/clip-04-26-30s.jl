@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.4
+# v0.12.10
 
 using Markdown
 using InteractiveUtils
@@ -30,7 +30,7 @@ end;
 md"### Snippet 4.27"
 
 # ╔═╡ 852d4188-fb5f-11ea-399e-b9a0892f608e
-m4_1 = "
+stan4_1 = "
 // Inferring the mean and std
 data {
   int N;
@@ -52,7 +52,7 @@ model {
 
 # ╔═╡ 8534f82e-fb5f-11ea-272a-5d6ffc867d60
 begin
-	m4_1s = SampleModel("m4_1s", m4_1)
+	m4_1s = SampleModel("m4_1s", stan4_1)
 	m4_1_data = Dict("N" => length(df.height), "h" => df.height)
 	rc4_1s = stan_sample(m4_1s, data=m4_1_data)
 end;
@@ -79,7 +79,9 @@ if success(rc4_1s)
 end
 
 # ╔═╡ 855315e8-fb5f-11ea-1be3-fd3515317471
-success(rc4_1s) && (part4_1s = read_samples(m4_1s; output_format=:particles))
+if success(rc4_1s)
+	part4_1s = read_samples(m4_1s; output_format=:particles)
+end
 
 # ╔═╡ 855512da-fb5f-11ea-3166-39b8cbfc82d7
 md"### Snippet 4.28 & 4.29"
@@ -87,8 +89,8 @@ md"### Snippet 4.28 & 4.29"
 # ╔═╡ 8560d76c-fb5f-11ea-0bc6-2b249358d29f
 begin
 	q4_1s = quap(m4_1s)
-	quap4_1s = sample(q4_1s)
-	Text(precis(quap4_1s; io=String))
+	quap4_1s_df = sample(q4_1s)
+	Text(precis(quap4_1s_df; io=String))
 end
 
 # ╔═╡ 8573377e-fb5f-11ea-05ef-1b6568304ef8

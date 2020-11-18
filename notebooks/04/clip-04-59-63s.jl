@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.10
 
 using Markdown
 using InteractiveUtils
@@ -71,7 +71,7 @@ begin
 end;
 
 # ╔═╡ 61313e88-fc09-11ea-3da3-2f1cfc0eb392
-rethinking = "
+unscaled_rethinking_result = "
         mean   sd   5.5%  94.5%
 a     154.60 0.27 154.17 155.03
 b       0.90 0.04   0.84   0.97
