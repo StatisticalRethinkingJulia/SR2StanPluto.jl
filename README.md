@@ -8,7 +8,7 @@ This Julia project uses Stan (the `cmdstan` executable) as the underlying mcmc i
 
 ## Usage
 
-Note: Currently StatisticalRethinkingStan requires StatisticalRethinking.jl v 3.0.0. One way if setting that up is to `] dev StatisticalRethinking` and then use git to activate branch 3.0.0.
+Note: Currently StatisticalRethinkingStan requires StatisticalRethinking.jl v 3.0.0. One way to set that up (until v3 is merged into Julia's package repository) is to `] dev StatisticalRethinking` and then use git to activate branch 3.0.0.
 
 StatisticalRethinkingStan.jl is a DrWatson project, with some added/re-purposed subdirectories:
 
@@ -47,7 +47,7 @@ cd StatisticalRethinkingStan.jl
 
 The next step assumes your Julia setup includes `Pkg`, `DrWatson`, `Pluto` and `PlutoUI`.
 
-2. Start a Pluto notebook server and open a notebook in a browser.
+2. Start a Pluto notebook server. A Pluto page should open in a browser.
 ```
 $ julia
 
@@ -55,8 +55,7 @@ julia> using Pluto
 julia> Pluto.run()
 ```
 
-By default the Pluto server uses port 1234. In your browser go to
-`http://localhost:1234`.
+Select a notebook in `open a file`, e.g.  step to `./notebooks/00/clip-00-01-03s.jl`.
 
 Each notebook will activate the project `StatisticalrethinkingStan`.
 
@@ -82,21 +81,28 @@ In addition to clips, in the early notebook chapters (0-3) it is shown how to cr
 
 The models and the results of simulations are stored as follows:
 
+Models:
+
 0. stan5_1           : Stan language program
 1. m5_1s             : The sampled StanSample model
 2. q5_1s             : Stan QuapModel 
- 
-3. chns5_1s          : MCMCChains object (4000 samples from 4 chains)
-4. quap5_1s          : Stan quap() samples (Particles notation)
 
-5. prior5_1s_df      : Prior samples (DataFrame)
-6. post5_1s_df       : Posterior samples (DataFrame)
-7. quap5_1s_df       : Quap approximation to posterior samples (DataFrame)
-8. pred5_1s_df       : Posterior predictions (DataFrame)
+Draws:
+
+3. chns5_1s          : MCMCChains object (4000 samples from 4 chains)
+4. part5_1s          : Stan samples (Particles notation)
+5. quap5_1s          : Stan quap() samples (Particles notation)
+
+Results as a DataFrame:
+
+6. prior5_1s_df      : Prior samples (DataFrame)
+7. post5_1s_df       : Posterior samples (DataFrame)
+8. quap5_1s_df       : Quap approximation to posterior samples (DataFrame)
+9. pred5_1s_df       : Posterior predictions (DataFrame)
 
 As before, the `s` at the end indicates Stan.
 
-All models in the `models` subdirectory return 0, 1 and 6.
+Most models in the `models` subdirectory return 0, 1 and 7.
 
 ## Status
 
@@ -112,11 +118,10 @@ Any feedback is appreciated. Please open an issue.
 
 This repository and format is derived from work by Karajan, previous versions of StatisticalRethinking.jl and many other contributors.
 
-The availability of DynamicHMC, the huge progress made by the Turing.jl team over the last 2 years, the availability of Julia `projects` in addition to Julia `packages` and the novel approach to notebooks in Pluto.jl were a few of the ideas that triggered exploring a new setup for the StatisticalRethinkingJulia.
 
 ## Versions
 
-### Version 0.1.0 (in preparation, expected Oct 2020)
+### Version 0.1.0 (in preparation, expected Nov 2020)
 
 1. Initial version
 
