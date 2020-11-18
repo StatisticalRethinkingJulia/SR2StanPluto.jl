@@ -97,12 +97,16 @@ if success(rc10_4s)
 
 	# Output will go to terminal.
 	
-	chn10_4s |> display
-	Chains(chn10_4s, [:pooled]) |> display
-	Chains(chn10_4s, [:internals]) |> display
 	
-	part10_4s = read_samples(m10_4s; output_format=:particles)
+	
+	Text(sprint(show, "text/plain", chn10_4s))
 end
+
+# ╔═╡ 7a8c9016-2905-11eb-27e8-4fcfd2b70f45
+Text(sprint(show, "text/plain", Chains(chn10_4s, [:pooled])))
+
+# ╔═╡ a995ab9a-2905-11eb-21c0-711bf47af518
+Text(sprint(show, "text/plain", Chains(chn10_4s, [:internals])))
 
 # ╔═╡ Cell order:
 # ╠═6a448eee-28fa-11eb-0e64-bdb834986306
@@ -113,3 +117,5 @@ end
 # ╠═71e84fea-28fb-11eb-3f65-7b750dee322c
 # ╠═71eab852-28fb-11eb-3219-c3bb82330495
 # ╠═71f5eb14-28fb-11eb-2d38-d301b4ee827c
+# ╠═7a8c9016-2905-11eb-27e8-4fcfd2b70f45
+# ╠═a995ab9a-2905-11eb-21c0-711bf47af518

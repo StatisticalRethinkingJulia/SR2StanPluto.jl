@@ -8,6 +8,8 @@ This Julia project uses Stan (the `cmdstan` executable) as the underlying mcmc i
 
 ## Usage
 
+Note: Currently StatisticalRethinkingStan requires StatisticalRethinking.jl v 3.0.0. One way if setting that up is to `] dev StatisticalRethinking` and then use git to activate branch 3.0.0.
+
 StatisticalRethinkingStan.jl is a DrWatson project, with some added/re-purposed subdirectories:
 
 1. `models`, which contains Stan language model scripts needed repeatedly,
@@ -86,15 +88,11 @@ The models and the results of simulations are stored as follows:
  
 3. chns5_1s          : MCMCChains object (4000 samples from 4 chains)
 4. quap5_1s          : Stan quap() samples (Particles notation)
-4. pred15_1s         : MCMCChains object (10000 Stan `quap()` samples)
 
 5. prior5_1s_df      : Prior samples (DataFrame)
 6. post5_1s_df       : Posterior samples (DataFrame)
-7. quap5_1s_df       : Quap approximation to posterior smaples (DataFrame)
+7. quap5_1s_df       : Quap approximation to posterior samples (DataFrame)
 8. pred5_1s_df       : Posterior predictions (DataFrame)
-9. pred5_1s_sum_df   : Posterior prediction summary
-
-10. m5_1s_results    : Rethinking precis() results
 
 As before, the `s` at the end indicates Stan.
 

@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.4
+# v0.12.10
 
 using Markdown
 using InteractiveUtils
@@ -21,8 +21,15 @@ md"### snippet 2.1"
 
 # ╔═╡ 43247cdc-f2d8-11ea-3afb-7757672ed539
 begin
-	ways  = [0, 3, 8, 9, 0];
-	ways/sum(ways)
+	ways = [0, 3, 8, 9, 0];
+	p = ways/sum(ways)
+end
+
+# ╔═╡ dbd5a774-291c-11eb-10fd-e188004eb50d
+begin
+	previous_counts = [ 0, 3, 16, 27, 0]
+	bags = [0, 3, 2, 1, 0]
+	p_updated = previous_counts .* bags / sum(previous_counts .* bags)
 end
 
 # ╔═╡ 432963dc-f2d8-11ea-1170-a10c13c88fc7
@@ -49,6 +56,7 @@ md"## End of clip-02-01-02s.jl"
 # ╠═431bbfd4-f2d8-11ea-3afe-57f83d09e5e4
 # ╟─431f9776-f2d8-11ea-1b0b-311cfa2d41ad
 # ╠═43247cdc-f2d8-11ea-3afb-7757672ed539
+# ╠═dbd5a774-291c-11eb-10fd-e188004eb50d
 # ╟─432963dc-f2d8-11ea-1170-a10c13c88fc7
 # ╟─4329e23a-f2d8-11ea-193d-196b19e87ff1
 # ╠═4334f736-f2d8-11ea-1328-df16f55a4050
