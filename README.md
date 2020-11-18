@@ -12,7 +12,7 @@ Note: Currently StatisticalRethinkingStan requires StatisticalRethinking.jl v 3.
 
 StatisticalRethinkingStan.jl is a DrWatson project, with some added/re-purposed subdirectories:
 
-1. `models`, which contains Stan language model scripts needed repeatedly,
+1. `models`, which contains a subset of the Stan language models,
 2. `notebooks`, used to store the Pluto notebooks and
 3. `scripts`, Julia scripts (generated from the notebooks).
 
