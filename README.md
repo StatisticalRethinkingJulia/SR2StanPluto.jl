@@ -55,9 +55,7 @@ julia> using Pluto
 julia> Pluto.run()
 ```
 
-Select a notebook in `open a file`, e.g.  step to `./notebooks/00/clip-00-01-03s.jl`.
-
-Each notebook will activate the project `StatisticalrethinkingStan`.
+Select a notebook in the `open a file` entry box, e.g. type `./` and step to `./notebooks/00/clip-00-01-03s.jl`. All notebooks will activate the project `StatisticalRethinkingStan`.
 
 ## Setup
 
@@ -102,7 +100,7 @@ Results as a DataFrame:
 
 As before, the `s` at the end indicates Stan.
 
-Most models in the `models` subdirectory return 0, 1 and 7.
+Most models in the `models` subdirectory return 0, 1 and 4.
 
 ## Status
 
