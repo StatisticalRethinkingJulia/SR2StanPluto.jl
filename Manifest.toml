@@ -261,9 +261,9 @@ version = "0.8.3"
 
 [[Documenter]]
 deps = ["Base64", "Dates", "DocStringExtensions", "IOCapture", "InteractiveUtils", "JSON", "LibGit2", "Logging", "Markdown", "REPL", "Test", "Unicode"]
-git-tree-sha1 = "71e35e069daa9969b8af06cef595a1add76e0a11"
+git-tree-sha1 = "e7b7acd1d25ffdc1fe6226a3c2fd807fe64f898d"
 uuid = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
-version = "0.25.3"
+version = "0.25.4"
 
 [[Downloads]]
 deps = ["ArgTools", "LibCURL", "NetworkOptions"]
@@ -549,7 +549,7 @@ deps = ["Libdl"]
 uuid = "deac9b47-8bc7-5906-a0fe-35ac56dc84c0"
 
 [[LibGit2]]
-deps = ["Printf"]
+deps = ["NetworkOptions", "Printf"]
 uuid = "76f85450-5226-5b5a-8eaa-529ad045b433"
 
 [[LibVPX_jll]]
@@ -710,9 +710,9 @@ uuid = "d41bc354-129a-5804-8e4c-c37616107c6c"
 version = "7.7.1"
 
 [[NaNMath]]
-git-tree-sha1 = "c84c576296d0e2fbb3fc134d3e09086b3ea617cd"
+git-tree-sha1 = "bfe47e760d60b82b66b61d2d44128b62e3a369fb"
 uuid = "77ba4419-2d1f-58cd-9bb1-8ffee604a2e3"
-version = "0.3.4"
+version = "0.3.5"
 
 [[NamedArrays]]
 deps = ["Combinatorics", "DataStructures", "DelimitedFiles", "InvertedIndices", "LinearAlgebra", "Random", "Requires", "SparseArrays", "Statistics"]
@@ -1026,7 +1026,7 @@ version = "0.1.10"
 
 [[StanBase]]
 deps = ["CSV", "DataFrames", "DelimitedFiles", "Distributed", "DocStringExtensions", "Documenter", "Parameters", "Random", "StanDump", "Unicode"]
-git-tree-sha1 = "73cc94c80ce1ee298b44f1956855b06d069a44c0"
+path = "../StanBase"
 uuid = "d0ee94f6-a23d-54aa-bbe9-7f572d6da7f5"
 version = "2.1.3"
 

@@ -6,6 +6,41 @@ StatisticalRethinkingStan is a Julia project that uses Pluto notebooks for this 
 
 This Julia project uses Stan (the `cmdstan` executable) as the underlying mcmc implementation.
 
+## Installation
+
+To (locally) reproduce and use this project, do the following:
+
+1. Download this [project](https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingStan.jl) from Github and move to the downloaded directory, e.g.:
+
+```
+$ git clone https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingStan.jl
+
+$ cd StatisticalRethinkingStan.jl
+
+$ julia
+```
+
+and in the Julia REPL:
+
+```
+]             # Actvate Pkg mode
+<1.5> activate .
+<StatisticalRethinkingStan> instantiate
+<delete>      # Exit package mode
+```
+
+The next step assumes your Julia setup includes `Pkg`, `DrWatson`, `Pluto` and `PlutoUI`.
+
+2. Start a Pluto notebook server. A Pluto page should open in a browser.
+```
+$ julia
+
+julia> using Pluto
+julia> Pluto.run()
+```
+
+Select a notebook in the `open a file` entry box, e.g. type `./` and step to `./notebooks/00/clip-00-01-03s.jl`. All notebooks will activate the project `StatisticalRethinkingStan`.
+
 ## Usage
 
 Note: Currently StatisticalRethinkingStan requires StatisticalRethinking.jl v 3.0.0. One way to set that up (until v3 is merged into Julia's package repository) is to `] dev StatisticalRethinking` and then use git to activate branch 3.0.0.
@@ -35,27 +70,6 @@ using StatisticalRethinking
 d = CSV.read(sr_datadir("Howell1.csv"), DataFrame)
 d2 = d[d.age .>= 18, :]
 ```
-
-To (locally) reproduce and use this project, do the following:
-
-1. Download this [project](https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingStan.jl) from Github and move to the downloaded directory, e.g.:
-
-```
-git clone https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingStan.jl
-cd StatisticalRethinkingStan.jl
-```
-
-The next step assumes your Julia setup includes `Pkg`, `DrWatson`, `Pluto` and `PlutoUI`.
-
-2. Start a Pluto notebook server. A Pluto page should open in a browser.
-```
-$ julia
-
-julia> using Pluto
-julia> Pluto.run()
-```
-
-Select a notebook in the `open a file` entry box, e.g. type `./` and step to `./notebooks/00/clip-00-01-03s.jl`. All notebooks will activate the project `StatisticalRethinkingStan`.
 
 ## Setup
 
