@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.10
 
 using Markdown
 using InteractiveUtils
@@ -32,7 +32,7 @@ begin
 end;
 
 # ╔═╡ 0ba1c21a-fdaa-11ea-009d-5dcaf34749be
-m5_7 = "
+stan5_7 = "
 data {
  int < lower = 1 > N; // Sample size
  vector[N] K; // Outcome
@@ -63,18 +63,18 @@ md"##### Define the SampleModel, etc."
 
 # ╔═╡ 0bacf8a6-fdaa-11ea-2c4e-ed3ec21de17e
 begin
-	m5_7s = SampleModel("m5.7", m5_7);
+	m5_7s = SampleModel("m5.7", stan5_7);
 	m5_7_data = Dict("N" => size(df, 1), "M" => df[!, :lmass_s],
 		"K" => df[!, :kcal_per_g_s], "NC" => df[!, :neocortex_perc_s]);
 	rc5_7s = stan_sample(m5_7s, data=m5_7_data);
-	success(rc5_7s) && (dfa5_7s = read_samples(m5_7s; output_format=:dataframe))
+	success(rc5_7s) && (post5_7s_df = read_samples(m5_7s; output_format=:dataframe))
 end;
 
 # ╔═╡ 0bb730c8-fdaa-11ea-13f4-65a4d5d6081c
-success(rc5_7s) && Particles(dfa5_7s)
+success(rc5_7s) && Particles(post5_7s_df)
 
 # ╔═╡ 0bb8537c-fdaa-11ea-3eb2-3fba4b89dedf
-success(rc5_7s) && quap(dfa5_7s)
+success(rc5_7s) && quap(post5_7s_df)
 
 # ╔═╡ 0bc2f976-fdaa-11ea-0212-29e5fd84c264
 begin

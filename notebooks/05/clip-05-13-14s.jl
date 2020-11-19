@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.10
 
 using Markdown
 using InteractiveUtils
@@ -25,8 +25,11 @@ md"## Clip-05-13-14s.jl"
 # ╔═╡ f501e93e-fcde-11ea-2bc3-256fb8778233
 if success(rc5_4_AMs)
 	begin
-		pMA = plotbounds(df, :M, :A, dfa5_4_MAs, [:a, :bMA, :sigma])
-		pAM = plotbounds(df, :A, :M, dfa5_4_AMs, [:a, :bAM, :sigma])
+		post5_4_MAs_df = read_samples(m5_4_MAs; output_format=:dataframe)
+		post5_4_AMs_df = read_samples(m5_4_AMs; output_format=:dataframe)
+
+		pMA = plotbounds(df, :M, :A, post5_4_MAs_df, [:a, :bMA, :sigma])
+		pAM = plotbounds(df, :A, :M, post5_4_AMs_df, [:a, :bAM, :sigma])
 		plot(pAM, pMA, layout=(1, 2))
 	end
 end
@@ -114,7 +117,7 @@ md"## End of clip-05-13-14s.jl"
 # ╠═f4f1e034-fcde-11ea-08da-b7f09891f0a5
 # ╠═f4f26af4-fcde-11ea-0020-45e8f5b3ad00
 # ╠═f501e93e-fcde-11ea-2bc3-256fb8778233
-# ╠═f502a090-fcde-11ea-37d0-233bf56ce068
+# ╟─f502a090-fcde-11ea-37d0-233bf56ce068
 # ╠═f50ffec0-fcde-11ea-2670-534a1a8a9725
 # ╠═f510ac4e-fcde-11ea-05a8-fdda93bbfc2a
 # ╠═f51db3b0-fcde-11ea-1be0-eb23b24429e1

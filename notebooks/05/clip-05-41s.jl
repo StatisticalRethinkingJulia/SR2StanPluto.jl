@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.10
 
 using Markdown
 using InteractiveUtils
@@ -32,7 +32,7 @@ end;
 # ╔═╡ 2f8bd97c-fdbe-11ea-0855-55a321d0e010
 # Define the Stan language model
 
-m5_7_A = "
+stan5_7_A = "
 data {
   int N;
   vector[N] K;
@@ -67,7 +67,7 @@ model {
 
 # ╔═╡ 664db714-fdbe-11ea-20ba-b18074f27490
 begin
-	m5_7_As = SampleModel("m5.7_A", m5_7_A);
+	m5_7_As = SampleModel("m5.7_A", stan5_7_A);
 	m5_7_A_data = Dict(
 	  "N" => size(df, 1), 
 	  "K" => df[:, :K_s],
@@ -75,7 +75,7 @@ begin
 	  "NC" => df[:, :NC_s] 
 	);
 	rc5_7_As = stan_sample(m5_7_As, data=m5_7_A_data);
-	dfa5_7_As = read_samples(m5_7_As,; output_format=:dataframe);
+	post5_7_As_df = read_samples(m5_7_As,; output_format=:dataframe);
 end;
 
 # ╔═╡ cd977756-fdba-11ea-0b92-79d3b2439454
@@ -85,7 +85,7 @@ md"### Snippet 5.22"
 a_seq = range(-2, stop=2, length=100)
 
 # ╔═╡ cda9c6f4-fdba-11ea-359b-a5464143c8a6
-m_sim, d_sim = simulate(dfa5_7_As, [:aNC, :bMNC, :sigma_NC], a_seq, [:bM, :sigma]);
+m_sim, d_sim = simulate(post5_7_As_df, [:aNC, :bMNC, :sigma_NC], a_seq, [:bM, :sigma]);
 
 # ╔═╡ cdab170c-fdba-11ea-1c9b-17e26c5d30f5
 md"### Snippet 5.24"

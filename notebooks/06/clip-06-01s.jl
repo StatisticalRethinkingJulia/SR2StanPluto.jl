@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.10
 
 using Markdown
 using InteractiveUtils
@@ -38,7 +38,7 @@ begin
 end
 
 # ╔═╡ c0ce63ae-fe4b-11ea-0438-0359324fac9b
-m6_0 = "
+stan6_0 = "
 data {
   int <lower=1> N;
   vector[N] nw;
@@ -61,7 +61,7 @@ model {
 
 # ╔═╡ c0df6122-fe4b-11ea-0d95-5366fce018a1
 begin
-	m6_0s = SampleModel("m6.0s", m6_0)
+	m6_0s = SampleModel("m6.0s", stan6_0)
 	m_6_0_data = Dict(
 	  :nw => selected_df.nw_s,
 	  :tw => selected_df.tw_s,
@@ -83,8 +83,8 @@ end
 
 # ╔═╡ 5bfe710c-fe4c-11ea-16c2-fdb21351103b
 if success(rc6_0s)
-  dfa6_0s = read_samples(m6_0s, output_format=:dataframe)
-  fig1 = plotbounds(df, :nw, :tw, dfa6_0s , [:a, :aS, :sigma])
+  post6_0s_df = read_samples(m6_0s, output_format=:dataframe)
+  fig1 = plotbounds(df, :nw, :tw, post6_0s_df , [:a, :aS, :sigma])
   scatter!(unselected_df[:, :nw], unselected_df[:, :tw], color=:lightgrey, lab="unselected")
 end
 

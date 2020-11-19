@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.10
 
 using Markdown
 using InteractiveUtils
@@ -30,7 +30,7 @@ begin
 end;
 
 # ╔═╡ d66f515e-fc58-11ea-3fae-cbb82f1a1a6a
-m5_1 = "
+stan5_1 = "
 	data {
 	 int < lower = 1 > N; // Sample size
 	 vector[N] D; // Outcome
@@ -61,14 +61,14 @@ md"## Define the SampleModel, etc."
 
 # ╔═╡ d67e0602-fc58-11ea-3a27-31d03e1c2318
 begin
-	m5_1s = SampleModel("MedianAgeMarriage", m5_1)
+	m5_1s = SampleModel("MedianAgeMarriage", stan5_1)
 	m5_1_data = Dict("N" => size(df, 1), "D" => df.Divorce_s, "A" => df.MedianAgeMarriage_s)
 	rc5_1s = stan_sample(m5_1s, data=m5_1_data)
-	success(rc5_1s) && (dfa5_1s = read_samples(m5_1s; output_format=:dataframe))
+	success(rc5_1s) && (post5_1s_df = read_samples(m5_1s; output_format=:dataframe))
 end;
 
 # ╔═╡ a4a9351a-01c6-11eb-28d0-71f8fb243719
-Text(precis(dfa5_1s; io=String))
+Text(precis(post5_1s_df; io=String))
 
 # ╔═╡ 12fedbca-fc5a-11ea-2d4d-1d5ac93ac4fa
 md"### snippet 5.5"
@@ -83,7 +83,7 @@ if success(rc5_1s)
 		plot(xlab="Medium age marriage (scaled)", ylab="Divorce rate (scaled)",
 			title="Showing 50 regression lines")
 		for i in 1:50
-			local yi = mean(dfa5_1s[i, :a]) .+ dfa5_1s[i, :bA] .* xi
+			local yi = mean(post5_1s_df[i, :a]) .+ post5_1s_df[i, :bA] .* xi
 			plot!(xi, yi, color=:lightgrey, leg=false)
 		end
 

@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.10
 
 using Markdown
 using InteractiveUtils
@@ -36,7 +36,7 @@ rethinking_results = "
 ";
 
 # ╔═╡ b9af5a04-fd49-11ea-07ba-fb61574aed90
-part5_3_As = Particles(dfa5_3_As)
+part5_3_As = read_samples(m5_3_As; output_format=:particles)
 
 # ╔═╡ 988ca05a-fd46-11ea-2ae3-910f7baa2b3f
 md"## Snippet 5.25"
@@ -48,10 +48,13 @@ a_seq = range(-2, stop=2, length=100)
 md"## Snippet 5.26"
 
 # ╔═╡ e46cd1dc-fd48-11ea-0802-4d13a4981a23
-m_sim = zeros(size(dfa5_3_As, 1), length(a_seq));
+begin
+	post5_3_As_df = read_samples(m5_3_As; output_format=:dataframe)
+	m_sim = zeros(size(post5_3_As_df, 1), length(a_seq))
+end;
 
 # ╔═╡ 9899e134-fd46-11ea-0499-b94859cad8d1
-for j in 1:size(dfa5_3_As, 1)
+for j in 1:size(post5_3_As_df, 1)
   for i in 1:length(a_seq)
     d = Normal(part5_3_As.aM[j] + part5_3_As.bAM[j]*a_seq[i], part5_3_As.sigma_M[j])
     m_sim[j, i] = rand(d, 1)[1]
@@ -62,10 +65,10 @@ end
 md"## Snippet 5.27"
 
 # ╔═╡ eee2e318-fd48-11ea-2433-e1f6e65a082a
-d_sim = zeros(size(dfa5_3_As, 1), length(a_seq));
+d_sim = zeros(size(post5_3_As_df, 1), length(a_seq));
 
 # ╔═╡ 98a9de04-fd46-11ea-1a1b-b7512b456dc6
-for j in 1:size(dfa5_3_As, 1)
+for j in 1:size(post5_3_As_df, 1)
   for i in 1:length(a_seq)
     d = Normal(part5_3_As.a[j] + part5_3_As.bA[j]*a_seq[i] + part5_3_As.bM[j]*m_sim[j, i], part5_3_As.sigma[j])
     d_sim[j, i] = rand(d, 1)[1]

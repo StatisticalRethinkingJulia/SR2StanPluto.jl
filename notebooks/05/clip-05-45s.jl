@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.10
 
 using Markdown
 using InteractiveUtils
@@ -28,7 +28,7 @@ begin
 end;
 
 # ╔═╡ d2deae40-fdc0-11ea-0e50-0fc462ae5deb
-m5_8 = "
+stan5_8 = "
 data{
     int N;
     int male[N];
@@ -57,7 +57,7 @@ md"### Define the SampleModel, etc."
 
 # ╔═╡ d2eac996-fdc0-11ea-0ab9-09ab8a1bcdca
 begin
-	m5_8s = SampleModel("m5.8", m5_8);
+	m5_8s = SampleModel("m5.8", stan5_8);
 	df[!, :sex] = [df[i, :male] == 1 ? 2 : 1 for i in 1:size(df, 1)]
 	df_m = filter(row -> row[:sex] == 2, df)
 	df_f = filter(row -> row[:sex] == 1, df)
@@ -65,17 +65,17 @@ begin
 		"weight" => df[:, :weight], "height" => df[:, :height], 
 		"age" => df[:, :age], "sex" => df[:, :sex])
 	rc5_8s = stan_sample(m5_8s, data=m5_8_data)
-	dfa5_8s = read_samples(m5_8s; output_format=:dataframe)
+	post5_8s_df = read_samples(m5_8s; output_format=:dataframe)
 end;
 
 # ╔═╡ d2f648e8-fdc0-11ea-11a6-8d47151362d8
 if success(rc5_8s)
-  part5_8s = Particles(dfa5_8s)
+  part5_8s = Particles(post5_8s_df)
 end
 
 # ╔═╡ d2fade12-fdc0-11ea-33a5-fb6aea0df159
 if success(rc5_8s)
-	quap5_8s = quap(dfa5_8s)
+	quap5_8s = quap(post5_8s_df)
 end
 
 # ╔═╡ d30451e0-fdc0-11ea-2c62-9f4cfd82f8fd

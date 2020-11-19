@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.10
 
 using Markdown
 using InteractiveUtils
@@ -31,7 +31,7 @@ end;
 Text(precis(df; io=String))
 
 # ╔═╡ e7c914b2-fd1b-11ea-3cf6-2bf799ff7370
-m5_4_RS = "
+stan5_4_RS = "
 data {
   int N;
   vector[N] R;
@@ -53,23 +53,20 @@ model {
 
 # ╔═╡ e58a4fa4-fd20-11ea-3e5e-a518a746f06a
 begin
-	m5_4_RSs = SampleModel("m5.4", m5_4_RS);
+	m5_4_RSs = SampleModel("m5.4", stan5_4_RS);
 	m5_4_RS_data = Dict("N" => size(df, 1), "R" => df[:, :R_s], "S" => df[:, :S_s]);
 	rc5_4_RSs = stan_sample(m5_4_RSs, data=m5_4_RS_data);
 	if success(rc5_4_RSs)
-		dfa5_4_RSs = read_samples(m5_4_RSs; output_format=:dataframe)
-		part5_4_RSs = Particles(dfa5_4_RSs)
-		quap5_4_RSs = quap(dfa5_4_RSs)
+		post5_4_RSs_df = read_samples(m5_4_RSs; output_format=:dataframe)
+		part5_4_RSs = Particles(post5_4_RSs_df)
+		quap5_4_RSs = quap(post5_4_RSs_df)
 	end
 end
-
-# ╔═╡ f82d0d84-0286-11eb-08f1-756c6a319279
-
 
 # ╔═╡ 89ee52d2-fd1e-11ea-3c23-dfea31e14847
 # Define the Stan language model
 
-m5_4_SR = "
+stan5_4_SR = "
 data {
   int N;
   vector[N] R;
@@ -91,24 +88,24 @@ model {
 
 # ╔═╡ be0e0f32-fd3a-11ea-0d07-6f89080d556f
 begin
-	m5_4_SRs = SampleModel("m5.4", m5_4_SR);
+	m5_4_SRs = SampleModel("m5.4", stan5_4_SR);
 	m5_4_SR_data = Dict("N" => size(df, 1),  "R" => df[:, :R_s], "S" => df[:, :S_s]);
 	rc5_4_SRs = stan_sample(m5_4_SRs, data=m5_4_SR_data)
 	if success(rc5_4_SRs)
-		dfa5_4_SRs = read_samples(m5_4_SRs; output_format=:dataframe)
-		part5_4_SRs = Particles(dfa5_4_SRs)
-		quap5_4_SRs = quap(dfa5_4_SRs)
+		post5_4_SRs_df = read_samples(m5_4_SRs; output_format=:dataframe)
+		part5_4_SRs = Particles(post5_4_SRs_df)
+		quap5_4_SRs_df = quap(post5_4_SRs_df)
 	end
 end
 
 # ╔═╡ e7cb19ce-fd1b-11ea-2ca5-e5f14a1e1d8b
 if success(rc5_4_RSs)
-	pRS = plotbounds(df, :R, :S, dfa5_4_RSs, [:a, :bRS, :sigma])
+	pRS = plotbounds(df, :R, :S, post5_4_RSs_df, [:a, :bRS, :sigma])
 end;
 
 # ╔═╡ e7d70126-fd1b-11ea-16ad-31564fc648de
 if success(rc5_4_SRs)
-	pSR = plotbounds(df, :S, :R, dfa5_4_SRs, [:a, :bSR, :sigma])
+	pSR = plotbounds(df, :S, :R, post5_4_SRs_df, [:a, :bSR, :sigma])
 end;
 
 # ╔═╡ e7d799e2-fd1b-11ea-27c6-7f2c85fb9b62
@@ -184,7 +181,6 @@ md"## End of clip-05-18s.jl"
 # ╠═9fc481be-fd1c-11ea-24fc-b5ee354e8434
 # ╠═e7c914b2-fd1b-11ea-3cf6-2bf799ff7370
 # ╠═e58a4fa4-fd20-11ea-3e5e-a518a746f06a
-# ╠═f82d0d84-0286-11eb-08f1-756c6a319279
 # ╠═89ee52d2-fd1e-11ea-3c23-dfea31e14847
 # ╠═be0e0f32-fd3a-11ea-0d07-6f89080d556f
 # ╠═e7cb19ce-fd1b-11ea-2ca5-e5f14a1e1d8b

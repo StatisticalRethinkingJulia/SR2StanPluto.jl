@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.10
 
 using Markdown
 using InteractiveUtils
@@ -39,7 +39,7 @@ rethinking_results = "
 ";
 
 # ╔═╡ 55f8123e-fd40-11ea-375c-6df3d346a96f
-part5_3_As = Particles(dfa5_3_As)
+part5_3_As = read_samples(m5_3_As; output_format=:particles)
 
 # ╔═╡ 55fefeaa-fd40-11ea-2c88-a910f049dcf0
 md"## Snippet 5.22"
@@ -51,7 +51,10 @@ a_seq = range(-2, stop=2, length=100);
 md"## Snippet 5.23"
 
 # ╔═╡ 560dcb42-fd40-11ea-0b2e-f14e70a7425a
-m_sim, d_sim = simulate(dfa5_3_As, [:aM, :bAM, :sigma_M], a_seq, [:bM, :sigma]);
+begin
+	post5_3_As_df = read_samples(m5_3_As; output_format=:dataframe)
+	m_sim, d_sim = simulate(post5_3_As_df, [:aM, :bAM, :sigma_M], a_seq, [:bM, :sigma])
+end
 
 # ╔═╡ 5618ec0c-fd40-11ea-3a0f-85fb3e33f1b1
 md"## Snippet 5.24"
@@ -86,10 +89,10 @@ md"##### M -> D"
 # ╔═╡ 56339584-fd40-11ea-3c75-4f679d500b1c
 begin
 	m_seq = range(-2, stop=2, length=100)
-	md_sim = zeros(size(dfa5_3_As, 1), length(m_seq))
-	for j in 1:size(dfa5_3_As, 1)
+	md_sim = zeros(size(post5_3_As_df, 1), length(m_seq))
+	for j in 1:size(post5_3_As_df, 1)
 		for i in 1:length(m_seq)
-			d = Normal(dfa5_3_As[j, :a] + dfa5_3_As[j, :bM] * m_seq[i], dfa5_3_As[j, :sigma])
+			d = Normal(post5_3_As_df[j, :a] + post5_3_As_df[j, :bM] * m_seq[i], post5_3_As_df[j, :sigma])
 			md_sim[j, i] = rand(d, 1)[1]
 		end
 	end

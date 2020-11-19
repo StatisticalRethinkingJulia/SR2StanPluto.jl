@@ -19,7 +19,6 @@ $ cd StatisticalRethinkingStan.jl
 
 $ julia
 ```
-
 and in the Julia REPL:
 
 ```
@@ -128,12 +127,11 @@ Any feedback is appreciated. Please open an issue.
 
 ## Acknowledgements
 
+Of course, without the excellent textbook by Richard McElreath, this package would not have been possible. The author has also been supportive of this work and gave permission to use the datasets.
+
 This repository and format is derived from work by Karajan, previous versions of StatisticalRethinking.jl and many other contributors.
 
-
-## Versions
-
-### Version 0.1.0 (in preparation, expected Nov 2020)
+### Version 1.0.0
 
 1. Initial version
 

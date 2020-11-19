@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.10
 
 using Markdown
 using InteractiveUtils
@@ -31,7 +31,7 @@ end;
 	Text(precis(df[:, 3:15]; io=String))
 
 # ╔═╡ 15937fa4-fc0e-11ea-0aaf-e7049b6392bf
-wd = "
+stan5_0 = "
 data {
  int < lower = 1 > N; // Sample size
  vector[N] D; // Outcome (Divorce rate)
@@ -58,7 +58,7 @@ model {
 md"##### Define the SampleModel."
 
 # ╔═╡ 15a204fc-fc0e-11ea-2b27-75d4236363d6
-sm1 = SampleModel("Fig5.1", wd);
+m5_0s = SampleModel("Fig5.1", stan5_0);
 
 # ╔═╡ 15a36108-fc0e-11ea-310b-d50e8725f62c
 md"##### Input data."
@@ -71,22 +71,24 @@ wd_data = Dict("N" => size(df, 1), "D" => df[:, :Divorce_s],
 md"##### Sample using StanSample."
 
 # ╔═╡ 15bce25e-fc0e-11ea-3c0d-a761765fd79f
-rc = stan_sample(sm1, data=wd_data);
+rc5_0s = stan_sample(m5_0s, data=wd_data);
 
 # ╔═╡ 15c8b926-fc0e-11ea-0b2d-55290b7dfe24
-if success(rc)
+if success(rc5_0s)
 	begin
 
 	  # Plot regression line using means and observations
 
-	  dfs = read_samples(sm1; output_format=:dataframe)
-	  p = Particles(dfs)
+	  post5_0s_df = read_samples(m5_0s; output_format=:dataframe)
+	  part5_0s = Particles(post5_0s_df)
 	end
 end
 
 # ╔═╡ 15ca02e2-fc0e-11ea-281e-194a9b83623d
-if success(rc)
-	q = quap(dfs)
+if success(rc5_0s)
+	q5_0s = quap(m5_0s)
+	quap5_0s_df = sample(q5_0s)
+	Text(precis(quap5_0s_df; io=String))
 end
 
 # ╔═╡ 3e6621a0-fc42-11ea-0790-6fdef3820273
@@ -99,11 +101,11 @@ df[[1, 4, 11, 20, 30, 40], [1, 2, 7, 9]]
 df[:,1]
 
 # ╔═╡ 15d19672-fc0e-11ea-093b-bff8eaf427d2
-if success(rc)
+if success(rc5_0s)
 	begin
 		p2 = plotbounds(
 			df, :WaffleHouses, :Divorce,
-			dfs, [:a, :bA, :sigma];
+			post5_0s_df, [:a, :bA, :sigma];
 			bounds=[:predicted, :hpdi],
 			title="Divorce rate vs. waffle houses per million" * "\nshowing predicted and hpd range",
 			xlab="Waffle houses per million",

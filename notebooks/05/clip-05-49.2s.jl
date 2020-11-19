@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.10
 
 using Markdown
 using InteractiveUtils
@@ -29,7 +29,7 @@ end;
 md"## Clip-05-49.2s.jl"
 
 # ╔═╡ e6116536-fdc3-11ea-2255-075c0866b513
-m5_9 = "
+stan5_9 = "
 data{
   int <lower=1> N;              // Sample size
   int <lower=1> k;              // Categories
@@ -53,16 +53,16 @@ model{
 
 # ╔═╡ e61e09f8-fdc3-11ea-0391-bfbbb35fbc9b
 begin
-	m5_9s = SampleModel("m5.9", m5_9);
+	m5_9s = SampleModel("m5.9", stan5_9);
 	m5_9_data = Dict("N" => size(df, 1), "clade_id" => c_id,
 		"K" => df[:, :K_s], "k" => 4);
 	rc5_9s = stan_sample(m5_9s, data=m5_9_data);
-	dfa5_9s = read_samples(m5_9s; output_format=:dataframe)
-	part5_9s = Particles(dfa5_9s)
+	post5_9s_df = read_samples(m5_9s; output_format=:dataframe)
+	part5_9s = Particles(post5_9s_df)
 end
 
 # ╔═╡ e61eadb8-fdc3-11ea-19bc-e30e128c1dbb
-success(rc5_9s) && quap(dfa5_9s)
+success(rc5_9s) && quap(post5_9s_df)
 
 # ╔═╡ e62ae894-fdc3-11ea-3de4-2b3cce9dd0bb
 rethinking_result = "

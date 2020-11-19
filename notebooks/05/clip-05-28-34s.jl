@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.10
 
 using Markdown
 using InteractiveUtils
@@ -30,7 +30,7 @@ begin
 end;
 
 # ╔═╡ 9fe858dc-fda3-11ea-38c8-df4b1d6e8419
-m_5_5_draft = "
+stan_5_5_draft = "
 data {
  int < lower = 1 > N; // Sample size
  vector[N] K; // Outcome
@@ -56,7 +56,7 @@ md"##### Define the SampleModel, etc."
 
 # ╔═╡ d65ec40a-fda3-11ea-2e15-2f55dd308dd9
 begin
-	m5_5_drafts = SampleModel("m5.5.draft", m_5_5_draft);
+	m5_5_drafts = SampleModel("m5.5.draft", stan_5_5_draft);
 	m5_5_data = Dict("N" => size(df, 1), "NC" => df.neocortex_perc_s,
 		"K" => df.kcal_per_g_s);
 	rc5_5_drafts = stan_sample(m5_5_drafts, data=m5_5_data)
@@ -64,7 +64,7 @@ end;
 
 # ╔═╡ 407845b4-fd4a-11ea-1ed5-65581b68ccda
 if success(rc5_5_drafts)
-  dfa5_5_drafts = read_samples(m5_5_drafts; output_format=:dataframe)
+  post5_5_drafts_df = read_samples(m5_5_drafts; output_format=:dataframe)
 end;
 
 # ╔═╡ d8d01f36-fda3-11ea-2b26-59b86a4e23ca
@@ -79,14 +79,14 @@ rethinking = "
 ";
 
 # ╔═╡ d8d8a4e4-fda3-11ea-3bda-0b8c90e63d65
-Particles(dfa5_5_drafts)
+Particles(post5_5_drafts_df)
 
 # ╔═╡ d8db84ca-fda3-11ea-35c2-1f671cea8a32
 if success(rc5_5_drafts)
   p = plot(title="m5.5.drafts: a ~ Normal(0, 1), bN ~ Normal(0, 1)")
   x = -2:0.01:2
   for j in 1:100
-    y = dfa5_5_drafts[j, :a] .+ dfa5_5_drafts[j, :bN]*x
+    y = post5_5_drafts_df[j, :a] .+ post5_5_drafts_df[j, :bN]*x
     plot!(p, x, y, color=:lightgrey, leg=false)
   end
 	plot(p)

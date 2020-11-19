@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.10
 
 using Markdown
 using InteractiveUtils
@@ -30,7 +30,7 @@ end;
 md"### snippet 5.35"
 
 # ╔═╡ 63a85bda-fda6-11ea-1664-4d81fe6e0bc2
-m5_5 = "
+stan5_5 = "
 data {
  int < lower = 1 > N; // Sample size
  vector[N] K; // Outcome
@@ -58,7 +58,7 @@ md"## Define the SampleModel, etc."
 
 # ╔═╡ 63b3736c-fda6-11ea-35fe-5b5f3d67aef6
 begin
-	m5_5s = SampleModel("m5.5", m5_5);
+	m5_5s = SampleModel("m5.5", stan5_5);
 	m5_5_data = Dict("N" => size(df, 1), "NC" => df[!, :neocortex_perc_s],
 		"K" => df[!, :kcal_per_g_s]);
 	rc5_5s = stan_sample(m5_5s, data=m5_5_data);
@@ -66,11 +66,11 @@ end;
 
 # ╔═╡ 63bc7bba-fda6-11ea-1e4e-3deb1786b246
 if success(rc5_5s)
-  dfa5_5s = read_samples(m5_5s; output_format=:dataframe)
+  post5_5s_df = read_samples(m5_5s; output_format=:dataframe)
   title = "Kcal_per_g vs. neocortex_perc" * "\nshowing predicted and hpd range"
   plotbounds(
     df, :neocortex_perc, :kcal_per_g,
-    dfa5_5s, [:a, :bN, :sigma];
+    post5_5s_df, [:a, :bN, :sigma];
     title=title
   )
 end

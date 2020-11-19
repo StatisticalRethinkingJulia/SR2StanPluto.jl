@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.10
 
 using Markdown
 using InteractiveUtils
@@ -22,12 +22,12 @@ md"## Clip-05-06-09s.jl"
 
 # ╔═╡ 9f1dddee-fcec-11ea-2328-dbd9ddc2be94
 if success(rc5_2s)
-	dfa5_2s = read_samples(m5_2s; output_format=:dataframe)
-	part5_2s = Particles(dfa5_2s) 
+	post5_2s_df = read_samples(m5_2s; output_format=:dataframe)
+	part5_2s = Particles(post5_2s_df) 
 end
 
 # ╔═╡ 9f1e7e82-fcec-11ea-203c-bf2312bf2fc6
-success(rc5_2s) && quap(dfa5_2s)
+success(rc5_2s) && quap(post5_2s_df)
 
 # ╔═╡ 9f27c84a-fcec-11ea-005e-97c59812d16e
 # Rethinking results
@@ -45,7 +45,7 @@ if success(rc5_2s)
 		title = "Divorce rate vs. Marriage rate" * "\nshowing sample and hpd range"
 		plotbounds(
 			df, :Marriage, :Divorce,
-			dfa5_2s, [:a, :bM, :sigma];
+			post5_2s_df, [:a, :bM, :sigma];
 			title=title,
 			colors=[:lightgrey, :darkgrey]
 		)
