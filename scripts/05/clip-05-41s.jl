@@ -24,7 +24,7 @@ begin
 end;
 
 
-m5_7_A = "
+stan5_7_A = "
 data {
   int N;
   vector[N] K;
@@ -58,7 +58,7 @@ model {
 ";
 
 begin
-	m5_7_As = SampleModel("m5.7_A", m5_7_A);
+	m5_7_As = SampleModel("m5.7_A", stan5_7_A);
 	m5_7_A_data = Dict(
 	  "N" => size(df, 1), 
 	  "K" => df[:, :K_s],
@@ -66,14 +66,14 @@ begin
 	  "NC" => df[:, :NC_s] 
 	);
 	rc5_7_As = stan_sample(m5_7_As, data=m5_7_A_data);
-	dfa5_7_As = read_samples(m5_7_As,; output_format=:dataframe);
+	post5_7_As_df = read_samples(m5_7_As,; output_format=:dataframe);
 end;
 
 md"### Snippet 5.22"
 
 a_seq = range(-2, stop=2, length=100)
 
-m_sim, d_sim = simulate(dfa5_7_As, [:aNC, :bMNC, :sigma_NC], a_seq, [:bM, :sigma]);
+m_sim, d_sim = simulate(post5_7_As_df, [:aNC, :bMNC, :sigma_NC], a_seq, [:bM, :sigma]);
 
 md"### Snippet 5.24"
 

@@ -16,7 +16,7 @@ md"## Clip-05-13s.jl"
 
 if success(rc5_3s)
 	begin
-		dfs = read_samples(m5_3s; output_format=:dataframe)
+		post5_3s_df = read_samples(m5_3s; output_format=:dataframe)
 
 		# Rethinking results
 
@@ -31,7 +31,7 @@ if success(rc5_3s)
 		title = "Divorce rate vs. Marriage rate" * "\nshowing predicted and hpd range"
 		plotbounds(
 			df, :Marriage, :Divorce,
-			dfs, [:a, :bM, :sigma];
+			post5_3s_df, [:a, :bM, :sigma];
 			title=title,
 			colors=[:lightgrey, :darkgrey],
 			bounds=[:predicted, :hpdi]

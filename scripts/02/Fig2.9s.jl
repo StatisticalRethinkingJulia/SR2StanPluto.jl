@@ -6,7 +6,6 @@ using Pkg, DrWatson
 
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample
 	using StatisticalRethinking
 end
 
@@ -46,7 +45,7 @@ end;
 
 md"##### Describe the chain."
 
-chn
+Text(sprint(show, "text/plain", chn))
 
 md"##### Compute the MAP (Maximum A Posteriori) estimate."
 

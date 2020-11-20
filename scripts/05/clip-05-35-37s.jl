@@ -22,7 +22,7 @@ end;
 
 md"### snippet 5.35"
 
-m5_5 = "
+stan5_5 = "
 data {
  int < lower = 1 > N; // Sample size
  vector[N] K; // Outcome
@@ -48,18 +48,18 @@ model {
 md"## Define the SampleModel, etc."
 
 begin
-	m5_5s = SampleModel("m5.5", m5_5);
+	m5_5s = SampleModel("m5.5", stan5_5);
 	m5_5_data = Dict("N" => size(df, 1), "NC" => df[!, :neocortex_perc_s],
 		"K" => df[!, :kcal_per_g_s]);
 	rc5_5s = stan_sample(m5_5s, data=m5_5_data);
 end;
 
 if success(rc5_5s)
-  dfa5_5s = read_samples(m5_5s; output_format=:dataframe)
+  post5_5s_df = read_samples(m5_5s; output_format=:dataframe)
   title = "Kcal_per_g vs. neocortex_perc" * "\nshowing predicted and hpd range"
   plotbounds(
     df, :neocortex_perc, :kcal_per_g,
-    dfa5_5s, [:a, :bN, :sigma];
+    post5_5s_df, [:a, :bN, :sigma];
     title=title
   )
 end

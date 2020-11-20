@@ -23,7 +23,7 @@ Text(precis(df; io=String))
 
 md"##### Define the Stan language model."
 
-m4_6 = "
+stan4_6 = "
 data {
  int < lower = 1 > N; // Sample size
  vector[N] height; // Predictor
@@ -44,23 +44,23 @@ model {
 md"##### Define the SampleModel."
 
 begin
-	m4_6s = SampleModel("weights", m4_6)
+	m4_6s = SampleModel("weights", stan4_6)
 	m4_6_data = Dict("N" => length(df.height), "height" => df.height, "weight" => df.weight_c)
 	rc4_6s = stan_sample(m4_6s, data=m4_6_data)
 end;
 
 if success(rc4_6s)
-  dfa4_6s = read_samples(m4_6s; output_format=:dataframe)
+  post4_6s_df = read_samples(m4_6s; output_format=:dataframe)
 end;
 
 md"### Snippet 4.47"
 
 
 if success(rc4_6s)
-  dfa4_6s[1:5,:]
+  post4_6s_df[1:5,:]
 end
 
-Text(precis(dfa4_6s; io=String))
+Text(precis(post4_6s_df; io=String))
 
 md"### Snippets 4.48 & 4.49"
 
@@ -74,7 +74,7 @@ begin
 		heightsdataN = Dict("N" => N, "height" => df[1:N, :height], "weight" => df[1:N, :weight_c])
     
 		# Make sure previous sample files are removed!
-		sm = SampleModel("weights", m4_6);
+		sm = SampleModel("weights", stan4_6);
 		rc = stan_sample(m4_6s, data=heightsdataN)
 
 		if success(rc)

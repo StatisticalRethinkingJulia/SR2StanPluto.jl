@@ -130,7 +130,7 @@ m4_1_rethinking = "
   height ~ Normal(μ, σ)
 ";
 
-m4_1 = "
+stan4_1 = "
 // Inferring the mean and std
 data {
   int N;
@@ -159,7 +159,7 @@ model {
 
 md"##### Create a StanSample SampleModel:"
 
-m4_1s = SampleModel("heights", m4_1);
+m4_1s = SampleModel("heights", stan4_1);
 
 md"##### Package the data:"
 
@@ -173,15 +173,18 @@ md"##### Check if sampling went ok:"
 
 md"##### Read in the samples and show a chain summary."
 
-success(rc4_1s) && (chn4_1s = read_samples(m4_1s; output_format=:mcmcchains))
+if success(rc4_1s)
+	chns4_1s = read_samples(m4_1s; output_format=:mcmcchains)
+	Text(sprint(show, "text/plain", chns4_1s))
+end
 
 md"##### Plot the sampling trace."
 
-plot(chn4_1s, seriestype = :traceplot)
+plot(chns4_1s, seriestype = :traceplot)
 
 md"##### Plot the density of posterior draws."
 
-plot(chn4_1s, seriestype = :density)
+plot(chns4_1s, seriestype = :density)
 
 md"## End of clip-04-07-15s.jl"
 

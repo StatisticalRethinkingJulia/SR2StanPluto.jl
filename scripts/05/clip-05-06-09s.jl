@@ -15,11 +15,11 @@ include(projectdir("models", "05", "m5.2s.jl"))
 md"## Clip-05-06-09s.jl"
 
 if success(rc5_2s)
-	dfa5_2s = read_samples(m5_2s; output_format=:dataframe)
-	part5_2s = Particles(dfa5_2s) 
+	post5_2s_df = read_samples(m5_2s; output_format=:dataframe)
+	part5_2s = Particles(post5_2s_df) 
 end
 
-success(rc5_2s) && quap(dfa5_2s)
+success(rc5_2s) && quap(post5_2s_df)
 
 
 rethinking_results = "
@@ -34,7 +34,7 @@ if success(rc5_2s)
 		title = "Divorce rate vs. Marriage rate" * "\nshowing sample and hpd range"
 		plotbounds(
 			df, :Marriage, :Divorce,
-			dfa5_2s, [:a, :bM, :sigma];
+			post5_2s_df, [:a, :bM, :sigma];
 			title=title,
 			colors=[:lightgrey, :darkgrey]
 		)

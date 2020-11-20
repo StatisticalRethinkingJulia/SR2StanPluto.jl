@@ -31,7 +31,7 @@ begin
 	cor(selected_df.nw, selected_df.tw)
 end
 
-m6_0 = "
+stan6_0 = "
 data {
   int <lower=1> N;
   vector[N] nw;
@@ -53,7 +53,7 @@ model {
 ";
 
 begin
-	m6_0s = SampleModel("m6.0s", m6_0)
+	m6_0s = SampleModel("m6.0s", stan6_0)
 	m_6_0_data = Dict(
 	  :nw => selected_df.nw_s,
 	  :tw => selected_df.tw_s,
@@ -73,8 +73,8 @@ if success(rc6_0s)
 end
 
 if success(rc6_0s)
-  dfa6_0s = read_samples(m6_0s, output_format=:dataframe)
-  fig1 = plotbounds(df, :nw, :tw, dfa6_0s , [:a, :aS, :sigma])
+  post6_0s_df = read_samples(m6_0s, output_format=:dataframe)
+  fig1 = plotbounds(df, :nw, :tw, post6_0s_df , [:a, :aS, :sigma])
   scatter!(unselected_df[:, :nw], unselected_df[:, :tw], color=:lightgrey, lab="unselected")
 end
 

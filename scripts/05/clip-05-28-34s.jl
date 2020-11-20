@@ -22,7 +22,7 @@ begin
 	scale!(df, [:kcal_per_g, :neocortex_perc, :lmass])
 end;
 
-m_5_5_draft = "
+stan_5_5_draft = "
 data {
  int < lower = 1 > N; // Sample size
  vector[N] K; // Outcome
@@ -46,14 +46,14 @@ model {
 md"##### Define the SampleModel, etc."
 
 begin
-	m5_5_drafts = SampleModel("m5.5.draft", m_5_5_draft);
+	m5_5_drafts = SampleModel("m5.5.draft", stan_5_5_draft);
 	m5_5_data = Dict("N" => size(df, 1), "NC" => df.neocortex_perc_s,
 		"K" => df.kcal_per_g_s);
 	rc5_5_drafts = stan_sample(m5_5_drafts, data=m5_5_data)
 end;
 
 if success(rc5_5_drafts)
-  dfa5_5_drafts = read_samples(m5_5_drafts; output_format=:dataframe)
+  post5_5_drafts_df = read_samples(m5_5_drafts; output_format=:dataframe)
 end;
 
 md"## Result rethinking."
@@ -65,13 +65,13 @@ rethinking = "
   sigma 1.00 0.16  0.74  1.26
 ";
 
-Particles(dfa5_5_drafts)
+Particles(post5_5_drafts_df)
 
 if success(rc5_5_drafts)
   p = plot(title="m5.5.drafts: a ~ Normal(0, 1), bN ~ Normal(0, 1)")
   x = -2:0.01:2
   for j in 1:100
-    y = dfa5_5_drafts[j, :a] .+ dfa5_5_drafts[j, :bN]*x
+    y = post5_5_drafts_df[j, :a] .+ post5_5_drafts_df[j, :bN]*x
     plot!(p, x, y, color=:lightgrey, leg=false)
   end
 	plot(p)

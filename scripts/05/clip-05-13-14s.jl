@@ -18,8 +18,11 @@ md"## Clip-05-13-14s.jl"
 
 if success(rc5_4_AMs)
 	begin
-		pMA = plotbounds(df, :M, :A, dfa5_4_MAs, [:a, :bMA, :sigma])
-		pAM = plotbounds(df, :A, :M, dfa5_4_AMs, [:a, :bAM, :sigma])
+		post5_4_MAs_df = read_samples(m5_4_MAs; output_format=:dataframe)
+		post5_4_AMs_df = read_samples(m5_4_AMs; output_format=:dataframe)
+
+		pMA = plotbounds(df, :M, :A, post5_4_MAs_df, [:a, :bMA, :sigma])
+		pAM = plotbounds(df, :A, :M, post5_4_AMs_df, [:a, :bAM, :sigma])
 		plot(pAM, pMA, layout=(1, 2))
 	end
 end

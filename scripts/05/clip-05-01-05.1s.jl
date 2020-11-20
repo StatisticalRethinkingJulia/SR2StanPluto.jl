@@ -40,7 +40,7 @@ model {
 
 md"##### The Stan language model."
 
-m5_1 = "
+stan5_1 = "
 	data {
 	 int < lower = 1 > N; // Sample size
 	 vector[N] D; // Outcome
@@ -64,7 +64,7 @@ m5_1 = "
 ";
 
 begin
-	m5_1s = SampleModel("m5.1s", m5_1)
+	m5_1s = SampleModel("m5.1s", stan5_1)
 	m5_1_data = Dict("N" => size(df, 1), "D" => df.Divorce_s, "A" => df.MedianAgeMarriage_s)
 	rc5_1s = stan_sample(m5_1s, data=m5_1_data)
 	success(rc5_1s) && (part5_1s = read_samples(m5_1s; output_format=:particles))
@@ -77,12 +77,12 @@ if success(rc5_1s)
 
 		# Plot regression line using means and observations
 
-		dfa5_1s = read_samples(m5_1s; output_format=:dataframe)
+		post5_1s_df = read_samples(m5_1s; output_format=:dataframe)
 		xi = -3.0:0.1:3.0
 		plot(xlab="Medium age marriage (scaled)", ylab="Divorce rate (scaled)",
 			title="Showing 50 regression lines")
 		for i in 1:50
-			local yi = mean(dfa5_1s[i, :a]) .+ dfa5_1s[i, :bA] .* xi
+			local yi = mean(post5_1s_df[i, :a]) .+ post5_1s_df[i, :bA] .* xi
 			plot!(xi, yi, color=:lightgrey, leg=false)
 		end
 
@@ -117,7 +117,7 @@ if success(rc5_2s)
 
 	# Compute quap approximation.
 
-	quap5_1s = quap(dfa5_1s)
+	quap5_1s_df = quap(post5_1s_df)
 end
 
 md"##### Result rethinking:"
@@ -136,7 +136,7 @@ if success(rc5_1s)
 	title1 = "Divorce rate vs. median age at marriage" * "\nshowing predicted and quantile range"
 	fig1 = plotbounds(
 		df, :MedianAgeMarriage, :Divorce,
-		dfa5_1s, [:a, :bA, :sigma];
+		post5_1s_df, [:a, :bA, :sigma];
 		title=title1,
 		colors=[:lightblue, :darkgrey]
 	)
@@ -146,8 +146,8 @@ if success(rc5_2s)
 
 	# Compute quap approximation.
 
-	dfa5_2s = read_samples(m5_2s; output_format=:dataframe)
-	quap5_2s = quap(dfa5_2s)
+	post5_2s_df = read_samples(m5_2s; output_format=:dataframe)
+	quap5_2s = quap(post5_2s_df)
 end
 
 if success(rc5_2s)
@@ -158,7 +158,7 @@ if success(rc5_2s)
 	title2 = "Divorce rate vs. marriage rate" * "\nshowing predicted and hpdi range"
 	fig2 = plotbounds(
 		df, :Marriage, :Divorce,
-		dfa5_2s, [:a, :bM, :sigma];
+		post5_2s_df, [:a, :bM, :sigma];
 		title=title2,
 		colors=[:lightblue, :darkgrey]
 	)

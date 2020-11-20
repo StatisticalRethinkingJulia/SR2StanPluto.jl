@@ -29,7 +29,7 @@ begin
 	Text(precis(df; io=String))
 end
 
-m6_12 = "
+stan6_12 = "
 data {
   int <lower=0> N;
   vector[N] C;
@@ -57,7 +57,7 @@ model {
 ";
 
 begin
-	m6_12s = SampleModel("m6.12s", m6_12)
+	m6_12s = SampleModel("m6.12s", stan6_12)
 	m6_12_data = Dict(
 	  :N => nrow(df),
 	  :C => df[:, :c],
@@ -66,8 +66,8 @@ begin
 	  :U => df[:, :u]
 	)
 	rc6_12s = stan_sample(m6_12s, data=m6_12_data)
-	dfa6_12s = read_samples(m6_12s, output_format=:dataframe)
-	Text(precis(dfa6_12s; io=String))
+	post6_12s_df = read_samples(m6_12s, output_format=:dataframe)
+	Text(precis(post6_12s_df; io=String))
 end
 
 if success(rc6_12s)

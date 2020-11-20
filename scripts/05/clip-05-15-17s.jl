@@ -16,7 +16,7 @@ md"## Clip-05-15-17s.jl"
 
 if success(rc5_3s)
 	begin
-		part5_3s = Particles(dfa5_3s)
+		part5_3s = read_samples(m5_3s; output_format=:particles)
 		N = size(df, 1)
 		plot(xlab="Observed divorce", ylab="Predicted divorce",
 			title="Posterior predictive plot")
@@ -48,8 +48,8 @@ if success(rc5_3s)
 		m1 = lm(@formula(y ~ x), df2)
 		x = -2.1:0.1:2.2
 		y = coef(m1)[2] * x
-		plot!(x, x, line=(2, :dash), color=:black)
-		plot!(x, y, line=:dash, color=:grey)
+		#plot!(x, x, line=(2, :dash), color=:green)
+		plot!(x, y, line=:dash, color=:red)
 
 	end
 end

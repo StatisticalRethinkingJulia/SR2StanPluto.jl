@@ -22,7 +22,7 @@ end;
 
 md"##### Define the Stan language model."
 
-m4_8 = "
+stan4_8 = "
 data{
     int N;
     real xbar;
@@ -49,7 +49,7 @@ model{
 md"##### Define the SampleModel."
 
 begin
-	m4_8s = SampleModel("weights", m4_8);
+	m4_8s = SampleModel("weights", stan4_8);
 	m4_8_data = Dict("N" => size(df, 1), "height" => df.height, "weight" => df.weight,
 		"xbar" => mean(df.weight));
 	rc4_8s = stan_sample(m4_8s, data=m4_8_data);
@@ -69,10 +69,10 @@ end
 md"### Snippet 4.53 - 4.56"
 
 begin
-	dfa4_8s = read_samples(m4_8s; output_format=:dataframe)
+	post4_8s_df = read_samples(m4_8s; output_format=:dataframe)
 	mu_range = 30:1:60
 	xbar = mean(df[:, :weight])
-	mu = link(dfa4_8s, [:alpha, :beta], mu_range, xbar);
+	mu = link(post4_8s_df, [:alpha, :beta], mu_range, xbar);
 
 	figs = Vector{Plots.Plot{Plots.GRBackend}}(undef, 2)
 	figs[1] = plot(xlab="weight", ylab="height")
@@ -84,7 +84,7 @@ begin
 
 	mu_range = 30:0.1:60
 	xbar = mean(df[:, :weight])
-	mu = link(dfa4_8s, [:alpha, :beta], mu_range, xbar);
+	mu = link(post4_8s_df, [:alpha, :beta], mu_range, xbar);
 	figs[2] = plot(xlab="weight", ylab="height", legend=:topleft)
 	scatter!(figs[2], df[:, :weight], df[:, :height], markersize=2, lab="Observations")
 	for (ind, m) in enumerate(mu_range)

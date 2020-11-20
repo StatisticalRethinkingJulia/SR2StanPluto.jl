@@ -20,7 +20,7 @@ begin
 	scale!(df, [:height, :weight])
 end;
 
-m5_8 = "
+stan5_8 = "
 data{
     int N;
     int male[N];
@@ -47,7 +47,7 @@ model{
 md"### Define the SampleModel, etc."
 
 begin
-	m5_8s = SampleModel("m5.8", m5_8);
+	m5_8s = SampleModel("m5.8", stan5_8);
 	df[!, :sex] = [df[i, :male] == 1 ? 2 : 1 for i in 1:size(df, 1)]
 	df_m = filter(row -> row[:sex] == 2, df)
 	df_f = filter(row -> row[:sex] == 1, df)
@@ -55,15 +55,15 @@ begin
 		"weight" => df[:, :weight], "height" => df[:, :height], 
 		"age" => df[:, :age], "sex" => df[:, :sex])
 	rc5_8s = stan_sample(m5_8s, data=m5_8_data)
-	dfa5_8s = read_samples(m5_8s; output_format=:dataframe)
+	post5_8s_df = read_samples(m5_8s; output_format=:dataframe)
 end;
 
 if success(rc5_8s)
-  part5_8s = Particles(dfa5_8s)
+  part5_8s = Particles(post5_8s_df)
 end
 
 if success(rc5_8s)
-	quap5_8s = quap(dfa5_8s)
+	quap5_8s = quap(post5_8s_df)
 end
 
 if success(rc5_8s)

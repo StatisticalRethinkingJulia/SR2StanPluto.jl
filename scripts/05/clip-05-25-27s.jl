@@ -27,7 +27,7 @@ rethinking_results = "
   sigma_M  0.68 0.07  0.57  0.79
 ";
 
-part5_3_As = Particles(dfa5_3_As)
+part5_3_As = read_samples(m5_3_As; output_format=:particles)
 
 md"## Snippet 5.25"
 
@@ -35,9 +35,12 @@ a_seq = range(-2, stop=2, length=100)
 
 md"## Snippet 5.26"
 
-m_sim = zeros(size(dfa5_3_As, 1), length(a_seq));
+begin
+	post5_3_As_df = read_samples(m5_3_As; output_format=:dataframe)
+	m_sim = zeros(size(post5_3_As_df, 1), length(a_seq))
+end;
 
-for j in 1:size(dfa5_3_As, 1)
+for j in 1:size(post5_3_As_df, 1)
   for i in 1:length(a_seq)
     d = Normal(part5_3_As.aM[j] + part5_3_As.bAM[j]*a_seq[i], part5_3_As.sigma_M[j])
     m_sim[j, i] = rand(d, 1)[1]
@@ -46,9 +49,9 @@ end
 
 md"## Snippet 5.27"
 
-d_sim = zeros(size(dfa5_3_As, 1), length(a_seq));
+d_sim = zeros(size(post5_3_As_df, 1), length(a_seq));
 
-for j in 1:size(dfa5_3_As, 1)
+for j in 1:size(post5_3_As_df, 1)
   for i in 1:length(a_seq)
     d = Normal(part5_3_As.a[j] + part5_3_As.bA[j]*a_seq[i] + part5_3_As.bM[j]*m_sim[j, i], part5_3_As.sigma[j])
     d_sim[j, i] = rand(d, 1)[1]

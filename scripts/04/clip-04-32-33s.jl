@@ -19,7 +19,7 @@ begin
 	df = filter(row -> row[:age] >= 18, df);
 end;
 
-m4_2 = "
+stan4_2 = "
 // Inferring the mean and std
 data {
   int N;
@@ -41,7 +41,7 @@ model {
 
 md"### Snippet 4.31"
 
-m4_2s = SampleModel("m4.2s", m4_2);
+m4_2s = SampleModel("m4.2s", stan4_2);
 
 m4_2_data = Dict("N" => length(df.height), "h" => df.height);
 
@@ -52,9 +52,9 @@ if success(rc4_2s)
 	q4_2s = quap(m4_2s)
 end;
 
-quap4_2s = sample(q4_2s);
+quap4_2s_df = sample(q4_2s);
 
-Text(precis(quap4_2s; io=String))
+Text(precis(quap4_2s_df; io=String))
 
 md"### snippet 4.32"
 
@@ -66,7 +66,7 @@ diag(q4_2s.vcov) .|> sqrt
 
 md"##### Use Particles."
 
- part_sim = Particles(4000, MvNormal([mean(quap4_2s.mu), mean(quap4_2s.sigma)], q4_2s.vcov))
+ part_sim = Particles(4000, MvNormal([mean(quap4_2s_df.mu), mean(quap4_2s_df.sigma)], q4_2s.vcov))
 
 begin
 	fig1 = plot(part_sim[1], lab="mu")

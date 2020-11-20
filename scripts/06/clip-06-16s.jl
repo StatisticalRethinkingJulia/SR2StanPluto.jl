@@ -24,7 +24,7 @@ end;
 
 Text(precis(df; io=String))
 
-m6_7 = "
+stan6_7 = "
 data {
   int <lower=1> N;
   vector[N] h0;
@@ -54,7 +54,7 @@ model {
 ";
 
 begin
-	m6_7s = SampleModel("m6.7s", m6_7)
+	m6_7s = SampleModel("m6.7s", stan6_7)
 	m6_7_data = Dict(
 	  :N => nrow(df),
 	  :h0 => df[:, :h0],
@@ -63,12 +63,12 @@ begin
 	  :treatment => df[:, :treatment]
 	)
 	rc6_7s = stan_sample(m6_7s; data=m6_7_data)
-	success(rc6_7s) && (dfa6_7s = read_samples(m6_7s; output_format=:dataframe))
+	success(rc6_7s) && (post6_7s_df = read_samples(m6_7s; output_format=:dataframe))
 end;
 
-success(rc6_7s) && Particles(dfa6_7s)
+success(rc6_7s) && Particles(post6_7s_df)
 
-success(rc6_7s) && (Text(precis(dfa6_7s; io=String)))
+success(rc6_7s) && (Text(precis(post6_7s_df; io=String)))
 
 if success(rc6_7s)
 	(part6_7s, fig6_7s) = plotcoef([m6_7s], [:a, :bt, :bf])

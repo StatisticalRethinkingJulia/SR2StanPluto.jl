@@ -24,7 +24,7 @@ begin
 	scale!(df, [:kcal_per_g, :neocortex_perc, :lmass])
 end;
 
-m5_7 = "
+stan5_7 = "
 data {
  int < lower = 1 > N; // Sample size
  vector[N] K; // Outcome
@@ -53,16 +53,16 @@ model {
 md"##### Define the SampleModel, etc."
 
 begin
-	m5_7s = SampleModel("m5.7", m5_7);
+	m5_7s = SampleModel("m5.7", stan5_7);
 	m5_7_data = Dict("N" => size(df, 1), "M" => df[!, :lmass_s],
 		"K" => df[!, :kcal_per_g_s], "NC" => df[!, :neocortex_perc_s]);
 	rc5_7s = stan_sample(m5_7s, data=m5_7_data);
-	success(rc5_7s) && (dfa5_7s = read_samples(m5_7s; output_format=:dataframe))
+	success(rc5_7s) && (post5_7s_df = read_samples(m5_7s; output_format=:dataframe))
 end;
 
-success(rc5_7s) && Particles(dfa5_7s)
+success(rc5_7s) && Particles(post5_7s_df)
 
-success(rc5_7s) && quap(dfa5_7s)
+success(rc5_7s) && quap(post5_7s_df)
 
 begin
 	(s1, p1) = plotcoef([m5_5s, m5_6s, m5_7s], [:a, :bN, :bM];

@@ -57,7 +57,10 @@ begin
 	success(rc6_2s) && (part6_2s = read_samples(m6_2s, output_format=:particles))
 end
 
-success(rc6_2s) && (chns6_2s = read_samples(m6_2s, output_format=:mcmcchains))
+if success(rc6_2s)
+	chns6_2s = read_samples(m6_2s, output_format=:mcmcchains)
+	Text(sprint(show, "text/plain", chns6_2s))
+end
 
 success(rc6_2s) && plot(chns6_2s; seriestype=:traceplot)
 

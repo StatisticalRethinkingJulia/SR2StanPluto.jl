@@ -14,7 +14,7 @@ md"## Clip-03-10s.jl"
 
 md"##### Define the Stan language model."
 
-m3_1 = "
+stan3_1 = "
 // Inferring a Rate
 data {
   int N;
@@ -37,7 +37,7 @@ model {
 
 md"##### Define the SampleModel."
 
-m3_1s = SampleModel("m3_1ss", m3_1);
+m3_1s = SampleModel("m3_1ss", stan3_1);
 
 md"##### Use 4 observations."
 
@@ -45,7 +45,7 @@ begin
 	N2 = 4
 	n2 = Int.(9 * ones(Int, N2))
 	k2 = [6, 5, 7, 6]
-end
+end;
 
 md"##### Input data for stan_sample()."
 
@@ -56,10 +56,9 @@ md"##### Sample using stan_sample()."
 rc3_1s = stan_sample(m3_1s, data=m3_1_data);
 
 if success(rc3_1s)
-  chn = read_samples(m3_1s; output_format=:mcmcchains)
+	chn = read_samples(m3_1s; output_format=:mcmcchains)
+	Text(sprint(show, "text/plain", chn))
 end
-
-chn
 
 md"##### Plot the chains."
 
@@ -72,7 +71,7 @@ end
 
 md"##### Look at area of hpd."
 
-MCMCChains.hpd(chn)
+Text(sprint(show, "text/plain", MCMCChains.hpd(chn)))
 
 md"## End of clip-03-10s.jl"
 

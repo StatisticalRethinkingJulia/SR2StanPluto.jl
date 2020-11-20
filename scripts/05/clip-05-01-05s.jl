@@ -21,7 +21,7 @@ begin
 	scale!(df, [:Marriage, :MedianAgeMarriage, :Divorce])
 end;
 
-m5_1 = "
+stan5_1 = "
 	data {
 	 int < lower = 1 > N; // Sample size
 	 vector[N] D; // Outcome
@@ -49,13 +49,13 @@ md"### snippet 5.3 - 5.4"
 md"## Define the SampleModel, etc."
 
 begin
-	m5_1s = SampleModel("MedianAgeMarriage", m5_1)
+	m5_1s = SampleModel("MedianAgeMarriage", stan5_1)
 	m5_1_data = Dict("N" => size(df, 1), "D" => df.Divorce_s, "A" => df.MedianAgeMarriage_s)
 	rc5_1s = stan_sample(m5_1s, data=m5_1_data)
-	success(rc5_1s) && (dfa5_1s = read_samples(m5_1s; output_format=:dataframe))
+	success(rc5_1s) && (post5_1s_df = read_samples(m5_1s; output_format=:dataframe))
 end;
 
-Text(precis(dfa5_1s; io=String))
+Text(precis(post5_1s_df; io=String))
 
 md"### snippet 5.5"
 
@@ -67,7 +67,7 @@ if success(rc5_1s)
 		plot(xlab="Medium age marriage (scaled)", ylab="Divorce rate (scaled)",
 			title="Showing 50 regression lines")
 		for i in 1:50
-			local yi = mean(dfa5_1s[i, :a]) .+ dfa5_1s[i, :bA] .* xi
+			local yi = mean(post5_1s_df[i, :a]) .+ post5_1s_df[i, :bA] .* xi
 			plot!(xi, yi, color=:lightgrey, leg=false)
 		end
 

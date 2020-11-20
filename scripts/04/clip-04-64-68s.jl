@@ -23,7 +23,7 @@ end;
 
 md"##### Define the Stan language model."
 
-m4_9 = "
+stan4_9 = "
 data{
     int N;
     vector[N] height;
@@ -50,7 +50,7 @@ model{
 md"##### Define the SampleModel, etc,"
 
 begin
-	m4_9s = SampleModel("m4.9s", m4_9);
+	m4_9s = SampleModel("m4.9s", stan4_9);
 	m4_9_data = Dict(
 		"N" => size(df, 1), 
 		"height" => df.height, 
@@ -76,7 +76,7 @@ md"### Snippet 4.53 - 4.67"
 
 if success(rc4_9s)
 	begin
-		dfa4_9s = read_samples(m4_9s; output_format=:dataframe)
+		post4_9s_df = read_samples(m4_9s; output_format=:dataframe)
 
 		function link_poly(dfa::DataFrame, xrange)
 			vars = Symbol.(names(dfa))
@@ -86,7 +86,7 @@ if success(rc4_9s)
 		mu_range = -2:0.1:2
 
 		xbar = mean(df[:, :weight])
-		mu = link_poly(dfa4_9s, mu_range);
+		mu = link_poly(post4_9s_df, mu_range);
 
 		plot(xlab="weight_s", ylab="height")
 		for (indx, mu_val) in enumerate(mu_range)
@@ -102,7 +102,7 @@ if success(rc4_9s)
 	plot(xlab="weight_s", ylab="height", leg=:bottomright)
 	fheight(weight, a, b1, b2) = a + weight * b1 + weight^2 * b2
 	testweights = -2:0.01:2
-	arr = [fheight.(w, dfa4_9s.alpha, dfa4_9s.beta1, dfa4_9s.beta2) for w in testweights]
+	arr = [fheight.(w, post4_9s_df.alpha, post4_9s_df.beta1, post4_9s_df.beta2) for w in testweights]
 	m = [mean(v) for v in arr]
 	quantiles = [quantile(v, [0.055, 0.945]) for v in arr]
 	lower = [q[1] - m for (q, m) in zip(quantiles, m)]

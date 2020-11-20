@@ -15,7 +15,7 @@ md"## Clip-05-37s.jl"
 md"### snippet 5.29"
 
 begin
-	df = CSV.read(sr_datadir("milk.csv"), delim=';');
+	df = CSV.read(sr_datadir("milk.csv"), DataFrame; delim=';');
 	df = filter(row -> !(row[:neocortex_perc] == "NA"), df);
 	df.neocortex_perc = parse.(Float64, df.neocortex_perc)
 	df.lmass = log.(df.mass)
@@ -24,7 +24,7 @@ end;
 
 md"### snippet 5.1"
 
-m5_6 = "
+stan5_6 = "
 data {
  int < lower = 1 > N; // Sample size
  vector[N] K; // Outcome
@@ -50,7 +50,7 @@ model {
 md"## Define the SampleModel, etc."
 
 begin
-	m5_6s = SampleModel("m5.6", m5_6);
+	m5_6s = SampleModel("m5.6", stan5_6);
 	m5_6_data = Dict("N" => size(df, 1), "M" => df.lmass_s, "K" => df.kcal_per_g_s);
 	rc5_6s = stan_sample(m5_6s, data=m5_6_data);
 end;
@@ -59,12 +59,12 @@ if success(rc5_6s)
 
   # Describe the draws
 
-  dfa5_6s = read_samples(m5_6s; output_format=:dataframe)
+  post5_6s_df = read_samples(m5_6s; output_format=:dataframe)
 
   title = "Kcal_per_g vs. log mass" * "\nshowing 89% predicted and hpd range"
   plotbounds(
     df, :lmass, :kcal_per_g,
-    dfa5_6s, [:a, :bM, :sigma];
+    post5_6s_df, [:a, :bM, :sigma];
     title=title
   )
 end

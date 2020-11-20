@@ -29,7 +29,7 @@ sim_p = DataFrame(:sim_p => rand(LogNormal(0, 0.25), 10000));
 
 Text(precis(sim_p; io=String))
 
-m6_6 = "
+stan6_6 = "
 data {
   int <lower=1> N;
   vector[N] h0;
@@ -49,17 +49,17 @@ model {
 ";
 
 begin
-	m6_6s = SampleModel("m6.6s", m6_6)
+	m6_6s = SampleModel("m6.6s", stan6_6)
 	m6_6_data = Dict(:N => nrow(df), :h0 => df.h0, :h1 => df.h1)
 	rc6_6s = stan_sample(m6_6s; data=m6_6_data)
-	success(rc6_6s) && (dfa6_6s = read_samples(m6_6s; output_format=:dataframe))
+	success(rc6_6s) && (post6_6s_df = read_samples(m6_6s; output_format=:dataframe))
 end;
 
 if success(rc6_6s)
-	part6_6s = Particles(dfa6_6s)
+	part6_6s = Particles(post6_6s_df)
 end
 
-success(rc6_6s) && (Text(precis(dfa6_6s; io=String)))
+success(rc6_6s) && (Text(precis(post6_6s_df; io=String)))
 
 md"## End of clip-06-13-15s.jl"
 

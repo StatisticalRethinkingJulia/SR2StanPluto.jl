@@ -17,7 +17,7 @@ begin
 	scale!(df, [:kcal_per_g, :perc_fat, :perc_lactose])
 end;
 
-m6_3 = "
+stan6_3 = "
 data{
   int <lower=1> N;              // Sample size
   vector[N] K;
@@ -39,15 +39,15 @@ model{
 ";
 
 begin
-	m6_3s = SampleModel("m6.3", m6_3);
+	m6_3s = SampleModel("m6.3", stan6_3);
 	m6_3_data = Dict("N" => size(df, 1), "F" => df.perc_fat_s, "K" => df.kcal_per_g_s);
 	rc6_3s = stan_sample(m6_3s, data=m6_3_data);
-	success(rc6_3s) && (dfa6_3s = read_samples(m6_3s; output_format=:dataframe))
+	success(rc6_3s) && (post6_3s_df = read_samples(m6_3s; output_format=:dataframe))
 end;
 
-success(rc6_3s) && (part6_3s = Particles(dfa6_3s))
+success(rc6_3s) && (part6_3s = Particles(post6_3s_df))
 
-success(rc6_3s) && quap(dfa6_3s)
+success(rc6_3s) && quap(post6_3s_df)
 
 hpdi(part6_3s.bF.particles, alpha=0.11)
 

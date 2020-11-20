@@ -14,8 +14,14 @@ md"## Clip-02-01-02s.jl"
 md"### snippet 2.1"
 
 begin
-	ways  = [0, 3, 8, 9, 0];
-	ways/sum(ways)
+	ways = [0, 3, 8, 9, 0];
+	p = ways/sum(ways)
+end
+
+begin
+	previous_counts = [ 0, 3, 16, 27, 0]
+	bags = [0, 3, 2, 1, 0]
+	p_updated = previous_counts .* bags / sum(previous_counts .* bags)
 end
 
 md"### snippet 2.2"

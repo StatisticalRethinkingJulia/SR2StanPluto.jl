@@ -18,7 +18,7 @@ begin
 	Text(precis(df; io=String))
 end
 
-m6_10 = "
+stan6_10 = "
 data {
   int <lower=1> N;
   vector[N] happiness;
@@ -40,15 +40,15 @@ model {
 ";
 
 begin
-	m6_10s = SampleModel("m6.10s", m6_10)
+	m6_10s = SampleModel("m6.10s", stan6_10)
 	m6_10_data = Dict(:N => nrow(df), :happiness => df.happiness, :A => df.A,)
 	rc6_10s = stan_sample(m6_10s, data=m6_10_data)
-	success(rc6_10s) && (p6_10s = read_samples(m6_10s, output_format=:particles))
+	success(rc6_10s) && (part6_10s = read_samples(m6_10s, output_format=:particles))
 end
 
 if success(rc6_10s)
-  dfa6_10s = read_samples(m6_10s, output_format=:dataframe)
-  Text(precis(dfa6_10s; io=String))
+  post6_10s_df = read_samples(m6_10s, output_format=:dataframe)
+  Text(precis(post6_10s_df; io=String))
 end
 
 begin

@@ -90,12 +90,16 @@ md"##### Convert to an MCMCChains.Chains object."
 begin
 	a2d = hcat(samples[:, :mu], samples[:, :sigma])
 	a3d = reshape(a2d, (size(a2d, 1), size(a2d, 2), 1))
-	chn = StanSample.convert_a3d(a3d, ["mu", "sigma"], Val(:mcmcchains); start=1)
+	chn = convert_a3d(a3d, ["mu", "sigma"], Val(:mcmcchains); start=1)
+	Text(sprint(show, "text/plain", chn))
 end
 
 md"##### hpd regions."
 
-bnds = MCMCChains.hpd(chn)
+begin
+	bnds = MCMCChains.hpd(chn)
+	Text(sprint(show, "text/plain", bnds))
+end
 
 md"### Snippet 4.21"
 

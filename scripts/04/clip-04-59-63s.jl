@@ -59,7 +59,7 @@ begin
 	rc4_8s = stan_sample(m4_8s, data=m4_8_data)
 end;
 
-rethinking = "
+unscaled_rethinking_result = "
         mean   sd   5.5%  94.5%
 a     154.60 0.27 154.17 155.03
 b       0.90 0.04   0.84   0.97

@@ -23,7 +23,7 @@ end;
 
 Text(precis(df; io=String))
 
-m5_4_RS = "
+stan5_4_RS = "
 data {
   int N;
   vector[N] R;
@@ -44,20 +44,18 @@ model {
 ";
 
 begin
-	m5_4_RSs = SampleModel("m5.4", m5_4_RS);
+	m5_4_RSs = SampleModel("m5.4", stan5_4_RS);
 	m5_4_RS_data = Dict("N" => size(df, 1), "R" => df[:, :R_s], "S" => df[:, :S_s]);
 	rc5_4_RSs = stan_sample(m5_4_RSs, data=m5_4_RS_data);
 	if success(rc5_4_RSs)
-		dfa5_4_RSs = read_samples(m5_4_RSs; output_format=:dataframe)
-		part5_4_RSs = Particles(dfa5_4_RSs)
-		quap5_4_RSs = quap(dfa5_4_RSs)
+		post5_4_RSs_df = read_samples(m5_4_RSs; output_format=:dataframe)
+		part5_4_RSs = Particles(post5_4_RSs_df)
+		quap5_4_RSs = quap(post5_4_RSs_df)
 	end
 end
 
 
-
-
-m5_4_SR = "
+stan5_4_SR = "
 data {
   int N;
   vector[N] R;
@@ -78,22 +76,22 @@ model {
 ";
 
 begin
-	m5_4_SRs = SampleModel("m5.4", m5_4_SR);
+	m5_4_SRs = SampleModel("m5.4", stan5_4_SR);
 	m5_4_SR_data = Dict("N" => size(df, 1),  "R" => df[:, :R_s], "S" => df[:, :S_s]);
 	rc5_4_SRs = stan_sample(m5_4_SRs, data=m5_4_SR_data)
 	if success(rc5_4_SRs)
-		dfa5_4_SRs = read_samples(m5_4_SRs; output_format=:dataframe)
-		part5_4_SRs = Particles(dfa5_4_SRs)
-		quap5_4_SRs = quap(dfa5_4_SRs)
+		post5_4_SRs_df = read_samples(m5_4_SRs; output_format=:dataframe)
+		part5_4_SRs = Particles(post5_4_SRs_df)
+		quap5_4_SRs_df = quap(post5_4_SRs_df)
 	end
 end
 
 if success(rc5_4_RSs)
-	pRS = plotbounds(df, :R, :S, dfa5_4_RSs, [:a, :bRS, :sigma])
+	pRS = plotbounds(df, :R, :S, post5_4_RSs_df, [:a, :bRS, :sigma])
 end;
 
 if success(rc5_4_SRs)
-	pSR = plotbounds(df, :S, :R, dfa5_4_SRs, [:a, :bSR, :sigma])
+	pSR = plotbounds(df, :S, :R, post5_4_SRs_df, [:a, :bSR, :sigma])
 end;
 
 plot(pRS, pSR, layout=(1, 2))

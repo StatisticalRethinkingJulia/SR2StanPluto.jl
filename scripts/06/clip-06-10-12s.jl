@@ -21,7 +21,7 @@ begin
 	scale!(df, [:kcal_per_g, :perc_fat, :perc_lactose])
 end;
 
-m6_5 = "
+stan6_5 = "
 data{
   int <lower=1> N;              // Sample size
   vector[N] K;
@@ -48,14 +48,14 @@ model{
 md"##### Define the SampleModel, etc."
 
 begin
-	m6_5s = SampleModel("m6.5s", m6_5);
+	m6_5s = SampleModel("m6.5s", stan6_5);
 	m6_5_data = Dict("N" => size(df, 1), "L" => df.perc_lactose_s, "F" => df.perc_fat_s,
 		"K" => 	df.kcal_per_g_s);
 	rc6_5s = stan_sample(m6_5s, data=m6_5_data)
-	success(rc6_5s) && (dfa6_5 = read_samples(m6_5s; output_format=:dataframe))
+	success(rc6_5s) && (post6_5s_df = read_samples(m6_5s; output_format=:dataframe))
 end;
 
-success(rc6_5s) && (p6_5s = Particles(dfa6_5))
+success(rc6_5s) && (p6_5s = Particles(post6_5s_df))
 
 if success(rc6_5s)
 	(s6_5s, f6_5s) = plotcoef([m6_3s, m6_4s, m6_5s], [:a, :bF, :bL, :sigma];

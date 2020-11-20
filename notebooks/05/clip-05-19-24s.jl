@@ -11,8 +11,8 @@ using Pkg, DrWatson
 begin
 	@quickactivate "StatisticalRethinkingStan"
 	using StanSample
-	using GLM
 	using StatisticalRethinking
+	using GLM
 end
 
 # ╔═╡ 55e7d3f6-fd40-11ea-14c5-21a0ef390e6d

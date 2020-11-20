@@ -23,7 +23,7 @@ begin
 	Text(precis(df; io=String))
 end
 
-m6_9 = "
+stan6_9 = "
 data {
   int <lower=1> N;
   vector[N] happiness;
@@ -49,15 +49,15 @@ model {
 ";
 
 begin
-	m6_9s = SampleModel("m6.9s", m6_9)
+	m6_9s = SampleModel("m6.9s", stan6_9)
 	m6_9_data = Dict(:N => nrow(df), :k => 2, :happiness => df.happiness, :A => df.A, :mid => df.mid)
 	rc6_9s = stan_sample(m6_9s, data=m6_9_data)
 	success(rc6_9s) && (part6_9s = read_samples(m6_9s, output_format=:particles))
 end
 
 if success(rc6_9s)
-  dfa6_9s = read_samples(m6_9s, output_format=:dataframe)
-  Text(precis(dfa6_9s; io=String))
+  post6_9s_df = read_samples(m6_9s, output_format=:dataframe)
+  Text(precis(post6_9s_df; io=String))
 end
 
 md"## End of clip-06-22-23s.jl"

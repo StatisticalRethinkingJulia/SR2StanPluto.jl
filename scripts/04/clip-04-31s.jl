@@ -17,7 +17,7 @@ begin
 	df = filter(row -> row[:age] >= 18, df);
 end;
 
-m4_2 = "
+stan4_2 = "
 // Inferring the mean and std
 data {
   int N;
@@ -38,7 +38,7 @@ model {
 ";
 
 begin
-	m4_2s = SampleModel("heights", m4_2);
+	m4_2s = SampleModel("heights", stan4_2);
 	m4_2_data = Dict("N" => length(df.height), "h" => df.height);
 	rc4_2s = stan_sample(m4_2s, data=m4_2_data);
 	success(rc4_2s) && (part4_2s = read_samples(m4_2s; output_format=:particles))

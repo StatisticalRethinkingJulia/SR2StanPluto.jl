@@ -14,7 +14,7 @@ md"## Clip-03-05s.jl"
 
 md"##### Define the Stan language model."
 
-m3_5 = "
+stan3_5 = "
 // Inferring a Rate
 data {
   int N;
@@ -37,7 +37,7 @@ model {
 
 md"##### Define the Stanmodel and set the output format to :mcmcchains."
 
-m3_5s = SampleModel("m3_5s", m3_5);
+m3_5s = SampleModel("m3_5s", stan3_5);
 
 md"###### Use 16 observations."
 
@@ -65,7 +65,7 @@ end;
 
 md"##### Describe the chains."
 
-chns3_5s
+Text(sprint(show, "text/plain", chns3_5s))
 
 md"##### Plot the chains."
 

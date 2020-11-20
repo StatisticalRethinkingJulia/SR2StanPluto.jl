@@ -23,7 +23,7 @@ end;
 
 md"## Clip-05-49.2s.jl"
 
-m5_9 = "
+stan5_9 = "
 data{
   int <lower=1> N;              // Sample size
   int <lower=1> k;              // Categories
@@ -46,15 +46,15 @@ model{
 ";
 
 begin
-	m5_9s = SampleModel("m5.9", m5_9);
+	m5_9s = SampleModel("m5.9", stan5_9);
 	m5_9_data = Dict("N" => size(df, 1), "clade_id" => c_id,
 		"K" => df[:, :K_s], "k" => 4);
 	rc5_9s = stan_sample(m5_9s, data=m5_9_data);
-	dfa5_9s = read_samples(m5_9s; output_format=:dataframe)
-	part5_9s = Particles(dfa5_9s)
+	post5_9s_df = read_samples(m5_9s; output_format=:dataframe)
+	part5_9s = Particles(post5_9s_df)
 end
 
-success(rc5_9s) && quap(dfa5_9s)
+success(rc5_9s) && quap(post5_9s_df)
 
 rethinking_result = "
        mean   sd  5.5% 94.5% n_eff Rhat4
