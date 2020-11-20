@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.10
 
 using Markdown
 using InteractiveUtils
@@ -29,7 +29,7 @@ begin
 end
 
 # ╔═╡ d2b6d230-feb7-11ea-13de-4fc9a25244fa
-m6_7 = "
+stan6_7 = "
 data {
   int <lower=1> N;
   vector[N] h0;
@@ -60,7 +60,7 @@ model {
 
 # ╔═╡ d2b75bc2-feb7-11ea-1a1c-19917ffb69d4
 begin
-	m6_7s = SampleModel("m6.7s", m6_7)
+	m6_7s = SampleModel("m6.7s", stan6_7)
 	m6_7_data = Dict(
 	  :N => nrow(df),
 	  :h0 => df[:, :h0],
@@ -69,14 +69,14 @@ begin
 	  :treatment => df[:, :treatment]
 	)
 	rc6_7s = stan_sample(m6_7s; data=m6_7_data)
-	success(rc6_7s) && (dfa6_7s = read_samples(m6_7s; output_format=:dataframe))
+	success(rc6_7s) && (post6_7s_df = read_samples(m6_7s; output_format=:dataframe))
 end;
 
 # ╔═╡ d2c2b71c-feb7-11ea-124d-6114c352b17b
-success(rc6_7s) && (part6_7s = Particles(dfa6_7s))
+success(rc6_7s) && (part6_7s = Particles(post6_7s_df))
 
 # ╔═╡ d2c34824-feb7-11ea-3c22-f91f4df2b0f5
-success(rc6_7s) && (Text(precis(dfa6_7s; io=String)))
+success(rc6_7s) && (Text(precis(post6_7s_df; io=String)))
 
 # ╔═╡ d2cebcf4-feb7-11ea-2d6a-798f2e408ddf
 if success(rc6_7s)

@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.11
 
 using Markdown
 using InteractiveUtils
@@ -24,7 +24,7 @@ begin
 end;
 
 # ╔═╡ 1c3fc474-fe76-11ea-327f-7beea4fb1872
-m6_4 = "
+stan6_4 = "
 data{
   int <lower=1> N;              // Sample size
   vector[N] K;
@@ -50,17 +50,17 @@ md"##### Define the SampleModel, etc."
 
 # ╔═╡ 1c4ba9c4-fe76-11ea-0aff-ef249af5bdb5
 begin
-	m6_4s = SampleModel("m6.3", m6_4);
+	m6_4s = SampleModel("m6.3", stan6_4);
 	m6_4_data = Dict("N" => size(df, 1), "L" => df.perc_lactose_s, "K" => df.kcal_per_g_s);
 	rc6_4s = stan_sample(m6_4s, data=m6_4_data);
-	success(rc6_4s) && (dfa6_4s = read_samples(m6_4s; output_format=:dataframe))
+	success(rc6_4s) && (post6_4s_df = read_samples(m6_4s; output_format=:dataframe))
 end;
 
 # ╔═╡ 1c57c894-fe76-11ea-0b4f-152cfd868c3f
-success(rc6_4s) && (part6_4s = Particles(dfa6_4s))
+success(rc6_4s) && (part6_4s = Particles(post6_4s_df))
 
 # ╔═╡ 1c586718-fe76-11ea-10ec-892fadc8778c
-success(rc6_4s) && (quap6_4s = quap(dfa6_4s))
+success(rc6_4s) && (quap6_4s = quap(post6_4s_df))
 
 # ╔═╡ 1c659f3c-fe76-11ea-0e95-c1c2cadaaebc
 success(rc6_4s) && hpdi(part6_4s.bL.particles, alpha=0.11)

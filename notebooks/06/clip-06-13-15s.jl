@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.4
+# v0.12.11
 
 using Markdown
 using InteractiveUtils
@@ -39,7 +39,7 @@ sim_p = DataFrame(:sim_p => rand(LogNormal(0, 0.25), 10000));
 Text(precis(sim_p; io=String))
 
 # ╔═╡ 2edc81fe-feac-11ea-3f3c-2ff7b2c13458
-m6_6 = "
+stan6_6 = "
 data {
   int <lower=1> N;
   vector[N] h0;
@@ -60,19 +60,19 @@ model {
 
 # ╔═╡ 2ee7bd6a-feac-11ea-1120-776954c32bd8
 begin
-	m6_6s = SampleModel("m6.6s", m6_6)
+	m6_6s = SampleModel("m6.6s", stan6_6)
 	m6_6_data = Dict(:N => nrow(df), :h0 => df.h0, :h1 => df.h1)
 	rc6_6s = stan_sample(m6_6s; data=m6_6_data)
-	success(rc6_6s) && (dfa6_6s = read_samples(m6_6s; output_format=:dataframe))
+	success(rc6_6s) && (post6_6s_df = read_samples(m6_6s; output_format=:dataframe))
 end;
 
 # ╔═╡ 2ef5aa9c-feac-11ea-1da4-67356630f549
 if success(rc6_6s)
-	part6_6s = Particles(dfa6_6s)
+	part6_6s = Particles(post6_6s_df)
 end
 
 # ╔═╡ 2f01856c-feac-11ea-0b6b-537d35689cfc
-success(rc6_6s) && (Text(precis(dfa6_6s; io=String)))
+success(rc6_6s) && (Text(precis(post6_6s_df; io=String)))
 
 # ╔═╡ 2f093c3a-feac-11ea-2325-37124b7e6bdf
 md"## End of clip-06-13-15s.jl"

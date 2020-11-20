@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.11
 
 using Markdown
 using InteractiveUtils
@@ -37,7 +37,7 @@ begin
 end
 
 # ╔═╡ 366b3adc-ff42-11ea-0b42-fd1d057bd787
-m6_12 = "
+stan6_12 = "
 data {
   int <lower=0> N;
   vector[N] C;
@@ -66,7 +66,7 @@ model {
 
 # ╔═╡ 366c251e-ff42-11ea-39e5-c3e32f574c75
 begin
-	m6_12s = SampleModel("m6.12s", m6_12)
+	m6_12s = SampleModel("m6.12s", stan6_12)
 	m6_12_data = Dict(
 	  :N => nrow(df),
 	  :C => df[:, :c],
@@ -75,8 +75,8 @@ begin
 	  :U => df[:, :u]
 	)
 	rc6_12s = stan_sample(m6_12s, data=m6_12_data)
-	dfa6_12s = read_samples(m6_12s, output_format=:dataframe)
-	Text(precis(dfa6_12s; io=String))
+	post6_12s_df = read_samples(m6_12s, output_format=:dataframe)
+	Text(precis(post6_12s_df; io=String))
 end
 
 # ╔═╡ 3676ee36-ff42-11ea-200c-594878417287

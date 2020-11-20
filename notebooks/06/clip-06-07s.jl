@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.10
 
 using Markdown
 using InteractiveUtils
@@ -69,7 +69,10 @@ begin
 end
 
 # ╔═╡ b09dac48-fe6d-11ea-3927-f5a982c7b715
-success(rc6_2s) && (chns6_2s = read_samples(m6_2s, output_format=:mcmcchains))
+if success(rc6_2s)
+	chns6_2s = read_samples(m6_2s, output_format=:mcmcchains)
+	Text(sprint(show, "text/plain", chns6_2s))
+end
 
 # ╔═╡ b0a8ce2a-fe6d-11ea-19e5-d7f5a9022680
 success(rc6_2s) && plot(chns6_2s; seriestype=:traceplot)

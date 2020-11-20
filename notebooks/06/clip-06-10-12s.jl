@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.11
 
 using Markdown
 using InteractiveUtils
@@ -29,7 +29,7 @@ begin
 end;
 
 # ╔═╡ 0f2e35d6-fea8-11ea-0034-cfd003aea49b
-m6_5 = "
+stan6_5 = "
 data{
   int <lower=1> N;              // Sample size
   vector[N] K;
@@ -58,15 +58,15 @@ md"##### Define the SampleModel, etc."
 
 # ╔═╡ 0f3462bc-fea8-11ea-09af-4135dc5fd195
 begin
-	m6_5s = SampleModel("m6.5s", m6_5);
+	m6_5s = SampleModel("m6.5s", stan6_5);
 	m6_5_data = Dict("N" => size(df, 1), "L" => df.perc_lactose_s, "F" => df.perc_fat_s,
 		"K" => 	df.kcal_per_g_s);
 	rc6_5s = stan_sample(m6_5s, data=m6_5_data)
-	success(rc6_5s) && (dfa6_5 = read_samples(m6_5s; output_format=:dataframe))
+	success(rc6_5s) && (post6_5s_df = read_samples(m6_5s; output_format=:dataframe))
 end;
 
 # ╔═╡ 0f408786-fea8-11ea-3868-89d746f4fb34
-success(rc6_5s) && (p6_5s = Particles(dfa6_5))
+success(rc6_5s) && (p6_5s = Particles(post6_5s_df))
 
 # ╔═╡ 0f4126fc-fea8-11ea-3fde-3f1ded9aaedb
 if success(rc6_5s)

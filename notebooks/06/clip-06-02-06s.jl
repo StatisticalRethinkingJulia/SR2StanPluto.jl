@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.10
 
 using Markdown
 using InteractiveUtils
@@ -35,7 +35,7 @@ end;
 md"### Snippet 6.2"
 
 # ╔═╡ 9842dbb8-fe50-11ea-158e-cbc2873c64bd
-m6_1 = "
+stan6_1 = "
 data {
   int <lower=1> N;
   vector[N] H;
@@ -61,7 +61,7 @@ model {
 
 # ╔═╡ 9851b4a8-fe50-11ea-083b-17e3c182a55a
 begin
-	m6_1s = SampleModel("m6.1s", m6_1, method=StanSample.Sample(num_samples=1000))
+	m6_1s = SampleModel("m6.1s", stan6_1, method=StanSample.Sample(num_samples=1000))
 	m_6_1_data = Dict(
 	  :H => df[:, :height],
 	  :LL => df[:, :leg_left],
@@ -84,18 +84,18 @@ s0
 
 # ╔═╡ 985265b0-fe50-11ea-0594-05ac311d2e87
 if success(rc6_1s)
-	dfa6_1s = read_samples(m6_1s, output_format=:dataframe)
+	post6_1s_df = read_samples(m6_1s, output_format=:dataframe)
 
 	# Fit a linear regression
 
-	m = lm(@formula(bL ~ bR), dfa6_1s)
+	m = lm(@formula(bL ~ bR), post6_1s_df)
 
 	# estimated coefficients from the model
 
 	coefs = coef(m)
 
 	fig1 = plot(xlabel="bR", ylabel="bL", lab="bL ~ bR")
-	plot!(dfa6_1s[:, :bR], dfa6_1s[:, :bL])
+	plot!(post6_1s_df[:, :bR], post6_1s_df[:, :bL])
 	fig2 = density(part6_1s.bR.particles + part6_1s.bL.particles, xlabel="sum of bL and bR",
 		ylabel="Density", lab="bL + bR")
 	plot(fig1, fig2, layout=(1, 2))

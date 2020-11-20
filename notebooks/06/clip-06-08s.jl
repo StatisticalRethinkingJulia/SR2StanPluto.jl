@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.11
 
 using Markdown
 using InteractiveUtils
@@ -24,7 +24,7 @@ begin
 end;
 
 # ╔═╡ 823966f0-fe75-11ea-3c37-25437bd882cd
-m6_3 = "
+stan6_3 = "
 data{
   int <lower=1> N;              // Sample size
   vector[N] K;
@@ -47,17 +47,17 @@ model{
 
 # ╔═╡ 82435d7e-fe75-11ea-3f52-7daa1879898d
 begin
-	m6_3s = SampleModel("m6.3", m6_3);
+	m6_3s = SampleModel("m6.3", stan6_3);
 	m6_3_data = Dict("N" => size(df, 1), "F" => df.perc_fat_s, "K" => df.kcal_per_g_s);
 	rc6_3s = stan_sample(m6_3s, data=m6_3_data);
-	success(rc6_3s) && (dfa6_3s = read_samples(m6_3s; output_format=:dataframe))
+	success(rc6_3s) && (post6_3s_df = read_samples(m6_3s; output_format=:dataframe))
 end;
 
 # ╔═╡ 82456bc6-fe75-11ea-3e9a-256e1fb9844f
-success(rc6_3s) && (part6_3s = Particles(dfa6_3s))
+success(rc6_3s) && (part6_3s = Particles(post6_3s_df))
 
 # ╔═╡ 82509064-fe75-11ea-16cb-e506f49efd72
-success(rc6_3s) && quap(dfa6_3s)
+success(rc6_3s) && quap(post6_3s_df)
 
 # ╔═╡ 8251194e-fe75-11ea-1403-d743608a5169
 hpdi(part6_3s.bF.particles, alpha=0.11)

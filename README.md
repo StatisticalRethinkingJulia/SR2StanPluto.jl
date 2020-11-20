@@ -22,21 +22,24 @@ $ julia
 and in the Julia REPL:
 
 ```
-]             # Actvate Pkg mode
-<1.5> activate .
-<StatisticalRethinkingStan> instantiate
-<delete>      # Exit package mode
+julia> ]                                        # Actvate Pkg mode
+(@v1.5) pkg> activate .                         # Activate pkg in .
+(StatisticalRethinkingStan) pkg> instantiate    # Install in pkg environment
+(StatisticalRethinkingStan) pkg> <delete>       # Exit package mode
+julia>
 ```
 
 The next step assumes your Julia setup includes `Pkg`, `DrWatson`, `Pluto` and `PlutoUI`.
 
-2. Start a Pluto notebook server. A Pluto page should open in a browser.
+2. Start a Pluto notebook server.
 ```
 $ julia
 
 julia> using Pluto
 julia> Pluto.run()
 ```
+
+3. A Pluto page should open in a browser.
 
 Select a notebook in the `open a file` entry box, e.g. type `./` and step to `./notebooks/00/clip-00-01-03s.jl`. All notebooks will activate the project `StatisticalRethinkingStan`.
 
