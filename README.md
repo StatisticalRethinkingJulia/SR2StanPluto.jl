@@ -51,7 +51,9 @@ StatisticalRethinkingStan.jl is a DrWatson project, with some added/re-purposed 
 2. `notebooks`, used to store the Pluto notebooks and
 3. `scripts`, Julia scripts (generated from the notebooks).
 
-The `data` directory, in DrWatson accessible through `datadir()`, can be used for locally generated data, exercises, etc. All "rethinking" data files are stored and maintained in StatisticalRethinking.jl and can be accessed via `sr_datadir(...)`. 
+The `data` directory, in DrWatson accessible through `datadir()`, can be used for locally generated data, exercises, etc. All "rethinking" data files are stored and maintained in StatisticalRethinking.jl and can be accessed via `sr_datadir(...)`.
+
+The scripts in the `scripts` subdirectory are directly generated from the notebooks and thus adhere to Pluto's programming restrictions.
 
 This leads to a typical set of opening lines in each notebook:
 ```
@@ -118,7 +120,7 @@ Most models in the `models` subdirectory return 0, 1 and 4 out of the box. But `
 
 ## Status
 
-StatisticalRethinkingStan.jl is compatible with the 2nd edition of the book.
+StatisticalRethinkingStan.jl is compatible with the 2nd edition of the book. Version 1.0.0 covers pretty much the same as StatisticalRethinking.jl v2.2.9+.
 
 Expanded coverage of chapters 7 remains WIP. Examples of Stan language models in the later chapters can be found in the `models` sub-directory
 
