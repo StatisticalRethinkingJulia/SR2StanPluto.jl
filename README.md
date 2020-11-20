@@ -4,7 +4,7 @@ As stated many times by the author in his [online lectures](https://www.youtube.
 
 StatisticalRethinkingStan is a Julia project that uses Pluto notebooks for this purpose. Each notebook demonstrates Julia versions of `code snippets` and `mcmc models` contained in the R package "rethinking" associated with the book [Statistical Rethinking](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath.
 
-This Julia project uses Stan (the `cmdstan` executable) as the underlying mcmc implementation.
+This Julia project uses Stan (the `cmdstan` executable) as the underlying mcmc implementation. A companion project ( [StatisticalRethinkingTuring.jl](https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingTuring.jl) ) uses Turing.jl.
 
 ## Installation
 
@@ -84,12 +84,10 @@ Clips are named as `clip-cc-fs-ls[s|t|d].jl` where
 
 Note: `d` is reserved for a combination Soss/DynamicHMC, `sl` is reserved for Stan models using the `logpdf` formulation and `m` for Mamba.
 
-The notebooks containing the clips are stored by chapter.
+The notebooks containing the clips are stored by chapter. In addition to clips, in the early notebook chapters (0-3) it is also shown how to create some of the figures in the book, e.g. `Fig2.5s.jl` in `notebooks/chapter/02`.
 
 Special introductory notebooks have been included in `notebooks/intros`, e.g.
 `intro-stan/intro-stan-01s.jl` and `intro-R-users/distributions.jl`.
-
-In addition to clips, in the early notebook chapters (0-3) it is shown how to create the figures in the book, e.g. `Fig2.5s.jl` in `notebooks/chapter/02`.
 
 Great introductory notebooks showing Julia and statistics ( based on the [Statistics with Julia](https://statisticswithjulia.org/index.html) book ) can be found in [StatisticsWithJuliaPlutoNotebooks](https://github.com/StatisticalRethinkingJulia/StatisticsWithJuliaPlutoNotebooks.jl).
 
