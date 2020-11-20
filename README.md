@@ -43,7 +43,7 @@ Select a notebook in the `open a file` entry box, e.g. type `./` and step to `./
 
 ## Usage
 
-Note: Currently StatisticalRethinkingStan requires StatisticalRethinking.jl v 3.0.0. One way to set that up (until v3 is merged into Julia's package repository) is to `] dev StatisticalRethinking` and then use git to activate branch 3.0.0.
+Note: *Currently StatisticalRethinkingStan requires StatisticalRethinking.jl v 3.0.0. One way to set that up (until v3 is merged into Julia's package repository) is to `] dev StatisticalRethinking` and then use git to activate branch 3.0.0.*
 
 StatisticalRethinkingStan.jl is a DrWatson project, with some added/re-purposed subdirectories:
 
