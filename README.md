@@ -69,11 +69,11 @@ using StanSample
 using StatisticalRethinking
 
 # To access e.g. the Howell1.csv data file:
-d = CSV.read(sr_datadir("Howell1.csv"), DataFrame)
-d2 = d[d.age .>= 18, :]
+df = CSV.read(sr_datadir("Howell1.csv"), DataFrame)
+df = df[df.age .>= 18, :]
 ```
 
-## Setup
+## Naming conventions
 
 All R snippets (fragments) have been organized in clips. Each clip is a notebook.
 
@@ -93,7 +93,9 @@ Special introductory notebooks have been included in `notebooks/intros`, e.g.
 
 In addition to clips, in the early notebook chapters (0-3) it is shown how to create the figures in the book, e.g. `Fig2.5s.jl` in `notebooks/chapter/02`.
 
-The models and the results of simulations are stored as follows:
+Great introductory notebooks showing Julia and statistics ( based on the [Statistics with Julia](https://statisticswithjulia.org/index.html) book ) can be found in [StatisticsWithJuliaPlutoNotebooks](https://github.com/StatisticalRethinkingJulia/StatisticsWithJuliaPlutoNotebooks.jl).
+
+One goal for the changes in StatisticalRethinking v3 was to make it easier to compare and mix and match results from different mcmc implementations. Hence consistent naming of models and results were important. The models and the results of simulations are stored as follows:
 
 Models:
 
@@ -116,15 +118,15 @@ Results as a DataFrame:
 
 As before, the `s` at the end indicates Stan.
 
-Most models in the `models` subdirectory return 0, 1 and 4.
+Most models in the `models` subdirectory return 0, 1 and 4 out of the box. But `read_samples(m5_1s; output_format=:...)` makes it easy to create MCMCChains.jl Chains objects, a DataFrame with draws or a MonteCarloMeasurements.jl Particles object.
 
 ## Status
 
 StatisticalRethinkingStan.jl is compatible with the 2nd edition of the book.
 
-Expanded coverage of chapters 7 and beyond of the book will likely happen while working on StatisticalRethinkingStan.jl.
+Expanded coverage of chapters 7 remains WIP. Examples of Stan language models in the later chapters can be found in the `models` sub-directory
 
-StructuralCausalModels.jl is included as en experimental dependency in the StatisticalRethinking.jl v3 package.
+StructuralCausalModels.jl is included as en experimental dependency in the StatisticalRethinking.jl v3 package. Definitely WIP!
 
 Any feedback is appreciated. Please open an issue.
 
