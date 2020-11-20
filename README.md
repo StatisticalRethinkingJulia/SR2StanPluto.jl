@@ -14,9 +14,7 @@ To (locally) reproduce and use this project, do the following:
 
 ```
 $ git clone https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingStan.jl
-
 $ cd StatisticalRethinkingStan.jl
-
 $ julia
 ```
 and in the Julia REPL:
@@ -95,7 +93,7 @@ In addition to clips, in the early notebook chapters (0-3) it is shown how to cr
 
 Great introductory notebooks showing Julia and statistics ( based on the [Statistics with Julia](https://statisticswithjulia.org/index.html) book ) can be found in [StatisticsWithJuliaPlutoNotebooks](https://github.com/StatisticalRethinkingJulia/StatisticsWithJuliaPlutoNotebooks.jl).
 
-One goal for the changes in StatisticalRethinking v3 was to make it easier to compare and mix and match results from different mcmc implementations. Hence consistent naming of models and results were important. The models and the results of simulations are stored as follows:
+One goal for the changes in StatisticalRethinking v3 was to make it easier to compare and mix and match results from different mcmc implementations. Hence consistent naming of models and results is important. The models and the results of simulations are stored as follows:
 
 Models:
 
@@ -118,7 +116,7 @@ Results as a DataFrame:
 
 As before, the `s` at the end indicates Stan.
 
-Most models in the `models` subdirectory return 0, 1 and 4 out of the box. But `read_samples(m5_1s; output_format=:...)` makes it easy to create MCMCChains.jl Chains objects, a DataFrame with draws or a MonteCarloMeasurements.jl Particles object.
+Most models in the `models` subdirectory return 0, 1 and 4 out of the box. But `read_samples(m5_1s; output_format=:...)` makes it easy to create MCMCChains.jl Chains objects, a DataFrame with draws or a MonteCarloMeasurements.jl Particles object (item 4 in above list).
 
 ## Status
 
@@ -138,5 +136,5 @@ This repository and format is derived from work by Karajan, previous versions of
 
 ### Version 1.0.0
 
-1. Initial version
+1. Initial version (late Oct 2020).
 
