@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.3
+# v0.12.11
 
 using Markdown
 using InteractiveUtils
@@ -23,7 +23,7 @@ md"##### Define the Stan language model."
 
 # ╔═╡ 114947f6-f20b-11ea-0ea5-0dfa3ef8191f
 begin
-	m1_1 = "
+	stan1_1 = "
 	// Inferring a rate
 	data {
 	  int N;
@@ -46,7 +46,7 @@ end;
 md"##### Create an OptimizeModel"
 
 # ╔═╡ 114a04d4-f20b-11ea-0c10-e5c266f4ea8d
-sm = OptimizeModel("m1.1s", m1_1);
+m1_1s = OptimizeModel("m1.1s", stan1_1);
 
 # ╔═╡ 29feebbc-0d8a-11eb-0cfe-fd90ac26ca49
 begin
@@ -58,14 +58,14 @@ begin
 end;
 
 # ╔═╡ 1153163c-f20b-11ea-3632-5beebd6994b8
-rc = stan_optimize(sm, data=m1_1_data);
+rc1_1s = stan_optimize(m1_1s, data=m1_1_data);
 
 # ╔═╡ 115537b2-f20b-11ea-030c-478dea20fdbe
 md"##### Describe the optimize result"
 
 # ╔═╡ 11602dea-f20b-11ea-1243-fd37bbd57993
-if success(rc)
-  optim_stan, cnames = read_optimize(sm)
+if success(rc1_1s)
+  optim_stan, cnames = read_optimize(m1_1s)
   optim_stan
 end
 
@@ -76,7 +76,7 @@ md"## End of intro/intro-stan-03s.jl"
 # ╟─c705c7c4-f209-11ea-3651-a72bfc0f1756
 # ╠═113eb996-f20b-11ea-297f-95379839995f
 # ╠═113efaf8-f20b-11ea-343f-b39e12c4d457
-# ╠═113f96ac-f20b-11ea-36c1-9b9b901c7af9
+# ╟─113f96ac-f20b-11ea-36c1-9b9b901c7af9
 # ╠═114947f6-f20b-11ea-0ea5-0dfa3ef8191f
 # ╟─620e650e-f20b-11ea-1157-a3b90612c017
 # ╠═114a04d4-f20b-11ea-0c10-e5c266f4ea8d

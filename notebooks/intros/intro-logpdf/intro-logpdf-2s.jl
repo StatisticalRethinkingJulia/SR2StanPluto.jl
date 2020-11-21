@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.11
 
 using Markdown
 using InteractiveUtils
@@ -11,7 +11,6 @@ using Pkg, DrWatson
 begin
 	@quickactivate "StatisticalRethinkingStan"
 	using StatisticalRethinking
-	using Optim
 end
 
 # ╔═╡ fdf51ec0-f794-11ea-327a-33958a9cd52a
@@ -33,7 +32,7 @@ end;
 
 # Our first model:
 
-m4_1 = "
+stan4_1 = "
   μ ~ Normal(178,20) # prior
   σ ~ Uniform(0, 50) # prior
   height ~ Normal(μ, σ) # likelihood
@@ -75,7 +74,7 @@ Optim.minimizer(res)
 # ╔═╡ b8cab216-f793-11ea-1880-9dc5d6a84e79
 # Our second model:
 
-m4_2 = "
+stan4_2 = "
   μ ~ Normal(178, 0.1) # prior
   σ ~ Uniform(0, 50) # prior
   height ~ Normal(μ, σ) # likelihood

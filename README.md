@@ -105,7 +105,7 @@ Draws:
 
 3. chns5_1s          : MCMCChains object (4000 samples from 4 chains)
 4. part5_1s          : Stan samples (Particles notation)
-5. quap5_1s          : Stan quap() samples (Particles notation)
+5. q5_1s.particles   : Stan quap() samples (Particles notation)
 
 Results as a DataFrame:
 

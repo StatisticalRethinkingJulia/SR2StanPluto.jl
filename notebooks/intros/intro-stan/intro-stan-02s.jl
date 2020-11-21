@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.11
 
 using Markdown
 using InteractiveUtils
@@ -22,7 +22,7 @@ md"###### Re-execute relevant parts of intro_stan/intro-stan-01.jl"
 
 # ╔═╡ 007b3eec-f207-11ea-3331-fd0db71ffe96
 begin
-	m1_1 = "
+	stan1_1 = "
 	// Inferring a rate
 	data {
 	  int N;
@@ -39,17 +39,17 @@ begin
 	  // Observed Counts
 	  k ~ binomial(n, theta);
 	}"
-	sm = SampleModel("m1.1s", m1_1)     # Define Stan language mdeol
+	m1_1s = SampleModel("m1.1s", stan1_1)     # Define Stan language mdeol
 	N = 25                              # 25 experiments
 	d = Binomial(9, 0.66)               # 9 tosses (simulate 2/3 is water)
 	k = rand(d, N)                      # Simulate 15 trial results
 	n = 9                               # Each experiment has 9 tosses
 	m1_1_data = Dict("N" => N, "n" => n, "k" => k)
-	rc = stan_sample(sm, data=m1_1_data)
+	rc1_1s = stan_sample(m1_1s, data=m1_1_data)
 end;
 
 # ╔═╡ 5654e97c-f206-11ea-024a-112a500adf2e
-if success(rc)
+if success(rc1_1s)
 
   # Allocate array of 4 Normal fits
 
@@ -57,10 +57,10 @@ if success(rc)
 
   # Fit a normal distribution to each chain.
 
-  dfsa = read_samples(sm; output_format=:dataframes)
+  post1_1s_df = read_samples(m1_1s; output_format=:dataframes)
 
   for i in 1:4
-    fits[i] = fit_mle(Normal, dfsa[i][:, :theta])
+    fits[i] = fit_mle(Normal, post1_1s_df[i][:, :theta])
    end
 
   # Plot the 4 chain densities and mle estimates
@@ -70,7 +70,7 @@ if success(rc)
   for i in 1:4
     μ = round(fits[i].μ, digits=2)
     σ = round(fits[i].σ, digits=2)
-    p[i] = density(dfsa[i][:, :theta], lab="Chain $i density",
+    p[i] = density(post1_1s_df[i][:, :theta], lab="Chain $i density",
        xlim=(0.0, 1.0), title="$(N) data points", leg=:topleft)
    plot!(p[i], x, pdf.(Normal(fits[i].μ, fits[i].σ), x), lab="Fitted Normal($μ, $σ)")
   end

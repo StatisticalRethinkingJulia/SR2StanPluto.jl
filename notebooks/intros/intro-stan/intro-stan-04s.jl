@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.11
 
 using Markdown
 using InteractiveUtils
@@ -19,7 +19,7 @@ end
 md"## Intro-stan-04s.jl"
 
 # ╔═╡ ba7b3448-f211-11ea-2ba3-eda3b6c0a146
-	m1_1 = "
+	stan1_1 = "
 	// Inferring a rate
 	data {
 	  int N;
@@ -35,30 +35,28 @@ md"## Intro-stan-04s.jl"
 
 	  // Observed Counts
 	  k ~ binomial(n, theta);
-	}"
-
-
+	}";
 
 # ╔═╡ 8103503a-f20f-11ea-0039-3df29edd62f2
 begin
-	sm = SampleModel("m1.1s", m1_1)     # Define Stan language mdeol
+	m1_1s = SampleModel("m1.1s", stan1_1)     # Define Stan language mdeol
 	N = 25                              # 25 experiments
 	d = Binomial(9, 0.66)               # 9 tosses (simulate 2/3 is water)
 	k = rand(d, N)                      # Simulate 15 trial results
 	n = 9                               # Each experiment has 9 tosses
 	m1_1_data = Dict("N" => N, "n" => n, "k" => k)
-	rc = stan_sample(sm, data=m1_1_data)
-	if success(rc)
-		dfs = read_samples(sm, output_format=:dataframe)
+	rc1_1s = stan_sample(m1_1s, data=m1_1_data)
+	if success(rc1_1s)
+		post1_1s_df = read_samples(m1_1s, output_format=:dataframe)
 	end
 end;
 
 # ╔═╡ 1a66e262-f210-11ea-0e79-7b57f5970e84
-Text(precis(dfs; io = String))
+Text(precis(post1_1s_df; io = String))
 
 # ╔═╡ 36063062-f211-11ea-39da-c5ef2ce3c3ab
 begin
-	sm_opt = OptimizeModel("m1.1s", m1_1)
+	sm_opt = OptimizeModel("m1.1s", stan1_1)
 	rc_opt = stan_optimize(sm_opt, data=m1_1_data)
 	optim_stan, cnames = read_optimize(sm_opt)
 	optim_stan
@@ -71,10 +69,10 @@ md"##### This scripts shows a number of different ways to estimate a quadratic a
 md"##### Compare with Stan, MLE & MAP."
 
 # ╔═╡ 81223818-f20f-11ea-028b-81d9a4408d3f
-md"###### StanSample mean and sd (see also intro_part_01):"
+md"###### StanSample mean and sd (see also `intro_part_01`):"
 
 # ╔═╡ 8122e934-f20f-11ea-3aa9-95546337d293
-p = Particles(dfs.theta)
+part1_1s = Particles(post1_1s_df)
 
 # ╔═╡ 812f5124-f20f-11ea-2189-f1d1db91f2d5
 md"###### Stan_optimize mean and std (see also intro-part-03):"
@@ -82,7 +80,7 @@ md"###### Stan_optimize mean and std (see also intro-part-03):"
 # ╔═╡ 81302324-f20f-11ea-15e8-7d2bbb21f094
 begin
 	mu_stan_optimize = mean(optim_stan["theta"])
-	sigma_stan_optimize = std(dfs[:, :theta], mean=mu_stan_optimize)
+	sigma_stan_optimize = std(post1_1s_df.theta, mean=mu_stan_optimize)
 	[mu_stan_optimize, sigma_stan_optimize]
 end
 
@@ -90,14 +88,14 @@ end
 md"###### MLE estimate"
 
 # ╔═╡ 9d8329f8-f215-11ea-05fb-73d13c3e9d3a
-mle_fit = fit_mle(Normal, dfs.theta)
+mle_fit = fit_mle(Normal, post1_1s_df.theta)
 
 # ╔═╡ 8183b70a-f20f-11ea-3b4a-61b4a1bd8a2c
 md"###### Use kernel density of Stan samples"
 
 # ╔═╡ 818da9a4-f20f-11ea-22f7-5d860f5d4302
 begin
-	q = quap(dfs)
+	q = quap(post1_1s_df)
 	mu_quap = mean(q.theta)
 	sigma_quap = std(q.theta)
 	[mu_quap, sigma_quap]
@@ -118,7 +116,7 @@ end
 begin
 	res = optimize(loglik, 0.0, 1.0)
 	mu_optim = Optim.minimizer(res)[1]
-	sigma_optim = std(dfs[:, :theta], mean=mu_optim)
+	sigma_optim = std(post1_1s_df[:, :theta], mean=mu_optim)
 	[mu_optim, sigma_optim]
 end
 
@@ -126,7 +124,7 @@ end
 md"###### Show the hpd region"
 
 # ╔═╡ 81cb464c-f20f-11ea-18be-a9e06beb1201
-bnds_hpd = hpdi(dfs.theta, alpha=0.11)
+bnds_hpd = hpdi(post1_1s_df.theta, alpha=0.11)
 
 # ╔═╡ 81ed14ac-f20f-11ea-22b2-e9ed65f3f14a
 begin
@@ -134,9 +132,10 @@ begin
 	plot( x, pdf.(Normal( mean(mle_fit) , std(mle_fit)) , x ),
 		xlim=(0.5, 0.8), lab="MLE approximation",
 		legend=:topleft, line=:dash)
-	plot!( x, pdf.(Normal( mean(p), std(p)), x ), lab="Particle approximation", line=:dash)
+	plot!( x, pdf.(Normal( mean(part1_1s.theta), std(part1_1s.theta)), x ),
+		lab="Particle approximation", line=:dash)
 	plot!( x, pdf.(Normal( mu_quap, sigma_quap), x ), lab="quap approximation")
-	density!(dfs.theta, lab="StanSample chain")
+	density!(post1_1s_df.theta, lab="StanSample chain")
 	vline!([bnds_hpd[1]], line=:dash, lab="hpd lower bound")
 	vline!([bnds_hpd[2]], line=:dash, lab="hpd upper bound")
 end

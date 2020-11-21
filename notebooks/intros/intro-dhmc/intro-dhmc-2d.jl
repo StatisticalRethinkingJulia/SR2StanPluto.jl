@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.11
 
 using Markdown
 using InteractiveUtils
@@ -10,9 +10,9 @@ using Pkg, DrWatson
 # ╔═╡ 9e6e3ad6-f7c4-11ea-0980-81a920a19f14
 begin
   @quickactivate "StatisticalRethinkingStan"
-  using StatisticalRethinking, DynamicHMC
+  using DynamicHMC
   using LogDensityProblems, TransformVariables
-  using DynamicHMC, Parameters
+  using DynamicHMC
   using StatisticalRethinking
 end
 
@@ -98,6 +98,9 @@ md"##### We use the transformation to obtain the posterior from the chain."
 # ╔═╡ 9effe6ae-f7c4-11ea-19cd-6d79b43b4278
 posterior = P.transformation.(results.chain)
 
+# ╔═╡ e3ae2806-2b90-11eb-070f-39ddd6208ccd
+typeof(posterior)
+
 # ╔═╡ 9f087fbc-f7c4-11ea-3264-9b235c4757c8
 md"##### Extract the posterior means,"
 
@@ -117,7 +120,8 @@ end
 begin
 	pnames = ["muy", "mux"]
 	sections = Dict(:parameters =>pnames,)
-	chn = create_mcmcchains(a3d, pnames, sections, start=1)
+	chn = MCMCChains.Chains(a3d, pnames, sections, start=1)
+	Text(sprint(show, "text/plain", chn))
 end
 
 # ╔═╡ 9f282556-f7c4-11ea-2b1d-6d19a869b9bf
@@ -145,9 +149,6 @@ begin
 	mean(samples, dims=1)
 end
 
-# ╔═╡ 9f448fd4-f7c4-11ea-0101-174ba256b33b
-mean(chn)
-
 # ╔═╡ 9f49119e-f7c4-11ea-1d55-dfcf0d3f164a
 md"## End of intro-dhmc-2d.jl"
 
@@ -173,10 +174,10 @@ md"## End of intro-dhmc-2d.jl"
 # ╠═9eecc290-f7c4-11ea-101e-0d4097815b8f
 # ╠═9ef6da32-f7c4-11ea-3f73-a5617190ffd2
 # ╠═9effe6ae-f7c4-11ea-19cd-6d79b43b4278
+# ╠═e3ae2806-2b90-11eb-070f-39ddd6208ccd
 # ╠═9f087fbc-f7c4-11ea-3264-9b235c4757c8
 # ╠═9f145896-f7c4-11ea-1104-b3a151572004
 # ╠═9f1eba20-f7c4-11ea-278e-8b535e3f4fe5
 # ╠═9f282556-f7c4-11ea-2b1d-6d19a869b9bf
 # ╠═9f33c5ca-f7c4-11ea-394c-59b681e11b40
-# ╠═9f448fd4-f7c4-11ea-0101-174ba256b33b
 # ╟─9f49119e-f7c4-11ea-1d55-dfcf0d3f164a

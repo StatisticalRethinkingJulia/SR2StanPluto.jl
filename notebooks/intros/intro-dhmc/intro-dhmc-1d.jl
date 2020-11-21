@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.11
 
 using Markdown
 using InteractiveUtils
@@ -10,7 +10,7 @@ using Pkg, DrWatson
 # ╔═╡ 33619e36-f796-11ea-0b36-bda68b9a5e2f
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using DynamicHMC, Parameters
+	using Random, DynamicHMC, Distributions
 	using TransformVariables, LogDensityProblems
 	using StatisticalRethinking
 end
@@ -65,14 +65,14 @@ begin
 	p = clip_9_3_model(y, x)
 	θ = (muy = 0.0, mux=0.0)
 	p(θ)
-end
+end;
 
 # ╔═╡ 339bdb26-f796-11ea-263a-c52b4b4acce2
 md"##### Write a function to return properly dimensioned transformation."
 
 # ╔═╡ 339d8368-f796-11ea-28d5-cf374f141754
 problem_transformation(p::clip_9_3_model) =
-    as((muy = asℝ, mux = asℝ))
+    as((muy = asℝ, mux = asℝ));
 
 # ╔═╡ 33aa58b8-f796-11ea-0f79-173450a7276c
 md"##### Wrap the problem with a transformation, then use Flux for the gradient."
@@ -135,4 +135,4 @@ md"## End of clip-09-03d.jl"
 # ╟─33b2a428-f796-11ea-01e4-93e8d05c759d
 # ╠═33bb5ece-f796-11ea-1ed2-1f9c93c1c9ac
 # ╠═33c2b99e-f796-11ea-0fde-89c09665dda0
-# ╠═33cbd4ac-f796-11ea-2dbe-510c35a57460
+# ╟─33cbd4ac-f796-11ea-2dbe-510c35a57460

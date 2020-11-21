@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.11
 
 using Markdown
 using InteractiveUtils
@@ -60,7 +60,8 @@ rc = stan_sample(sm, data=heightsdata);
 
 # ╔═╡ 3fefbbe4-f792-11ea-3602-612bbf22dc17
 if success(rc)
-  chn = read_samples(sm; output_format=:mcmcchains)
+ 	chn = read_samples(sm; output_format=:mcmcchains)
+	Text(sprint(show, "text/plain", chn))
 end
 
 # ╔═╡ 3ff6ee3c-f792-11ea-1aa9-e129fcaf7171

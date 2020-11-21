@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.11.14
+# v0.12.11
 
 using Markdown
 using InteractiveUtils
@@ -40,7 +40,7 @@ flist <- alist(
 md"##### This model in Stan language could be written as:"
 
 # ╔═╡ 5da2632c-f1dd-11ea-2d50-9d80cda7b1ed
-m1_1 = "
+stan1_1 = "
 // Inferring a rate
 data {
   int N;
@@ -89,7 +89,7 @@ md"###### Once the Stan language model is defined, in this case stored in the Ju
 md"##### 1. Create a Stanmodel object:"
 
 # ╔═╡ a9af402c-f1de-11ea-2ad7-39922b622327
-sm = SampleModel("m1.1s", m1_1);
+m1_1s = SampleModel("m1.1s", stan1_1);
 
 # ╔═╡ ffdf3090-f1ea-11ea-084a-dda8c4d1a68c
 md"##### 2. Simulate the results of N repetitions of 9 tosses."
@@ -112,48 +112,61 @@ m1_1_data = Dict("N" => N, "n" => n, "k" => k)
 md"##### 4. Sample using stan_sample."
 
 # ╔═╡ 6f463898-f1eb-11ea-16f1-0b6de4bd69c4
-rc = stan_sample(sm, data=m1_1_data);
+rc1_1s = stan_sample(m1_1s, data=m1_1_data);
 
 # ╔═╡ 5ddf4cf6-f1dd-11ea-388f-77f48ba93c39
 md"##### 5. Describe and check the results"
 
 # ╔═╡ 73d0dd98-f1ec-11ea-2499-477a8024ecc6
-if success(rc)
-  dfs = read_samples(sm; output_format=:dataframe)
+if success(rc1_1s)
+  post1_1s_df = read_samples(m1_1s; output_format=:dataframe)
 end;
+
+# ╔═╡ 06519646-2b5e-11eb-1093-43f360b702eb
+Text(precis(post1_1s_df; io=String))
 
 # ╔═╡ 208e7a70-f1ec-11ea-3ba9-d5e8c8c00553
 md"###### Sample Particles summary:"
 
 # ╔═╡ cfe9027e-f1ec-11ea-33df-65cd05965437
-p = Particles(dfs); p
+part1_1s = read_samples(m1_1s; output_format=:particles)
 
 # ╔═╡ cfe95fee-f1ec-11ea-32a1-bbf3633ab8e7
-md"###### Quap Particles estimate:"
+md"###### Particles representation of estimate:"
 
 # ╔═╡ cfea40dc-f1ec-11ea-248e-9d1c3b0a0180
-q = quap(dfs); q
+begin
+	q1_1s = quap(m1_1s)
+	quap1_1s_df = sample(q1_1s)
+	Text(precis(quap1_1s_df; io=String))
+end
+
+# ╔═╡ a0a04fa8-2b5e-11eb-0a44-4b31c17d9a57
+q1_1s.particles
 
 # ╔═╡ d0006f7c-f1ec-11ea-3361-9baae166396a
 md"##### Check the chains using MCMCChains.jl"
 
 # ╔═╡ 1ce58ec6-f1ed-11ea-1c05-99a463481fd8
-chn = read_samples(sm; output_format=:mcmcchains)
+begin
+	chns1_1s = read_samples(m1_1s; output_format=:mcmcchains)
+	Text(sprint(show, "text/plain", chns1_1s))
+end
 
 # ╔═╡ 2c465b0a-f1ed-11ea-35e3-017075244cd8
 md"##### Plot the chains."
 
 # ╔═╡ d00180d8-f1ec-11ea-0d29-350fac31122f
-plot(chn; seriestype=:traceplot)
+plot(chns1_1s; seriestype=:traceplot)
 
 # ╔═╡ 3db08936-f914-11ea-1d74-d33b946ef534
-plot(chn; seriestype=:density)
+plot(chns1_1s; seriestype=:density)
 
 # ╔═╡ d00c24de-f1ec-11ea-1c83-cb2584421f6f
 md"##### Display the stansummary result"
 
 # ╔═╡ 0e3309b2-f1ed-11ea-0d57-2f0e5b83c8dd
-success(rc) && read_summary(sm)
+success(rc1_1s) && read_summary(m1_1s)
 
 # ╔═╡ 45929f5a-f759-11ea-1955-67ba740778e6
 md"## Rethinking vs. StatisticalRethinking.jl."
@@ -221,6 +234,18 @@ Examples and comparisons of different ways of computing a quap approximation can
 
 
 
+# ╔═╡ 5c40f5be-2b5f-11eb-0744-b3518615bcf7
+md"##### As explained in the README document, the section on `Naming conventions`, another way to generate quap() samples is:
+
+```
+begin
+	q1_1s = quap(m1_1s)                # Create a Stan QuapModel object
+                                       # q1_1s.particles contains a Particle representation
+	quap1_1s_df = sample(q1_1s)
+	Text(precis(quap1_1s_df; io=String))
+end
+```"
+
 # ╔═╡ b82e2e82-f757-11ea-2696-6f294e3070f5
 md"The increasing use of Particles to represent quap approximations is possible thanks to the package [MonteCarloMeasurements.jl](https://github.com/baggepinnen/MonteCarloMeasurements.jl). [Soss.jl](https://github.com/cscherrer/Soss.jl) and [related write-ups](https://cscherrer.github.io) introduced me to that option."
 
@@ -256,10 +281,12 @@ md"## End of intros/intro-stan-01s.jl"
 # ╠═6f463898-f1eb-11ea-16f1-0b6de4bd69c4
 # ╟─5ddf4cf6-f1dd-11ea-388f-77f48ba93c39
 # ╠═73d0dd98-f1ec-11ea-2499-477a8024ecc6
+# ╠═06519646-2b5e-11eb-1093-43f360b702eb
 # ╟─208e7a70-f1ec-11ea-3ba9-d5e8c8c00553
 # ╠═cfe9027e-f1ec-11ea-33df-65cd05965437
 # ╟─cfe95fee-f1ec-11ea-32a1-bbf3633ab8e7
 # ╠═cfea40dc-f1ec-11ea-248e-9d1c3b0a0180
+# ╠═a0a04fa8-2b5e-11eb-0a44-4b31c17d9a57
 # ╟─d0006f7c-f1ec-11ea-3361-9baae166396a
 # ╠═1ce58ec6-f1ed-11ea-1c05-99a463481fd8
 # ╟─2c465b0a-f1ed-11ea-35e3-017075244cd8
@@ -272,5 +299,6 @@ md"## End of intros/intro-stan-01s.jl"
 # ╟─8819279a-f757-11ea-37ee-f7b0a267d351
 # ╟─55ed2bde-f756-11ea-1f1d-7fbdf76c1b76
 # ╟─2e4c633e-f75a-11ea-2bcb-fb9800e518af
+# ╟─5c40f5be-2b5f-11eb-0744-b3518615bcf7
 # ╟─b82e2e82-f757-11ea-2696-6f294e3070f5
 # ╟─5de8c1c8-f1dd-11ea-1b97-5bbb6c6316ae
