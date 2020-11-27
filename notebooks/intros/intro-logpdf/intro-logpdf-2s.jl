@@ -17,7 +17,7 @@ end
 md"## Intro-logpdf-2s.jl"
 
 # ╔═╡ 3330c924-f793-11ea-28b7-6d61030db6f9
-md"##### This scirpt shows clip-04-26-29s.jl using Optim and a loglik function."
+md"##### This script shows clip-04-26-29s.jl using Optim and a loglik function."
 
 # ╔═╡ b8812010-f793-11ea-19d0-61be51252ae5
 # ### snippet 4.26
@@ -103,7 +103,7 @@ md"## End of intro-logpdfs-2.jl"
 
 # ╔═╡ Cell order:
 # ╟─fdf51ec0-f794-11ea-327a-33958a9cd52a
-# ╠═3330c924-f793-11ea-28b7-6d61030db6f9
+# ╟─3330c924-f793-11ea-28b7-6d61030db6f9
 # ╠═b88059f0-f793-11ea-0031-23a60382d51a
 # ╠═b8809a8c-f793-11ea-382c-5763b1d11ca5
 # ╠═b8812010-f793-11ea-19d0-61be51252ae5

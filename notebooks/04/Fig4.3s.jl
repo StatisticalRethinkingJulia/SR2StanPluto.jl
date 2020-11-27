@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.10
+# v0.12.12
 
 using Markdown
 using InteractiveUtils
@@ -39,7 +39,7 @@ md"### snippet 4.9"
 md"##### Show some statistics."
 
 # ╔═╡ 30eeef00-fb54-11ea-0020-0fa3fe1aa1aa
-Text(precis(df1; io=String))
+PRECIS(df1)
 
 # ╔═╡ 30fe8d34-fb54-11ea-1db7-2ffaf6b6a992
 md"### snippet 4.10"

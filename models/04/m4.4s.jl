@@ -53,9 +53,9 @@ rc4_4s = stan_sample(m4_4s, data=m4_4_data)
 if success(rc4_4s)
   chns4_4s = read_samples(m4_4s; output_format=:mcmcchains)
   chns4_4s
-  q4_4s = quap(m4_4s);                 # Stan QuapModel
-  quap4_4s = Particles(q4_4s)          # Samples from a QuapModel (Particles)
-  quap4_4s_df = sample(q4_4s)          # DataFrame with samples
+  q4_4s = quap(m4_4s);                    # Stan QuapModel
+  quap4_4s = Particles(4000, q4_4s.distr) # Samples from a QuapModel (Particles)
+  quap4_4s_df = sample(q4_4s)             # DataFrame with samples
   precis(m4_4s)
 
   stan_generate_quantities(m4_4s, 1);

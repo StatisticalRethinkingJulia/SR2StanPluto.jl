@@ -123,7 +123,7 @@ if success(rc1_1s)
 end;
 
 # ╔═╡ 06519646-2b5e-11eb-1093-43f360b702eb
-Text(precis(post1_1s_df; io=String))
+PRECIS(post1_1s_df)
 
 # ╔═╡ 208e7a70-f1ec-11ea-3ba9-d5e8c8c00553
 md"###### Sample Particles summary:"
@@ -138,11 +138,14 @@ md"###### Particles representation of estimate:"
 begin
 	q1_1s = quap(m1_1s)
 	quap1_1s_df = sample(q1_1s)
-	Text(precis(quap1_1s_df; io=String))
+	PRECIS(quap1_1s_df)
 end
 
+# ╔═╡ 4fef5504-2de3-11eb-10f9-39676cbe1205
+
+
 # ╔═╡ a0a04fa8-2b5e-11eb-0a44-4b31c17d9a57
-q1_1s.particles
+q1_1s
 
 # ╔═╡ d0006f7c-f1ec-11ea-3361-9baae166396a
 md"##### Check the chains using MCMCChains.jl"
@@ -150,7 +153,10 @@ md"##### Check the chains using MCMCChains.jl"
 # ╔═╡ 1ce58ec6-f1ed-11ea-1c05-99a463481fd8
 begin
 	chns1_1s = read_samples(m1_1s; output_format=:mcmcchains)
-	Text(sprint(show, "text/plain", chns1_1s))
+	
+	# Display the chns
+	
+	CHNS(chns1_1s)
 end
 
 # ╔═╡ 2c465b0a-f1ed-11ea-35e3-017075244cd8
@@ -273,7 +279,7 @@ md"## End of intros/intro-stan-01s.jl"
 # ╟─459f3540-f1ea-11ea-21da-9bf2ec949773
 # ╟─4b81f25e-f1ea-11ea-0f34-99192ddea9ad
 # ╠═a9af402c-f1de-11ea-2ad7-39922b622327
-# ╠═ffdf3090-f1ea-11ea-084a-dda8c4d1a68c
+# ╟─ffdf3090-f1ea-11ea-084a-dda8c4d1a68c
 # ╠═5daf1ed2-f1dd-11ea-1f3d-1909cc196f7a
 # ╟─5dcb2868-f1dd-11ea-389c-ff32a30fddc2
 # ╠═49b87dde-f1eb-11ea-0ee1-67edf7b90b1c
@@ -286,6 +292,7 @@ md"## End of intros/intro-stan-01s.jl"
 # ╠═cfe9027e-f1ec-11ea-33df-65cd05965437
 # ╟─cfe95fee-f1ec-11ea-32a1-bbf3633ab8e7
 # ╠═cfea40dc-f1ec-11ea-248e-9d1c3b0a0180
+# ╟─4fef5504-2de3-11eb-10f9-39676cbe1205
 # ╠═a0a04fa8-2b5e-11eb-0a44-4b31c17d9a57
 # ╟─d0006f7c-f1ec-11ea-3361-9baae166396a
 # ╠═1ce58ec6-f1ed-11ea-1c05-99a463481fd8

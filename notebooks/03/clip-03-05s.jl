@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.10
+# v0.12.12
 
 using Markdown
 using InteractiveUtils
@@ -84,7 +84,7 @@ end;
 md"##### Describe the chains."
 
 # ╔═╡ 9e931692-f368-11ea-2359-4b617b0cd65c
-Text(sprint(show, "text/plain", chns3_5s))
+CHNS(chns3_5s)
 
 # ╔═╡ 781b804c-f365-11ea-21d8-25088dbbbceb
 md"##### Plot the chains."

@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.10
+# v0.12.11
 
 using Markdown
 using InteractiveUtils
@@ -81,7 +81,7 @@ md"### snippet 2.7"
 if success(rc2_0s)
 	x = 0.0:0.01:1.0
  	df = read_samples(m2_0s; output_format=:dataframe)
- 	quapfit = quap(df)
+ 	quapfit = sample(quap(df))
  	density(df.theta, lab="Stan samples")
  	plot!( x, pdf.(Beta( w+1 , l+1 ) , x ), lab="Conjugate solution")
  	plot!( x, pdf.(Normal(mean(quapfit.theta), std(quapfit.theta)) , x ), lab="Stan quap solution")

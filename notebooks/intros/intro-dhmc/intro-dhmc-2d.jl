@@ -121,7 +121,7 @@ begin
 	pnames = ["muy", "mux"]
 	sections = Dict(:parameters =>pnames,)
 	chn = MCMCChains.Chains(a3d, pnames, sections, start=1)
-	Text(sprint(show, "text/plain", chn))
+	CHNS(chn)
 end
 
 # ╔═╡ 9f282556-f7c4-11ea-2b1d-6d19a869b9bf

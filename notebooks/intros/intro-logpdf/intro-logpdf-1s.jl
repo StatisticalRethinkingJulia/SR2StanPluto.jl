@@ -60,8 +60,8 @@ rc = stan_sample(sm, data=heightsdata);
 
 # ╔═╡ 3fefbbe4-f792-11ea-3602-612bbf22dc17
 if success(rc)
- 	chn = read_samples(sm; output_format=:mcmcchains)
-	Text(sprint(show, "text/plain", chn))
+ 	chns = read_samples(sm; output_format=:mcmcchains)
+	CHNS(chns)
 end
 
 # ╔═╡ 3ff6ee3c-f792-11ea-1aa9-e129fcaf7171

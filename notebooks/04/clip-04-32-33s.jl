@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.10
+# v0.12.12
 
 using Markdown
 using InteractiveUtils
@@ -69,7 +69,7 @@ end;
 quap4_2s_df = sample(q4_2s);
 
 # ╔═╡ 243a9eea-0e22-11eb-0e83-2d7bbd03f78a
-Text(precis(quap4_2s_df; io=String))
+PRECIS(quap4_2s_df)
 
 # ╔═╡ 62d7694e-fb76-11ea-28c4-4d1e78f54b82
 md"### snippet 4.32"

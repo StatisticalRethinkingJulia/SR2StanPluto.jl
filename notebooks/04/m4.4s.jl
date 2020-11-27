@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.10
+# v0.12.12
 
 using Markdown
 using InteractiveUtils
@@ -67,19 +67,19 @@ end;
 # ╔═╡ 4f138b0a-2861-11eb-0985-1b00943863f2
 if success(rc4_4s)
   chns4_4s = read_samples(m4_4s; output_format=:mcmcchains)
-  Text(precis(DataFrame(chns4_4s); io=String))
+  Particles(chns4_4s)
 end
 
 # ╔═╡ bb9846a6-2861-11eb-02dc-957c2bda5814
-q4_4s = quap(m4_4s);                 # Stan QuapModel
+q4_4s = quap(m4_4s)                 			# Stan QuapModel
 
 # ╔═╡ bb98768c-2861-11eb-2d79-29c05cf7320b
-quap4_4s = Particles(q4_4s)          # Samples from a QuapModel (Particles)
+Particles(4000, q4_4s.distr)          			# Samples from a QuapModel (Particles)
 
 # ╔═╡ bb990b7e-2861-11eb-0df7-13c6c6413b4b
 begin
-	quap4_4s_df = sample(q4_4s)			# DataFrame with samples
-	first(quap4_4s_df, 10)				# First 10 rows
+	quap4_4s_df = sample(q4_4s)				# DataFrame with samples
+	first(quap4_4s_df, 10)					# First 10 rows
 end
 
 # ╔═╡ bba94750-2861-11eb-0a53-99ef01630bb2
@@ -89,7 +89,7 @@ pred4_4s_df = stan_generate_quantities(m4_4s, 1)		# Use draws of chain 1 to simu
 begin
 	(ytilde, parameters) = read_generated_quantities(m4_4s)		# Read the generated quantities
 	pred4_4s_df2 = DataFrame(ytilde[:, :, 1], parameters)		# Convert to a DataFrame
-	Text(precis(pred4_4s_df2; io=String))						# Show summary
+	PRECIS(pred4_4s_df2)										# Show summary
 end
 
 # ╔═╡ 4f20e764-2861-11eb-036a-89b36686b6e4

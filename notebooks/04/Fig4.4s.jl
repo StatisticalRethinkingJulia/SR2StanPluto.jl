@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.10
+# v0.12.12
 
 using Markdown
 using InteractiveUtils
@@ -111,7 +111,7 @@ begin
 	a2d = hcat(samples[:, :mu], samples[:, :sigma])
 	a3d = reshape(a2d, (size(a2d, 1), size(a2d, 2), 1))
 	chn = convert_a3d(a3d, ["mu", "sigma"], Val(:mcmcchains); start=1)
-	Text(sprint(show, "text/plain", chn))
+	CHNS(chn)
 end
 
 # ╔═╡ 7aa6ebee-fb58-11ea-18e2-5dad90457b46
@@ -120,7 +120,7 @@ md"##### hpd regions."
 # ╔═╡ a91331ac-fb5a-11ea-30f1-17727fb4b4e3
 begin
 	bnds = MCMCChains.hpd(chn)
-	Text(sprint(show, "text/plain", bnds))
+	HPD(chn)
 end
 
 # ╔═╡ a9138058-fb5a-11ea-107f-49a1e879a358

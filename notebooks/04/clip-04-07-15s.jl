@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.10
+# v0.12.12
 
 using Markdown
 using InteractiveUtils
@@ -42,7 +42,7 @@ describe(d, :all)
 md"### snippet 4.9"
 
 # ╔═╡ 8efcd538-f863-11ea-1677-111b9890814e
-Text(precis(d; io=String))
+PRECIS(d)
 
 # ╔═╡ 267d089e-f826-11ea-1788-a3cf9d04a192
 md"### snippet 4.10"
@@ -63,7 +63,7 @@ begin
 end
 
 # ╔═╡ 26a5dfa8-f826-11ea-0c29-d57b72e30315
-Text(precis(df; io=String))
+PRECIS(df)
 
 # ╔═╡ 26ae2848-f826-11ea-00f0-77f23ed3ccf3
 md"##### Our model:"
@@ -153,7 +153,7 @@ df2 = DataFrame(
 	prior_height_100=prior_height_100);
 
 # ╔═╡ 2763c7ac-f826-11ea-13ce-61b6a5ee2379
-precis(df2)
+PRECIS(df2)
 
 # ╔═╡ 276f9e94-f826-11ea-2421-218735527bc2
 md"##### On to Stan."
@@ -226,7 +226,7 @@ md"##### Read in the samples and show a chain summary."
 # ╔═╡ dc3a5122-f82c-11ea-1eff-c745d65ab11b
 if success(rc4_1s)
 	chns4_1s = read_samples(m4_1s; output_format=:mcmcchains)
-	Text(sprint(show, "text/plain", chns4_1s))
+	CHNS(chns4_1s)
 end
 
 # ╔═╡ dc3af532-f82c-11ea-3212-f1b3c852513b

@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.10
+# v0.12.12
 
 using Markdown
 using InteractiveUtils
@@ -26,7 +26,7 @@ begin
 end
 
 # ╔═╡ bf92904e-fb7d-11ea-3945-0768960719f4
-Text(precis(df; io=String))
+PRECIS(df)
 
 # ╔═╡ bf932126-fb7d-11ea-3b65-5b36bcc7ac03
 md"##### Define the Stan language model."
@@ -98,11 +98,13 @@ md"### snippet 4.44"
 # ╔═╡ bfe69b8a-fb7d-11ea-10e6-150a3c3ef3eb
 if success(rc4_3s)
 
-	quap4_3s = quap(post4_3s)
+	q4_3s = quap(m4_3s)
+	quap4_3s_df = sample(q4_3s)
+	PRECIS(quap4_3s_df)
 end
 
 # ╔═╡ bfee7d82-fb7d-11ea-21a3-651b8574029b
-plot(plot(quap4_3s.alpha, lab="alpha"), plot(quap4_3s.beta, lab="beta"), layout=(2, 1))
+plot(plot(quap4_3s_df.alpha, lab="alpha"), plot(quap4_3s_df.beta, lab="beta"), layout=(2, 1))
 
 # ╔═╡ bff6b6d2-fb7d-11ea-3ea8-e5d61fa1ebf7
 md"## End of clip-04-37-44s.jl"

@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.10
+# v0.12.12
 
 using Markdown
 using InteractiveUtils
@@ -73,7 +73,7 @@ rc3_1s = stan_sample(m3_1s, data=m3_1_data);
 # ╔═╡ 4f06f9e0-f36d-11ea-3bcf-51b2ce61f1a5
 if success(rc3_1s)
 	chn = read_samples(m3_1s; output_format=:mcmcchains)
-	Text(sprint(show, "text/plain", chn))
+	CHNS(chn)
 end
 
 # ╔═╡ 4f268cc4-f36d-11ea-2311-817925108b74
@@ -91,7 +91,7 @@ end
 md"##### Look at area of hpd."
 
 # ╔═╡ 4f1b93dc-f36d-11ea-1b30-f7529e8874e3
-Text(sprint(show, "text/plain", MCMCChains.hpd(chn)))
+HPD(chn)
 
 # ╔═╡ 4f2f785c-f36d-11ea-3049-4ddfd1351684
 md"## End of clip-03-10s.jl"
