@@ -50,7 +50,6 @@ rc4_3s = stan_sample(m4_3s, data=m4_3_data)
 
 if success(rc4_3s)
   q4_3s = quap(m4_3s);                 # Stan QuapModel
-  quap4_3s = Particles(q4_3s)          # Samples from a QuapModel
   quap4_3s_df = sample(q4_3s)          # DataFrame with quap samples
   precis(m4_3s)
   precis(quap4_3s_df)

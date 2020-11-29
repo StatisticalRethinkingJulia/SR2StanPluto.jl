@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.10
+# v0.12.14
 
 using Markdown
 using InteractiveUtils
@@ -12,7 +12,6 @@ begin
 	@quickactivate "StatisticalRethinkingStan"
 	using StanSample
 	using StatisticalRethinking
-	using GLM
 end
 
 # ╔═╡ 55e7d3f6-fd40-11ea-14c5-21a0ef390e6d
@@ -127,7 +126,7 @@ md"## End of clip-05-19-24s.jl"
 # ╟─5618ec0c-fd40-11ea-3a0f-85fb3e33f1b1
 # ╠═5621e8fc-fd40-11ea-2f52-095b7196c40c
 # ╠═56236592-fd40-11ea-2be2-b9b04f0ce30c
-# ╠═5631855a-fd40-11ea-173a-a187c5976832
+# ╟─5631855a-fd40-11ea-173a-a187c5976832
 # ╠═56339584-fd40-11ea-3c75-4f679d500b1c
 # ╠═563b3f8c-fd40-11ea-1d4b-3fc4eec893fa
 # ╟─56426262-fd40-11ea-22a7-5bbc6089cb07

@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.10
+# v0.12.13
 
 using Markdown
 using InteractiveUtils
@@ -33,8 +33,11 @@ DMA_dag_1 = DAG("DMA_dag1", DMA_1)
 begin
 	fname1 = joinpath(mktempdir(), "DMA_dag_1.dot")
 	to_graphviz(DMA_dag_1, fname1)
-	Sys.isapple() && run(`open -a GraphViz.app $(fname1)`)
-end;
+	Text(read(fname1, String))
+end
+
+# ╔═╡ d38bfda6-3106-11eb-3df8-9b9747437288
+Sys.isapple() && run(`open -a GraphViz.app $(fname1)`)
 
 # ╔═╡ 36ca0908-01d7-11eb-2783-bb2f25bd2f17
 md"### snippet 5.9"
@@ -66,14 +69,17 @@ DMA_dag_2 = DAG("DMA_dag_2", DMA_2)
 begin
 	fname2 = joinpath(mktempdir(), "DMA_dag_2.dot")
 	to_graphviz(DMA_dag_2, fname2)
-	Sys.isapple() && run(`open -a GraphViz.app $(fname2)`)
-end;
+	Text(read(fname2, String))
+end
+
+# ╔═╡ 25e479d4-3107-11eb-3912-2fb85b82743f
+Sys.isapple() && run(`open -a GraphViz.app $(fname2)`);
 
 # ╔═╡ 18f56d12-fd10-11ea-02a2-c77de8c1416b
 Text(pluto_string(basis_set(DMA_dag_2)))
 
 # ╔═╡ f199e5a2-01d5-11eb-3b15-95701444ac4d
-md"##### `DMA_dag_2` has 1 testable conditional independence (:d and :m are independent after conditioning on :a). Otherwise all pairs of variables are associated"
+md"##### `DMA_dag_2` has 1 testable conditional independence (:d and :m are independent after conditioning on :a). Otherwise all pairs of variables are associated."
 
 # ╔═╡ 2dd8856a-fd04-11ea-1486-2f3c7dd650bb
 adjustment_sets(DMA_dag_2, :a, :d)
@@ -92,6 +98,7 @@ md"## End of clip-05-07-09s.jl"
 # ╠═2d9c5a52-fd04-11ea-3ea7-c1990f74f046
 # ╠═2da77b08-fd04-11ea-2ed1-adedc0ada52b
 # ╠═2dabbff6-fd04-11ea-1990-abf87ec712da
+# ╠═d38bfda6-3106-11eb-3df8-9b9747437288
 # ╟─36ca0908-01d7-11eb-2783-bb2f25bd2f17
 # ╠═2db49e3c-fd04-11ea-2343-0d29f51022cc
 # ╟─a8f18662-01d4-11eb-01d1-197483e27bd0
@@ -101,6 +108,7 @@ md"## End of clip-05-07-09s.jl"
 # ╠═2dbfc582-fd04-11ea-2086-e1f761ff9365
 # ╠═2dc0543e-fd04-11ea-39c9-6d3da3587f12
 # ╠═2dcccbba-fd04-11ea-104d-797e2b94ebbb
+# ╠═25e479d4-3107-11eb-3912-2fb85b82743f
 # ╠═18f56d12-fd10-11ea-02a2-c77de8c1416b
 # ╟─f199e5a2-01d5-11eb-3b15-95701444ac4d
 # ╠═2dd8856a-fd04-11ea-1486-2f3c7dd650bb

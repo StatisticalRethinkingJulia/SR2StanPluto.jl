@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.10
+# v0.12.14
 
 using Markdown
 using InteractiveUtils
@@ -75,17 +75,23 @@ end
 
 # ╔═╡ d2fade12-fdc0-11ea-33a5-fb6aea0df159
 if success(rc5_8s)
-	quap5_8s = quap(post5_8s_df)
+	q5_8s = quap(m5_8s)
+end
+
+# ╔═╡ 6a3e68b2-31a0-11eb-0420-cfa73a6e8f35
+begin
+	quap5_8s_df = sample(q5_8s)
+	PRECIS(quap5_8s_df)
 end
 
 # ╔═╡ d30451e0-fdc0-11ea-2c62-9f4cfd82f8fd
 if success(rc5_8s)
   plot(title="Densities by sex")
-  density!(df_m[:, :height], lab="Male")
-  density!(df_f[:, :height], lab="Female")
+  density!(df_m.height, lab="Male")
+  density!(df_f.height, lab="Female")
   vline!([mean(part5_8s[Symbol("a.1")])], lab="Female mean estimate")
   vline!([mean(part5_8s[Symbol("a.2")])], lab="Male mean estimate")
-  vline!([mean(quap5_8s[Symbol("a.2")])], lab="Male (quap) mean estimate")
+  vline!([mean(quap5_8s_df[:, Symbol("a.2")])], lab="Male (quap) mean estimate")
 end
 
 # ╔═╡ d304f5a0-fdc0-11ea-2651-4db63a66bd53
@@ -102,5 +108,6 @@ md"## End of clip-05-44s.jl"
 # ╠═d2eac996-fdc0-11ea-0ab9-09ab8a1bcdca
 # ╠═d2f648e8-fdc0-11ea-11a6-8d47151362d8
 # ╠═d2fade12-fdc0-11ea-33a5-fb6aea0df159
+# ╠═6a3e68b2-31a0-11eb-0420-cfa73a6e8f35
 # ╠═d30451e0-fdc0-11ea-2c62-9f4cfd82f8fd
 # ╟─d304f5a0-fdc0-11ea-2651-4db63a66bd53

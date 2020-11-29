@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.10
+# v0.12.14
 
 using Markdown
 using InteractiveUtils
@@ -28,7 +28,7 @@ begin
 end;
 
 # ╔═╡ 9fc481be-fd1c-11ea-24fc-b5ee354e8434
-Text(precis(df; io=String))
+PRECIS(df)
 
 # ╔═╡ e7c914b2-fd1b-11ea-3cf6-2bf799ff7370
 stan5_4_RS = "

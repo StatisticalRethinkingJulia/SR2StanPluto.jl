@@ -40,7 +40,6 @@ if success(rc4_2s)
   chns4_2s = read_samples(m4_2s; output_format=:mcmcchains)
   chns4_2s
   q4_2s = quap(m4_2s);                 # Stan QuapModel
-  quap4_2s = Particles(q4_2s)          # Samples from a QuapModel (Particles)
   quap4_2s_df = sample(q4_2s)          # DataFrame with samples
 end
 

@@ -43,7 +43,7 @@ Select a notebook in the `open a file` entry box, e.g. type `./` and step to `./
 
 ## Usage
 
-Note: *StatisticalRethinkingStan requires StatisticalRethinking.jl v 3.0.0.*
+Note: *StatisticalRethinkingStan v1.1 requires StatisticalRethinking.jl v 3.1.*
 
 StatisticalRethinkingStan.jl is a DrWatson project, with some added/re-purposed subdirectories:
 

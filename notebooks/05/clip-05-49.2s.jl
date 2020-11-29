@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.10
+# v0.12.14
 
 using Markdown
 using InteractiveUtils
@@ -62,7 +62,7 @@ begin
 end
 
 # ╔═╡ e61eadb8-fdc3-11ea-19bc-e30e128c1dbb
-success(rc5_9s) && quap(post5_9s_df)
+success(rc5_9s) && quap(m5_9s)
 
 # ╔═╡ e62ae894-fdc3-11ea-3de4-2b3cce9dd0bb
 rethinking_result = "

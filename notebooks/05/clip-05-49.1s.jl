@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.10
+# v0.12.14
 
 using Markdown
 using InteractiveUtils
@@ -36,8 +36,8 @@ begin
 	  0.91, 0.92, 0.80, 0.46, 0.71, 0.71, 0.73, 0.68, 0.72,
 	  0.97, 0.79, 0.84, 0.48, 0.62, 0.51, 0.54, 0.49, 0.53, 0.48, 0.55, 0.71]
 
-	df2=DataFrame(:clade_id => c_id, :K => kcal_per_g)
-end;
+	PRECIS(DataFrame(:clade_id => c_id, :K => kcal_per_g))
+end
 
 # ╔═╡ 5ffa4cfc-fdc2-11ea-0dd3-659a65ad4949
 m5_9 = "
