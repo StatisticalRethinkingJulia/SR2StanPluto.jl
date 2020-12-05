@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.11
+# v0.12.16
 
 using Markdown
 using InteractiveUtils
@@ -82,7 +82,7 @@ success(rc6_5s) && s6_5s
 md"### Snippet 6.11"
 
 # ╔═╡ 0f5da062-fea8-11ea-218b-b90a9e3f07ca
-pairsplot(df, [:kcal_per_g, :perc_fat, :perc_lactose], "")
+pairsplot(df, [:kcal_per_g, :perc_fat, :perc_lactose])
 
 # ╔═╡ 0f64d190-fea8-11ea-057c-83a01a41598d
 md"### Snippet 6.12"

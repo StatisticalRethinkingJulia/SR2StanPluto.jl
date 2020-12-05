@@ -39,11 +39,11 @@ md"## Intro-stan-04s.jl"
 
 # ╔═╡ 8103503a-f20f-11ea-0039-3df29edd62f2
 begin
-	m1_1s = SampleModel("m1.1s", stan1_1)     # Define Stan language mdeol
-	N = 25                              # 25 experiments
-	d = Binomial(9, 0.66)               # 9 tosses (simulate 2/3 is water)
-	k = rand(d, N)                      # Simulate 15 trial results
-	n = 9                               # Each experiment has 9 tosses
+	m1_1s = SampleModel("m1.1s", stan1_1)	# Define Stan language mdeol
+	N = 25                              	# 25 experiments
+	d = Binomial(9, 0.66)               	# 9 tosses (simulate 2/3 is water)
+	k = rand(d, N)                      	# Simulate 15 trial results
+	n = 9                               	# Each experiment has 9 tosses
 	m1_1_data = Dict("N" => N, "n" => n, "k" => k)
 	rc1_1s = stan_sample(m1_1s, data=m1_1_data)
 	if success(rc1_1s)
@@ -57,7 +57,7 @@ Text(precis(post1_1s_df; io = String))
 # ╔═╡ 36063062-f211-11ea-39da-c5ef2ce3c3ab
 begin
 	sm_opt = OptimizeModel("m1.1s", stan1_1)
-	rc_opt = stan_optimize(sm_opt, data=m1_1_data)
+	rc_opt = stan_optimize(sm_opt; data=m1_1_data)
 	optim_stan, cnames = read_optimize(sm_opt)
 	optim_stan
 end
