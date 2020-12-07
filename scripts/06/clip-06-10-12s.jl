@@ -67,7 +67,7 @@ success(rc6_5s) && s6_5s
 
 md"### Snippet 6.11"
 
-pairsplot(df, [:kcal_per_g, :perc_fat, :perc_lactose], "")
+pairsplot(df, [:kcal_per_g, :perc_fat, :perc_lactose])
 
 md"### Snippet 6.12"
 

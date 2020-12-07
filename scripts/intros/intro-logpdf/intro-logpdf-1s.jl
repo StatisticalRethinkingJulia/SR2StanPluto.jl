@@ -47,7 +47,8 @@ heightsdata = Dict("N" => length(df2[:, :height]), "h" =>df2.height);
 rc = stan_sample(sm, data=heightsdata);
 
 if success(rc)
-  chn = read_samples(sm; output_format=:mcmcchains)
+ 	chns = read_samples(sm; output_format=:mcmcchains)
+	CHNS(chns)
 end
 
 md"## End intro-logpdf-1s.jl"

@@ -6,6 +6,7 @@ using Pkg, DrWatson
 
 begin
 	@quickactivate "StatisticalRethinkingStan"
+	using StanSample
 	using StatisticalRethinking
 end
 
@@ -91,7 +92,7 @@ begin
 	# quadratic approximation using StatisticalRethinking.jl quap()
 
 	df = DataFrame(:toss => samples)
-	q = quap(df)
+	q = sample(quap(df))
 	figs[3] = plot( x, pdf.(Beta( w+1 , n-w+1 ) , x ), xlims=(-0.5, 1.0),
 	  lab="Conjugate solution", leg=:topleft)
 	plot!( figs[3], x, pdf.(Normal(mean(q.toss), std(q.toss) ) , x ),

@@ -72,7 +72,7 @@ end
 if success(rc5_0s)
 	q5_0s = quap(m5_0s)
 	quap5_0s_df = sample(q5_0s)
-	Text(precis(quap5_0s_df; io=String))
+	PRECIS(quap5_0s_df)
 end
 
 md"##### Figure out which annotations we want."

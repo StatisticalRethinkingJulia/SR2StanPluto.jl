@@ -24,8 +24,10 @@ DMA_dag_1 = DAG("DMA_dag1", DMA_1)
 begin
 	fname1 = joinpath(mktempdir(), "DMA_dag_1.dot")
 	to_graphviz(DMA_dag_1, fname1)
-	Sys.isapple() && run(`open -a GraphViz.app $(fname1)`)
-end;
+	Text(read(fname1, String))
+end
+
+Sys.isapple() && run(`open -a GraphViz.app $(fname1)`)
 
 md"### snippet 5.9"
 
@@ -48,12 +50,14 @@ DMA_dag_2 = DAG("DMA_dag_2", DMA_2)
 begin
 	fname2 = joinpath(mktempdir(), "DMA_dag_2.dot")
 	to_graphviz(DMA_dag_2, fname2)
-	Sys.isapple() && run(`open -a GraphViz.app $(fname2)`)
-end;
+	Text(read(fname2, String))
+end
+
+Sys.isapple() && run(`open -a GraphViz.app $(fname2)`);
 
 Text(pluto_string(basis_set(DMA_dag_2)))
 
-md"##### `DMA_dag_2` has 1 testable conditional independence (:d and :m are independent after conditioning on :a). Otherwise all pairs of variables are associated"
+md"##### `DMA_dag_2` has 1 testable conditional independence (:d and :m are independent after conditioning on :a). Otherwise all pairs of variables are associated."
 
 adjustment_sets(DMA_dag_2, :a, :d)
 

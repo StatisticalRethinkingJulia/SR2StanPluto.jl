@@ -58,16 +58,16 @@ end;
 
 if success(rc4_4s)
   chns4_4s = read_samples(m4_4s; output_format=:mcmcchains)
-  Text(precis(DataFrame(chns4_4s); io=String))
+  Particles(chns4_4s)
 end
 
-q4_4s = quap(m4_4s);                 # Stan QuapModel
+q4_4s = quap(m4_4s)                 			# Stan QuapModel
 
-quap4_4s = Particles(q4_4s)          # Samples from a QuapModel (Particles)
+Particles(4000, q4_4s.distr)          			# Samples from a QuapModel (Particles)
 
 begin
-	quap4_4s_df = sample(q4_4s)			# DataFrame with samples
-	first(quap4_4s_df, 10)				# First 10 rows
+	quap4_4s_df = sample(q4_4s)				# DataFrame with samples
+	first(quap4_4s_df, 10)					# First 10 rows
 end
 
 pred4_4s_df = stan_generate_quantities(m4_4s, 1)		# Use draws of chain 1 to simulate predictions
@@ -75,7 +75,7 @@ pred4_4s_df = stan_generate_quantities(m4_4s, 1)		# Use draws of chain 1 to simu
 begin
 	(ytilde, parameters) = read_generated_quantities(m4_4s)		# Read the generated quantities
 	pred4_4s_df2 = DataFrame(ytilde[:, :, 1], parameters)		# Convert to a DataFrame
-	Text(precis(pred4_4s_df2; io=String))						# Show summary
+	PRECIS(pred4_4s_df2)										# Show summary
 end
 
 md"## End of m4.4s"

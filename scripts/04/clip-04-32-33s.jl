@@ -54,7 +54,7 @@ end;
 
 quap4_2s_df = sample(q4_2s);
 
-Text(precis(quap4_2s_df; io=String))
+PRECIS(quap4_2s_df)
 
 md"### snippet 4.32"
 

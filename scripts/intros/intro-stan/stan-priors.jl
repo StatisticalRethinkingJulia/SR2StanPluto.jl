@@ -38,15 +38,15 @@ model {
 }
 ";
 
-m4_2s = SampleModel("p4_2s", m4_2);
+begin
+	m4_2s = SampleModel("p4_2s", m4_2)
+	prior4_2_data = Dict("N" => 0, "h" => [])
+	rc4_2s = stan_sample(m4_2s; data=prior4_2_data)
+end
 
-prior4_2_data = Dict("N" => 0, "h" => []);
-
-rc = stan_sample(m4_2s; data=prior4_2_data);
-
-if success(rc)
+if success(rc4_2s)
   priors4_2s = read_samples(m4_2s; output_format=:dataframe)
-  Text(precis(priors4_2s; io=String))
+  PRECIS(priors4_2s)
 end
 
 md"## End of stan-priors.jl"

@@ -106,14 +106,14 @@ begin
 	a2d = hcat(samples[:, :mu], samples[:, :sigma])
 	a3d = reshape(a2d, (size(a2d, 1), size(a2d, 2), 1))
 	chn = StanSample.convert_a3d(a3d, ["mu", "sigma"], Val(:mcmcchains); start=1)
-	Text(sprint(show, "text/plain", chn))
+	CHNS(chn)
 end
 
 md"##### Show hpd regions."
 
 begin
 	bnds = MCMCChains.hpd(chn)
-	Text(sprint(show, "text/plain", bnds))
+	HPD(chn)
 end
 
 md"### Snippet 4.21"

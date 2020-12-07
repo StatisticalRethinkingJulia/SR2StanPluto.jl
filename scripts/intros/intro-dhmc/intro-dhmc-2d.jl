@@ -6,9 +6,9 @@ using Pkg, DrWatson
 
 begin
   @quickactivate "StatisticalRethinkingStan"
-  using StatisticalRethinking, DynamicHMC
+  using DynamicHMC
   using LogDensityProblems, TransformVariables
-  using DynamicHMC, Parameters
+  using DynamicHMC
   using StatisticalRethinking
 end
 
@@ -75,6 +75,8 @@ md"##### We use the transformation to obtain the posterior from the chain."
 
 posterior = P.transformation.(results.chain)
 
+typeof(posterior)
+
 md"##### Extract the posterior means,"
 
 begin
@@ -91,7 +93,8 @@ end
 begin
 	pnames = ["muy", "mux"]
 	sections = Dict(:parameters =>pnames,)
-	chn = create_mcmcchains(a3d, pnames, sections, start=1)
+	chn = MCMCChains.Chains(a3d, pnames, sections, start=1)
+	CHNS(chn)
 end
 
 
@@ -115,8 +118,6 @@ begin
 	samples = draw_n_samples(model1, ∇P; n_samples=200);
 	mean(samples, dims=1)
 end
-
-mean(chn)
 
 md"## End of intro-dhmc-2d.jl"
 

@@ -26,7 +26,7 @@ md"### snippet 4.9"
 
 md"##### Show some statistics."
 
-Text(precis(df1; io=String))
+PRECIS(df1)
 
 md"### snippet 4.10"
 

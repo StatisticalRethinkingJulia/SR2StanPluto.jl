@@ -76,7 +76,7 @@ md"### Snippet 4.28 & 4.29"
 begin
 	q4_1s = quap(m4_1s)
 	quap4_1s_df = sample(q4_1s)
-	Text(precis(quap4_1s_df; io=String))
+	PRECIS(quap4_1s_df)
 end
 
 md"# End of clip-04-26-30s.jl"

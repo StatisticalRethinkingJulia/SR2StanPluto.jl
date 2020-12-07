@@ -16,7 +16,7 @@ md"## Intro-stan-03s.jl"
 md"##### Define the Stan language model."
 
 begin
-	m1_1 = "
+	stan1_1 = "
 	// Inferring a rate
 	data {
 	  int N;
@@ -37,7 +37,7 @@ end;
 
 md"##### Create an OptimizeModel"
 
-sm = OptimizeModel("m1.1s", m1_1);
+m1_1s = OptimizeModel("m1.1s", stan1_1);
 
 begin
 	N = 25                              # 25 experiments
@@ -47,12 +47,12 @@ begin
 	m1_1_data = Dict("N" => N, "n" => n, "k" => k)
 end;
 
-rc = stan_optimize(sm, data=m1_1_data);
+rc1_1s = stan_optimize(m1_1s, data=m1_1_data);
 
 md"##### Describe the optimize result"
 
-if success(rc)
-  optim_stan, cnames = read_optimize(sm)
+if success(rc1_1s)
+  optim_stan, cnames = read_optimize(m1_1s)
   optim_stan
 end
 

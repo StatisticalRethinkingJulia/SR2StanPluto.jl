@@ -17,29 +17,30 @@ begin
 	x = 0:0.01:1
 
 	for (j, i) in enumerate([1, 2, 4])
-	  w = i * 6
-	  n = i * 9
+		  w = i * 6
+		  n = i * 9
 
-	  p_grid = range(0, stop=1, length=1000);
-	  prior = ones(length(p_grid));
-	  likelihood = [pdf(Binomial(n, p), w) for p in p_grid];
-	  posterior = likelihood .* prior;
-	  posterior = posterior / sum(posterior);
+		  p_grid = range(0, stop=1, length=1000);
+		  prior = ones(length(p_grid));
+		  likelihood = [pdf(Binomial(n, p), w) for p in p_grid];
+		  posterior = likelihood .* prior;
+		  posterior = posterior / sum(posterior);
 
-	  N = 10000
-	  samples = sample(p_grid, Weights(posterior), N);
+		  N = 10000
+		  samples = sample(p_grid, Weights(posterior), N);
 
-	  # Analytical calculation
+		  # Analytical calculation
 
-	  figs[j] = plot( x, pdf.(Beta( w+1 , n-w+1 ) , x ), xlims=(0.0, 1.0), 
-		lab="exact", leg=:topleft, title="n = $n")
+		  figs[j] = plot( x, pdf.(Beta( w+1 , n-w+1 ) , x ), xlims=(0.0, 1.0), 
+			lab="exact", leg=:topleft, title="n = $n")
 
-	  # Quadratic approximation using StatisticalRethinking.jl quap()
+		  # Quadratic approximation using StatisticalRethinking.jl quap()
 
-	  df = DataFrame(:toss => samples)
-	  q = quap(df)
-	  plot!( figs[j], x, pdf.(Normal(mean(q.toss), std(q.toss) ) , x ),
-		lab="quap")
+		  df = DataFrame(:toss => samples)
+		  q = quap(df)
+		  q_df = sample(q)
+		  plot!( figs[j], x, pdf.(Normal(mean(q_df.toss), std(q_df.toss) ) , x ),
+			lab="quap")
 	end
 end
 

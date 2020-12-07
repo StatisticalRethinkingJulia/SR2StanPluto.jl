@@ -54,7 +54,7 @@ begin
 	part5_9s = Particles(post5_9s_df)
 end
 
-success(rc5_9s) && quap(post5_9s_df)
+success(rc5_9s) && quap(m5_9s)
 
 rethinking_result = "
        mean   sd  5.5% 94.5% n_eff Rhat4

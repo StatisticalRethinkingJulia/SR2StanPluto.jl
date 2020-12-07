@@ -7,7 +7,6 @@ using Pkg, DrWatson
 begin
 	@quickactivate "StatisticalRethinkingStan"
 	using StanSample
-	using GLM
 	using StatisticalRethinking
 end
 

@@ -6,7 +6,7 @@ using Pkg, DrWatson
 
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using DynamicHMC, Parameters
+	using Random, DynamicHMC, Distributions
 	using TransformVariables, LogDensityProblems
 	using StatisticalRethinking
 end
@@ -51,12 +51,12 @@ begin
 	p = clip_9_3_model(y, x)
 	θ = (muy = 0.0, mux=0.0)
 	p(θ)
-end
+end;
 
 md"##### Write a function to return properly dimensioned transformation."
 
 problem_transformation(p::clip_9_3_model) =
-    as((muy = asℝ, mux = asℝ))
+    as((muy = asℝ, mux = asℝ));
 
 md"##### Wrap the problem with a transformation, then use Flux for the gradient."
 

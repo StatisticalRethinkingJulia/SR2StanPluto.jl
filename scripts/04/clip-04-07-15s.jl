@@ -28,7 +28,7 @@ describe(d, :all)
 
 md"### snippet 4.9"
 
-Text(precis(d; io=String))
+PRECIS(d)
 
 md"### snippet 4.10"
 
@@ -43,7 +43,7 @@ begin
 	Particles(df)
 end
 
-Text(precis(df; io=String))
+PRECIS(df)
 
 md"##### Our model:"
 
@@ -115,7 +115,7 @@ df2 = DataFrame(
 	prior_height_20=prior_height_20,
 	prior_height_100=prior_height_100);
 
-precis(df2)
+PRECIS(df2)
 
 md"##### On to Stan."
 
@@ -175,7 +175,7 @@ md"##### Read in the samples and show a chain summary."
 
 if success(rc4_1s)
 	chns4_1s = read_samples(m4_1s; output_format=:mcmcchains)
-	Text(sprint(show, "text/plain", chns4_1s))
+	CHNS(chns4_1s)
 end
 
 md"##### Plot the sampling trace."

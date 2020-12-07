@@ -19,7 +19,7 @@ begin
 	df.weight_c = df.weight .- mean_weight
 end
 
-Text(precis(df; io=String))
+PRECIS(df)
 
 md"##### Define the Stan language model."
 
@@ -78,10 +78,12 @@ md"### snippet 4.44"
 
 if success(rc4_3s)
 
-	quap4_3s = quap(post4_3s)
+	q4_3s = quap(m4_3s)
+	quap4_3s_df = sample(q4_3s)
+	PRECIS(quap4_3s_df)
 end
 
-plot(plot(quap4_3s.alpha, lab="alpha"), plot(quap4_3s.beta, lab="beta"), layout=(2, 1))
+plot(plot(quap4_3s_df.alpha, lab="alpha"), plot(quap4_3s_df.beta, lab="beta"), layout=(2, 1))
 
 md"## End of clip-04-37-44s.jl"
 

@@ -21,7 +21,7 @@ begin
 	scale!(df, [:R, :S, :Y])
 end;
 
-Text(precis(df; io=String))
+PRECIS(df)
 
 stan5_4_RS = "
 data {

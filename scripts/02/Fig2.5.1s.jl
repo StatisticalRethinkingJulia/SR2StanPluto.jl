@@ -59,7 +59,7 @@ begin
 	rc2_0s = stan_sample(m2_0s, data=m2_0_data)
 	if success(rc2_0s)
 		post2_0s_df = read_samples(m2_0s; output_format=:dataframe)
-		Text(precis(post2_0s_df; io=String))
+		PRECIS(post2_0s_df)
 	end
 end
 

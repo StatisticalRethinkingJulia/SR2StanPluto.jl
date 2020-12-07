@@ -63,16 +63,21 @@ if success(rc5_8s)
 end
 
 if success(rc5_8s)
-	quap5_8s = quap(post5_8s_df)
+	q5_8s = quap(m5_8s)
+end
+
+begin
+	quap5_8s_df = sample(q5_8s)
+	PRECIS(quap5_8s_df)
 end
 
 if success(rc5_8s)
   plot(title="Densities by sex")
-  density!(df_m[:, :height], lab="Male")
-  density!(df_f[:, :height], lab="Female")
+  density!(df_m.height, lab="Male")
+  density!(df_f.height, lab="Female")
   vline!([mean(part5_8s[Symbol("a.1")])], lab="Female mean estimate")
   vline!([mean(part5_8s[Symbol("a.2")])], lab="Male mean estimate")
-  vline!([mean(quap5_8s[Symbol("a.2")])], lab="Male (quap) mean estimate")
+  vline!([mean(quap5_8s_df[:, Symbol("a.2")])], lab="Male (quap) mean estimate")
 end
 
 md"## End of clip-05-44s.jl"

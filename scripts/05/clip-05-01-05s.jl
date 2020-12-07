@@ -55,7 +55,7 @@ begin
 	success(rc5_1s) && (post5_1s_df = read_samples(m5_1s; output_format=:dataframe))
 end;
 
-Text(precis(post5_1s_df; io=String))
+PRECIS(post5_1s_df)
 
 md"### snippet 5.5"
 

@@ -36,7 +36,7 @@ chn = MCMCChains.Chains(reshape(samples, N, 1, 1), [:p]);
 
 md"##### Describe the chain."
 
-Text(sprint(show, "text/plain", chn))
+CHNS(chn)
 
 md"##### Plot the chain."
 

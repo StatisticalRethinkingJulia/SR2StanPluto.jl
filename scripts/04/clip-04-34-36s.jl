@@ -19,7 +19,7 @@ begin
 	df = filter(row -> row[:age] >= 18, df);
 end;
 
-m4_1 = "
+stan4_1 = "
 // Inferring the mean and std
 data {
   int N;
@@ -42,7 +42,7 @@ model {
 md"### Snippet 4.31"
 
 begin
-	m4_1s = SampleModel("m4_1", m4_1)
+	m4_1s = SampleModel("m4_1", stan4_1)
 	m4_1_data = Dict("N" => length(df.height), "h" => df.height)
 	rc4_1s = stan_sample(m4_1s, data=m4_1_data)
 	if success(rc4_1s)
@@ -55,23 +55,23 @@ md"##### Stan quap estimate."
 begin
 	dfa4_1s = read_samples(m4_1s; output_format=:dataframe)
 	q4_1s = quap(m4_1s)
-	quap4_1s = sample(q4_1s)
+	quap4_1s_df = sample(q4_1s)
 end;
 
 md"##### Check equivalence of Stan samples and Particles."
 
 begin
 	mu_range = 152.0:0.01:157.0
-	plot(mu_range, ecdf(sample(dfa4_1s.mu, 10000))(mu_range),
+	plot(mu_range, ecdf(sample(quap4_1s_df.mu, 10000))(mu_range),
 		xlabel="ecdf", ylabel="mu", lab="Stan samples")
 end
 
 md"##### Sampling from quap result:"
 
 begin
-	d = Normal(mean(quap4_1s.mu), std(quap4_1s.mu))
+	d = Normal(mean(quap4_1s_df.mu), std(quap4_1s_df.mu))
 	plot!(mu_range, ecdf(rand(d, 10000))(mu_range), lab="Quap samples")
-	plot!(mu_range, ecdf(quap4_1s.mu)(mu_range), lab="Particles samples")
+	plot!(mu_range, ecdf(quap4_1s_df.mu)(mu_range), lab="Particles samples")
 end
 
 begin

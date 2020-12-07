@@ -29,7 +29,7 @@ flist <- alist(
 
 md"##### This model in Stan language could be written as:"
 
-m1_1 = "
+stan1_1 = "
 // Inferring a rate
 data {
   int N;
@@ -67,7 +67,7 @@ md"###### Once the Stan language model is defined, in this case stored in the Ju
 
 md"##### 1. Create a Stanmodel object:"
 
-sm = SampleModel("m1.1s", m1_1);
+m1_1s = SampleModel("m1.1s", stan1_1);
 
 md"##### 2. Simulate the results of N repetitions of 9 tosses."
 
@@ -84,35 +84,51 @@ m1_1_data = Dict("N" => N, "n" => n, "k" => k)
 
 md"##### 4. Sample using stan_sample."
 
-rc = stan_sample(sm, data=m1_1_data);
+rc1_1s = stan_sample(m1_1s, data=m1_1_data);
 
 md"##### 5. Describe and check the results"
 
-if success(rc)
-  dfs = read_samples(sm; output_format=:dataframe)
+if success(rc1_1s)
+  post1_1s_df = read_samples(m1_1s; output_format=:dataframe)
 end;
+
+PRECIS(post1_1s_df)
 
 md"###### Sample Particles summary:"
 
-p = Particles(dfs); p
+part1_1s = read_samples(m1_1s; output_format=:particles)
 
-md"###### Quap Particles estimate:"
+md"###### Particles representation of estimate:"
 
-q = quap(dfs); q
+begin
+	q1_1s = quap(m1_1s)
+	quap1_1s_df = sample(q1_1s)
+	PRECIS(quap1_1s_df)
+end
+
+
+
+q1_1s
 
 md"##### Check the chains using MCMCChains.jl"
 
-chn = read_samples(sm; output_format=:mcmcchains)
+begin
+	chns1_1s = read_samples(m1_1s; output_format=:mcmcchains)
+	
+	# Display the chns
+	
+	CHNS(chns1_1s)
+end
 
 md"##### Plot the chains."
 
-plot(chn; seriestype=:traceplot)
+plot(chns1_1s; seriestype=:traceplot)
 
-plot(chn; seriestype=:density)
+plot(chns1_1s; seriestype=:density)
 
 md"##### Display the stansummary result"
 
-success(rc) && read_summary(sm)
+success(rc1_1s) && read_summary(m1_1s)
 
 md"## Rethinking vs. StatisticalRethinking.jl."
 
@@ -172,6 +188,17 @@ q.mu
 Examples and comparisons of different ways of computing a quap approximation can be found in `notebooks/intro-stan/intro-stan-04.jl`."
 
 
+
+md"##### As explained in the README document, the section on `Naming conventions`, another way to generate quap() samples is:
+
+```
+begin
+	q1_1s = quap(m1_1s)                # Create a Stan QuapModel object
+                                       # q1_1s.particles contains a Particle representation
+	quap1_1s_df = sample(q1_1s)
+	Text(precis(quap1_1s_df; io=String))
+end
+```"
 
 md"The increasing use of Particles to represent quap approximations is possible thanks to the package [MonteCarloMeasurements.jl](https://github.com/baggepinnen/MonteCarloMeasurements.jl). [Soss.jl](https://github.com/cscherrer/Soss.jl) and [related write-ups](https://cscherrer.github.io) introduced me to that option."
 

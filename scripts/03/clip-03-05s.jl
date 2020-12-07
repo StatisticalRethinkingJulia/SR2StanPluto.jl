@@ -65,7 +65,7 @@ end;
 
 md"##### Describe the chains."
 
-Text(sprint(show, "text/plain", chns3_5s))
+CHNS(chns3_5s)
 
 md"##### Plot the chains."
 

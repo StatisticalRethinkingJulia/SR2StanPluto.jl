@@ -39,7 +39,7 @@ md"##### Create an MCMCChains.Chains object. This Chains object has 10000 sample
 begin
 	a3d[:, 1, 1] = p
 	chns = MCMCChains.Chains(a3d, [:p])
-	Text(sprint(show, "text/plain", chns))
+	CHNS(chns)
 end
 
 md"### snippet 2.9"

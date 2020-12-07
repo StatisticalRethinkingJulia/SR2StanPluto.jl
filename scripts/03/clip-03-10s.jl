@@ -57,7 +57,7 @@ rc3_1s = stan_sample(m3_1s, data=m3_1_data);
 
 if success(rc3_1s)
 	chn = read_samples(m3_1s; output_format=:mcmcchains)
-	Text(sprint(show, "text/plain", chn))
+	CHNS(chn)
 end
 
 md"##### Plot the chains."
@@ -71,7 +71,7 @@ end
 
 md"##### Look at area of hpd."
 
-Text(sprint(show, "text/plain", MCMCChains.hpd(chn)))
+HPD(chn)
 
 md"## End of clip-03-10s.jl"
 
