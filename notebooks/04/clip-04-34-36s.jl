@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.12
+# v0.12.17
 
 using Markdown
 using InteractiveUtils
@@ -10,7 +10,7 @@ using Pkg, DrWatson
 # ╔═╡ 8b927db6-fb7a-11ea-2f69-0b162e382593
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample
+	using StanSample, StanOptimize
 	using StatisticalRethinking
 end
 
@@ -52,10 +52,10 @@ md"### Snippet 4.31"
 
 # ╔═╡ 8bb0861c-fb7a-11ea-1482-fd704f9ad02e
 begin
-	m4_1s = SampleModel("m4_1", stan4_1)
-	m4_1_data = Dict("N" => length(df.height), "h" => df.height)
-	rc4_1s = stan_sample(m4_1s, data=m4_1_data)
-	if success(rc4_1s)
+	data = Dict(:N => length(df.height), :h => df.height)
+	init = Dict(:mu => 180, :sigma => 10)
+	q4_1s, m4_1s, _ = quap("m4.1s", stan4_1; data, init)
+	if !isnothing(m4_1s)
 		part4_1s = read_samples(m4_1s; output_format=:particles)
 	end
 end
@@ -65,10 +65,10 @@ md"##### Stan quap estimate."
 
 # ╔═╡ 8bd83964-fb7a-11ea-2a5f-9b23b6992c80
 begin
-	dfa4_1s = read_samples(m4_1s; output_format=:dataframe)
-	q4_1s = quap(m4_1s)
+	post4_1s_df = read_samples(m4_1s; output_format=:dataframe)
 	quap4_1s_df = sample(q4_1s)
-end;
+	PRECIS(quap4_1s_df)
+end
 
 # ╔═╡ 8bd90fa6-fb7a-11ea-3c81-59fc91debe8b
 md"##### Check equivalence of Stan samples and Particles."
@@ -77,7 +77,10 @@ md"##### Check equivalence of Stan samples and Particles."
 begin
 	mu_range = 152.0:0.01:157.0
 	plot(mu_range, ecdf(sample(quap4_1s_df.mu, 10000))(mu_range),
+		xlabel="ecdf", ylabel="mu", lab="Quap samples")
+	plot!(mu_range, ecdf(sample(post4_1s_df.mu, 10000))(mu_range),
 		xlabel="ecdf", ylabel="mu", lab="Stan samples")
+
 end
 
 # ╔═╡ 8bf180ac-fb7a-11ea-3f23-5d0f84019beb

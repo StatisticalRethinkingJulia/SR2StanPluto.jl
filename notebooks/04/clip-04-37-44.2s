@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.12
+# v0.12.17
 
 using Markdown
 using InteractiveUtils
@@ -10,7 +10,7 @@ using Pkg, DrWatson
 # ╔═╡ 92d465d0-fb7f-11ea-09ac-dba2e8262027
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample
+	using StanSample, StanOptimize
 	using StatisticalRethinking
 end
 
@@ -53,26 +53,20 @@ model {
 }
 ";
 
-# ╔═╡ 92f0bb54-fb7f-11ea-00b6-532f65c64bae
-md"##### Define the SampleModel."
-
-# ╔═╡ 92f1673e-fb7f-11ea-012b-cfd0fe1d6343
-m4_4s = SampleModel("weights", stan4_4);
-
-# ╔═╡ 92fcc818-fb7f-11ea-0e2d-8373091c45cb
-md"##### Input data."
-
-# ╔═╡ 92fd772c-fb7f-11ea-3a82-d94e4000559f
-m4_4_data = Dict("N" => length(df.height), "height" => df.height, "weight" => df.weight_c);
-
 # ╔═╡ 930a2c6a-fb7f-11ea-0637-9f9a4f99cbae
 md"##### Sample using stan_sample."
 
-# ╔═╡ 930bd916-fb7f-11ea-229f-eb6822da124c
-rc4_4s = stan_sample(m4_4s, data=m4_4_data);
+# ╔═╡ 933be70a-fb7f-11ea-085b-1f1e155132e1
+begin
+	data = Dict(:N => length(df.height), :height => df.height, :weight => df.weight_c)
+	init = Dict(:alpha => 170.0, :beta => 2.0, :sigma => 10.0)
+	q4_4s, m4_4s, om = quap("m4.4s", stan4_4; data, init)
+	quap4_4s_df = sample(q4_4s)
+	PRECIS(quap4_4s_df)
+end
 
 # ╔═╡ 931a5b3a-fb7f-11ea-1141-5d36d9e65042
-if success(rc4_4s)
+if !isnothing(m4_4s)
 
 	# Describe the draws
 
@@ -81,7 +75,7 @@ if success(rc4_4s)
 end
 
 # ╔═╡ 931d3abc-fb7f-11ea-197e-15f7d6b229b5
-if success(rc4_4s)
+if !isnothing(m4_4s)
 
 	# Use an appended dataframe
 
@@ -93,7 +87,7 @@ end
 md"### snippet 4.37"
 
 # ╔═╡ 932c24fa-fb7f-11ea-1f58-8d2518905066
-if success(rc4_4s)
+if !isnothing(m4_4s)
 
 	# Plot regression line using means and observations
 
@@ -106,13 +100,6 @@ end
 
 # ╔═╡ 93343ef6-fb7f-11ea-1719-c53ce62d37aa
 md"### snippet 4.44"
-
-# ╔═╡ 933be70a-fb7f-11ea-085b-1f1e155132e1
-if success(rc4_4s)
-	q4_4s = quap(m4_4s)
-	quap4_4s_df = sample(q4_4s)
-	PRECIS(quap4_4s_df)
-end
 
 # ╔═╡ 93437c7e-fb7f-11ea-2fe6-6f5f2d64f110
 plot(plot(quap4_4s_df.alpha, lab="alpha"), plot(quap4_4s_df.beta, lab="beta"), layout=(2, 1))
@@ -127,17 +114,12 @@ md"# End of clip-04-37-44.2s.jl"
 # ╠═92d50a6c-fb7f-11ea-05fd-0533613f0978
 # ╟─92e3b63e-fb7f-11ea-309a-5b6db7cdab70
 # ╠═92e4747c-fb7f-11ea-0b2a-578127070b2c
-# ╟─92f0bb54-fb7f-11ea-00b6-532f65c64bae
-# ╠═92f1673e-fb7f-11ea-012b-cfd0fe1d6343
-# ╟─92fcc818-fb7f-11ea-0e2d-8373091c45cb
-# ╠═92fd772c-fb7f-11ea-3a82-d94e4000559f
 # ╟─930a2c6a-fb7f-11ea-0637-9f9a4f99cbae
-# ╠═930bd916-fb7f-11ea-229f-eb6822da124c
+# ╠═933be70a-fb7f-11ea-085b-1f1e155132e1
 # ╠═931a5b3a-fb7f-11ea-1141-5d36d9e65042
 # ╠═931d3abc-fb7f-11ea-197e-15f7d6b229b5
 # ╟─9324cee4-fb7f-11ea-3826-55a5b6621195
 # ╠═932c24fa-fb7f-11ea-1f58-8d2518905066
 # ╟─93343ef6-fb7f-11ea-1719-c53ce62d37aa
-# ╠═933be70a-fb7f-11ea-085b-1f1e155132e1
 # ╠═93437c7e-fb7f-11ea-2fe6-6f5f2d64f110
 # ╟─934badd4-fb7f-11ea-24b7-1d2740deb647

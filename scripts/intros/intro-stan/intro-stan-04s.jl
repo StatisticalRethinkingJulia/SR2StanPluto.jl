@@ -78,6 +78,10 @@ md"###### Use kernel density of Stan samples"
 begin
 	q1_1s = quap(m1_1s)
 	quap1_1s_df = sample(q1_1s)
+	PRECIS(quap1_1s_df)
+end
+
+begin
 	mu_quap = mean(quap1_1s_df.theta)
 	sigma_quap = std(quap1_1s_df.theta)
 	[mu_quap, sigma_quap]

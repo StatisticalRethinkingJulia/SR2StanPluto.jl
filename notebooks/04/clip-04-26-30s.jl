@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.12
+# v0.12.17
 
 using Markdown
 using InteractiveUtils
@@ -10,7 +10,7 @@ using Pkg, DrWatson
 # ╔═╡ 8514b000-fb5f-11ea-0f19-4131e60e5e40
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample
+	using StanSample, StanOptimize
 	using StatisticalRethinking
 end
 
@@ -50,17 +50,40 @@ model {
 }
 ";
 
-# ╔═╡ 8534f82e-fb5f-11ea-272a-5d6ffc867d60
+# ╔═╡ 855512da-fb5f-11ea-3166-39b8cbfc82d7
+md"### Snippet 4.28 & 4.29"
+
+# ╔═╡ b6f80b9c-3cc0-11eb-2dd5-2b133f397f41
+ md"##### Quadratic approximation vs. Stan samples vs. Normal distribution."
+
+# ╔═╡ 24cec984-3c27-11eb-2ff2-f79c61deccf4
 begin
-	m4_1s = SampleModel("m4_1s", stan4_1)
 	m4_1_data = Dict("N" => length(df.height), "h" => df.height)
-	rc4_1s = stan_sample(m4_1s, data=m4_1_data)
-end;
+	m4_1_init = Dict(:mu => 180.0, :sigma => 10.0)
+	q4_1s, m4_1s, om = quap("m4_1_s", stan4_1; data=m4_1_data, init=m4_1_init)
+	quap4_1s_df = sample(q4_1s)
+	PRECIS(quap4_1s_df)
+end
+
+# ╔═╡ 9e4ba502-3c2c-11eb-0e99-ad512c8ca8e4
+begin
+	post4_1s_df = read_samples(m4_1s; output_format=:dataframe)
+	e = ecdf(post4_1s_df.mu)
+	f = ecdf(quap4_1s_df.mu)
+	g = ecdf(rand(Normal(mean(post4_1s_df.mu), std(post4_1s_df.mu)), 4000))
+	r = range(minimum(e), stop=maximum(e), length=length(e.sorted_values))
+	plot(r, e(r), lab = "ECDF mu (Stan samples)", leg = :bottomright)
+	plot!(r, f(r), lab = "ECDF mu (quap approx.)")
+	plot!(r, g(r), lab = "ECDF mu (Normal distr.)")
+end
+
+# ╔═╡ 8dbed206-3cc0-11eb-05e0-2fabb5827e04
+md"##### Look at individual chains."
 
 # ╔═╡ 8542c8b2-fb5f-11ea-175b-739d60bcb414
-if success(rc4_1s)
+if !isnothing(m4_1s)
 
-	# Array od DataFrames, 1 Dataframe/chain
+	# Array of DataFrames, 1 Dataframe/chain
 	
 	dfs4_1s = read_samples(m4_1s; output_format=:dataframes)
 	figs = Vector{Plots.Plot{Plots.GRBackend}}(undef, size(dfs4_1s[1], 2))
@@ -78,19 +101,12 @@ if success(rc4_1s)
 	plot(figs..., layout=(2,1))
 end
 
+# ╔═╡ aacb8f74-3cc0-11eb-0493-8def94216dd8
+md"##### Particle summary."
+
 # ╔═╡ 855315e8-fb5f-11ea-1be3-fd3515317471
-if success(rc4_1s)
+if !isnothing(m4_1s)
 	part4_1s = read_samples(m4_1s; output_format=:particles)
-end
-
-# ╔═╡ 855512da-fb5f-11ea-3166-39b8cbfc82d7
-md"### Snippet 4.28 & 4.29"
-
-# ╔═╡ 8560d76c-fb5f-11ea-0bc6-2b249358d29f
-begin
-	q4_1s = quap(m4_1s)
-	quap4_1s_df = sample(q4_1s)
-	PRECIS(quap4_1s_df)
 end
 
 # ╔═╡ 8573377e-fb5f-11ea-05ef-1b6568304ef8
@@ -104,9 +120,12 @@ md"# End of clip-04-26-30s.jl"
 # ╠═8523db98-fb5f-11ea-143e-e5ae17aabbe8
 # ╟─852467a2-fb5f-11ea-01cd-cbcae8197739
 # ╠═852d4188-fb5f-11ea-399e-b9a0892f608e
-# ╠═8534f82e-fb5f-11ea-272a-5d6ffc867d60
-# ╠═8542c8b2-fb5f-11ea-175b-739d60bcb414
-# ╠═855315e8-fb5f-11ea-1be3-fd3515317471
 # ╟─855512da-fb5f-11ea-3166-39b8cbfc82d7
-# ╠═8560d76c-fb5f-11ea-0bc6-2b249358d29f
+# ╟─b6f80b9c-3cc0-11eb-2dd5-2b133f397f41
+# ╠═24cec984-3c27-11eb-2ff2-f79c61deccf4
+# ╠═9e4ba502-3c2c-11eb-0e99-ad512c8ca8e4
+# ╟─8dbed206-3cc0-11eb-05e0-2fabb5827e04
+# ╠═8542c8b2-fb5f-11ea-175b-739d60bcb414
+# ╟─aacb8f74-3cc0-11eb-0493-8def94216dd8
+# ╠═855315e8-fb5f-11ea-1be3-fd3515317471
 # ╟─8573377e-fb5f-11ea-05ef-1b6568304ef8

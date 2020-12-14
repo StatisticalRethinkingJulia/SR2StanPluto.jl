@@ -6,7 +6,7 @@ using Pkg, DrWatson
 
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample
+	using StanSample, StanOptimize
 	using StatisticalRethinking
 end
 
@@ -41,15 +41,34 @@ model {
 }
 ";
 
+md"### Snippet 4.28 & 4.29"
+
+ md"##### Quadratic approximation vs. Stan samples vs. Normal distribution."
+
 begin
-	m4_1s = SampleModel("m4_1s", stan4_1)
 	m4_1_data = Dict("N" => length(df.height), "h" => df.height)
-	rc4_1s = stan_sample(m4_1s, data=m4_1_data)
-end;
+	m4_1_init = Dict(:mu => 180.0, :sigma => 10.0)
+	q4_1s, m4_1s, om = quap("m4_1_s", stan4_1; data=m4_1_data, init=m4_1_init)
+	quap4_1s_df = sample(q4_1s)
+	PRECIS(quap4_1s_df)
+end
 
-if success(rc4_1s)
+begin
+	post4_1s_df = read_samples(m4_1s; output_format=:dataframe)
+	e = ecdf(post4_1s_df.mu)
+	f = ecdf(quap4_1s_df.mu)
+	g = ecdf(rand(Normal(mean(post4_1s_df.mu), std(post4_1s_df.mu)), 4000))
+	r = range(minimum(e), stop=maximum(e), length=length(e.sorted_values))
+	plot(r, e(r), lab = "ECDF mu (Stan samples)", leg = :bottomright)
+	plot!(r, f(r), lab = "ECDF mu (quap approx.)")
+	plot!(r, g(r), lab = "ECDF mu (Normal distr.)")
+end
 
-	# Array od DataFrames, 1 Dataframe/chain
+md"##### Look at individual chains."
+
+if !isnothing(m4_1s)
+
+	# Array of DataFrames, 1 Dataframe/chain
 	
 	dfs4_1s = read_samples(m4_1s; output_format=:dataframes)
 	figs = Vector{Plots.Plot{Plots.GRBackend}}(undef, size(dfs4_1s[1], 2))
@@ -67,16 +86,10 @@ if success(rc4_1s)
 	plot(figs..., layout=(2,1))
 end
 
-if success(rc4_1s)
+md"##### Particle summary."
+
+if !isnothing(m4_1s)
 	part4_1s = read_samples(m4_1s; output_format=:particles)
-end
-
-md"### Snippet 4.28 & 4.29"
-
-begin
-	q4_1s = quap(m4_1s)
-	quap4_1s_df = sample(q4_1s)
-	PRECIS(quap4_1s_df)
 end
 
 md"# End of clip-04-26-30s.jl"

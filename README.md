@@ -66,6 +66,7 @@ using Pkg, DrWatson
 
 @quickactivate "StatisticalRethinkingStan"
 using StanSample
+using StanOptimize              # If quap() is used.
 using StatisticalRethinking
 
 # To access e.g. the Howell1.csv data file:

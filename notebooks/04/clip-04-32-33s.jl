@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.12
+# v0.12.17
 
 using Markdown
 using InteractiveUtils
@@ -10,7 +10,7 @@ using Pkg, DrWatson
 # ╔═╡ 62916bce-fb76-11ea-1d36-77a8b156aabb
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample
+	using StanSample, StanOptimize
 	using StatisticalRethinking
 end
 
@@ -50,32 +50,30 @@ model {
 # ╔═╡ 62aebe34-fb76-11ea-1646-d75ffe9ecd49
 md"### Snippet 4.31"
 
-# ╔═╡ 62af493c-fb76-11ea-3fb8-15cf5f21732b
-m4_2s = SampleModel("m4.2s", stan4_2);
-
-# ╔═╡ 62b97556-fb76-11ea-2914-cf968082c17b
-m4_2_data = Dict("N" => length(df.height), "h" => df.height);
-
-# ╔═╡ 62c0286a-fb76-11ea-0db1-91794ac99ae6
-rc4_2s = stan_sample(m4_2s, data=m4_2_data);
-
-# ╔═╡ 62c16610-fb76-11ea-36d5-51093f07a76a
-if success(rc4_2s)
-	post4_2s = read_samples(m4_2s; output_format=:dataframe)
-	q4_2s = quap(m4_2s)
+# ╔═╡ 2fc627a0-3cc3-11eb-31a0-47b17099e493
+begin
+	m4_2_data = Dict(:N => length(df.height), :h => df.height)
+	m4_2_init = Dict(:mu => 180.0, :sigma => 10.0)
+	q4_2s, m4_2s, om = quap("m4.2s", stan4_2; data=m4_2_data, init=m4_2_init)
 end;
 
-# ╔═╡ 69c7b810-0e21-11eb-19c1-af43d12c84dd
-quap4_2s_df = sample(q4_2s);
+# ╔═╡ 62c16610-fb76-11ea-36d5-51093f07a76a
+if !isnothing(m4_2s)
+	post4_2s_df = read_samples(m4_2s; output_format=:dataframe)
+	PRECIS(post4_2s_df)
+end
 
 # ╔═╡ 243a9eea-0e22-11eb-0e83-2d7bbd03f78a
-PRECIS(quap4_2s_df)
+if !isnothing(q4_2s)
+	quap4_2s_df = sample(q4_2s)
+	PRECIS(quap4_2s_df)
+end
 
 # ╔═╡ 62d7694e-fb76-11ea-28c4-4d1e78f54b82
 md"### snippet 4.32"
 
 # ╔═╡ 62e3e746-fb76-11ea-327a-21f83959bb7c
-md"##### Compute covariance matrix."
+md"##### Computed covariance matrix by quap()."
 
 # ╔═╡ bf7e6a2e-0ef6-11eb-3753-d5cddb8365c2
 q4_2s.vcov
@@ -116,11 +114,8 @@ md"## End of clip-04-32-34s.jl"
 # ╠═629f31e6-fb76-11ea-2e8b-774da4fa0cb6
 # ╠═62a7bf82-fb76-11ea-3ad9-6bcc0a1b1be3
 # ╟─62aebe34-fb76-11ea-1646-d75ffe9ecd49
-# ╠═62af493c-fb76-11ea-3fb8-15cf5f21732b
-# ╠═62b97556-fb76-11ea-2914-cf968082c17b
-# ╠═62c0286a-fb76-11ea-0db1-91794ac99ae6
+# ╠═2fc627a0-3cc3-11eb-31a0-47b17099e493
 # ╠═62c16610-fb76-11ea-36d5-51093f07a76a
-# ╠═69c7b810-0e21-11eb-19c1-af43d12c84dd
 # ╠═243a9eea-0e22-11eb-0e83-2d7bbd03f78a
 # ╟─62d7694e-fb76-11ea-28c4-4d1e78f54b82
 # ╟─62e3e746-fb76-11ea-327a-21f83959bb7c

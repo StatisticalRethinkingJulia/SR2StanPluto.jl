@@ -59,10 +59,10 @@ md"##### μ prior."
 
 begin
 	d1 = Normal(178, 20)
-	figs[1] = plot(-300:600, [pdf(d1, μ) for μ in -300:600],
+	figs[1] = plot(0:600, [pdf(d1, μ) for μ in 0:600],
 		xlab="mu",
 		ylab="density",
-		xlim=(-300, 600),
+		xlim=(80, 250),
 		leg=false,
 		title="mu ~ Normal( 178, 20)")
 end

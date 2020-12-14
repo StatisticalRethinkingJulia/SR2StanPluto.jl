@@ -52,7 +52,7 @@ begin
 end;
 
 # ╔═╡ a109cbc0-3803-11eb-114c-09042c8e43aa
-md"##### Quadratic approximation to std (sigma) and mean (mu)."
+md"##### Single quap() call to compoute the quadratic approximation to std (sigma) and mean (mu). Note that the SampleModel and the OptimizeModel are accessable later on."
 
 # ╔═╡ cf29cb5a-33e8-11eb-142c-319fcce6609b
 begin
@@ -140,7 +140,7 @@ md"## End of stan-optimize-02s.jl"
 # ╠═b88588d8-0e8b-11eb-096f-f152abbd3d1e
 # ╠═b89107b4-0e8b-11eb-0c7f-437f9e4a9d19
 # ╠═b89c414e-0e8b-11eb-2056-bd70c5d493ee
-# ╟─a109cbc0-3803-11eb-114c-09042c8e43aa
+# ╠═a109cbc0-3803-11eb-114c-09042c8e43aa
 # ╠═cf29cb5a-33e8-11eb-142c-319fcce6609b
 # ╟─32dfec2e-3808-11eb-23a6-9beab7ea7ad9
 # ╠═253abe0c-3808-11eb-34ed-e326357b5ef1

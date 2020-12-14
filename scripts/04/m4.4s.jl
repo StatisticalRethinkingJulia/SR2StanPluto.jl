@@ -6,7 +6,7 @@ using Pkg, DrWatson
 
 begin
     @quickactivate "StatisticalRethinkingStan"
-    using StanSample
+    using StanSample, StanOptimize
     using StatisticalRethinking
 end
 
@@ -47,23 +47,23 @@ generated quantities {
 ";
 
 begin
-	m4_4s = SampleModel("m4_4s", stan4_4)
-	m4_4_data = Dict(
-	  :N => length(df.height), :N_new => 5,
-	  :weight_c => df.weight_c, :height => df.height,
-	  :x_new => [-30, -10, 0, +10, +30]
+	data = Dict(
+		:N => length(df.height), :N_new => 5,
+		:weight_c => df.weight_c, :height => df.height,
+		:x_new => [-30, -10, 0, +10, +30]
 	)
-	rc4_4s = stan_sample(m4_4s, data=m4_4_data)
-end;
+	init = Dict(:alpha => 170.0, :beta => 1.5, :sigma => 10.0)
+end;			
 
-if success(rc4_4s)
+begin
+	q4_4s, m4_4s, om = quap("m4_4s", stan4_4; data, init)
+	q4_4s
+end
+
+if !isnothing(m4_4s)
   chns4_4s = read_samples(m4_4s; output_format=:mcmcchains)
   Particles(chns4_4s)
 end
-
-q4_4s = quap(m4_4s)                 			# Stan QuapModel
-
-Particles(4000, q4_4s.distr)          			# Samples from a QuapModel (Particles)
 
 begin
 	quap4_4s_df = sample(q4_4s)				# DataFrame with samples

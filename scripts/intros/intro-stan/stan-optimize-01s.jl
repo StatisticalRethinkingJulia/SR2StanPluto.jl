@@ -11,7 +11,9 @@ begin
 	using StatisticalRethinking
 end
 
-md"## Stan-optimize.jl"
+md"## Stan-optimize-01s.jl"
+
+md"##### This notebook uses a SampleModel and OptimizeModel to demonstrate the quadratic approximation. See `stan-optimize-02s.jl` for a more streamlined approach for the relatively simple models in chapters 4 to 8 of StatisticalRethinking."
 
 begin
 	df = CSV.read(sr_datadir("Howell1.csv"), DataFrame; delim=';')
@@ -43,6 +45,8 @@ begin
   m4_2_init = Dict(:mu => 174.0, :sigma => 5.0)
 end;
 
+md"##### Create a SampleModel:"
+
 begin
   m4_2_sample_s = SampleModel("m4.2_sample_s", stan4_2)
   rc4_2_sample_s = stan_sample(m4_2_sample_s; data=m4_2_data)
@@ -54,6 +58,8 @@ begin
     precis(m4_2_sample_s_df)
   end
 end
+
+md"##### Create an OptimizeMdel:"
 
 begin
 	m4_2_opt_s = OptimizeModel("m4.2_opt_s", stan4_2)
@@ -98,5 +104,5 @@ A ╲ B │          :μ           :σ
 :σ    │ 0.000218032    0.0849058
 ```"
 
-md"## End of Stan optimize intro"
+md"## End of stan-optimize-01s.jl intro"
 

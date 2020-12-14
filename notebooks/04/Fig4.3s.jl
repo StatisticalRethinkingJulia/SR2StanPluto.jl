@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.12
+# v0.12.16
 
 using Markdown
 using InteractiveUtils
@@ -84,10 +84,10 @@ md"##### μ prior."
 # ╔═╡ 315af808-fb54-11ea-37f7-fd91181356d9
 begin
 	d1 = Normal(178, 20)
-	figs[1] = plot(-300:600, [pdf(d1, μ) for μ in -300:600],
+	figs[1] = plot(0:600, [pdf(d1, μ) for μ in 0:600],
 		xlab="mu",
 		ylab="density",
-		xlim=(-300, 600),
+		xlim=(80, 250),
 		leg=false,
 		title="mu ~ Normal( 178, 20)")
 end

@@ -43,7 +43,7 @@ begin
   m4_2_init = Dict(:mu => 174.0, :sigma => 5.0)
 end;
 
-md"##### Quadratic approximation to std (sigma) and mean (mu)."
+md"##### Single quap() call to compoute the quadratic approximation to std (sigma) and mean (mu). Note that the SampleModel and the OptimizeModel are accessable later on."
 
 begin
 	(q4_2s, sm, om) = quap("m4.2s", stan4_2;
@@ -67,14 +67,14 @@ md"##### Sample quap model."
 
 begin
 	quap4_2s_df = sample(q4_2s)
-	precis(quap4_2s_df)
+	PRECIS(quap4_2s_df)
 end
 
 md"##### Original draws from Stan model."
 
 begin
 	m4_2_sample_s_df = read_samples(sm; output_format=:dataframe)
-    precis(m4_2_sample_s_df)
+    PRECIS(m4_2_sample_s_df)
 end
 
 md"##### MAP estimates using stan_optimize (4 chains)."

@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.12
+# v0.12.17
 
 using Markdown
 using InteractiveUtils
@@ -10,7 +10,7 @@ using Pkg, DrWatson
 # ╔═╡ 4ed86460-2861-11eb-2bd8-43083b1529de
 begin
     @quickactivate "StatisticalRethinkingStan"
-    using StanSample
+    using StanSample, StanOptimize
     using StatisticalRethinking
 end
 
@@ -53,28 +53,27 @@ generated quantities {
 }
 ";
 
+# ╔═╡ 3c4565a2-3d92-11eb-3f55-43c346db5876
+begin
+	data = Dict(
+		:N => length(df.height), :N_new => 5,
+		:weight_c => df.weight_c, :height => df.height,
+		:x_new => [-30, -10, 0, +10, +30]
+	)
+	init = Dict(:alpha => 170.0, :beta => 1.5, :sigma => 10.0)
+end;			
+
 # ╔═╡ 4f12dab6-2861-11eb-2ab5-db94af68f01f
 begin
-	m4_4s = SampleModel("m4_4s", stan4_4)
-	m4_4_data = Dict(
-	  :N => length(df.height), :N_new => 5,
-	  :weight_c => df.weight_c, :height => df.height,
-	  :x_new => [-30, -10, 0, +10, +30]
-	)
-	rc4_4s = stan_sample(m4_4s, data=m4_4_data)
-end;
+	q4_4s, m4_4s, om = quap("m4_4s", stan4_4; data, init)
+	q4_4s
+end
 
 # ╔═╡ 4f138b0a-2861-11eb-0985-1b00943863f2
-if success(rc4_4s)
+if !isnothing(m4_4s)
   chns4_4s = read_samples(m4_4s; output_format=:mcmcchains)
   Particles(chns4_4s)
 end
-
-# ╔═╡ bb9846a6-2861-11eb-02dc-957c2bda5814
-q4_4s = quap(m4_4s)                 			# Stan QuapModel
-
-# ╔═╡ bb98768c-2861-11eb-2d79-29c05cf7320b
-Particles(4000, q4_4s.distr)          			# Samples from a QuapModel (Particles)
 
 # ╔═╡ bb990b7e-2861-11eb-0df7-13c6c6413b4b
 begin
@@ -101,10 +100,9 @@ md"## End of m4.4s"
 # ╠═4ed86460-2861-11eb-2bd8-43083b1529de
 # ╠═4f022e8c-2861-11eb-23ad-5992b76394bd
 # ╠═4f029908-2861-11eb-10aa-7d9fc0eec927
+# ╠═3c4565a2-3d92-11eb-3f55-43c346db5876
 # ╠═4f12dab6-2861-11eb-2ab5-db94af68f01f
 # ╠═4f138b0a-2861-11eb-0985-1b00943863f2
-# ╠═bb9846a6-2861-11eb-02dc-957c2bda5814
-# ╠═bb98768c-2861-11eb-2d79-29c05cf7320b
 # ╠═bb990b7e-2861-11eb-0df7-13c6c6413b4b
 # ╠═bba94750-2861-11eb-0a53-99ef01630bb2
 # ╠═bbbf2c8c-2861-11eb-1324-a51c06a16e92

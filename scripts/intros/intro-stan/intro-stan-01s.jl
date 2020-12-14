@@ -7,6 +7,7 @@ using Pkg, DrWatson
 begin
 	@quickactivate "StatisticalRethinkingStan"
 	using StanSample
+	using StanOptimize            # Used to compute quadratic approximation
 	using StatisticalRethinking
 	using PlutoUI
 end
@@ -49,9 +50,9 @@ model {
 
 md"###### For this model three Stan language blocks are used: data, parameters and the model block."
 
-md"###### The first two blocks define the data and the parameter definitions for the model and at the same time can be used to define constraints. Data is known (chosen or observed), parameters are often not observed or even observable."
+md"###### The first two blocks define the data and the parameter definitions for the model and at the same time can be used to define constraints. As explained in section 2.3 of the book (*'Components of the model'*), variables can be observable or unobservable. Variables known (chosen or observed) are defined in the data block, parameters are not observed but need to be inferred and are defined in the parameter block."
 
-md"###### We know that k can't be negative (k == 0 indicates in the n tosses of an experiment the globe never landed on `W`). We also assume at least 1 toss is performed, hence n >= 1. In this example we use N=10 experiments of 9 tosses, thus n = 9 in all trials. k is the number of times the globe lands on water in each experiment."
+md"###### We know that k can't be negative (k[i] == 0 indicates the globe never landed on `W` in the n tosses). We also assume at least 1 toss is performed, hence n >= 1. In this example we use N=10 experiments of 9 tosses, thus n = 9 in all trials. k[i] is the number of times the globe lands on water in each experiment."
 
 md"###### N, n and the vector k[N] and are all integers."
 
@@ -63,7 +64,7 @@ md"###### Note that unfortunately the names of distributions such as Normal and 
 
 md"##### Running a Stan language program in Julia."
 
-md"###### Once the Stan language model is defined, in this case stored in the Julia variable m1_1, below steps execute the program:"
+md"###### Once the Stan language model is defined, in this case stored in the Julia variable stan1_1, below steps execute the program:"
 
 md"##### 1. Create a Stanmodel object:"
 
@@ -98,17 +99,19 @@ md"###### Sample Particles summary:"
 
 part1_1s = read_samples(m1_1s; output_format=:particles)
 
-md"###### Particles representation of estimate:"
+md"###### NamedTuple representation of quap estimate:"
 
 begin
-	q1_1s = quap(m1_1s)
+	data = m1_1_data
+	init = Dict(:theta => 0.5)
+	q1_1s, sm, om = quap("m1.1s", stan1_1; data, init)
+	q1_1s
+end
+
+begin
 	quap1_1s_df = sample(q1_1s)
 	PRECIS(quap1_1s_df)
 end
-
-
-
-q1_1s
 
 md"##### Check the chains using MCMCChains.jl"
 
@@ -167,40 +170,5 @@ In StatisticalRethinkingStan, R's ulam() has been replaced by StanSample.jl. Thi
 
 
 md"To help out with this, in this notebook and a few additional notebooks in the subdirectory `notebooks/intro-stan` the Stan language is introduced and the execution of Stan language programs illustrated. Chapter 9 of the book contains a nice introduction to translating the `alist` R models to the Stan language (just before section 9.5)."
-
-md"The equivalent of the R function `quap()` in StatisticalRethinkingStan uses the MAP density of the Stan samples as the mean of the Normal distribution and reports the approximation as a NamedTuple. e.g. from `./scripts/04-part-1/clip-31.jl`:
-```
-if success(rc)
-  println()
-  df = read_samples(sm; output_format=:dataframe)
-  q = quap(df)
-  q |> display
-end
-```
-returns:
-```
-(mu = 178.0 ± 0.1, sigma = 24.5 ± 0.94)
-```
-To obtain the mu quap:
-```
-q.mu
-```
-Examples and comparisons of different ways of computing a quap approximation can be found in `notebooks/intro-stan/intro-stan-04.jl`."
-
-
-
-md"##### As explained in the README document, the section on `Naming conventions`, another way to generate quap() samples is:
-
-```
-begin
-	q1_1s = quap(m1_1s)                # Create a Stan QuapModel object
-                                       # q1_1s.particles contains a Particle representation
-	quap1_1s_df = sample(q1_1s)
-	Text(precis(quap1_1s_df; io=String))
-end
-```"
-
-md"The increasing use of Particles to represent quap approximations is possible thanks to the package [MonteCarloMeasurements.jl](https://github.com/baggepinnen/MonteCarloMeasurements.jl). [Soss.jl](https://github.com/cscherrer/Soss.jl) and [related write-ups](https://cscherrer.github.io) introduced me to that option."
-
 md"## End of intros/intro-stan-01s.jl"
 

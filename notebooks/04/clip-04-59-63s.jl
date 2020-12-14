@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.12
+# v0.12.17
 
 using Markdown
 using InteractiveUtils
@@ -31,7 +31,7 @@ end;
 md"##### Define the Stan language model."
 
 # ╔═╡ 6123f1a8-fc09-11ea-2354-b5650434c87d
-m4_8 = "
+stan4_8 = "
 data{
     int N;
     real xbar;
@@ -60,7 +60,7 @@ md"##### Define the SampleModel, input data and samples."
 
 # ╔═╡ 61309cbc-fc09-11ea-173d-cb33d7b82e8d
 begin
-	m4_8s = SampleModel("m4.8s", m4_8);
+	m4_8s = SampleModel("m4.8s", stan4_8);
 	m4_8_data = Dict(
 	  "N" => size(df, 1), 
 	  "height" => df.height_s, 

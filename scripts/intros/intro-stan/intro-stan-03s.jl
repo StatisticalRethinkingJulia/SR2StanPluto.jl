@@ -1,4 +1,11 @@
 
+md"The equivalent of the R function `quap()` in StatisticalRethinkingStan uses either StanOptimize or the MAP density of the Stan samples as the mean of the Normal distribution and reports the approximation as a NamedTuple. e.g. see `./notebooks/intro-stan/intro-stan-optimize-01s.jl` and `./notebooks/intro-stan/intro-stan-optimize-02s.jl`:
+
+Examples and comparisons of different ways of computing a quap approximation can be found in `./notebooks/intro-stan/intro-stan-04.jl`."
+
+md"The increasing use of Particles to represent quap approximations is possible thanks to the package [MonteCarloMeasurements.jl](https://github.com/baggepinnen/MonteCarloMeasurements.jl). [Soss.jl](https://github.com/cscherrer/Soss.jl) and [related write-ups](https://cscherrer.github.io) introduced me to that option."
+
+
 using Markdown
 using InteractiveUtils
 
@@ -12,6 +19,8 @@ begin
 end
 
 md"## Intro-stan-03s.jl"
+
+
 
 md"##### Define the Stan language model."
 
@@ -35,24 +44,26 @@ begin
 	}"
 end;
 
-md"##### Create an OptimizeModel"
-
-m1_1s = OptimizeModel("m1.1s", stan1_1);
-
 begin
 	N = 25                              # 25 experiments
 	d = Binomial(9, 0.66)               # 9 tosses (simulate 2/3 is water)
 	k = rand(d, N)                      # Simulate 15 trial results
 	n = 9                               # Each experiment has 9 tosses
-	m1_1_data = Dict("N" => N, "n" => n, "k" => k)
+	data = Dict(:N => N, :n => n, :k => k)
+	init = Dict(:theta => 0.5)
 end;
 
-rc1_1s = stan_optimize(m1_1s, data=m1_1_data);
+md"##### Create a quadratic apprximation."
+
+begin
+	q1_1s, m1_1s, om = quap("m1.1s", stan1_1; data, init)
+	q1_1s
+end
 
 md"##### Describe the optimize result"
 
-if success(rc1_1s)
-  optim_stan, cnames = read_optimize(m1_1s)
+if !isnothing(om)
+  optim_stan, cnames = read_optimize(om)
   optim_stan
 end
 

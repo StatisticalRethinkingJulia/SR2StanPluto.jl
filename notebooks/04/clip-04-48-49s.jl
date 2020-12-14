@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.10
+# v0.12.17
 
 using Markdown
 using InteractiveUtils
@@ -76,7 +76,7 @@ if success(rc4_6s)
 end
 
 # ╔═╡ 18413a74-fb8d-11ea-2c54-7ba333cc282e
-Text(precis(post4_6s_df; io=String))
+PRECIS(post4_6s_df)
 
 # ╔═╡ dd09e4ce-fb8c-11ea-1b16-6d5afe600ab1
 md"### Snippets 4.48 & 4.49"

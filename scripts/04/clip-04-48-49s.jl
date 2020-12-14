@@ -60,7 +60,7 @@ if success(rc4_6s)
   post4_6s_df[1:5,:]
 end
 
-Text(precis(post4_6s_df; io=String))
+PRECIS(post4_6s_df)
 
 md"### Snippets 4.48 & 4.49"
 

@@ -6,7 +6,7 @@ using Pkg, DrWatson
 
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample
+	using StanSample, StanOptimize
 	using StatisticalRethinking
 end
 
@@ -45,19 +45,17 @@ model {
 }
 ";
 
-md"##### Define the SampleModel."
-
-m4_4s = SampleModel("weights", stan4_4);
-
-md"##### Input data."
-
-m4_4_data = Dict("N" => length(df.height), "height" => df.height, "weight" => df.weight_c);
-
 md"##### Sample using stan_sample."
 
-rc4_4s = stan_sample(m4_4s, data=m4_4_data);
+begin
+	data = Dict(:N => length(df.height), :height => df.height, :weight => df.weight_c)
+	init = Dict(:alpha => 170.0, :beta => 2.0, :sigma => 10.0)
+	q4_4s, m4_4s, om = quap("m4.4s", stan4_4; data, init)
+	quap4_4s_df = sample(q4_4s)
+	PRECIS(quap4_4s_df)
+end
 
-if success(rc4_4s)
+if !isnothing(m4_4s)
 
 	# Describe the draws
 
@@ -65,7 +63,7 @@ if success(rc4_4s)
 	CHNS(chns4_4s)
 end
 
-if success(rc4_4s)
+if !isnothing(m4_4s)
 
 	# Use an appended dataframe
 
@@ -75,7 +73,7 @@ end
 
 md"### snippet 4.37"
 
-if success(rc4_4s)
+if !isnothing(m4_4s)
 
 	# Plot regression line using means and observations
 
@@ -87,12 +85,6 @@ if success(rc4_4s)
 end
 
 md"### snippet 4.44"
-
-if success(rc4_4s)
-	q4_4s = quap(m4_4s)
-	quap4_4s_df = sample(q4_4s)
-	PRECIS(quap4_4s_df)
-end
 
 plot(plot(quap4_4s_df.alpha, lab="alpha"), plot(quap4_4s_df.beta, lab="beta"), layout=(2, 1))
 

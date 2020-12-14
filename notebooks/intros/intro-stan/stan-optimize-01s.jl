@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.15
+# v0.12.16
 
 using Markdown
 using InteractiveUtils
@@ -16,7 +16,10 @@ begin
 end
 
 # ╔═╡ 766ea8e6-0e8b-11eb-15fa-477197ab5a31
-md"## Stan-optimize.jl"
+md"## Stan-optimize-01s.jl"
+
+# ╔═╡ ca399c32-3a2e-11eb-3f73-d51f5baf0250
+md"##### This notebook uses a SampleModel and OptimizeModel to demonstrate the quadratic approximation. See `stan-optimize-02s.jl` for a more streamlined approach for the relatively simple models in chapters 4 to 8 of StatisticalRethinking."
 
 # ╔═╡ b88588d8-0e8b-11eb-096f-f152abbd3d1e
 begin
@@ -51,6 +54,9 @@ begin
   m4_2_init = Dict(:mu => 174.0, :sigma => 5.0)
 end;
 
+# ╔═╡ ddbc3e62-3a2f-11eb-06d0-e7a7abf38861
+md"##### Create a SampleModel:"
+
 # ╔═╡ cb914d40-3345-11eb-1f96-81c4902b8193
 begin
   m4_2_sample_s = SampleModel("m4.2_sample_s", stan4_2)
@@ -64,6 +70,9 @@ begin
     precis(m4_2_sample_s_df)
   end
 end
+
+# ╔═╡ cb766002-3a2f-11eb-25d6-d9aef3e9d398
+md"##### Create an OptimizeMdel:"
 
 # ╔═╡ a87dc40a-3345-11eb-191b-7f02f5ff8ee7
 begin
@@ -115,17 +124,20 @@ A ╲ B │          :μ           :σ
 ```"
 
 # ╔═╡ b8bdd370-0e8b-11eb-0d2e-1174a6d67c88
-md"## End of Stan optimize intro"
+md"## End of stan-optimize-01s.jl intro"
 
 # ╔═╡ Cell order:
 # ╟─766ea8e6-0e8b-11eb-15fa-477197ab5a31
+# ╟─ca399c32-3a2e-11eb-3f73-d51f5baf0250
 # ╠═b850b5ba-0e8b-11eb-1e8f-ff7e2b29163e
 # ╠═b878f13a-0e8b-11eb-3a3d-3df3931f026e
 # ╠═b88588d8-0e8b-11eb-096f-f152abbd3d1e
 # ╠═b89107b4-0e8b-11eb-0c7f-437f9e4a9d19
 # ╠═b89c414e-0e8b-11eb-2056-bd70c5d493ee
+# ╟─ddbc3e62-3a2f-11eb-06d0-e7a7abf38861
 # ╠═cb914d40-3345-11eb-1f96-81c4902b8193
 # ╠═847d6bee-3347-11eb-0b71-312d18c967df
+# ╟─cb766002-3a2f-11eb-25d6-d9aef3e9d398
 # ╠═a87dc40a-3345-11eb-191b-7f02f5ff8ee7
 # ╠═b8b1e70e-0e8b-11eb-0f10-7d74079e68f8
 # ╠═0c4bcc62-3345-11eb-1d44-652ed085b8c5

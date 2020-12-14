@@ -22,7 +22,7 @@ end;
 
 md"##### Define the Stan language model."
 
-m4_8 = "
+stan4_8 = "
 data{
     int N;
     real xbar;
@@ -49,7 +49,7 @@ model{
 md"##### Define the SampleModel, input data and samples."
 
 begin
-	m4_8s = SampleModel("m4.8s", m4_8);
+	m4_8s = SampleModel("m4.8s", stan4_8);
 	m4_8_data = Dict(
 	  "N" => size(df, 1), 
 	  "height" => df.height_s, 

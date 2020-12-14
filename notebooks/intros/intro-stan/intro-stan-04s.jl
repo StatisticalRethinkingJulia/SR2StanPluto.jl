@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.11
+# v0.12.17
 
 using Markdown
 using InteractiveUtils
@@ -39,50 +39,37 @@ md"## Intro-stan-04s.jl"
 
 # ╔═╡ 8103503a-f20f-11ea-0039-3df29edd62f2
 begin
-	m1_1s = SampleModel("m1.1s", stan1_1)	# Define Stan language mdeol
 	N = 25                              	# 25 experiments
 	d = Binomial(9, 0.66)               	# 9 tosses (simulate 2/3 is water)
 	k = rand(d, N)                      	# Simulate 15 trial results
 	n = 9                               	# Each experiment has 9 tosses
-	m1_1_data = Dict("N" => N, "n" => n, "k" => k)
-	rc1_1s = stan_sample(m1_1s, data=m1_1_data)
-	if success(rc1_1s)
+	data = Dict("N" => N, "n" => n, "k" => k)
+	init = Dict(:theta => 0.5)
+end
+
+# ╔═╡ 4ff9f050-3e36-11eb-0e80-2b7e791d4ba5
+begin
+	q1_1s, m1_1s, om = quap("m1.1s", stan1_1; data, init)
+	if !isnothing(m1_1s)
 		post1_1s_df = read_samples(m1_1s, output_format=:dataframe)
 	end
-end;
+	PRECIS(post1_1s_df)
+end
 
-# ╔═╡ 1a66e262-f210-11ea-0e79-7b57f5970e84
-Text(precis(post1_1s_df; io = String))
-
-# ╔═╡ 36063062-f211-11ea-39da-c5ef2ce3c3ab
+# ╔═╡ 818da9a4-f20f-11ea-22f7-5d860f5d4302
 begin
-	sm_opt = OptimizeModel("m1.1s", stan1_1)
-	rc_opt = stan_optimize(sm_opt; data=m1_1_data)
-	optim_stan, cnames = read_optimize(sm_opt)
-	optim_stan
+	quap1_1s_df = sample(q1_1s)
+	PRECIS(quap1_1s_df)
 end
 
 # ╔═╡ 8113d7ac-f20f-11ea-3c23-55e1cc5b3833
 md"##### This scripts shows a number of different ways to estimate a quadratic approximation."
 
 # ╔═╡ 8114dca4-f20f-11ea-01b6-655c44daa6ce
-md"##### Compare with Stan, MLE & MAP."
-
-# ╔═╡ 81223818-f20f-11ea-028b-81d9a4408d3f
-md"###### StanSample mean and sd (see also `intro_part_01`):"
+md"##### Compare with MLE."
 
 # ╔═╡ 8122e934-f20f-11ea-3aa9-95546337d293
 part1_1s = Particles(post1_1s_df)
-
-# ╔═╡ 812f5124-f20f-11ea-2189-f1d1db91f2d5
-md"###### Stan_optimize mean and std (see also intro-part-03):"
-
-# ╔═╡ 81302324-f20f-11ea-15e8-7d2bbb21f094
-begin
-	mu_stan_optimize = mean(optim_stan["theta"])
-	sigma_stan_optimize = std(post1_1s_df.theta, mean=mu_stan_optimize)
-	[mu_stan_optimize, sigma_stan_optimize]
-end
 
 # ╔═╡ 21543902-f216-11ea-076c-bf301cca4890
 md"###### MLE estimate"
@@ -90,20 +77,8 @@ md"###### MLE estimate"
 # ╔═╡ 9d8329f8-f215-11ea-05fb-73d13c3e9d3a
 mle_fit = fit_mle(Normal, post1_1s_df.theta)
 
-# ╔═╡ 8183b70a-f20f-11ea-3b4a-61b4a1bd8a2c
-md"###### Use kernel density of Stan samples"
-
-# ╔═╡ 818da9a4-f20f-11ea-22f7-5d860f5d4302
-begin
-	q1_1s = quap(m1_1s)
-	quap1_1s_df = sample(q1_1s)
-	mu_quap = mean(quap1_1s_df.theta)
-	sigma_quap = std(quap1_1s_df.theta)
-	[mu_quap, sigma_quap]
-end
-
 # ╔═╡ 819831c6-f20f-11ea-3a18-b97920d8dea0
-md"###### Using optim"
+md"###### Using optim (compare with quap() result above)."
 
 # ╔═╡ 81abd456-f20f-11ea-1f23-7d0391bd1088
 function loglik(x)
@@ -135,14 +110,15 @@ begin
 		legend=:topleft, line=:dash)
 	plot!( x, pdf.(Normal( mean(part1_1s.theta), std(part1_1s.theta)), x ),
 		lab="Particle approximation", line=:dash)
-	plot!( x, pdf.(Normal( mu_quap, sigma_quap), x ), lab="quap approximation")
+	plot!( x, pdf.(Normal( q1_1s.coef.theta, √q1_1s.vcov[1]), x ),
+		lab="quap approximation")
 	density!(post1_1s_df.theta, lab="StanSample chain")
 	vline!([bnds_hpd[1]], line=:dash, lab="hpd lower bound")
 	vline!([bnds_hpd[2]], line=:dash, lab="hpd upper bound")
 end
 
 # ╔═╡ 823b6f1c-f20f-11ea-25fc-41aaa9ddbf48
-md"In this example usually most approximations are similar. Other examples are less clear. In StatisticalRethinking.jl we have the actual Stan samples, quap() uses this to fit a Normal distribution with mean equal to the sample MAP."
+md"In this example usually most approximations are similar. Other examples are less clear."
 
 # ╔═╡ 90032db0-f217-11ea-33a9-8fa3202cd2f8
 md"## End of intro-stan/intro-stan-04s.jl"
@@ -153,19 +129,14 @@ md"## End of intro-stan/intro-stan-04s.jl"
 # ╠═81020e56-f20f-11ea-362b-27053dc41cdb
 # ╠═ba7b3448-f211-11ea-2ba3-eda3b6c0a146
 # ╠═8103503a-f20f-11ea-0039-3df29edd62f2
-# ╠═1a66e262-f210-11ea-0e79-7b57f5970e84
-# ╠═36063062-f211-11ea-39da-c5ef2ce3c3ab
+# ╠═4ff9f050-3e36-11eb-0e80-2b7e791d4ba5
+# ╠═818da9a4-f20f-11ea-22f7-5d860f5d4302
 # ╟─8113d7ac-f20f-11ea-3c23-55e1cc5b3833
 # ╟─8114dca4-f20f-11ea-01b6-655c44daa6ce
-# ╟─81223818-f20f-11ea-028b-81d9a4408d3f
 # ╠═8122e934-f20f-11ea-3aa9-95546337d293
-# ╟─812f5124-f20f-11ea-2189-f1d1db91f2d5
-# ╠═81302324-f20f-11ea-15e8-7d2bbb21f094
 # ╟─21543902-f216-11ea-076c-bf301cca4890
 # ╠═9d8329f8-f215-11ea-05fb-73d13c3e9d3a
-# ╟─8183b70a-f20f-11ea-3b4a-61b4a1bd8a2c
-# ╠═818da9a4-f20f-11ea-22f7-5d860f5d4302
-# ╟─819831c6-f20f-11ea-3a18-b97920d8dea0
+# ╠═819831c6-f20f-11ea-3a18-b97920d8dea0
 # ╠═81abd456-f20f-11ea-1f23-7d0391bd1088
 # ╠═81b591ee-f20f-11ea-282d-49247a597eb3
 # ╟─81c0aeb2-f20f-11ea-2c2e-61392085a1d3

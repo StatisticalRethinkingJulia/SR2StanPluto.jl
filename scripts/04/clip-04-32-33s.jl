@@ -6,7 +6,7 @@ using Pkg, DrWatson
 
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample
+	using StanSample, StanOptimize
 	using StatisticalRethinking
 end
 
@@ -41,24 +41,25 @@ model {
 
 md"### Snippet 4.31"
 
-m4_2s = SampleModel("m4.2s", stan4_2);
-
-m4_2_data = Dict("N" => length(df.height), "h" => df.height);
-
-rc4_2s = stan_sample(m4_2s, data=m4_2_data);
-
-if success(rc4_2s)
-	post4_2s = read_samples(m4_2s; output_format=:dataframe)
-	q4_2s = quap(m4_2s)
+begin
+	m4_2_data = Dict(:N => length(df.height), :h => df.height)
+	m4_2_init = Dict(:mu => 180.0, :sigma => 10.0)
+	q4_2s, m4_2s, om = quap("m4.2s", stan4_2; data=m4_2_data, init=m4_2_init)
 end;
 
-quap4_2s_df = sample(q4_2s);
+if !isnothing(m4_2s)
+	post4_2s_df = read_samples(m4_2s; output_format=:dataframe)
+	PRECIS(post4_2s_df)
+end
 
-PRECIS(quap4_2s_df)
+if !isnothing(q4_2s)
+	quap4_2s_df = sample(q4_2s)
+	PRECIS(quap4_2s_df)
+end
 
 md"### snippet 4.32"
 
-md"##### Compute covariance matrix."
+md"##### Computed covariance matrix by quap()."
 
 q4_2s.vcov
 
