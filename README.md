@@ -90,7 +90,7 @@ Note: `d` is reserved for a combination Soss/DynamicHMC, `sl` is reserved for St
 The notebooks containing the clips are stored by chapter. In addition to clips, in the early notebook chapters (0-3) it is also shown how to create some of the figures in the book, e.g. `Fig2.5s.jl` in `notebooks/chapter/02`.
 
 Special introductory notebooks have been included in `notebooks/intros`, e.g.
-`intro-stan/intro-stan-01s.jl` and `intro-R-users/distributions.jl`.
+`intro-stan/intro-stan-01s.jl` and `intro-R-users/distributions.jl`. It is suggested to at least glance over the `intro-stan` notebooks.
 
 Great introductory notebooks showing Julia and statistics ( based on the [Statistics with Julia](https://statisticswithjulia.org/index.html) book ) can be found in [StatisticsWithJuliaPlutoNotebooks](https://github.com/StatisticalRethinkingJulia/StatisticsWithJuliaPlutoNotebooks.jl).
 
@@ -100,20 +100,19 @@ Models:
 
 0. stan5_1           : Stan language program
 1. m5_1s             : The sampled StanSample model
-2. q5_1s             : Stan QuapModel 
+2. q5_1s             : Stan quap model (NamedTuple similar to Turing)
 
 Draws:
 
 3. chns5_1s          : MCMCChains object (4000 samples from 4 chains)
 4. part5_1s          : Stan samples (Particles notation)
-5. q5_1s.particles   : Stan quap() samples (Particles notation)
 
 Results as a DataFrame:
 
-6. prior5_1s_df      : Prior samples (DataFrame)
-7. post5_1s_df       : Posterior samples (DataFrame)
-8. quap5_1s_df       : Quap approximation to posterior samples (DataFrame)
-9. pred5_1s_df       : Posterior predictions (DataFrame)
+5. prior5_1s_df      : Prior samples (DataFrame)
+6. post5_1s_df       : Posterior samples (DataFrame)
+7. quap5_1s_df       : Quap approximation to posterior samples (DataFrame)
+8. pred5_1s_df       : Posterior predictions (DataFrame)
 
 As before, the `s` at the end indicates Stan.
 
