@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.12
+# v0.12.17
 
 using Markdown
 using InteractiveUtils
@@ -10,12 +10,12 @@ using Pkg, DrWatson
 # ╔═╡ bf85db88-fb7d-11ea-0372-67375f0b8d43
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample
+	using StanSample, StanOptimize
 	using StatisticalRethinking
 end
 
 # ╔═╡ 0f7e4956-fb7c-11ea-04ac-47bc7bab44cf
-md"## Clip-04-37-44s.jl"
+md"## Clip-04-44-46s.jl"
 
 # ╔═╡ bf865754-fb7d-11ea-0a35-8db33296670d
 begin
@@ -50,64 +50,64 @@ model {
 }
 ";
 
+# ╔═╡ 1b7ee764-40ba-11eb-1a0d-5baaa48e2a1e
+md"## snippet 4.44"
+
 # ╔═╡ bf9fb904-fb7d-11ea-143a-3db8cf435c2c
-md"##### Define the SampleModel."
+md"##### Quadratic approximation."
 
-# ╔═╡ bfab2758-fb7d-11ea-3606-e52aad817697
-m4_3s = SampleModel("m4.3s", stan4_3);
+# ╔═╡ 6a0f1080-408c-11eb-2fd8-e79d7c6c6d54
+begin
+	data = Dict(:N => length(df.height), :height => df.height, :weight => df.weight_c)
+	init = Dict(:alpha => 170.0, :beta => 2.0, :sigma => 10.0)
+	q4_3s, m4_3s, _ = quap("m4.3s", stan4_3; data, init)
+end;
 
-# ╔═╡ bfb20fdc-fb7d-11ea-3ae1-57790717c9fb
-md"##### Input data."
-
-# ╔═╡ bfb74662-fb7d-11ea-0423-0f1f2c5c5e24
-m4_3_data = Dict("N" => length(df.height), "height" => df.height, "weight" => df.weight_c);
+# ╔═╡ bfe69b8a-fb7d-11ea-10e6-150a3c3ef3eb
+if !isnothing(q4_3s)
+	quap4_3s_df = sample(q4_3s)
+	PRECIS(quap4_3s_df)
+end
 
 # ╔═╡ bfc025d6-fb7d-11ea-124f-61d3a0d25e8a
-md"##### Sample using stan_sample."
-
-# ╔═╡ bfc0d1b6-fb7d-11ea-3800-0f8e8e96f509
-rc4_3s = stan_sample(m4_3s, data=m4_3_data);
+md"##### Read the Stan samples."
 
 # ╔═╡ bfc7a900-fb7d-11ea-088f-1f908ced09d8
-if success(rc4_3s)
-
-	# Describe the draws
-	
+if !isnothing(m4_3s)
 	post4_3s = read_samples(m4_3s; output_format=:dataframe)
 	part4_3s = Particles(post4_3s)
 end
 
+# ╔═╡ cf81c9e4-408c-11eb-3660-9dc540b1fe16
+PRECIS(post4_3s)
+
+# ╔═╡ 2a6816ce-40ba-11eb-0055-594078cf6eff
+md"## snippet 4.45"
+
+# ╔═╡ c2c711b4-40b9-11eb-20b3-8b316696df09
+begin
+	nms = [string(k) for k in keys(q4_3s.coef)]
+	covm = NamedArray(Matrix(q4_3s.vcov), (nms, nms), ("Rows", "Cols"))
+	covm
+end
+
 # ╔═╡ bfd4d4c2-fb7d-11ea-0995-8fcce3233153
-md"### snippet 4.37"
+md"### snippet 4.46"
 
 # ╔═╡ bfd622b4-fb7d-11ea-2907-fd345097b670
-if success(rc4_3s)
+if !isnothing(m4_3s)
 
 	# Plot regression line using means and observations
 
 	scatter(df.weight_c, df.height, lab="Observations",
-	  ylab="height [cm]", xlab="weight[kg]")
+	  ylab="height [cm]", xlab="weight[kg]", leg=:topleft)
 	xi = -16.0:0.1:18.0
 	yi = mean(post4_3s.alpha) .+ mean(post4_3s.beta)*xi;
 	plot!(xi, yi, lab="Regression line")
 end
 
-# ╔═╡ bfde88b6-fb7d-11ea-1833-c36f65d47841
-md"### snippet 4.44"
-
-# ╔═╡ bfe69b8a-fb7d-11ea-10e6-150a3c3ef3eb
-if success(rc4_3s)
-
-	q4_3s = quap(m4_3s)
-	quap4_3s_df = sample(q4_3s)
-	PRECIS(quap4_3s_df)
-end
-
-# ╔═╡ bfee7d82-fb7d-11ea-21a3-651b8574029b
-plot(plot(quap4_3s_df.alpha, lab="alpha"), plot(quap4_3s_df.beta, lab="beta"), layout=(2, 1))
-
 # ╔═╡ bff6b6d2-fb7d-11ea-3ea8-e5d61fa1ebf7
-md"## End of clip-04-37-44s.jl"
+md"## End of clip-04-44-46s.jl"
 
 # ╔═╡ Cell order:
 # ╟─0f7e4956-fb7c-11ea-04ac-47bc7bab44cf
@@ -117,16 +117,15 @@ md"## End of clip-04-37-44s.jl"
 # ╠═bf92904e-fb7d-11ea-3945-0768960719f4
 # ╟─bf932126-fb7d-11ea-3b65-5b36bcc7ac03
 # ╠═bf9f151c-fb7d-11ea-3857-0f812f0b3ced
+# ╟─1b7ee764-40ba-11eb-1a0d-5baaa48e2a1e
 # ╟─bf9fb904-fb7d-11ea-143a-3db8cf435c2c
-# ╠═bfab2758-fb7d-11ea-3606-e52aad817697
-# ╟─bfb20fdc-fb7d-11ea-3ae1-57790717c9fb
-# ╠═bfb74662-fb7d-11ea-0423-0f1f2c5c5e24
+# ╠═6a0f1080-408c-11eb-2fd8-e79d7c6c6d54
+# ╠═bfe69b8a-fb7d-11ea-10e6-150a3c3ef3eb
 # ╟─bfc025d6-fb7d-11ea-124f-61d3a0d25e8a
-# ╠═bfc0d1b6-fb7d-11ea-3800-0f8e8e96f509
 # ╠═bfc7a900-fb7d-11ea-088f-1f908ced09d8
+# ╠═cf81c9e4-408c-11eb-3660-9dc540b1fe16
+# ╟─2a6816ce-40ba-11eb-0055-594078cf6eff
+# ╠═c2c711b4-40b9-11eb-20b3-8b316696df09
 # ╟─bfd4d4c2-fb7d-11ea-0995-8fcce3233153
 # ╠═bfd622b4-fb7d-11ea-2907-fd345097b670
-# ╟─bfde88b6-fb7d-11ea-1833-c36f65d47841
-# ╠═bfe69b8a-fb7d-11ea-10e6-150a3c3ef3eb
-# ╠═bfee7d82-fb7d-11ea-21a3-651b8574029b
 # ╟─bff6b6d2-fb7d-11ea-3ea8-e5d61fa1ebf7

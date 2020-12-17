@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.16
+# v0.12.17
 
 using Markdown
 using InteractiveUtils
@@ -18,22 +18,10 @@ end
 md"## Clip-04-16-22s.jl"
 
 # ╔═╡ f6b189fa-f8e8-11ea-3c7e-db6b39ae5110
-df = CSV.read(sr_datadir("Howell1.csv"), DataFrame; delim=';');
-
-# ╔═╡ f6c1db52-f8e8-11ea-139b-cb0a529c7a67
-md"### snippet 4.8"
-
-# ╔═╡ f6c28070-f8e8-11ea-148a-6364b90cc4fe
-md"##### Use only adults."
-
-# ╔═╡ f6cec6c0-f8e8-11ea-3b68-1dbc8afb5206
-df2 = filter(row -> row[:age] >= 18, df);
-
-# ╔═╡ f6cfe79c-f8e8-11ea-2c05-c1cbd48b9c72
-md"##### Show first 5 rows of DataFrame df."
-
-# ╔═╡ f6db9e66-f8e8-11ea-280a-93d48faed703
-first(df2, 5)
+begin
+	df = CSV.read(sr_datadir("Howell1.csv"), DataFrame; delim=';')
+	df2 = filter(row -> row[:age] >= 18, df)
+end;		
 
 # ╔═╡ f6dceb68-f8e8-11ea-3258-f3c3b6f4ef76
 md"### Snippet 4.16"
@@ -64,7 +52,7 @@ function grid_prob(x, y, prior_x, prior_y, obs)
 	the_prod = []
 	for i in 1:length(grid)
 	    d1 = Normal(grid[i][1], grid[i][2])
-	    ll = sum(log.(pdf.(d1, obs)))
+	    ll = sum(logpdf.(d1, obs))
 	    append!(df, DataFrame(mu=grid[i][1], sigma=grid[i][2],
 	    	ll=ll))
 		append!(the_prod, ll + log.(pdf.(prior_x, grid[i][1])) + 
@@ -118,8 +106,18 @@ md"### Snippet 4.19"
 md"##### Sample post_df."
 
 # ╔═╡ f7359696-f8e8-11ea-04b4-add413a60b41
-samples = post_df[sample(1:size(post_df, 1), Weights(post_df[:, :prob]), 
-	10000, replace=true), :];
+begin
+	samples = post_df[sample(1:size(post_df, 1), Weights(post_df[:, :prob]), 
+	10000, replace=true), :]
+	PRECIS(samples)
+end
+
+# ╔═╡ 244d8ae2-3fc7-11eb-085e-d97bd2f910d7
+md"## Snippet 4.20"
+
+# ╔═╡ 330e73e8-3fc7-11eb-3c1d-252d5ee27186
+scatter(samples.mu, samples.sigma, pch=".", markersize=0.3, leg=false,
+	xlab="samples.mu", ylab="samples.sigma")
 
 # ╔═╡ f73e1758-f8e8-11ea-1812-8d4723d20456
 md"### Snippet 4.22"
@@ -186,11 +184,6 @@ md"## End of clip-04-16-20s.jl"
 # ╠═f6b0972a-f8e8-11ea-335d-09e48cf0ff26
 # ╠═f6b0ee5a-f8e8-11ea-3427-c5eda9c27be2
 # ╠═f6b189fa-f8e8-11ea-3c7e-db6b39ae5110
-# ╟─f6c1db52-f8e8-11ea-139b-cb0a529c7a67
-# ╟─f6c28070-f8e8-11ea-148a-6364b90cc4fe
-# ╠═f6cec6c0-f8e8-11ea-3b68-1dbc8afb5206
-# ╟─f6cfe79c-f8e8-11ea-2c05-c1cbd48b9c72
-# ╠═f6db9e66-f8e8-11ea-280a-93d48faed703
 # ╟─f6dceb68-f8e8-11ea-3258-f3c3b6f4ef76
 # ╟─f6ea346c-f8e8-11ea-375b-19bd5ff09fb7
 # ╠═f6eae056-f8e8-11ea-27d8-9b4dca29c5ef
@@ -203,6 +196,8 @@ md"## End of clip-04-16-20s.jl"
 # ╟─f7240cf0-f8e8-11ea-224a-89543e618960
 # ╟─f72d36f4-f8e8-11ea-3659-3f9ce23635d2
 # ╠═f7359696-f8e8-11ea-04b4-add413a60b41
+# ╟─244d8ae2-3fc7-11eb-085e-d97bd2f910d7
+# ╠═330e73e8-3fc7-11eb-3c1d-252d5ee27186
 # ╟─f73e1758-f8e8-11ea-1812-8d4723d20456
 # ╟─f74778c0-f8e8-11ea-31b2-2b4adb0f865b
 # ╠═f751b452-f8e8-11ea-33a1-23bf97c35a18

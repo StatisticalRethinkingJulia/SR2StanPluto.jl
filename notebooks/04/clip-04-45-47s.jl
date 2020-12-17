@@ -17,16 +17,13 @@ end
 # ╔═╡ 225b3552-fb89-11ea-0dbe-611fac11deaf
 md"# Clip-04-45-47s.jl"
 
-# ╔═╡ 678312b8-fb8a-11ea-0fdd-d1359db75eff
-md"### snippet 4.7"
-
 # ╔═╡ 6790df42-fb8a-11ea-2fef-6771420832e8
 begin
 	df = CSV.read(sr_datadir("Howell1.csv"), DataFrame)
 	df = filter(row -> row[:age] >= 18, df);
 	mean_weight = mean(df.weight);
 	df.weight_c = df.weight .- mean_weight;
-end
+end;
 
 # ╔═╡ 67924116-fb8a-11ea-0715-6fc3b90735b1
 md"##### Define the Stan language model."
@@ -105,7 +102,6 @@ md"## End of clip-04-45-47a.jl"
 # ╟─225b3552-fb89-11ea-0dbe-611fac11deaf
 # ╠═67824748-fb8a-11ea-2ffd-430bf9a407b7
 # ╠═67828e9e-fb8a-11ea-1ea1-1f3705c329cb
-# ╟─678312b8-fb8a-11ea-0fdd-d1359db75eff
 # ╠═6790df42-fb8a-11ea-2fef-6771420832e8
 # ╟─67924116-fb8a-11ea-0715-6fc3b90735b1
 # ╠═679e9f60-fb8a-11ea-386c-49c81c17bce6

@@ -51,18 +51,18 @@ model {
 ";
 
 # ╔═╡ 855512da-fb5f-11ea-3166-39b8cbfc82d7
-md"### Snippet 4.28 & 4.29"
+md"### Snippet 4.28, 4.29 & 4.30"
 
 # ╔═╡ b6f80b9c-3cc0-11eb-2dd5-2b133f397f41
  md"##### Quadratic approximation vs. Stan samples vs. Normal distribution."
 
 # ╔═╡ 24cec984-3c27-11eb-2ff2-f79c61deccf4
 begin
-	m4_1_data = Dict("N" => length(df.height), "h" => df.height)
-	m4_1_init = Dict(:mu => 180.0, :sigma => 10.0)
-	q4_1s, m4_1s, om = quap("m4_1_s", stan4_1; data=m4_1_data, init=m4_1_init)
-	quap4_1s_df = sample(q4_1s)
-	PRECIS(quap4_1s_df)
+	m4_1_data = Dict("N" => length(df.height), "h" => df.height)                 # 4.26
+	m4_1_init = Dict(:mu => 180.0, :sigma => 10.0)                               # 4.30
+	q4_1s, m4_1s, om = quap("m4_1_s", stan4_1; data=m4_1_data, init=m4_1_init)   # 4.28
+	quap4_1s_df = sample(q4_1s)                                                  # 4.29
+	PRECIS(quap4_1s_df)                                                          # 4.29
 end
 
 # ╔═╡ 9e4ba502-3c2c-11eb-0e99-ad512c8ca8e4

@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.16
+# v0.12.17
 
 using Markdown
 using InteractiveUtils
@@ -88,13 +88,38 @@ md"### snippet 4.12"
 md"##### μ prior."
 
 # ╔═╡ 26e489d8-f826-11ea-2a8e-63dc68ebdfcb
-d1 = Normal(178, 20)
+begin
+	d1 = Normal(178, 20)
+	sample_mu_20 = rand(d1, 10000)
+end;
 
 # ╔═╡ 26ee436a-f826-11ea-2b51-553109976eeb
 figs[1] = plot(100:250, [pdf(d1, μ) for μ in 100:250],
 	xlab="mu",
 	ylab="density",
-	lab="Prior on mu");
+	title="Prior on mu")
+
+# ╔═╡ 272c9e2e-f826-11ea-221d-afb68d7bd316
+begin
+	d2 = Uniform(0, 50)
+	sample_sigma = rand(d2, 10000)
+	
+	prior_height_20 = [rand(Normal(sample_mu_20[i], sample_sigma[i]), 1)[1] for i in 1:10000]
+		figs[3] = density(prior_height_20,
+		xlab="height",
+		ylab="density",
+		title="Prior predictive height")
+
+	d3 = Normal(178, 100)
+	sample_mu_100 = rand(d3, 10000)
+	
+	prior_height_100 = [rand(Normal(sample_mu_100[i], sample_sigma[i]), 1)[1] for i in 1:10000]
+	figs[4] = density(prior_height_100,
+		xlab="height",
+		ylab="density",
+		title="Prior predictive height (d3)")
+	plot(figs[3], figs[4])
+end
 
 # ╔═╡ 26f91aa6-f826-11ea-1b96-2be9514b1f4c
 md"### snippet 4.13"
@@ -104,56 +129,18 @@ md"##### Show σ  prior."
 
 # ╔═╡ 270cde42-f826-11ea-25f3-71a99eae18e2
 begin
-	d2 = Uniform(0, 50)
 	figs[2] = plot(-5:0.1:55, [pdf(d2, σ) for σ in 0-5:0.1:55],
 		xlab="sigma",
 		ylab="density",
-		lab="Prior on sigma")
-end;
+		title="Prior on sigma"
+	)
+end
 
 # ╔═╡ 2717e74c-f826-11ea-26d5-c5862cdeef06
 md"### snippet 4.14."
 
-# ╔═╡ 27222c68-f826-11ea-0c72-392e7c56f262
-begin
-	sample_mu_20 = rand(d1, 10000)
-	sample_sigma = rand(d2, 10000)
-
-	d3 = Normal(178, 100)
-	sample_mu_100 = rand(d3, 10000)
-
-	prior_height_20 = [rand(Normal(sample_mu_20[i], sample_sigma[i]), 1)[1] for i in 1:10000]
-	figs[3] = density(prior_height_20,
-		xlab="height",
-		ylab="density",
-		lab="Prior predictive height")
-end;
-
-# ╔═╡ 272c9e2e-f826-11ea-221d-afb68d7bd316
-begin
-	prior_height_100 = [rand(Normal(sample_mu_100[i], sample_sigma[i]), 1)[1] for i in 1:10000]
-	figs[4] = density(prior_height_100,
-		xlab="height",
-		ylab="density",
-		lab="Prior predictive mu")
-end;
-
 # ╔═╡ 2737cdaa-f826-11ea-2c70-c5c3d16d5a36
 plot(figs..., layout=(2,2))
-
-# ╔═╡ 274bc54e-f826-11ea-026e-9f45eeb84c1b
-md"##### Store in a DataFrame."
-
-# ╔═╡ 2755d188-f826-11ea-0f5f-e11a4ffec021
-df2 = DataFrame(
-	mu_20 = sample_mu_20,
-	mu_100 = sample_mu_100,
-	sigma=sample_sigma,
-	prior_height_20=prior_height_20,
-	prior_height_100=prior_height_100);
-
-# ╔═╡ 2763c7ac-f826-11ea-13ce-61b6a5ee2379
-PRECIS(df2)
 
 # ╔═╡ 276f9e94-f826-11ea-2421-218735527bc2
 md"##### On to Stan."
@@ -241,6 +228,9 @@ md"##### Plot the density of posterior draws."
 # ╔═╡ 25318e22-f866-11ea-015b-d736c83ebfaa
 plot(chns4_1s, seriestype = :density)
 
+# ╔═╡ a3269596-3fc4-11eb-2eb3-d7bbaafe365f
+Particles(chns4_1s)
+
 # ╔═╡ 2814f2fc-f826-11ea-3fbc-0541fe904b97
 md"## End of clip-04-07-15s.jl"
 
@@ -271,16 +261,12 @@ md"## End of clip-04-07-15s.jl"
 # ╟─26da7a74-f826-11ea-04de-c1af74ca5f52
 # ╠═26e489d8-f826-11ea-2a8e-63dc68ebdfcb
 # ╠═26ee436a-f826-11ea-2b51-553109976eeb
+# ╠═272c9e2e-f826-11ea-221d-afb68d7bd316
 # ╟─26f91aa6-f826-11ea-1b96-2be9514b1f4c
 # ╟─2702ab5e-f826-11ea-007a-878156afed4e
 # ╠═270cde42-f826-11ea-25f3-71a99eae18e2
 # ╟─2717e74c-f826-11ea-26d5-c5862cdeef06
-# ╠═27222c68-f826-11ea-0c72-392e7c56f262
-# ╠═272c9e2e-f826-11ea-221d-afb68d7bd316
 # ╠═2737cdaa-f826-11ea-2c70-c5c3d16d5a36
-# ╠═274bc54e-f826-11ea-026e-9f45eeb84c1b
-# ╠═2755d188-f826-11ea-0f5f-e11a4ffec021
-# ╠═2763c7ac-f826-11ea-13ce-61b6a5ee2379
 # ╟─276f9e94-f826-11ea-2421-218735527bc2
 # ╟─277b474c-f826-11ea-1816-e518c1ed26eb
 # ╠═278ac238-f826-11ea-0f32-799e4c8f10f5
@@ -298,4 +284,5 @@ md"## End of clip-04-07-15s.jl"
 # ╠═044a19a2-f866-11ea-2b89-a51866d89a50
 # ╟─dc476376-f82c-11ea-10ac-97fcb8c78627
 # ╠═25318e22-f866-11ea-015b-d736c83ebfaa
+# ╠═a3269596-3fc4-11eb-2eb3-d7bbaafe365f
 # ╟─2814f2fc-f826-11ea-3fbc-0541fe904b97

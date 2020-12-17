@@ -10,7 +10,7 @@ using Pkg, DrWatson
 # ╔═╡ 056e12ae-fb70-11ea-2e74-23b6879ea8a5
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample
+	using StanSample, StanOptimize
 	using StatisticalRethinking
 end
 
@@ -44,13 +44,28 @@ model {
 }
 ";
 
+# ╔═╡ 845f528a-3ff4-11eb-3208-eb3fbb9022f2
+md"## Snippet 4.31"
+
 # ╔═╡ 057a5a8a-fb70-11ea-087f-7f1562f46764
 begin
-	m4_2s = SampleModel("heights", stan4_2);
-	m4_2_data = Dict("N" => length(df.height), "h" => df.height);
-	rc4_2s = stan_sample(m4_2s, data=m4_2_data);
-	success(rc4_2s) && (part4_2s = read_samples(m4_2s; output_format=:particles))
+	data = Dict(:N => length(df.height), :h => df.height)
+	init = Dict(:mu => 180.0, :sigma => 50.0)
+	q4_2s, m4_2s, _ = quap("m4.2s", stan4_2; data, init)
+	if !isnothing(m4_2s)
+		post4_2s_df = read_samples(m4_2s; output_format=:dataframe)
+		part4_2s = read_samples(m4_2s; output_format=:particles)
+	end
 end
+
+# ╔═╡ 32553622-3ff5-11eb-1c77-d764df9673ed
+if !isnothing(q4_2s)
+	quap4_2s_df = sample(q4_2s)
+	PRECIS(quap4_2s_df)
+end
+
+# ╔═╡ 56dddfda-3ff5-11eb-35a5-ad21c023fbb5
+PRECIS(post4_2s_df)
 
 # ╔═╡ 058373e2-fb70-11ea-2fbe-634f17946677
 md"## End of clip-04-31s.jl"
@@ -61,5 +76,8 @@ md"## End of clip-04-31s.jl"
 # ╠═056e12ae-fb70-11ea-2e74-23b6879ea8a5
 # ╠═056e751e-fb70-11ea-0d8c-0f392d4231ac
 # ╠═0579eaa2-fb70-11ea-1646-095d244514f3
+# ╟─845f528a-3ff4-11eb-3208-eb3fbb9022f2
 # ╠═057a5a8a-fb70-11ea-087f-7f1562f46764
+# ╠═32553622-3ff5-11eb-1c77-d764df9673ed
+# ╠═56dddfda-3ff5-11eb-35a5-ad21c023fbb5
 # ╟─058373e2-fb70-11ea-2fbe-634f17946677
