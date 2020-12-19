@@ -25,7 +25,7 @@ md"### snippet 4.38"
 
 md"##### Define the Stan language models."
 
-stan4_4a = "
+stan4_3a = "
 parameters {
  real alpha;                       // Intercept
  real beta;                        // Slope (regression coefficients)
@@ -37,7 +37,7 @@ model {
 }
 ";
 
-stan4_4b = "
+stan4_3b = "
 parameters {
  real alpha;                       // Intercept
  real beta;                        // Slope (regression coefficients)
@@ -53,15 +53,15 @@ md"##### Compute quadratic approximations."
 
 begin
 	init = Dict(:alpha => 170.0, :beta => 2.0)
-	q4_4as, _, _ = quap("m4.4as", stan4_4a; init)
-	quap4_4as_df = sample(q4_4as)
-	q4_4bs, _, _ = quap("m4.4bs", stan4_4b; init)
-	quap4_4bs_df = sample(q4_4bs)
+	q4_3as, _, _ = quap("m4.4as", stan4_3a; init)
+	quap4_3as_df = sample(q4_3as)
+	q4_3bs, _, _ = quap("m4.3bs", stan4_3b; init)
+	quap4_3bs_df = sample(q4_3bs)
 end;|
 
-PRECIS(quap4_4as_df)
+PRECIS(quap4_3as_df)
 
-PRECIS(quap4_4bs_df)
+PRECIS(quap4_3bs_df)
 
 md"## snippet 4.40"
 
@@ -71,18 +71,18 @@ end
 
 md"### snippets 4.39 & 4.41"
 
-if !isnothing(q4_4as) && !isnothing(q4_4bs)
+if !isnothing(q4_3as) && !isnothing(q4_3bs)
 	x = range(30.0, stop=70.0, length=50)
 	xbar = mean(x)
 	fig1 = plot(ylab="height [cm]", xlab="weight [kg]", ylim=(-100, 400),
 		leg=false, title="beta ~ Normal(0, 10)")
 	for i in 1:100
-		fig1 = plot!(x, quap4_4as_df.alpha[i] .+ quap4_4as_df.beta[i] .* (x .- xbar), color=:grey)
+		fig1 = plot!(x, quap4_3as_df.alpha[i] .+ quap4_3as_df.beta[i] .* (x .- xbar), color=:grey)
 	end
 	fig2 = plot(ylab="height [cm]", xlab="weight [kg]", ylim=(-100, 400), 
 		leg=false, title="beta ~ LogNormal(0, 1)")
 	for i in 1:100
-		fig2 = plot!(x, quap4_4bs_df.alpha[i] .+ quap4_4bs_df.beta[i] .* (x .- xbar), color=:grey)
+		fig2 = plot!(x, quap4_3bs_df.alpha[i] .+ quap4_3bs_df.beta[i] .* (x .- xbar), color=:grey)
 	end
 	hline!(fig1, [0.0, 272.0], width=3)
 	annotate!(fig1, [(30.0, 10.0, Plots.text("Embryo", 6, :red, :left))])
@@ -95,7 +95,7 @@ if !isnothing(q4_4as) && !isnothing(q4_4bs)
 	plot(fig1, fig2, layout=(1, 2))
 end
 
-stan4_4c = "
+stan4_3c = "
 parameters {
  real alpha;                       // Intercept
  real log_beta;                    // Slope (regression coefficients)
@@ -108,17 +108,17 @@ model {
 ";
 
 begin
-	q4_4cs, sm, om = quap("m4.4cs", stan4_4c; init)
-	quap4_4cs_df = sample(q4_4cs)
-	PRECIS(quap4_4cs_df)
+	q4_3cs, sm, om = quap("m4.3cs", stan4_3c; init)
+	quap4_3cs_df = sample(q4_3cs)
+	PRECIS(quap4_3cs_df)
 end
 
-if !isnothing(q4_4as) && !isnothing(q4_4bs)
+if !isnothing(q4_3cs) && !isnothing(q4_3bs)
 	fig3 = plot(ylab="height [cm]", xlab="weight [kg]", ylim=(-100, 400), 
 		leg=false, title="log_beta ~ Normal(0, 1)")
 	for i in 1:100
-		fig3 = plot!(x, quap4_4cs_df.alpha[i] .+ 
-			exp(quap4_4cs_df.log_beta[i]) .* (x .- xbar), color=:grey)
+		fig3 = plot!(x, quap4_3cs_df.alpha[i] .+ 
+			exp(quap4_3cs_df.log_beta[i]) .* (x .- xbar), color=:grey)
 	end
 
 	hline!(fig3, [0.0, 272.0], width=3)

@@ -23,7 +23,7 @@ end;
 
 md"##### Define the Stan language model."
 
-stan4_9 = "
+stan4_5 = "
 data{
     int N;
     vector[N] height;
@@ -50,7 +50,7 @@ model{
 md"##### Define the SampleModel, etc,"
 
 begin
-	m4_9s = SampleModel("m4.9s", stan4_9);
+	m4_5s = SampleModel("m4.5s", stan4_5);
 	data = Dict(
 		:N => size(df, 1), 
 		:height => df.height, 
@@ -58,9 +58,9 @@ begin
 		:weight_sq => df.weight_sq_s
 	)
 	init = Dict(:alpha => 140.0, :beta1 => 15.0, :beta2 => -5.0, :sigma => 10.0)
-	q4_9s, m4_9s, _ = quap("m4.9s", stan4_9; data, init)
-	quap4_9s_df = sample(q4_9s)
-	PRECIS(quap4_9s_df)
+	q4_5s, m4_5s, _ = quap("m4.5s", stan4_5; data, init)
+	quap4_5s_df = sample(q4_5s)
+	PRECIS(quap4_5s_df)
 end
 
 rethinking = "
@@ -72,12 +72,12 @@ sigma   5.77 0.18   5.49   6.06
 ";
 
 if !isnothing(m4_9s)
-  sdf4_9s = read_summary(m4_9s)
+  sdf4_5s = read_summary(m4_5s)
 end
 
 md"### Snippet 4.53 - 4.67"
 
-if !isnothing(q4_9s)
+if !isnothing(q4_5s)
 	begin
 		function link_poly(dfa::DataFrame, xrange)
 			vars = Symbol.(names(dfa))
@@ -87,7 +87,7 @@ if !isnothing(q4_9s)
 		mu_range = -2:0.1:2
 
 		xbar = mean(df[:, :weight])
-		mu = link_poly(quap4_9s_df, mu_range);
+		mu = link_poly(quap4_5s_df, mu_range);
 
 		plot(xlab="weight_s", ylab="height")
 		for (indx, mu_val) in enumerate(mu_range)
@@ -99,11 +99,11 @@ if !isnothing(q4_9s)
 	end
 end
 
-if !isnothing(q4_9s)
+if !isnothing(q4_5s)
 	plot(xlab="weight_s", ylab="height", leg=:bottomright)
 	fheight(weight, a, b1, b2) = a + weight * b1 + weight^2 * b2
 	testweights = -2:0.01:2
-	arr = [fheight.(w, quap4_9s_df.alpha, quap4_9s_df.beta1, quap4_9s_df.beta2) for w in testweights]
+	arr = [fheight.(w, quap4_5s_df.alpha, quap4_5s_df.beta1, quap4_5s_df.beta2) for w in testweights]
 	m = [mean(v) for v in arr]
 	quantiles = [quantile(v, [0.055, 0.945]) for v in arr]
 	lower = [q[1] - m for (q, m) in zip(quantiles, m)]

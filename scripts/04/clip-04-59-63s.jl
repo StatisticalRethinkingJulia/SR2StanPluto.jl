@@ -22,7 +22,7 @@ end;
 
 md"##### Define the Stan language model."
 
-stan4_8 = "
+stan4_3 = "
 data{
     int N;
     real xbar;
@@ -49,14 +49,14 @@ model{
 md"##### Define the SampleModel, input data and samples."
 
 begin
-	m4_8s = SampleModel("m4.8s", stan4_8);
-	m4_8_data = Dict(
+	m4_3s = SampleModel("m4.3s", stan4_3);
+	m4_3_data = Dict(
 	  "N" => size(df, 1), 
 	  "height" => df.height_s, 
 	  "weight" => df.weight_s,
 	  "xbar" => mean(df.weight)
 	);
-	rc4_8s = stan_sample(m4_8s, data=m4_8_data)
+	rc4_3s = stan_sample(m4_3s, data=m4_3_data)
 end;
 
 unscaled_rethinking_result = "
@@ -66,20 +66,20 @@ b       0.90 0.04   0.84   0.97
 sigma   5.07 0.19   4.77   5.38
 ";
 
-if success(rc4_8s)
-  sdf4_8s = read_summary(m4_8s)
+if success(rc4_3s)
+  sdf4_3s = read_summary(m4_3s)
 end
 
 md"### Snippet 4.61"
 
 begin
-	dfa4_8s = read_samples(m4_8s; output_format=:dataframe)
+	dfa4_3s = read_samples(m4_3s; output_format=:dataframe)
 
 	title = "Height vs. Weight regions" * "\n89% of prediction interval for heights" *
 		"\nand 89% hpd interval around mu"
 	plotbounds(
 		df, :weight, :height,
-		dfa4_8s, [:a, :b, :sigma];
+		dfa4_3s, [:a, :b, :sigma];
 		bounds=[:predicted, :hpdi],
 		title=title,
 		colors=[:lightblue, :darkgrey]

@@ -22,7 +22,7 @@ end;
 
 md"##### Define the Stan language model."
 
-stan4_8 = "
+stan4_3 = "
 data{
     int N;
     real xbar;
@@ -51,9 +51,9 @@ md"##### Define the SampleModel."
 begin
 	data = Dict(:N => size(df, 1), :height => df.height, :weight => df.weight, :xbar => mean(df.weight));
 	init = Dict(:alpha => 170.0, :beta => 2.0, :sigma => 10.0)
-	q4_8s, m4_8s, _ = quap("m4.8s", stan4_8; data, init)
-	quap4_8s_df = sample(q4_8s)
-	PRECIS(quap4_8s_df)
+	q4_3s, m4_3s, _ = quap("m4.3s", stan4_3; data, init)
+	quap4_3s_df = sample(q4_3s)
+	PRECIS(quap4_3s_df)
 end
 
 rethinking = "
@@ -63,8 +63,8 @@ beta       0.90    0.04    0.84     0.97
 sigma      5.07    0.19    4.77     5.38
 ";
 
-if !isnothing(m4_8s)
-	sdf4_8s = read_summary(m4_8s)
+if !isnothing(m4_3s)
+	sdf4_3s = read_summary(m4_3s)
 end
 
 md"### Snippet 4.53 - 4.56"
@@ -72,7 +72,7 @@ md"### Snippet 4.53 - 4.56"
 begin
 	mu_range = 30:1:60
 	xbar = mean(df[:, :weight])
-	mu = link(quap4_8s_df, [:alpha, :beta], mu_range, xbar);
+	mu = link(quap4_3s_df, [:alpha, :beta], mu_range, xbar);
 
 	figs = Vector{Plots.Plot{Plots.GRBackend}}(undef, 2)
 	figs[1] = plot(xlab="weight", ylab="height")
@@ -97,18 +97,18 @@ begin
 end
 
 begin
-	nms = string.(q4_8s.params)
-	covm = NamedArray(Matrix(q4_8s.vcov), (nms, nms), ("Rows", "Cols"))
+	nms = string.(q4_3s.params)
+	covm = NamedArray(Matrix(q4_3s.vcov), (nms, nms), ("Rows", "Cols"))
 	covm
 end 
 
 begin
-	μ = [q4_8s.coef...][1:2]
-	Σ = q4_8s.vcov[1:2, 1:2]
-    covellipse(μ, Σ; showaxes=true, n_std=1, n_ellipse_vertices=100, lab="q4_8s vcov")
+	μ = [q4_3s.coef...][1:2]
+	Σ = q4_3s.vcov[1:2, 1:2]
+    covellipse(μ, Σ; showaxes=true, n_std=1, n_ellipse_vertices=100, lab="q4_3s vcov")
 end
 
-q4_8s.params
+q4_3s.params
 
 md"## End of clip-04-53-58s.jl"
 

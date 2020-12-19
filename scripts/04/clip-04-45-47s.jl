@@ -21,7 +21,7 @@ end;
 
 md"##### Define the Stan language model."
 
-stan4_5 = "
+stan4_3 = "
 data {
  int < lower = 1 > N; // Sample size
  vector[N] height; // Predictor
@@ -42,9 +42,9 @@ model {
 md"##### Define the SampleModel and sample."
 
 begin
-	m4_5s = SampleModel("m4.5s", stan4_5)
-	m4_5_data = Dict("N" => length(df.height), "height" => df.height, "weight" => df.weight_c)
-	rc4_5s = stan_sample(m4_5s, data=m4_5_data)
+	m4_3s = SampleModel("m4.3s", stan4_3)
+	m4_3_data = Dict("N" => length(df.height), "height" => df.height, "weight" => df.weight_c)
+	rc4_3s = stan_sample(m4_3s, data=m4_3_data)
 end;
 
 md"###### Plot estimates using the N = [10, 50, 150, 352] observations."
@@ -60,10 +60,10 @@ begin
 			"weight" => df[1:N, :weight]
 		)
 
-		m4_5s = SampleModel("m4.5s", stan4_5)
-		rc4_5s = stan_sample(m4_5s, data=heightsdataN)
+		m4_3s = SampleModel("m4.3s", stan4_3)
+		rc4_3s = stan_sample(m4_3s, data=heightsdataN)
 
-		if success(rc4_5s)
+		if success(rc4_3s)
 
 			local xi = 30.0:0.1:65.0
 			sample_df = read_samples(m4_5s; output_format=:dataframe)

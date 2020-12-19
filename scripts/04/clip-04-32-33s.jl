@@ -19,7 +19,7 @@ begin
 	df = filter(row -> row[:age] >= 18, df);
 end;
 
-stan4_2 = "
+stan4_1 = "
 // Inferring the mean and std
 data {
   int N;
@@ -42,32 +42,32 @@ model {
 md"### Snippet 4.31"
 
 begin
-	m4_2_data = Dict(:N => length(df.height), :h => df.height)
-	m4_2_init = Dict(:mu => 180.0, :sigma => 10.0)
-	q4_2s, m4_2s, om = quap("m4.2s", stan4_2; data=m4_2_data, init=m4_2_init)
+	data = Dict(:N => length(df.height), :h => df.height)
+	init = Dict(:mu => 180.0, :sigma => 10.0)
+	q4_1s, m4_1s, om = quap("m4.1s", stan4_1; data, init)
 end;
 
-if !isnothing(m4_2s)
-	post4_2s_df = read_samples(m4_2s; output_format=:dataframe)
-	PRECIS(post4_2s_df)
+if !isnothing(m4_1s)
+	post4_1s_df = read_samples(m4_1s; output_format=:dataframe)
+	PRECIS(post4_1s_df)
 end
 
-if !isnothing(q4_2s)
-	quap4_2s_df = sample(q4_2s)
-	PRECIS(quap4_2s_df)
+if !isnothing(q4_1s)
+	quap4_1s_df = sample(q4_1s)
+	PRECIS(quap4_1s_df)
 end
 
 md"### snippet 4.32"
 
 md"##### Computed covariance matrix by quap()."
 
-q4_2s.vcov
+q4_1s.vcov
 
-diag(q4_2s.vcov) .|> sqrt
+diag(q4_1s.vcov) .|> sqrt
 
 md"##### Use Particles."
 
- part_sim = Particles(4000, MvNormal([mean(quap4_2s_df.mu), mean(quap4_2s_df.sigma)], q4_2s.vcov))
+ part_sim = Particles(4000, MvNormal([mean(quap4_1s_df.mu), mean(quap4_1s_df.sigma)], q4_1s.vcov))
 
 begin
 	fig1 = plot(part_sim[1], lab="mu")
@@ -79,7 +79,7 @@ md"### snippet 4.33"
 
 md"##### Compute correlation matrix."
 
-cor(Array(sample(q4_2s)))
+cor(Array(sample(q4_1s)))
 
-md"## End of clip-04-32-34s.jl"
+md"## End of clip-04-32-33s.jl"
 
