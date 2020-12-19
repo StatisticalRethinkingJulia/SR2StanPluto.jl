@@ -32,7 +32,7 @@ Text(precis(df; io=String))
 md"##### Define the Stan language model."
 
 # ╔═╡ dcdde1bc-fb8c-11ea-0430-b1893316491d
-stan4_6 = "
+stan4_3 = "
 data {
  int < lower = 1 > N; // Sample size
  vector[N] height; // Predictor
@@ -55,14 +55,14 @@ md"##### Define the SampleModel."
 
 # ╔═╡ dcef8aca-fb8c-11ea-1230-21768d10856e
 begin
-	m4_6s = SampleModel("weights", stan4_6)
-	m4_6_data = Dict("N" => length(df.height), "height" => df.height, "weight" => df.weight_c)
-	rc4_6s = stan_sample(m4_6s, data=m4_6_data)
+	m4_3s = SampleModel("m4.3s", stan4_3)
+	m4_3_data = Dict("N" => length(df.height), "height" => df.height, "weight" => df.weight_c)
+	rc4_3s = stan_sample(m4_3s, data=m4_3_data)
 end;
 
 # ╔═╡ dcf7ac28-fb8c-11ea-09ee-9fe5c75f668a
-if success(rc4_6s)
-  post4_6s_df = read_samples(m4_6s; output_format=:dataframe)
+if success(rc4_3s)
+  post4_3s_df = read_samples(m4_3s; output_format=:dataframe)
 end;
 
 # ╔═╡ dcf84386-fb8c-11ea-18ef-0b8ff5c50351
@@ -71,12 +71,12 @@ md"### Snippet 4.47"
 # ╔═╡ dd05a5bc-fb8c-11ea-3975-c3ffe53fc995
 # Show first 5 draws of correlated parameter values in chain 1
 
-if success(rc4_6s)
-  post4_6s_df[1:5,:]
+if success(rc4_3s)
+  post4_3s_df[1:5,:]
 end
 
 # ╔═╡ 18413a74-fb8d-11ea-2c54-7ba333cc282e
-PRECIS(post4_6s_df)
+PRECIS(post4_3s_df)
 
 # ╔═╡ dd09e4ce-fb8c-11ea-1b16-6d5afe600ab1
 md"### Snippets 4.48 & 4.49"
@@ -93,12 +93,12 @@ begin
 		heightsdataN = Dict("N" => N, "height" => df[1:N, :height], "weight" => df[1:N, :weight_c])
     
 		# Make sure previous sample files are removed!
-		sm = SampleModel("weights", stan4_6);
-		rc = stan_sample(m4_6s, data=heightsdataN)
+		sm = SampleModel("weights", stan4_3);
+		rc = stan_sample(m4_3s, data=heightsdataN)
 
 		if success(rc)
 
-		sample_df = read_samples(m4_6s; output_format=:dataframe)
+		sample_df = read_samples(m4_3s; output_format=:dataframe)
 		xi = -2.5:0.1:3.0
 		figs[i] = scatter(df[1:N, :weight_c], df[1:N, :height],
 			leg=false, xlab="weight_c")

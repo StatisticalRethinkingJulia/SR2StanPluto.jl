@@ -23,7 +23,7 @@ begin
 	df = filter(row -> row[:age] >= 18, df)
 	xbar = mean(df.weight)
 	df.weight_c = df.weight .- xbar
-end
+end;
 
 # ╔═╡ bf92904e-fb7d-11ea-3945-0768960719f4
 PRECIS(df)
@@ -32,7 +32,7 @@ PRECIS(df)
 md"##### Define the Stan language model."
 
 # ╔═╡ bf9f151c-fb7d-11ea-3857-0f812f0b3ced
-stan4_7 = "
+stan4_3 = "
 data {
  int < lower = 1 > N; // Sample size
  vector[N] height; // Predictor
@@ -57,21 +57,21 @@ md"##### Quadratic approximation."
 begin
 	data = Dict(:N => length(df.height), :height => df.height, :weight => df.weight_c)
 	init = Dict(:alpha => 170.0, :beta => 2.0, :sigma => 10.0)
-	q4_7s, m4_7s, _ = quap("m4.3s", stan4_7; data, init)
+	q4_3s, m4_3s, _ = quap("m4.3s", stan4_3; data, init)
 end;
 
 # ╔═╡ bfe69b8a-fb7d-11ea-10e6-150a3c3ef3eb
-if !isnothing(q4_7s)
-	quap4_7s_df = sample(q4_7s)
-	PRECIS(quap4_7s_df)
+if !isnothing(q4_3s)
+	quap4_3s_df = sample(q4_3s)
+	PRECIS(quap4_3s_df)
 end
 
 # ╔═╡ bfd622b4-fb7d-11ea-2907-fd345097b670
-if !isnothing(q4_7s)
+if !isnothing(q4_3s)
 	scatter(df.weight, df.height, lab="Observations",
 	  ylab="height [cm]", xlab="weight[kg]", leg=:topleft)
 	xi = 30.0:0.1:60.0
-	yi = mean(quap4_7s_df.alpha) .+ mean(quap4_7s_df.beta) * (xi .- xbar)
+	yi = mean(quap4_3s_df.alpha) .+ mean(quap4_3s_df.beta) * (xi .- xbar)
 	plot!(xi, yi, lab="Regression line")
 end
 
@@ -79,7 +79,7 @@ end
 md"### snippet 4.51"
 
 # ╔═╡ aa8207a2-4146-11eb-25d2-3bfd3c48db98
-density(quap4_7s_df.alpha + quap4_7s_df.beta * (50 - xbar), lab="mu | weight=50")
+density(quap4_3s_df.alpha + quap4_3s_df.beta * (50 - xbar), lab="mu | weight=50")
 
 # ╔═╡ bfd4d4c2-fb7d-11ea-0995-8fcce3233153
 md"### snippet 4.52"
@@ -87,9 +87,9 @@ md"### snippet 4.52"
 # ╔═╡ a8c24ab6-413f-11eb-1da9-f761587adc0f
 begin
 	plot(xlab="Height | weight=[30, 50, 60]", ylab="Density")
-	density!(quap4_7s_df.alpha + quap4_7s_df.beta * (30 - xbar), lab="mu | weight=30")
-	density!(quap4_7s_df.alpha + quap4_7s_df.beta * (50 - xbar), lab="mu | weight=50")
-	density!(quap4_7s_df.alpha + quap4_7s_df.beta * (70 - xbar), lab="mu | weight=70")
+	density!(quap4_3s_df.alpha + quap4_3s_df.beta * (30 - xbar), lab="mu | weight=30")
+	density!(quap4_3s_df.alpha + quap4_3s_df.beta * (50 - xbar), lab="mu | weight=50")
+	density!(quap4_3s_df.alpha + quap4_3s_df.beta * (70 - xbar), lab="mu | weight=70")
 end
 
 # ╔═╡ bff6b6d2-fb7d-11ea-3ea8-e5d61fa1ebf7

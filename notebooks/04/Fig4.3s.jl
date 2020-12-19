@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.16
+# v0.12.17
 
 using Markdown
 using InteractiveUtils
@@ -89,7 +89,7 @@ begin
 		ylab="density",
 		xlim=(80, 250),
 		leg=false,
-		title="mu ~ Normal( 178, 20)")
+		title="mu ~ Normal(178, 20)")
 end
 
 # ╔═╡ 3169f1a0-fb54-11ea-1307-cb6f253f9eee
@@ -105,7 +105,7 @@ begin
 		xlab="sigma",
 		ylab="density",
 		leg=false,
-		title="sigma ~ Uniform( 0, 50)")
+		title="sigma ~ Uniform(0, 50)")
 end
 
 # ╔═╡ 3180a500-fb54-11ea-0c06-b155d6887126
@@ -125,14 +125,14 @@ begin
 		ylab="density",
 		xlim=(-300, 600),
 		leg=false,
-		title="mu ~ Normal( 178, 100)")
+		title="mu ~ Normal(178, 100)")
 
 
 	figs[4] = plot(-5:0.1:55, [pdf(d2, σ) for σ in 0-5:0.1:55],
 		xlab="sigma",
 		ylab="density",
 		leg=false,
-		title="sigma ~ Uniform( 0, 50)")
+		title="sigma ~ Uniform(0, 50)")
 
 	prior_height_20 = [rand(Normal(sample_mu_20[i], sample_sigma[i]), 1)[1] for i in 1:10000]
 	figs[5] = density(prior_height_20,
@@ -149,7 +149,7 @@ begin
 		ylab="density",
 		xlim=(-300, 600),
 		leg=false,
-		title="h ~ Normal(mu,sigma)")
+		title="h ~ Normal(mu, sigma)")
 
 	plot(figs..., layout=(3, 2))
 end

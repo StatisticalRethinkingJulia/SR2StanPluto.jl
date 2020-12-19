@@ -27,7 +27,7 @@ begin
 end;
 
 # ╔═╡ 62a7bf82-fb76-11ea-3ad9-6bcc0a1b1be3
-stan4_2 = "
+stan4_1 = "
 // Inferring the mean and std
 data {
   int N;
@@ -52,21 +52,21 @@ md"### Snippet 4.31"
 
 # ╔═╡ 2fc627a0-3cc3-11eb-31a0-47b17099e493
 begin
-	m4_2_data = Dict(:N => length(df.height), :h => df.height)
-	m4_2_init = Dict(:mu => 180.0, :sigma => 10.0)
-	q4_2s, m4_2s, om = quap("m4.2s", stan4_2; data=m4_2_data, init=m4_2_init)
+	data = Dict(:N => length(df.height), :h => df.height)
+	init = Dict(:mu => 180.0, :sigma => 10.0)
+	q4_1s, m4_1s, om = quap("m4.1s", stan4_1; data, init)
 end;
 
 # ╔═╡ 62c16610-fb76-11ea-36d5-51093f07a76a
-if !isnothing(m4_2s)
-	post4_2s_df = read_samples(m4_2s; output_format=:dataframe)
-	PRECIS(post4_2s_df)
+if !isnothing(m4_1s)
+	post4_1s_df = read_samples(m4_1s; output_format=:dataframe)
+	PRECIS(post4_1s_df)
 end
 
 # ╔═╡ 243a9eea-0e22-11eb-0e83-2d7bbd03f78a
-if !isnothing(q4_2s)
-	quap4_2s_df = sample(q4_2s)
-	PRECIS(quap4_2s_df)
+if !isnothing(q4_1s)
+	quap4_1s_df = sample(q4_1s)
+	PRECIS(quap4_1s_df)
 end
 
 # ╔═╡ 62d7694e-fb76-11ea-28c4-4d1e78f54b82
@@ -76,16 +76,16 @@ md"### snippet 4.32"
 md"##### Computed covariance matrix by quap()."
 
 # ╔═╡ bf7e6a2e-0ef6-11eb-3753-d5cddb8365c2
-q4_2s.vcov
+q4_1s.vcov
 
 # ╔═╡ 0857073c-0bd8-11eb-0c3c-777cd67bac01
-diag(q4_2s.vcov) .|> sqrt
+diag(q4_1s.vcov) .|> sqrt
 
 # ╔═╡ 03c38850-0b68-11eb-3045-d1d65f44f4c4
 md"##### Use Particles."
 
 # ╔═╡ fcb54d46-0b67-11eb-221d-87a459b88a94
- part_sim = Particles(4000, MvNormal([mean(quap4_2s_df.mu), mean(quap4_2s_df.sigma)], q4_2s.vcov))
+ part_sim = Particles(4000, MvNormal([mean(quap4_1s_df.mu), mean(quap4_1s_df.sigma)], q4_1s.vcov))
 
 # ╔═╡ 4fb21aa6-0be5-11eb-3ff7-d55646170d94
 begin
@@ -101,10 +101,10 @@ md"### snippet 4.33"
 md"##### Compute correlation matrix."
 
 # ╔═╡ 62feda92-fb76-11ea-32a4-454502ca4488
-cor(Array(sample(q4_2s)))
+cor(Array(sample(q4_1s)))
 
 # ╔═╡ 6306bcf8-fb76-11ea-2feb-af94851021ba
-md"## End of clip-04-32-34s.jl"
+md"## End of clip-04-32-33s.jl"
 
 # ╔═╡ Cell order:
 # ╟─8e62b178-fb75-11ea-0fd3-f16790f4bf4f
@@ -127,4 +127,4 @@ md"## End of clip-04-32-34s.jl"
 # ╟─62ef3826-fb76-11ea-2369-c157a18c626c
 # ╟─62f79ff0-fb76-11ea-323d-074b61eb40f0
 # ╠═62feda92-fb76-11ea-32a4-454502ca4488
-# ╟─6306bcf8-fb76-11ea-2feb-af94851021ba
+# ╠═6306bcf8-fb76-11ea-2feb-af94851021ba
