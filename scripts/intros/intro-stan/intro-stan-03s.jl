@@ -1,11 +1,4 @@
 
-md"The equivalent of the R function `quap()` in StatisticalRethinkingStan uses either StanOptimize or the MAP density of the Stan samples as the mean of the Normal distribution and reports the approximation as a NamedTuple. e.g. see `./notebooks/intro-stan/intro-stan-optimize-01s.jl` and `./notebooks/intro-stan/intro-stan-optimize-02s.jl`:
-
-Examples and comparisons of different ways of computing a quap approximation can be found in `./notebooks/intro-stan/intro-stan-04.jl`."
-
-md"The increasing use of Particles to represent quap approximations is possible thanks to the package [MonteCarloMeasurements.jl](https://github.com/baggepinnen/MonteCarloMeasurements.jl). [Soss.jl](https://github.com/cscherrer/Soss.jl) and [related write-ups](https://cscherrer.github.io) introduced me to that option."
-
-
 using Markdown
 using InteractiveUtils
 
@@ -53,7 +46,7 @@ begin
 	init = Dict(:theta => 0.5)
 end;
 
-md"##### Create a quadratic apprximation."
+md"##### Create a quadratic approximation."
 
 begin
 	q1_1s, m1_1s, om = quap("m1.1s", stan1_1; data, init)

@@ -61,61 +61,52 @@ md"### snippet 4.12"
 
 md"##### μ prior."
 
-d1 = Normal(178, 20)
+begin
+	d1 = Normal(178, 20)
+	sample_mu_20 = rand(d1, 10000)
+end;
 
 figs[1] = plot(100:250, [pdf(d1, μ) for μ in 100:250],
 	xlab="mu",
 	ylab="density",
-	lab="Prior on mu");
+	title="Prior on mu")
+
+begin
+	d2 = Uniform(0, 50)
+	sample_sigma = rand(d2, 10000)
+	
+	prior_height_20 = [rand(Normal(sample_mu_20[i], sample_sigma[i]), 1)[1] for i in 1:10000]
+		figs[3] = density(prior_height_20,
+		xlab="height",
+		ylab="density",
+		title="Prior predictive height")
+
+	d3 = Normal(178, 100)
+	sample_mu_100 = rand(d3, 10000)
+	
+	prior_height_100 = [rand(Normal(sample_mu_100[i], sample_sigma[i]), 1)[1] for i in 1:10000]
+	figs[4] = density(prior_height_100,
+		xlab="height",
+		ylab="density",
+		title="Prior predictive height (d3)")
+	plot(figs[3], figs[4])
+end
 
 md"### snippet 4.13"
 
 md"##### Show σ  prior."
 
 begin
-	d2 = Uniform(0, 50)
 	figs[2] = plot(-5:0.1:55, [pdf(d2, σ) for σ in 0-5:0.1:55],
 		xlab="sigma",
 		ylab="density",
-		lab="Prior on sigma")
-end;
+		title="Prior on sigma"
+	)
+end
 
 md"### snippet 4.14."
 
-begin
-	sample_mu_20 = rand(d1, 10000)
-	sample_sigma = rand(d2, 10000)
-
-	d3 = Normal(178, 100)
-	sample_mu_100 = rand(d3, 10000)
-
-	prior_height_20 = [rand(Normal(sample_mu_20[i], sample_sigma[i]), 1)[1] for i in 1:10000]
-	figs[3] = density(prior_height_20,
-		xlab="height",
-		ylab="density",
-		lab="Prior predictive height")
-end;
-
-begin
-	prior_height_100 = [rand(Normal(sample_mu_100[i], sample_sigma[i]), 1)[1] for i in 1:10000]
-	figs[4] = density(prior_height_100,
-		xlab="height",
-		ylab="density",
-		lab="Prior predictive mu")
-end;
-
 plot(figs..., layout=(2,2))
-
-md"##### Store in a DataFrame."
-
-df2 = DataFrame(
-	mu_20 = sample_mu_20,
-	mu_100 = sample_mu_100,
-	sigma=sample_sigma,
-	prior_height_20=prior_height_20,
-	prior_height_100=prior_height_100);
-
-PRECIS(df2)
 
 md"##### On to Stan."
 
@@ -185,6 +176,8 @@ plot(chns4_1s, seriestype = :traceplot)
 md"##### Plot the density of posterior draws."
 
 plot(chns4_1s, seriestype = :density)
+
+Particles(chns4_1s)
 
 md"## End of clip-04-07-15s.jl"
 

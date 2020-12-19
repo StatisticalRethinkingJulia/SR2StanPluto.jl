@@ -16,87 +16,65 @@ begin
 	df2 = filter(row -> row[:age] >= 18, df);
 end;
 
-Text(precis(df2; io=String))
-
-md"### Snippet 4.23"
-
-md"##### Sample 20 random heights."
-
-begin
-	n = size(df2, 1)
-	selected_ind = sample(1:n, 20, replace=false);
-	df3 = df2[selected_ind, :];
-end;
+PRECIS(df2)
 
 md"### Snippet 4.24"
 
 md"##### Generate approximate probabilities."
 
+flat_gridpoints(grids) = vec(collect(Iterators.product(grids...)))
+
 begin
-	mu_list_1 = repeat(range(150, 170, length=200), 200);
-	sigma_list_1 = repeat(range(4, 20, length=200), inner=200);
-end;
+	df3 = sample(df2, 20, replace=true)
 
-function grid_prob(x, y, prior_x, prior_y, obs)
+	mu_list = range(150, 160, length=100)
+	sigma_list = range(4, 20, length=100)
+	prior_mu = Normal(178.0, 20.0)
+	prior_sigma = Uniform(0, 50)
 
-	# Create an x vs. y grid (vector of vectors), e.g.
-	# 10000-element Array{Array{Float64,1},1}:
- 	#	[150.0, 7.0]
- 	#	[150.1010101010101, 7.0]
- 	#	[150.2020202020202, 7.0]
- 	#   ...
-
- 	df = DataFrame()
-	grid = reshape([ [x,y]  for x=x, y=y ], length(x)*length(y))
-
-	# Define the priors
-
-	d2 = Normal(178.0, 20.0)
-	d3 = Uniform(0, 50)
+ 	post_df = DataFrame()
+	the_grid = flat_gridpoints([mu_list, sigma_list])
 
 	# Compute the log(likelihood * prior)
 
-	the_prod = []
-	for i in 1:length(grid)
-	    d1 = Normal(grid[i][1], grid[i][2])
-	    ll = sum(log.(pdf.(d1, obs)))
-	    append!(df, DataFrame(mu=grid[i][1], sigma=grid[i][2],
-	    	ll=ll))
-		append!(the_prod, ll + log.(pdf.(prior_x, grid[i][1])) + 
-			log.(pdf.(prior_y, grid[i][2])))
+	for i in 1:length(the_grid)
+	    d1 = Normal(the_grid[i][1], the_grid[i][2])
+	    ll = sum(logpdf.(d1, df3.height))
+		the_prod = ll + pdf(prior_mu, the_grid[i][1]) + pdf(prior_sigma, the_grid[i][2])
+	    append!(post_df, DataFrame(mu=the_grid[i][1], sigma=the_grid[i][2],
+	    	ll=ll, prod=the_prod))
 	end
 
 	# Make it a probability
 
-	df.prob = exp.(the_prod .- maximum(the_prod))
-	df
+	post_df.prob = exp.(post_df.prod .- maximum(post_df.prod))
+	
+	#	   mu     sigma     LL      prod
+	#1  150.0000     4 -115.1337 -123.9404
+	#2  150.1005     4 -114.2501 -123.0497
+	#3  150.2010     4 -113.3790 -122.1717
+	#4  150.3015     4 -112.5206 -121.3063
+	#5  150.4020     4 -111.6748 -120.4536
+
+	PRECIS(post_df)
 end
 
-begin
-	mu_list = range(150, 160, length=100)
-	sigma_list = range(7, 9, length=100)
-	prior_mu = Normal(178.0, 20.0)
-	prior_sigma = Uniform(0, 50)
-
-	post_df = grid_prob(mu_list, sigma_list, prior_mu, prior_sigma,
-		df3[:, :height])
-	Text(precis(post_df; io=String))
-end
-
-md"##### Sample post."
-
-samples = post_df[sample(1:size(post_df, 1), Weights(post_df.prob), 
-	10000, replace=true), :];
+first(post_df, 5)
 
 md"### Snippet 4.25"
 
 md"##### Density of sigma."
 
-density(samples[:, :sigma],
-	xlab="sigma",
-	ylab="density",
-	lab="posterior sigma (only 20 obs)"
-)
+begin
+	samples = post_df[sample(1:size(post_df, 1), Weights(post_df.prob), 4000; replace=true), :]
+	density(samples.sigma,
+		xlab="sigma",
+		ylab="density",
+		lab="Posterior sigma",
+		xlim = (3, 15)
+	)
+	density!(rand(Normal(mean(samples.sigma), std(samples.sigma)), 10000), lab="Normal comparison")
+end
 
 md"# End of clip-04-23-25s.jl"
 

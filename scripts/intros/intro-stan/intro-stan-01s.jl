@@ -12,6 +12,46 @@ begin
 	using PlutoUI
 end
 
+md"## Rethinking vs. StatisticalRethinking.jl."
+
+md"In the book and associated R package `rethinking`, statistical models are defined as illustrated below:
+
+```
+flist <- alist(
+  height ~ dnorm( mu , sigma ) ,
+  mu <- a + b*weight ,
+  a ~ dnorm( 156 , 100 ) ,
+  b ~ dnorm( 0 , 10 ) ,
+  sigma ~ dunif( 0 , 50 )
+)
+```
+"
+
+md"The author of the book states: *If that (the statistical model) doesn't make much sense, good. ... you're holding the right textbook, since this book teaches you how to read and write these mathematical descriptions* (page 77).
+
+The Pluto notebooks in [StatisticalRethinkingJuliaStan](https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingStan.jl) are intended to allow experimenting with this learning process using [Stan](https://github.com/StanJulia) and [Julia](https://julialang.org).
+
+In the R package `rethinking`, posterior values can be approximated by
+ 
+```
+m4.31 <- quap(flist, data=d2)
+```
+
+or generated using Stan by:
+
+```
+m4.32 <- ulam(flist, data=d2)
+```
+
+In StatisticalRethinkingStan, R's ulam() has been replaced by StanSample.jl. This means that much earlier on than in the book, StatisticalRethinkingStan introduces the reader to the Stan language."
+
+
+
+
+md"To help out with this, in this notebook and a few additional notebooks in the subdirectory `notebooks/intro-stan` the Stan language is introduced and the execution of Stan language programs illustrated. Chapter 9 of the book contains a nice introduction to translating the `alist` R models to the Stan language (just before section 9.5)."
+
+md"The equivalent of the R function `quap()` in StatisticalRethinkingStan uses StanOptimize (or, as a further shortcut, the MAP density of the Stan samples) as the mean of the Normal distribution and reports the quap approximation as a NamedTuple. e.g. see `./notebooks/intro-stan/intro-stan-03.jl` and `./notebooks/intro-stan/intro-stan-04.jl`."
+
 md"## Introduction to a Stan Language program"
 
 md"## Intro-stan-01s.jl"
@@ -99,6 +139,8 @@ md"###### Sample Particles summary:"
 
 part1_1s = read_samples(m1_1s; output_format=:particles)
 
+md"The increasing use of Particles to represent quap-like approximations is possible thanks to the package [MonteCarloMeasurements.jl](https://github.com/baggepinnen/MonteCarloMeasurements.jl). [Soss.jl](https://github.com/cscherrer/Soss.jl) and [related write-ups](https://cscherrer.github.io) introduced me to that option."
+
 md"###### NamedTuple representation of quap estimate:"
 
 begin
@@ -133,42 +175,5 @@ md"##### Display the stansummary result"
 
 success(rc1_1s) && read_summary(m1_1s)
 
-md"## Rethinking vs. StatisticalRethinking.jl."
-
-md"In the book and associated R package `rethinking`, statistical models are defined as illustrated below:
-
-```
-flist <- alist(
-  height ~ dnorm( mu , sigma ) ,
-  mu <- a + b*weight ,
-  a ~ dnorm( 156 , 100 ) ,
-  b ~ dnorm( 0 , 10 ) ,
-  sigma ~ dunif( 0 , 50 )
-)
-```
-"
-
-md"The author of the book states: *If that (the statistical model) doesn't make much sense, good. ... you're holding the right textbook, since this book teaches you how to read and write these mathematical descriptions* (page 77).
-
-The Pluto notebooks in [StatisticalRethinkingJuliaStan](https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingStan.jl) are intended to allow experimenting with this learning process using [Stan](https://github.com/StanJulia) and [Julia](https://julialang.org).
-
-In the R package `rethinking`, posterior values can be approximated by
- 
-```
-m4.31 <- quap(flist, data=d2)
-```
-
-or generated using Stan by:
-
-```
-m4.32 <- ulam(flist, data=d2)
-```
-
-In StatisticalRethinkingStan, R's ulam() has been replaced by StanSample.jl. This means that much earlier on than in the book, StatisticalRethinkingStan introduces the reader to the Stan language."
-
-
-
-
-md"To help out with this, in this notebook and a few additional notebooks in the subdirectory `notebooks/intro-stan` the Stan language is introduced and the execution of Stan language programs illustrated. Chapter 9 of the book contains a nice introduction to translating the `alist` R models to the Stan language (just before section 9.5)."
 md"## End of intros/intro-stan-01s.jl"
 

@@ -6,7 +6,7 @@ using Pkg, DrWatson
 
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample
+	using StanSample, StanOptimize
 	using StatisticalRethinking
 end
 
@@ -37,12 +37,24 @@ model {
 }
 ";
 
+md"## Snippet 4.31"
+
 begin
-	m4_2s = SampleModel("heights", stan4_2);
-	m4_2_data = Dict("N" => length(df.height), "h" => df.height);
-	rc4_2s = stan_sample(m4_2s, data=m4_2_data);
-	success(rc4_2s) && (part4_2s = read_samples(m4_2s; output_format=:particles))
+	data = Dict(:N => length(df.height), :h => df.height)
+	init = Dict(:mu => 180.0, :sigma => 50.0)
+	q4_2s, m4_2s, _ = quap("m4.2s", stan4_2; data, init)
+	if !isnothing(m4_2s)
+		post4_2s_df = read_samples(m4_2s; output_format=:dataframe)
+		part4_2s = read_samples(m4_2s; output_format=:particles)
+	end
 end
+
+if !isnothing(q4_2s)
+	quap4_2s_df = sample(q4_2s)
+	PRECIS(quap4_2s_df)
+end
+
+PRECIS(post4_2s_df)
 
 md"## End of clip-04-31s.jl"
 

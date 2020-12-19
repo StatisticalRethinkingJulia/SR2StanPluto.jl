@@ -32,62 +32,38 @@ md"## Intro-stan-04s.jl"
 	}";
 
 begin
-	m1_1s = SampleModel("m1.1s", stan1_1)	# Define Stan language mdeol
 	N = 25                              	# 25 experiments
 	d = Binomial(9, 0.66)               	# 9 tosses (simulate 2/3 is water)
 	k = rand(d, N)                      	# Simulate 15 trial results
 	n = 9                               	# Each experiment has 9 tosses
-	m1_1_data = Dict("N" => N, "n" => n, "k" => k)
-	rc1_1s = stan_sample(m1_1s, data=m1_1_data)
-	if success(rc1_1s)
-		post1_1s_df = read_samples(m1_1s, output_format=:dataframe)
-	end
-end;
-
-Text(precis(post1_1s_df; io = String))
+	data = Dict("N" => N, "n" => n, "k" => k)
+	init = Dict(:theta => 0.5)
+end
 
 begin
-	sm_opt = OptimizeModel("m1.1s", stan1_1)
-	rc_opt = stan_optimize(sm_opt; data=m1_1_data)
-	optim_stan, cnames = read_optimize(sm_opt)
-	optim_stan
+	q1_1s, m1_1s, om = quap("m1.1s", stan1_1; data, init)
+	if !isnothing(m1_1s)
+		post1_1s_df = read_samples(m1_1s, output_format=:dataframe)
+	end
+	PRECIS(post1_1s_df)
+end
+
+begin
+	quap1_1s_df = sample(q1_1s)
+	PRECIS(quap1_1s_df)
 end
 
 md"##### This scripts shows a number of different ways to estimate a quadratic approximation."
 
-md"##### Compare with Stan, MLE & MAP."
-
-md"###### StanSample mean and sd (see also `intro_part_01`):"
+md"##### Compare with MLE."
 
 part1_1s = Particles(post1_1s_df)
-
-md"###### Stan_optimize mean and std (see also intro-part-03):"
-
-begin
-	mu_stan_optimize = mean(optim_stan["theta"])
-	sigma_stan_optimize = std(post1_1s_df.theta, mean=mu_stan_optimize)
-	[mu_stan_optimize, sigma_stan_optimize]
-end
 
 md"###### MLE estimate"
 
 mle_fit = fit_mle(Normal, post1_1s_df.theta)
 
-md"###### Use kernel density of Stan samples"
-
-begin
-	q1_1s = quap(m1_1s)
-	quap1_1s_df = sample(q1_1s)
-	PRECIS(quap1_1s_df)
-end
-
-begin
-	mu_quap = mean(quap1_1s_df.theta)
-	sigma_quap = std(quap1_1s_df.theta)
-	[mu_quap, sigma_quap]
-end
-
-md"###### Using optim"
+md"###### Using optim (compare with quap() result above)."
 
 function loglik(x)
   ll = 0.0
@@ -114,13 +90,14 @@ begin
 		legend=:topleft, line=:dash)
 	plot!( x, pdf.(Normal( mean(part1_1s.theta), std(part1_1s.theta)), x ),
 		lab="Particle approximation", line=:dash)
-	plot!( x, pdf.(Normal( mu_quap, sigma_quap), x ), lab="quap approximation")
+	plot!( x, pdf.(Normal( q1_1s.coef.theta, √q1_1s.vcov[1]), x ),
+		lab="quap approximation")
 	density!(post1_1s_df.theta, lab="StanSample chain")
 	vline!([bnds_hpd[1]], line=:dash, lab="hpd lower bound")
 	vline!([bnds_hpd[2]], line=:dash, lab="hpd upper bound")
 end
 
-md"In this example usually most approximations are similar. Other examples are less clear. In StatisticalRethinking.jl we have the actual Stan samples, quap() uses this to fit a Normal distribution with mean equal to the sample MAP."
+md"In this example usually most approximations are similar. Other examples are less clear."
 
 md"## End of intro-stan/intro-stan-04s.jl"
 

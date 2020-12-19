@@ -63,7 +63,7 @@ md"##### Check equivalence of Stan samples and Particles."
 begin
 	mu_range = 152.0:0.01:157.0
 	plot(mu_range, ecdf(sample(quap4_1s_df.mu, 10000))(mu_range),
-		xlabel="ecdf", ylabel="mu", lab="Quap samples")
+		xlabel="ecdf", ylabel="mu", lab="Quap samples", leg=:topleft)
 	plot!(mu_range, ecdf(sample(post4_1s_df.mu, 10000))(mu_range),
 		xlabel="ecdf", ylabel="mu", lab="Stan samples")
 
@@ -73,8 +73,18 @@ md"##### Sampling from quap result:"
 
 begin
 	d = Normal(mean(quap4_1s_df.mu), std(quap4_1s_df.mu))
-	plot!(mu_range, ecdf(rand(d, 10000))(mu_range), lab="Quap samples")
+	plot!(mu_range, ecdf(rand(d, 10000))(mu_range), lab="Normal samples", leg=:topleft)
 	plot!(mu_range, ecdf(quap4_1s_df.mu)(mu_range), lab="Particles samples")
+end
+
+begin
+	sigma_range = 7.0:0.01:8.4
+	plot(sigma_range, ecdf(sample(quap4_1s_df.sigma, 10000))(sigma_range),
+		xlabel="ecdf", ylabel="mu", lab="Quap samples", leg=:topleft)
+	plot!(sigma_range, ecdf(sample(post4_1s_df.sigma, 10000))(sigma_range),
+		xlabel="ecdf", ylabel="mu", lab="Stan samples")
+	d_sigma = Normal(mean(quap4_1s_df.sigma), std(quap4_1s_df.sigma))
+	plot!(sigma_range, ecdf(rand(d_sigma, 10000))(sigma_range), lab="NormL samples")
 end
 
 begin
@@ -84,7 +94,7 @@ begin
 	for (indx, par) in enumerate(names(dfs4_1s[1]))
 		for i in 1:size(dfs4_1s,1)
 			if i == 1
-				figs[indx] = plot()
+				figs[indx] = plot(leg=:topleft)
 	  		end
 			e = ecdf(dfs4_1s[i][:, par])
 			r = range(minimum(e), stop=maximum(e), length=length(e.sorted_values))

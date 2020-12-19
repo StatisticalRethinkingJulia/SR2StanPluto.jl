@@ -84,14 +84,14 @@ if success(rc4_8s)
 end
 
 # ╔═╡ 6145d0be-fc09-11ea-183e-13fdf81ae7d0
-md"### Snippet 4.53"
+md"### Snippet 4.61"
 
 # ╔═╡ 614e8dc6-fc09-11ea-16c9-19a4d2eed3e6
 begin
 	dfa4_8s = read_samples(m4_8s; output_format=:dataframe)
 
-	title = "Height vs. Weight, regions are" * "\nshowing 89% of predicted heights (lightgrey)" *
-		"\nand 89% hpd interval around the mean line (darkgrey)"
+	title = "Height vs. Weight regions" * "\n89% of prediction interval for heights" *
+		"\nand 89% hpd interval around mu"
 	plotbounds(
 		df, :weight, :height,
 		dfa4_8s, [:a, :b, :sigma];

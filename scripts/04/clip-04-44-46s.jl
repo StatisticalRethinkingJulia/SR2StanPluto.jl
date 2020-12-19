@@ -6,11 +6,11 @@ using Pkg, DrWatson
 
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample
+	using StanSample, StanOptimize
 	using StatisticalRethinking
 end
 
-md"## Clip-04-37-44s.jl"
+md"## Clip-04-44-46s.jl"
 
 begin
 	df = CSV.read(sr_datadir("Howell1.csv"), DataFrame)
@@ -41,49 +41,50 @@ model {
 }
 ";
 
-md"##### Define the SampleModel."
+md"## snippet 4.44"
 
-m4_3s = SampleModel("m4.3s", stan4_3);
+md"##### Quadratic approximation."
 
-md"##### Input data."
+begin
+	data = Dict(:N => length(df.height), :height => df.height, :weight => df.weight_c)
+	init = Dict(:alpha => 170.0, :beta => 2.0, :sigma => 10.0)
+	q4_3s, m4_3s, _ = quap("m4.3s", stan4_3; data, init)
+end;
 
-m4_3_data = Dict("N" => length(df.height), "height" => df.height, "weight" => df.weight_c);
+if !isnothing(q4_3s)
+	quap4_3s_df = sample(q4_3s)
+	PRECIS(quap4_3s_df)
+end
 
-md"##### Sample using stan_sample."
+md"##### Read the Stan samples."
 
-rc4_3s = stan_sample(m4_3s, data=m4_3_data);
-
-if success(rc4_3s)
-
-	# Describe the draws
-	
+if !isnothing(m4_3s)
 	post4_3s = read_samples(m4_3s; output_format=:dataframe)
 	part4_3s = Particles(post4_3s)
 end
 
-md"### snippet 4.37"
+PRECIS(post4_3s)
 
-if success(rc4_3s)
+md"## snippet 4.45"
+
+begin
+	nms = [string(k) for k in keys(q4_3s.coef)]
+	covm = NamedArray(Matrix(q4_3s.vcov), (nms, nms), ("Rows", "Cols"))
+	covm
+end
+
+md"### snippet 4.46"
+
+if !isnothing(m4_3s)
 
 	# Plot regression line using means and observations
 
 	scatter(df.weight_c, df.height, lab="Observations",
-	  ylab="height [cm]", xlab="weight[kg]")
+	  ylab="height [cm]", xlab="weight[kg]", leg=:topleft)
 	xi = -16.0:0.1:18.0
 	yi = mean(post4_3s.alpha) .+ mean(post4_3s.beta)*xi;
 	plot!(xi, yi, lab="Regression line")
 end
 
-md"### snippet 4.44"
-
-if success(rc4_3s)
-
-	q4_3s = quap(m4_3s)
-	quap4_3s_df = sample(q4_3s)
-	PRECIS(quap4_3s_df)
-end
-
-plot(plot(quap4_3s_df.alpha, lab="alpha"), plot(quap4_3s_df.beta, lab="beta"), layout=(2, 1))
-
-md"## End of clip-04-37-44s.jl"
+md"## End of clip-04-44-46s.jl"
 

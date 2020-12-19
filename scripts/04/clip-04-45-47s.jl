@@ -12,14 +12,12 @@ end
 
 md"# Clip-04-45-47s.jl"
 
-md"### snippet 4.7"
-
 begin
 	df = CSV.read(sr_datadir("Howell1.csv"), DataFrame)
 	df = filter(row -> row[:age] >= 18, df);
 	mean_weight = mean(df.weight);
 	df.weight_c = df.weight .- mean_weight;
-end
+end;
 
 md"##### Define the Stan language model."
 

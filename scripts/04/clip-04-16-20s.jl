@@ -12,17 +12,10 @@ end
 
 md"## Clip-04-16-22s.jl"
 
-df = CSV.read(sr_datadir("Howell1.csv"), DataFrame; delim=';');
-
-md"### snippet 4.8"
-
-md"##### Use only adults."
-
-df2 = filter(row -> row[:age] >= 18, df);
-
-md"##### Show first 5 rows of DataFrame df."
-
-first(df2, 5)
+begin
+	df = CSV.read(sr_datadir("Howell1.csv"), DataFrame; delim=';')
+	df2 = filter(row -> row[:age] >= 18, df)
+end;		
 
 md"### Snippet 4.16"
 
@@ -50,7 +43,7 @@ function grid_prob(x, y, prior_x, prior_y, obs)
 	the_prod = []
 	for i in 1:length(grid)
 	    d1 = Normal(grid[i][1], grid[i][2])
-	    ll = sum(log.(pdf.(d1, obs)))
+	    ll = sum(logpdf.(d1, obs))
 	    append!(df, DataFrame(mu=grid[i][1], sigma=grid[i][2],
 	    	ll=ll))
 		append!(the_prod, ll + log.(pdf.(prior_x, grid[i][1])) + 
@@ -95,8 +88,16 @@ md"### Snippet 4.19"
 
 md"##### Sample post_df."
 
-samples = post_df[sample(1:size(post_df, 1), Weights(post_df[:, :prob]), 
-	10000, replace=true), :];
+begin
+	samples = post_df[sample(1:size(post_df, 1), Weights(post_df[:, :prob]), 
+	10000, replace=true), :]
+	PRECIS(samples)
+end
+
+md"## Snippet 4.20"
+
+scatter(samples.mu, samples.sigma, pch=".", markersize=0.3, leg=false,
+	xlab="samples.mu", ylab="samples.sigma")
 
 md"### Snippet 4.22"
 
