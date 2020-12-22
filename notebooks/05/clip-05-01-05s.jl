@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.13
+# v0.12.17
 
 using Markdown
 using InteractiveUtils
@@ -21,7 +21,7 @@ md"## clip-05-01-05s.jl"
 md"### snippet 5.1"
 
 # ╔═╡ cfa44fec-01c5-11eb-14bf-338eed7e2c9d
-md"##### Notice that in below Stan language model we ignore the observed data (the likelihood is commented out). The draws show sampled regression lines implied by the priors."
+md"##### Notice that in below Stan language model we ignore the observed data (the likelihood is commented out). The draws show sampled regression lines implied by the priors. This is an alternative to the formulation chosen in clip-04-01-05s.jl"
 
 # ╔═╡ d65e98dc-fc58-11ea-25e1-9fab97b6125a
 begin
@@ -30,7 +30,7 @@ begin
 end;
 
 # ╔═╡ d66f515e-fc58-11ea-3fae-cbb82f1a1a6a
-stan5_1 = "
+stan5_1_alt_priors = "
 	data {
 	 int < lower = 1 > N; // Sample size
 	 vector[N] D; // Outcome
@@ -61,7 +61,7 @@ md"## Define the SampleModel, etc."
 
 # ╔═╡ d67e0602-fc58-11ea-3a27-31d03e1c2318
 begin
-	m5_1s = SampleModel("MedianAgeMarriage", stan5_1)
+	m5_1s = SampleModel("MedianAgeMarriage", stan5_1_alt_priors)
 	m5_1_data = Dict("N" => size(df, 1), "D" => df.Divorce_s, "A" => df.MedianAgeMarriage_s)
 	rc5_1s = stan_sample(m5_1s, data=m5_1_data)
 	success(rc5_1s) && (post5_1s_df = read_samples(m5_1s; output_format=:dataframe))
@@ -74,23 +74,18 @@ PRECIS(post5_1s_df)
 md"### snippet 5.5"
 
 # ╔═╡ 45b2b002-01c6-11eb-3f86-3f9586afcc8b
-md"##### Plot regression lines using sampled values of the intercept (`:a`) and the slope (`:bA`)."
+md"##### Plot priors of the intercept (`:a`) and the slope (`:bA`)."
 
 # ╔═╡ d68ab980-fc58-11ea-342d-31e66a8e7559
 if success(rc5_1s)
-	begin
-		xi = -3.0:0.1:3.0
-		plot(xlab="Medium age marriage (scaled)", ylab="Divorce rate (scaled)",
-			title="Showing 50 regression lines")
-		for i in 1:50
-			local yi = mean(post5_1s_df[i, :a]) .+ post5_1s_df[i, :bA] .* xi
-			plot!(xi, yi, color=:lightgrey, leg=false)
-		end
-
-		scatter!(df[:, :MedianAgeMarriage_s], df[!, :Divorce_s], color=:darkblue)
-
+	xi = -3.0:0.1:3.0
+	plot(xlab="Medium age marriage (scaled)", ylab="Divorce rate (scaled)",
+		title="Showing 50 regression lines")
+	for i in 1:50
+		local yi = mean(post5_1s_df[i, :a]) .+ post5_1s_df[i, :bA] .* xi
+		plot!(xi, yi, color=:lightgrey, leg=false)
 	end
-
+	scatter!(df[:, :MedianAgeMarriage_s], df[!, :Divorce_s], color=:darkblue)
 end
 
 # ╔═╡ d69533ba-fc58-11ea-3378-e512a1d55d27

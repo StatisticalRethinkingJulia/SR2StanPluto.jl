@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.13
+# v0.12.17
 
 using Markdown
 using InteractiveUtils
@@ -19,6 +19,9 @@ include(projectdir("models", "05", "m5.2s.jl"))
 
 # ╔═╡ e2e2c948-fceb-11ea-20e0-f19b598a9e90
 md"## Clip-05-06-09s.jl"
+
+# ╔═╡ 7edf5ec4-4243-11eb-08fe-9b57cc817ea8
+md"##### This is an example how to include a previously defined model. Note that Pluto will not allow reloading in the same session."
 
 # ╔═╡ 9f1dddee-fcec-11ea-2328-dbd9ddc2be94
 if success(rc5_2s)
@@ -59,6 +62,7 @@ md"## End of clip-05-06-10s.jl"
 # ╟─e2e2c948-fceb-11ea-20e0-f19b598a9e90
 # ╠═9f10e30a-fcec-11ea-1ca8-f1ad8754f845
 # ╠═9f11214e-fcec-11ea-2002-6541f7abc779
+# ╟─7edf5ec4-4243-11eb-08fe-9b57cc817ea8
 # ╠═9f11aca4-fcec-11ea-0d60-2549341d0fc8
 # ╠═9f1dddee-fcec-11ea-2328-dbd9ddc2be94
 # ╠═9f1e7e82-fcec-11ea-203c-bf2312bf2fc6

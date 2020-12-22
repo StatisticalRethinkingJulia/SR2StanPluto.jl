@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.13
+# v0.12.17
 
 using Markdown
 using InteractiveUtils
@@ -53,9 +53,53 @@ model {
 md"##### The Stan language model."
 
 # ╔═╡ b5431248-01af-11eb-03ac-ed6a17e17e39
+stan5_1_priors = "
+	data {
+	 int N; // Sample size
+	 vector[N] D; // Outcome
+	 vector[N] A; // Predictor
+	}
+
+	parameters {
+	 real a; // Intercept
+	 real bA; // Slope (regression coefficients)
+	 real < lower = 0 > sigma;    // Error SD
+	}
+
+	model {
+	  vector[N] mu;               // mu is a vector
+	  a ~ normal(0, 0.2);         // Priors
+	  bA ~ normal(0, 0.5);
+	  sigma ~ exponential(1);
+	  mu = a + bA * A;
+	  D ~ normal(mu , sigma);   // Likelihood
+	}
+";
+
+# ╔═╡ db59a030-423e-11eb-3eb2-5d1f7d3dd0f5
+begin
+	m5_1s_priors = SampleModel("m5.1.priors", stan5_1_priors)
+	rc5_1s_priors = stan_sample(m5_1s_priors; data = Dict("N" => 0, "D" => [], "A" => []))
+	success(rc5_1s_priors) && (part5_1s_priors = read_samples(m5_1s_priors; output_format=:particles))
+end
+
+# ╔═╡ 55ef3d46-423f-11eb-1d83-55276a40b702
+if success(rc5_1s_priors)
+	priors5_1s_df = read_samples(m5_1s_priors; output_format=:dataframe)
+	xi = -3.0:0.1:3.0
+	plot(xlab="Medium age marriage (scaled)", ylab="Divorce rate (scaled)",
+		title="Showing 50 regression lines")
+	for i in 1:50
+		local yi = mean(priors5_1s_df[i, :a]) .+ priors5_1s_df[i, :bA] .* xi
+		plot!(xi, yi, color=:lightgrey, leg=false)
+	end
+	scatter!(df[:, :MedianAgeMarriage_s], df[!, :Divorce_s], color=:darkblue)
+end
+
+# ╔═╡ fad134cc-423f-11eb-3398-b7d0e22aad9c
 stan5_1 = "
 	data {
-	 int < lower = 1 > N; // Sample size
+	 int N; // Sample size
 	 vector[N] D; // Outcome
 	 vector[N] A; // Predictor
 	}
@@ -89,23 +133,14 @@ md"##### Compare below figure with the corresponding figure in clip-05-01-05s.jl
 
 # ╔═╡ 07cfcaec-01c4-11eb-38b7-31dca6cafefb
 if success(rc5_1s)
-	begin
-
-		# Plot regression line using means and observations
-
-		post5_1s_df = read_samples(m5_1s; output_format=:dataframe)
-		xi = -3.0:0.1:3.0
-		plot(xlab="Medium age marriage (scaled)", ylab="Divorce rate (scaled)",
-			title="Showing 50 regression lines")
-		for i in 1:50
-			local yi = mean(post5_1s_df[i, :a]) .+ post5_1s_df[i, :bA] .* xi
-			plot!(xi, yi, color=:lightgrey, leg=false)
-		end
-
-		scatter!(df[:, :MedianAgeMarriage_s], df[!, :Divorce_s], color=:darkblue)
-
+	post5_1s_df = read_samples(m5_1s; output_format=:dataframe)
+	plot(xlab="Medium age marriage (scaled)", ylab="Divorce rate (scaled)",
+		title="Showing 50 regression lines")
+	for i in 1:50
+		local yi = mean(post5_1s_df[i, :a]) .+ post5_1s_df[i, :bA] .* xi
+		plot!(xi, yi, color=:lightgrey, leg=false)
 	end
-
+	scatter!(df[:, :MedianAgeMarriage_s], df[!, :Divorce_s], color=:darkblue)
 end
 
 # ╔═╡ 683093dc-fc54-11ea-3be9-fdad0a8812f6
@@ -209,6 +244,9 @@ md"## End of clip-05-01-02s.jl"
 # ╟─25c70d5a-fc54-11ea-3910-a9276dc7b696
 # ╟─b8ae47cc-01af-11eb-3cbd-a749b6e3d327
 # ╠═b5431248-01af-11eb-03ac-ed6a17e17e39
+# ╠═db59a030-423e-11eb-3eb2-5d1f7d3dd0f5
+# ╠═55ef3d46-423f-11eb-1d83-55276a40b702
+# ╠═fad134cc-423f-11eb-3398-b7d0e22aad9c
 # ╠═cbd5fe10-01af-11eb-055b-bd009d0dca55
 # ╟─9547a2a0-01c4-11eb-169c-17d6dbace4d9
 # ╠═07cfcaec-01c4-11eb-38b7-31dca6cafefb

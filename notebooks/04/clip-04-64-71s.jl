@@ -84,12 +84,12 @@ sigma   5.77 0.18   5.49   6.06
 ";
 
 # ╔═╡ 4b2030de-fc0b-11ea-3bce-0b80a6338b7e
-if !isnothing(m4_9s)
+if !isnothing(m4_5s)
   sdf4_5s = read_summary(m4_5s)
 end
 
 # ╔═╡ 4b2109c8-fc0b-11ea-0aed-2b80f6b14188
-md"### Snippet 4.53 - 4.67"
+md"### Snippet 4.64 - 4.67"
 
 # ╔═╡ 4b30dc0e-fc0b-11ea-30c4-05c83cf73fda
 if !isnothing(q4_5s)

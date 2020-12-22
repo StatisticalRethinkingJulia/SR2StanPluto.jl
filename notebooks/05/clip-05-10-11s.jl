@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.13
+# v0.12.17
 
 using Markdown
 using InteractiveUtils
@@ -56,9 +56,6 @@ if success(rc5_3s)
 	p1
 end
 
-# ╔═╡ b04e701c-fcd9-11ea-38ce-414484022e20
-s1
-
 # ╔═╡ 318b8252-fcda-11ea-1909-335ff6f1e4af
 md"##### Quap estimates:"
 
@@ -68,6 +65,9 @@ if success(rc5_3s)
 		title="Quap estimates", func=quap)
 	p2
 end
+
+# ╔═╡ b04e701c-fcd9-11ea-38ce-414484022e20
+s1
 
 # ╔═╡ 22d5823a-fcda-11ea-07cb-07ee2c78626d
 s2
@@ -86,8 +86,8 @@ md"## End of clip-05-10-11s.jl"
 # ╠═ce8df1ec-fc77-11ea-1c7d-ad620c19fbbd
 # ╟─47566d90-fcda-11ea-0662-8fa0dd0583c4
 # ╠═ce8e68c0-fc77-11ea-30eb-3fcbdd292d2c
-# ╠═b04e701c-fcd9-11ea-38ce-414484022e20
 # ╟─318b8252-fcda-11ea-1909-335ff6f1e4af
 # ╠═ce97d09a-fc77-11ea-22c5-1da0cf5c001d
+# ╠═b04e701c-fcd9-11ea-38ce-414484022e20
 # ╠═22d5823a-fcda-11ea-07cb-07ee2c78626d
 # ╟─cea73280-fc77-11ea-348f-8973a4e7a5d3

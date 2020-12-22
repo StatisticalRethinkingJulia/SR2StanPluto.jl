@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.13
+# v0.12.17
 
 using Markdown
 using InteractiveUtils
@@ -20,6 +20,9 @@ md"## Clip-04-07-09s.jl"
 # ╔═╡ fea4ccac-01d1-11eb-2456-67b005bf8512
 md"### snippet 5.7"
 
+# ╔═╡ 1636dc9a-4244-11eb-2c12-cde10a99d0ed
+md"##### DMA_1 specifies a causal link from :a to :d (:a directly influences :d) and from :m to :d. Furthermore, there is also a causal link from :a to :m."
+
 # ╔═╡ 2d9c5a52-fd04-11ea-3ea7-c1990f74f046
 DMA_1 = OrderedDict(
   :d => [:a, :m],
@@ -37,7 +40,7 @@ begin
 end
 
 # ╔═╡ d38bfda6-3106-11eb-3df8-9b9747437288
-Sys.isapple() && run(`open -a GraphViz.app $(fname1)`)
+Sys.isapple() && run(`open -a GraphViz.app $(fname1)`);
 
 # ╔═╡ 36ca0908-01d7-11eb-2783-bb2f25bd2f17
 md"### snippet 5.9"
@@ -95,6 +98,7 @@ md"## End of clip-05-07-09s.jl"
 # ╠═2d9b943a-fd04-11ea-2072-4bffc42a2fdf
 # ╠═2d9bd37a-fd04-11ea-2509-4b297c013e6d
 # ╟─fea4ccac-01d1-11eb-2456-67b005bf8512
+# ╟─1636dc9a-4244-11eb-2c12-cde10a99d0ed
 # ╠═2d9c5a52-fd04-11ea-3ea7-c1990f74f046
 # ╠═2da77b08-fd04-11ea-2ed1-adedc0ada52b
 # ╠═2dabbff6-fd04-11ea-1990-abf87ec712da
