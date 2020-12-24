@@ -130,9 +130,9 @@ version = "0.10.9"
 
 [[Colors]]
 deps = ["ColorTypes", "FixedPointNumbers", "InteractiveUtils", "Reexport"]
-git-tree-sha1 = "008d6bc68dea6beb6303fdc37188cb557391ebf2"
+git-tree-sha1 = "30b2dd71d1585435c905e3228ca878867eb57e4b"
 uuid = "5ae59095-9a9b-59fe-a467-6f913c188581"
-version = "0.12.4"
+version = "0.12.5"
 
 [[Combinatorics]]
 git-tree-sha1 = "08c8b6831dc00bfea825826be0bc8336fc369860"
@@ -259,9 +259,9 @@ version = "0.8.3"
 
 [[Documenter]]
 deps = ["Base64", "Dates", "DocStringExtensions", "IOCapture", "InteractiveUtils", "JSON", "LibGit2", "Logging", "Markdown", "REPL", "Test", "Unicode"]
-git-tree-sha1 = "a4875e0763112d6d017126f3944f4133abb342ae"
+git-tree-sha1 = "b7715ae18be02110a8cf9cc8ed2ccdb1e3e3aba2"
 uuid = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
-version = "0.25.5"
+version = "0.26.1"
 
 [[Downloads]]
 deps = ["ArgTools", "LibCURL", "NetworkOptions"]
@@ -551,9 +551,9 @@ version = "1.2.0"
 
 [[Latexify]]
 deps = ["Formatting", "InteractiveUtils", "LaTeXStrings", "MacroTools", "Markdown", "Printf", "Requires"]
-git-tree-sha1 = "1a8fd0d819f88fd802f54278f02b120cfc4f5755"
+git-tree-sha1 = "3a0084cec7bf157edcb45a67fac0647f88fe5eaf"
 uuid = "23fbe1c1-3f47-55db-b15f-69d7ec21a316"
-version = "0.14.6"
+version = "0.14.7"
 
 [[LeftChildRightSiblingTrees]]
 deps = ["AbstractTrees"]
@@ -1046,9 +1046,9 @@ version = "0.1.10"
 
 [[StanBase]]
 deps = ["CSV", "DataFrames", "DelimitedFiles", "Distributed", "DocStringExtensions", "Documenter", "Parameters", "Random", "StanDump", "Unicode"]
-git-tree-sha1 = "73cc94c80ce1ee298b44f1956855b06d069a44c0"
+git-tree-sha1 = "e2a1f5225a39c5dfd242d1ede5663ac534f37ac0"
 uuid = "d0ee94f6-a23d-54aa-bbe9-7f572d6da7f5"
-version = "2.1.3"
+version = "2.1.4"
 
 [[StanDump]]
 deps = ["ArgCheck", "DocStringExtensions"]
@@ -1058,15 +1058,15 @@ version = "0.2.0"
 
 [[StanOptimize]]
 deps = ["CSV", "DataFrames", "DelimitedFiles", "Distributed", "DocStringExtensions", "Documenter", "Random", "StanBase", "Statistics", "Test", "Unicode"]
-git-tree-sha1 = "4ce1b1fd7f5a5e967e74a6f3695e02e3640edc0d"
+git-tree-sha1 = "c9f783438e393459cca6b62c69e6a77d6ca1a903"
 uuid = "fbd8da12-e93d-5a64-9231-612a0707ab99"
-version = "2.1.3"
+version = "2.1.4"
 
 [[StanSample]]
 deps = ["CSV", "DataFrames", "DelimitedFiles", "Distributed", "DocStringExtensions", "MonteCarloMeasurements", "Reexport", "Requires", "StanBase", "Unicode"]
-git-tree-sha1 = "f87d194cc3657b5a0389c5f250dc6766194f9e15"
+git-tree-sha1 = "9d6e4d15b6adc7be798986422f7e94bb9e77472e"
 uuid = "c1514b29-d3a0-5178-b312-660c88baa699"
-version = "2.2.3"
+version = "2.2.4"
 
 [[StaticArrays]]
 deps = ["LinearAlgebra", "Random", "Statistics"]
@@ -1192,9 +1192,9 @@ uuid = "4ec0a83e-493e-50e2-b9ac-8f72acf5a8f5"
 
 [[VectorizationBase]]
 deps = ["ArrayInterface", "Hwloc", "IfElse", "Libdl", "LinearAlgebra"]
-git-tree-sha1 = "c7d577e9740cd8a2f6a763cb6870bb0a34425f9f"
+git-tree-sha1 = "0c91341774b92ccda47a79d76a1631b79325f254"
 uuid = "3d5dd08c-fd9d-11e8-17fa-ed2836048c2f"
-version = "0.14.5"
+version = "0.14.8"
 
 [[Wayland_jll]]
 deps = ["Artifacts", "Expat_jll", "JLLWrappers", "Libdl", "Libffi_jll", "Pkg", "XML2_jll"]
