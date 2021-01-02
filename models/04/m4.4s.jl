@@ -4,7 +4,7 @@ using Pkg, DrWatson
 
 begin
     @quickactivate "StatisticalRethinkingStan"
-    using StanSample
+    using StanSample, StanOptimize
     using StatisticalRethinking
 end
 
@@ -42,20 +42,28 @@ generated quantities {
 }
 ";
 
-m4_4s = SampleModel("m4_4s", stan4_4)
-m4_4_data = Dict(
-  :N => length(df.height), :N_new => 5,
-  :weight_c => df.weight_c, :height => df.height,
-  :x_new => [-30, -10, 0, +10, +30]
+data = (
+  N = length(df.height), :N_new => 5,
+  weight_c = df.weight_c, :height => df.height,
+  x_new = [-30, -10, 0, +10, +30]
 )
-rc4_4s = stan_sample(m4_4s, data=m4_4_data)
+init = (alpha = 180.0, beta = 1.0, sigma = 10.0)
+q4_4s, m4_4s, o4_4s = quap("m4.2s", stan4_4; data, init);
 
-if success(rc4_4s)
-  chns4_4s = read_samples(m4_4s; output_format=:mcmcchains)
-  chns4_4s
-  q4_4s = quap(m4_4s);                    # Stan QuapModel
-  quap4_4s = Particles(4000, q4_4s.distr) # Samples from a QuapModel (Particles)
-  quap4_4s_df = sample(q4_4s)             # DataFrame with samples
+if !isnothing(m4_4s)
+  part4_4s = read_samples(m4_4s; output_format=:particles)
+end
+
+if q4_4s.converged
+  quap4_4s_df = sample(q4_4s)          # DataFrame with samples
+  Particles(quap4_4s_df)
+end
+
+if !isnothing(o4_4s)
+  read_optimize(o4_4s)
+end
+
+if !isnothing(m4_4s)
   precis(m4_4s)
 
   stan_generate_quantities(m4_4s, 1);

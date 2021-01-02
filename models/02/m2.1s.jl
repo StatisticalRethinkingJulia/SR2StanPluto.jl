@@ -4,7 +4,7 @@ using Pkg, DrWatson
 
 begin
     @quickactivate "StatisticalRethinkingStan"
-    using StanSample
+    using StanSample, StanOptimize
     using StatisticalRethinking
 end
 
@@ -30,28 +30,28 @@ model {
 }
 ";
 
-# Define the SampleModel.
-
-m2_1s = SampleModel("m2.1s", stan2_1);
-
 # Use 16 observations
+# Input data for cmdstan
 
 N = 15
 d = Binomial(9, 0.66)
 k = rand(d, N)
 n = repeat([9], N)
-
-# Input data for cmdstan
-
-m2_1_data = Dict("N" => N, "n" => n, "k" => k);
+data = (N = N, n = n, k = k);
+init = (theta = 0.5,);
 
 # Sample using cmdstan
  
-rc2_1s = stan_sample(m2_1s, data=m2_1_data);
+q2_1s, m2_1s, o2_1s = quap("m2.1", stan2_1; data, init);
 
 # Describe the draws
 
-if success(rc2_1s)
+if !isnothing(m2_1s)
   part2_1s = read_samples(m2_1s; output_format=:particles)
-  part2_1s |> display
+end
+
+if q2_1s.converged
+  quap2_1s = sample(q2_1s)
+  Particles(quap2_1s)
+  read_optimize(o2_1s)
 end
