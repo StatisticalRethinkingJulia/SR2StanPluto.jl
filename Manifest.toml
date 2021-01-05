@@ -775,9 +775,9 @@ version = "0.3.3"
 
 [[OffsetArrays]]
 deps = ["Adapt"]
-git-tree-sha1 = "5b9ed21d50a91bb783c87f37c8da9266f0265504"
+git-tree-sha1 = "5b644e46f71e744fac0775b885809fd82c4ca904"
 uuid = "6fe1bfb0-de20-5000-8ca7-80f57d26f881"
-version = "1.4.4"
+version = "1.5.0"
 
 [[Ogg_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -1064,7 +1064,7 @@ version = "2.1.4"
 
 [[StanSample]]
 deps = ["CSV", "DataFrames", "DelimitedFiles", "Distributed", "DocStringExtensions", "MonteCarloMeasurements", "OrderedCollections", "Reexport", "Requires", "StanBase", "Unicode"]
-path = "/Users/rob/.julia/dev/StanSample"
+git-tree-sha1 = "d0d75d7528cba387ce49c87dcc8c02b59c8ba221"
 uuid = "c1514b29-d3a0-5178-b312-660c88baa699"
 version = "3.0.0"
 
@@ -1076,9 +1076,9 @@ version = "1.0.1"
 
 [[StatisticalRethinking]]
 deps = ["AxisArrays", "BSplines", "CSV", "DataFrames", "Distributions", "DocStringExtensions", "Formatting", "GLM", "KernelDensity", "LaTeXStrings", "LinearAlgebra", "MCMCChains", "MonteCarloMeasurements", "NamedArrays", "NamedTupleTools", "Optim", "OrderedCollections", "Parameters", "PrettyTables", "Random", "Reexport", "Requires", "Statistics", "StatsBase", "StatsFuns", "StatsPlots", "StructuralCausalModels", "Test", "Unicode"]
-path = "/Users/rob/.julia/dev/StatisticalRethinking"
+git-tree-sha1 = "3e0325ddfc70c9227fe4859613761613ac8e4b54"
 uuid = "2d09df54-9d0f-5258-8220-54c2a3d4fbee"
-version = "3.1.8"
+version = "3.1.9"
 
 [[Statistics]]
 deps = ["LinearAlgebra", "SparseArrays"]
