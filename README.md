@@ -106,13 +106,14 @@ Draws:
 
 3. chns5_1s          : MCMCChains object (4000 samples from 4 chains)
 4. part5_1s          : Stan samples (Particles notation)
+5. quap5_1s          : Quap samples (Particles notation)
 
 Results as a DataFrame:
 
-5. prior5_1s_df      : Prior samples (DataFrame)
-6. post5_1s_df       : Posterior samples (DataFrame)
-7. quap5_1s_df       : Quap approximation to posterior samples (DataFrame)
-8. pred5_1s_df       : Posterior predictions (DataFrame)
+6. prior5_1s_df      : Prior samples (DataFrame)
+7. post5_1s_df       : Posterior samples (DataFrame)
+8. quap5_1s_df       : Quap approximation to posterior samples (DataFrame)
+9. pred5_1s_df       : Posterior predictions (DataFrame)
 
 As before, the `s` at the end indicates Stan.
 

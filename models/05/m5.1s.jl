@@ -2,17 +2,11 @@
 
 using Pkg, DrWatson
 @quickactivate "StatisticalRethinkingStan"
-using StanSample
+using StanSample, StanOptimize
 using StatisticalRethinking
 
-# ### snippet 5.1
-
 df = CSV.read(sr_datadir("WaffleDivorce.csv"), DataFrame);
-
-# ### snippet 5.1
-
 scale!(df, [:Marriage, :MedianAgeMarriage, :Divorce])
-println()
 
 stan5_1 = "
 data {
@@ -37,31 +31,19 @@ model {
 }
 ";
 
-# Define the SampleModel and set the output format to :mcmcchains.
+data = (N=size(df, 1), D=df.Divorce_s, A=df.MedianAgeMarriage_s)
+init = (a=1.0, bA=1.0, sigma=10.0)
+q5_1s, m5_1s, o5_1s = quap("m4.7s", stan5_1; data, init);
 
-m5_1s = SampleModel("m5.1", stan5_1);
-
-# Input data for cmdstan
-
-m5_1_data = Dict("N" => size(df, 1), "D" => df[!, :Divorce_s],
-    "A" => df[!, :MedianAgeMarriage_s]);
-
-# Sample using StanSample
-
-rc5_1s = stan_sample(m5_1s, data=m5_1_data);
-
-if success(rc5_1s)
-
-  # Result rethinking
-
-  rethinking = "
-           mean   sd  5.5% 94.5%
-    a      0.00 0.10 -0.16  0.16
-    bA    -0.57 0.11 -0.74 -0.39
-    sigma  0.79 0.08  0.66  0.91
-  "
-
+if !isnothing(m5_1s)
   part5_1s = read_samples(m5_1s; output_format=:particles)
-  part5_1s |> display
+end
 
+if !isnothing(q5_1s)
+  quap5_1s_df = sample(q5_1s)
+  Particles(quap5_1s_df)
+end
+
+if !isnothing(o5_1s)
+  read_optimize(o5_1s)
 end
