@@ -44,8 +44,6 @@ if success(rc5_3s)
 	p1
 end
 
-s1
-
 md"##### Quap estimates:"
 
 if success(rc5_3s)
@@ -53,6 +51,8 @@ if success(rc5_3s)
 		title="Quap estimates", func=quap)
 	p2
 end
+
+s1
 
 s2
 

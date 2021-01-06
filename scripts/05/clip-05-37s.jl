@@ -39,7 +39,7 @@ parameters {
 
 model {
   vector[N] mu;               // mu is a vector
-  a ~ normal(0, 0.2);           //Priors
+  a ~ normal(0, 0.2);         //Priors
   bM ~ normal(0, 0.5);
   sigma ~ exponential(1);
   mu = a + bM * M;

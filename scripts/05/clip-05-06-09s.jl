@@ -14,6 +14,8 @@ include(projectdir("models", "05", "m5.2s.jl"))
 
 md"## Clip-05-06-09s.jl"
 
+md"##### This is an example how to include a previously defined model. Note that Pluto will not allow reloading in the same session."
+
 if success(rc5_2s)
 	post5_2s_df = read_samples(m5_2s; output_format=:dataframe)
 	part5_2s = Particles(post5_2s_df) 

@@ -21,7 +21,7 @@ begin
 	scale!(df, [:WaffleHouses, :Divorce])
 end;
 
-	Text(precis(df[:, 3:15]; io=String))
+	PRECIS(df[:, 3:15])
 
 stan5_0 = "
 data {

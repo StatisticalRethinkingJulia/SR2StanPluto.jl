@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.14
+# v0.12.18
 
 using Markdown
 using InteractiveUtils
@@ -10,7 +10,7 @@ using Pkg, DrWatson
 # ╔═╡ e610e930-fdc3-11ea-3591-7db6a3c831be
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample
+	using StanSample, StanOptimize
 	using StatisticalRethinking
 
 	# Circumvent filtering rows with "NA" values out
@@ -53,16 +53,30 @@ model{
 
 # ╔═╡ e61e09f8-fdc3-11ea-0391-bfbbb35fbc9b
 begin
-	m5_9s = SampleModel("m5.9", stan5_9);
-	m5_9_data = Dict("N" => size(df, 1), "clade_id" => c_id,
-		"K" => df[:, :K_s], "k" => 4);
-	rc5_9s = stan_sample(m5_9s, data=m5_9_data);
-	post5_9s_df = read_samples(m5_9s; output_format=:dataframe)
-	part5_9s = Particles(post5_9s_df)
+	data = (N = size(df, 1), clade_id = c_id, K = df.K_s, k = 4);
+    init = (sigma=2.0,)
+    q5_9s, m5_9s, o5_9s = quap("m5.9s", stan5_9; data, init)
+end;
+
+# ╔═╡ d4f8ade0-504f-11eb-3bc2-854d8eca33c4
+if !isnothing(m5_9s)
+  part5_9s = read_samples(m5_9s; output_format=:particles)
+  nt5_9s = read_samples(m5_9s)
 end
 
-# ╔═╡ e61eadb8-fdc3-11ea-19bc-e30e128c1dbb
-success(rc5_9s) && quap(m5_9s)
+# ╔═╡ d5238400-504f-11eb-255a-5deed62c878b
+if !isnothing(q5_9s)
+  quap5_9s_df = sample(q5_9s)
+  quap5_9s = Particles(quap5_9s_df)
+end
+
+# ╔═╡ d52411cc-504f-11eb-085c-b53444c50f19
+if !isnothing(o5_9s)
+  read_optimize(o5_9s)
+end
+
+# ╔═╡ e74c8da0-5051-11eb-2142-a3ba1967eb1d
+q5_9s
 
 # ╔═╡ e62ae894-fdc3-11ea-3de4-2b3cce9dd0bb
 rethinking_result = "
@@ -83,6 +97,9 @@ md"## End of clip-05-49.2s.jl"
 # ╠═e610e930-fdc3-11ea-3591-7db6a3c831be
 # ╠═e6116536-fdc3-11ea-2255-075c0866b513
 # ╠═e61e09f8-fdc3-11ea-0391-bfbbb35fbc9b
-# ╠═e61eadb8-fdc3-11ea-19bc-e30e128c1dbb
+# ╠═d4f8ade0-504f-11eb-3bc2-854d8eca33c4
+# ╠═d5238400-504f-11eb-255a-5deed62c878b
+# ╠═d52411cc-504f-11eb-085c-b53444c50f19
+# ╠═e74c8da0-5051-11eb-2142-a3ba1967eb1d
 # ╠═e62ae894-fdc3-11ea-3de4-2b3cce9dd0bb
 # ╟─e62b7ac0-fdc3-11ea-1282-f5b4b9a7118e

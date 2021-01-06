@@ -14,6 +14,8 @@ md"## Clip-04-07-09s.jl"
 
 md"### snippet 5.7"
 
+md"##### DMA_1 specifies a causal link from :a to :d (:a directly influences :d) and from :m to :d. Furthermore, there is also a causal link from :a to :m."
+
 DMA_1 = OrderedDict(
   :d => [:a, :m],
   :m => :a
@@ -27,7 +29,7 @@ begin
 	Text(read(fname1, String))
 end
 
-Sys.isapple() && run(`open -a GraphViz.app $(fname1)`)
+Sys.isapple() && run(`open -a GraphViz.app $(fname1)`);
 
 md"### snippet 5.9"
 

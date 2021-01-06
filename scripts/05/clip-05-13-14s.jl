@@ -21,8 +21,10 @@ if success(rc5_4_AMs)
 		post5_4_MAs_df = read_samples(m5_4_MAs; output_format=:dataframe)
 		post5_4_AMs_df = read_samples(m5_4_AMs; output_format=:dataframe)
 
-		pMA = plotbounds(df, :M, :A, post5_4_MAs_df, [:a, :bMA, :sigma])
-		pAM = plotbounds(df, :A, :M, post5_4_AMs_df, [:a, :bAM, :sigma])
+		pMA = plotbounds(df, :M, :A, post5_4_MAs_df,
+			[:a, :bMA, :sigma]; ylims=(10, 30))
+		pAM = plotbounds(df, :A, :M, post5_4_AMs_df, 
+			[:a, :bAM, :sigma]; ylims=(10, 30))
 		plot(pAM, pMA, layout=(1, 2))
 	end
 end

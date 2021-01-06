@@ -6,7 +6,7 @@ using Pkg, DrWatson
 
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample
+	using StanSample, StanOptimize
 	using StatisticalRethinking
 
 	# Circumvent filtering rows with "NA" values out
@@ -46,15 +46,24 @@ model{
 ";
 
 begin
-	m5_9s = SampleModel("m5.9", stan5_9);
-	m5_9_data = Dict("N" => size(df, 1), "clade_id" => c_id,
-		"K" => df[:, :K_s], "k" => 4);
-	rc5_9s = stan_sample(m5_9s, data=m5_9_data);
-	post5_9s_df = read_samples(m5_9s; output_format=:dataframe)
-	part5_9s = Particles(post5_9s_df)
+	data = (N = size(df, 1), clade_id = c_id, K = df.K_s, k = 4);
+    init = (sigma=2.0,)
+    q5_9s, m5_9s, o5_9s = quap("m5.9s", stan5_9; data, init)
 end
 
-success(rc5_9s) && quap(m5_9s)
+if !isnothing(m5_9s)
+  part5_9s = read_samples(m5_9s; output_format=:particles)
+  nt5_9s = read_samples(m5_9s)
+end
+
+if !isnothing(q5_9s)
+  quap5_9s_df = sample(q5_9s)
+  quap5_9s = Particles(quap5_9s_df)
+end
+
+if !isnothing(o5_9s)
+  read_optimize(o5_9s)
+end
 
 rethinking_result = "
        mean   sd  5.5% 94.5% n_eff Rhat4

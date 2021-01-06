@@ -71,11 +71,11 @@ b2     -7.80 0.27  -8.24  -7.36
 sigma   5.77 0.18   5.49   6.06
 ";
 
-if !isnothing(m4_9s)
+if !isnothing(m4_5s)
   sdf4_5s = read_summary(m4_5s)
 end
 
-md"### Snippet 4.53 - 4.67"
+md"### Snippet 4.64 - 4.67"
 
 if !isnothing(q4_5s)
 	begin

@@ -40,9 +40,50 @@ model {
 
 md"##### The Stan language model."
 
+stan5_1_priors = "
+	data {
+	 int N; // Sample size
+	 vector[N] D; // Outcome
+	 vector[N] A; // Predictor
+	}
+
+	parameters {
+	 real a; // Intercept
+	 real bA; // Slope (regression coefficients)
+	 real < lower = 0 > sigma;    // Error SD
+	}
+
+	model {
+	  vector[N] mu;               // mu is a vector
+	  a ~ normal(0, 0.2);         // Priors
+	  bA ~ normal(0, 0.5);
+	  sigma ~ exponential(1);
+	  mu = a + bA * A;
+	  D ~ normal(mu , sigma);   // Likelihood
+	}
+";
+
+begin
+	m5_1s_priors = SampleModel("m5.1.priors", stan5_1_priors)
+	rc5_1s_priors = stan_sample(m5_1s_priors; data = Dict("N" => 0, "D" => [], "A" => []))
+	success(rc5_1s_priors) && (part5_1s_priors = read_samples(m5_1s_priors; output_format=:particles))
+end
+
+if success(rc5_1s_priors)
+	priors5_1s_df = read_samples(m5_1s_priors; output_format=:dataframe)
+	xi = -3.0:0.1:3.0
+	plot(xlab="Medium age marriage (scaled)", ylab="Divorce rate (scaled)",
+		title="Showing 50 regression lines")
+	for i in 1:50
+		local yi = mean(priors5_1s_df[i, :a]) .+ priors5_1s_df[i, :bA] .* xi
+		plot!(xi, yi, color=:lightgrey, leg=false)
+	end
+	scatter!(df[:, :MedianAgeMarriage_s], df[!, :Divorce_s], color=:darkblue)
+end
+
 stan5_1 = "
 	data {
-	 int < lower = 1 > N; // Sample size
+	 int N; // Sample size
 	 vector[N] D; // Outcome
 	 vector[N] A; // Predictor
 	}
@@ -73,23 +114,14 @@ end
 md"##### Compare below figure with the corresponding figure in clip-05-01-05s.jl."
 
 if success(rc5_1s)
-	begin
-
-		# Plot regression line using means and observations
-
-		post5_1s_df = read_samples(m5_1s; output_format=:dataframe)
-		xi = -3.0:0.1:3.0
-		plot(xlab="Medium age marriage (scaled)", ylab="Divorce rate (scaled)",
-			title="Showing 50 regression lines")
-		for i in 1:50
-			local yi = mean(post5_1s_df[i, :a]) .+ post5_1s_df[i, :bA] .* xi
-			plot!(xi, yi, color=:lightgrey, leg=false)
-		end
-
-		scatter!(df[:, :MedianAgeMarriage_s], df[!, :Divorce_s], color=:darkblue)
-
+	post5_1s_df = read_samples(m5_1s; output_format=:dataframe)
+	plot(xlab="Medium age marriage (scaled)", ylab="Divorce rate (scaled)",
+		title="Showing 50 regression lines")
+	for i in 1:50
+		local yi = mean(post5_1s_df[i, :a]) .+ post5_1s_df[i, :bA] .* xi
+		plot!(xi, yi, color=:lightgrey, leg=false)
 	end
-
+	scatter!(df[:, :MedianAgeMarriage_s], df[!, :Divorce_s], color=:darkblue)
 end
 
 md"##### The model m5.2s represents a regression of Divorce on Marriage and is defined as:"
