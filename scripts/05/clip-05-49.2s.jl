@@ -49,7 +49,7 @@ begin
 	data = (N = size(df, 1), clade_id = c_id, K = df.K_s, k = 4);
     init = (sigma=2.0,)
     q5_9s, m5_9s, o5_9s = quap("m5.9s", stan5_9; data, init)
-end
+end;
 
 if !isnothing(m5_9s)
   part5_9s = read_samples(m5_9s; output_format=:particles)
@@ -64,6 +64,8 @@ end
 if !isnothing(o5_9s)
   read_optimize(o5_9s)
 end
+
+q5_9s
 
 rethinking_result = "
        mean   sd  5.5% 94.5% n_eff Rhat4
