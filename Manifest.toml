@@ -650,9 +650,9 @@ version = "2020.2.254+0"
 
 [[MLJModelInterface]]
 deps = ["Random", "ScientificTypes"]
-git-tree-sha1 = "6ac897581ef6e949cf3a4ca28f7bcee4674538e7"
+git-tree-sha1 = "dc9af7178bdbe2619623be56fc127fe8b0d30c78"
 uuid = "e80e1ace-859a-464e-9ed9-23947d8ae3ea"
-version = "0.3.7"
+version = "0.3.8"
 
 [[MacroTools]]
 deps = ["Markdown", "Random"]
@@ -1046,9 +1046,9 @@ version = "2.2.0"
 
 [[StanSample]]
 deps = ["CSV", "DataFrames", "DelimitedFiles", "Distributed", "DocStringExtensions", "MonteCarloMeasurements", "OrderedCollections", "Reexport", "Requires", "StanBase", "Unicode"]
-git-tree-sha1 = "ea87e74ae57b3cd5dbbab32ccb513d1df46f0558"
+git-tree-sha1 = "7ba014afd3c7748f13f6fcc9d79696a7ccedd928"
 uuid = "c1514b29-d3a0-5178-b312-660c88baa699"
-version = "3.0.2"
+version = "3.0.4"
 
 [[StaticArrays]]
 deps = ["LinearAlgebra", "Random", "Statistics"]
