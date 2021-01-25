@@ -79,6 +79,12 @@ H(p, q) - H(p)
 # ╔═╡ 2c131646-58f6-11eb-12f2-f3b8dfb82dcb
 md" ##### Divergence from earth -> mars."
 
+# ╔═╡ 09550666-5994-11eb-3c4c-11461379f117
+md"
+!!! note
+    Reverse arguments?
+"
+
 # ╔═╡ 755016a2-58f5-11eb-02c6-235a5d44e9c7
 D(mars, earth)
 
@@ -111,6 +117,7 @@ md" ## End of clip-07-12s.jl"
 # ╠═42415416-58f4-11eb-2cc3-c951f0416798
 # ╠═49cab272-58f4-11eb-02a8-375cce076851
 # ╟─2c131646-58f6-11eb-12f2-f3b8dfb82dcb
+# ╟─09550666-5994-11eb-3c4c-11461379f117
 # ╠═755016a2-58f5-11eb-02c6-235a5d44e9c7
 # ╟─40d5189a-58f6-11eb-08c3-95d784d16c87
 # ╠═6bc4b400-58f5-11eb-1de2-c9c8b44ae7ae
