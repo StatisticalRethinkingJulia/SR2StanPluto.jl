@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.18
+# v0.12.20
 
 using Markdown
 using InteractiveUtils
@@ -15,7 +15,7 @@ begin
 end
 
 # ╔═╡ 235c5298-5053-11eb-0608-435d1aa4716c
-md" ## Clip-07-13-14s.jl"
+md" ## Clip-07-15s.jl"
 
 # ╔═╡ 861accd4-5053-11eb-0432-81db212f4f38
 begin
@@ -68,13 +68,6 @@ generated quantities{
 }
 ";
 
-# ╔═╡ 007f085a-59b4-11eb-3a8a-2913fe91aae7
-function log_sum_exp(x) 
-    xmax = maximum(x)
-    xsum = sum(exp.(x .- xmax))
-    xmax + log(xsum)
-end
-
 # ╔═╡ 95cbb456-520e-11eb-2e0a-1d173ddc9dec
 begin
 	mass = create_observation_matrix(df.mass_s, 6)
@@ -85,9 +78,17 @@ begin
 	if success(rc7_6s)
 		nt7_6s = read_samples(m7_6s)
 	end
-	n, ns = size(nt7_6s.log_lik)
-	lppd = [log_sum_exp(nt7_6s.log_lik[i, :] .- log(ns)) for i in 1:n]
+end;
+
+# ╔═╡ 172b171a-60b2-11eb-1d99-81f8e7cd6217
+begin
+	log_lik = nt7_6s.log_lik'
+	n_sam, n_obs = size(log_lik)
+	lppd = reshape(logsumexp(log_lik .- log(n_sam); dims=1), n_obs)
 end
+
+# ╔═╡ cff34b68-61a1-11eb-0279-23adefa9293d
+lppd
 
 # ╔═╡ 675109fc-59e6-11eb-247d-157746d5c626
 sum(lppd)
@@ -109,24 +110,44 @@ b6  1.63 0.02  1.59  1.66    49  1.06
 # ╔═╡ bc6292b4-5a75-11eb-2a11-a31ae9ae5c4f
 PRECIS(read_samples(m7_6s; output_format=:dataframe))
 
-# ╔═╡ 9a11f4a0-5a7c-11eb-070c-7b6ad82aba32
-mass
+# ╔═╡ 77373916-5fe2-11eb-2df1-4bf002248937
+begin
+	loo, loos, pk = psisloo(log_lik)
+	loo
+end
+
+# ╔═╡ c429b37a-5fe2-11eb-1345-190b929d58d8
+sum(loos)
+
+# ╔═╡ c429ee8a-5fe2-11eb-274e-31490ca32c5e
+pk_qualify(pk)
+
+# ╔═╡ c42aa528-5fe2-11eb-0492-1fc418032f9c
+pk_plot(pk)
+
+# ╔═╡ 7ce0cadc-61a2-11eb-1c20-353d2ad1df76
+waic(log_lik)
 
 # ╔═╡ 91e9af0a-5065-11eb-212c-f751fd114263
-md" ## End of clip-07-13-14s.jl"
+md" ## End of clip-07-15s.jl"
 
 # ╔═╡ Cell order:
-# ╠═235c5298-5053-11eb-0608-435d1aa4716c
+# ╟─235c5298-5053-11eb-0608-435d1aa4716c
 # ╠═538f05be-5053-11eb-19a0-959e34e1c2a1
 # ╠═5d84f90c-5053-11eb-076b-5f30fc9685e3
 # ╠═861accd4-5053-11eb-0432-81db212f4f38
 # ╠═290d19ae-59cf-11eb-1636-772efccc7cb9
 # ╠═24328f84-541d-11eb-0ec3-4df5b8a8cb19
 # ╠═ee275e7a-5067-11eb-325b-7760b758e85e
-# ╠═007f085a-59b4-11eb-3a8a-2913fe91aae7
 # ╠═95cbb456-520e-11eb-2e0a-1d173ddc9dec
+# ╠═172b171a-60b2-11eb-1d99-81f8e7cd6217
+# ╠═cff34b68-61a1-11eb-0279-23adefa9293d
 # ╠═675109fc-59e6-11eb-247d-157746d5c626
 # ╟─e8343c86-5a79-11eb-1cd4-7b05ac85f7dd
 # ╠═bc6292b4-5a75-11eb-2a11-a31ae9ae5c4f
-# ╠═9a11f4a0-5a7c-11eb-070c-7b6ad82aba32
-# ╠═91e9af0a-5065-11eb-212c-f751fd114263
+# ╠═77373916-5fe2-11eb-2df1-4bf002248937
+# ╠═c429b37a-5fe2-11eb-1345-190b929d58d8
+# ╠═c429ee8a-5fe2-11eb-274e-31490ca32c5e
+# ╠═c42aa528-5fe2-11eb-0492-1fc418032f9c
+# ╠═7ce0cadc-61a2-11eb-1c20-353d2ad1df76
+# ╟─91e9af0a-5065-11eb-212c-f751fd114263

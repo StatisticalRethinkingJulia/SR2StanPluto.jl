@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.18
+# v0.12.20
 
 using Markdown
 using InteractiveUtils
@@ -118,12 +118,12 @@ generated quantities {
 }
 ";
 
-# ╔═╡ 007f085a-59b4-11eb-3a8a-2913fe91aae7
-function log_sum_exp(x) 
-    xmax = maximum(x)
-    xsum = sum(exp.(x .- xmax))
-    xmax + log(xsum)
-end
+# ╔═╡ f59ecd72-60ab-11eb-2fe2-c3f7159e2080
+begin
+	loo = Vector{Float64}(undef, 6)
+	loos = Vector{Vector{Float64}}(undef, 6)
+	pk = Vector{Vector{Float64}}(undef, 6)
+end;
 
 # ╔═╡ 95cbb456-520e-11eb-2e0a-1d173ddc9dec
 begin
@@ -145,8 +145,10 @@ begin
 		if success(rc7_2s)
 			nt7_2s = read_samples(m7_2s)
 		end
-		n, ns = size(nt7_2s.log_lik)
-		lppd[K, :] = [log_sum_exp(nt7_2s.log_lik[i, :] .- log(ns)) for i in 1:n]
+		log_lik = nt7_2s.log_lik'
+		n_sam, n_obs = size(log_lik)
+		lppd[K, :] = logsumexp(log_lik .- log(n_sam); dims=1)
+		loo[K], loos[K], pk[K] = psisloo(log_lik)
 	end;
 end
 
@@ -156,11 +158,48 @@ lppd'
 # ╔═╡ 675109fc-59e6-11eb-247d-157746d5c626
 [sum(lppd[i, :]) for i in 1:6]
 
+# ╔═╡ 946d5e90-5fe5-11eb-1ec8-ed64a60550e3
+md"
+!!! note
+
+	Take a look at these runs using `psisloo()` from PSIS.jl. This is explained later in chapter 7.
+"
+
+# ╔═╡ ef3da47a-60ac-11eb-39b9-f3fe46d314d5
+loo
+
+# ╔═╡ 19541136-5fe5-11eb-00a2-db4ef2435713
+sum(loos[1])
+
+# ╔═╡ 1ed9cb28-5fe5-11eb-0e3e-29e68eb14885
+pk_qualify(pk[1])
+
+# ╔═╡ 3ae2831e-5fe5-11eb-24ec-d36a56204b4e
+pk_plot(pk[1]; title="PSIS diagnostic plot (K = 1)")
+
+# ╔═╡ 5a2220d6-60ad-11eb-1b64-d58bc6a78683
+loo[2]
+
+# ╔═╡ 1ea22e72-5f7f-11eb-3b41-bfef370f64d4
+sum(loos[2])
+
+# ╔═╡ 754915a6-5f7f-11eb-0fc2-59095949b7e9
+pk_qualify(pk[2])
+
+# ╔═╡ 5246f7ba-5f7f-11eb-2a0b-b77c47d6bdcc
+begin
+	fig = Vector{Plots.Plot{Plots.GRBackend}}(undef, 6)
+	for i in 1:6
+		fig[i] = pk_plot(pk[i], title="K = $i", leg=false)
+	end
+	plot(fig..., layout=(3,2))
+end
+
 # ╔═╡ 91e9af0a-5065-11eb-212c-f751fd114263
 md" ## End of clip-07-13-14s.jl"
 
 # ╔═╡ Cell order:
-# ╠═235c5298-5053-11eb-0608-435d1aa4716c
+# ╟─235c5298-5053-11eb-0608-435d1aa4716c
 # ╠═538f05be-5053-11eb-19a0-959e34e1c2a1
 # ╠═5d84f90c-5053-11eb-076b-5f30fc9685e3
 # ╠═861accd4-5053-11eb-0432-81db212f4f38
@@ -171,8 +210,17 @@ md" ## End of clip-07-13-14s.jl"
 # ╠═ee275e7a-5067-11eb-325b-7760b758e85e
 # ╠═e1bd7ef2-5a98-11eb-19a8-f32fcb3d7fb6
 # ╠═f2898fe6-5a98-11eb-10f0-db1c4fe19bff
-# ╠═007f085a-59b4-11eb-3a8a-2913fe91aae7
+# ╠═f59ecd72-60ab-11eb-2fe2-c3f7159e2080
 # ╠═95cbb456-520e-11eb-2e0a-1d173ddc9dec
 # ╠═1ab3e174-59e0-11eb-3db8-4d91bc007f0a
 # ╠═675109fc-59e6-11eb-247d-157746d5c626
+# ╟─946d5e90-5fe5-11eb-1ec8-ed64a60550e3
+# ╠═ef3da47a-60ac-11eb-39b9-f3fe46d314d5
+# ╠═19541136-5fe5-11eb-00a2-db4ef2435713
+# ╠═1ed9cb28-5fe5-11eb-0e3e-29e68eb14885
+# ╠═3ae2831e-5fe5-11eb-24ec-d36a56204b4e
+# ╠═5a2220d6-60ad-11eb-1b64-d58bc6a78683
+# ╠═1ea22e72-5f7f-11eb-3b41-bfef370f64d4
+# ╠═754915a6-5f7f-11eb-0fc2-59095949b7e9
+# ╠═5246f7ba-5f7f-11eb-2a0b-b77c47d6bdcc
 # ╟─91e9af0a-5065-11eb-212c-f751fd114263
