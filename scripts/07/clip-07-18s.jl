@@ -1,23 +1,17 @@
-### A Pluto.jl notebook ###
-# v0.12.20
 
 using Markdown
 using InteractiveUtils
 
-# ╔═╡ 265ed188-5bf6-11eb-0d29-51ea74e6c7d1
 using Pkg, DrWatson
 
-# ╔═╡ ac6f2dfc-5bf6-11eb-3dc0-b5368b466ff7
 begin
 	@quickactivate "StatisticalRethinkingStan"
 	using StanSample, StanOptimize
 	using StatisticalRethinking
 end
 
-# ╔═╡ a4042486-5bf5-11eb-0183-33fd00d868e4
 md" ## Clip-07-18s.jl"
 
-# ╔═╡ ac6f6634-5bf6-11eb-0929-b5ed20ab3036
 function sim_train_test(;
     N = 20,
 	K = 3,
@@ -38,7 +32,6 @@ function sim_train_test(;
 	(y, x_train, x_test[:, 2:n_dim])
 end
 
-# ╔═╡ ac8227b2-5bf6-11eb-27dd-09924b99e6c2
 stan7_9 = "
 data {
     int<lower=1> K;
@@ -80,10 +73,8 @@ generated quantities {
 }
 ";
 
-# ╔═╡ 00ee9dc0-5c23-11eb-10c3-1dfb4f486e6f
 m7_9s = SampleModel("m7.9s", stan7_9);
 
-# ╔═╡ 5d5b8982-64b2-11eb-0ca9-b94e3197ff31
 begin
 	N = 20
 	rho = [0.15, -0.4]
@@ -96,7 +87,6 @@ begin
 	pks_oos = zeros(N, L, K)
 end;
 
-# ╔═╡ f253787c-64c3-11eb-2cd4-9322707100b7
 begin
 	for i in 1:L
 		for j = 1:K
@@ -124,72 +114,45 @@ begin
     PRECIS(post7_9s_df[:, vcat([:a], [Symbol("b.$i") for i in 1:k])])
 end
 
-# ╔═╡ b481987e-64c5-11eb-3d96-4b1e4adf242c
 mean(in_sample_deviance, dims=1)
 
-# ╔═╡ c938af32-64c5-11eb-3b78-53bd350c8e39
 mean(out_of_sample_deviance, dims=1)
 
-# ╔═╡ 263e7030-657b-11eb-1614-89eb98d87ef8
 begin
 	fig1a = pk_plot(pks_is[:, 1, 1])
 	fig2a = pk_plot(pks_oos[:, 1, 1])
 	plot(fig1a, fig2a, layout=(1, 2))
 end
 
-# ╔═╡ b8dbc372-6565-11eb-2cce-5b005337c92a
 begin
 	fig1b = pk_plot(pks_is[:, 1, 2])
 	fig2b = pk_plot(pks_oos[:, 1, 2])
 	plot(fig1b, fig2b, layout=(1, 2))
 end
 
-# ╔═╡ 4fbbe5bc-657b-11eb-149d-c7f3f1080d21
 begin
 	fig1c = pk_plot(pks_is[:, 1, 3])
 	fig2c = pk_plot(pks_oos[:, 1, 3])
 	plot(fig1c, fig2c, layout=(1, 2))
 end
 
-# ╔═╡ 737b9faa-657b-11eb-2bbd-a5001aacefa5
 begin
 	fig1d = pk_plot(pks_is[:, 1, 4])
 	fig2d = pk_plot(pks_oos[:, 1, 4])
 	plot(fig1d, fig2d, layout=(1, 2))
 end
 
-# ╔═╡ 90396b52-657b-11eb-018b-2b1d3e63083b
 begin
 	fig1e = pk_plot(pks_is[:, 1, 5])
 	fig2e = pk_plot(pks_oos[:, 1, 5])
 	plot(fig1e, fig2e, layout=(1, 2))
 end
 
-# ╔═╡ 92040134-657b-11eb-3c45-47708152dc68
 begin
 	fig1f = pk_plot(pks_is[:, 1, 6])
 	fig2f = pk_plot(pks_oos[:, 1, 6])
 	plot(fig1f, fig2f, layout=(1, 2))
 end
 
-# ╔═╡ 74d4016e-6563-11eb-0c3b-b7c4f81baca6
 md" ## End of clip-07-18s.jl"
 
-# ╔═╡ Cell order:
-# ╟─a4042486-5bf5-11eb-0183-33fd00d868e4
-# ╠═265ed188-5bf6-11eb-0d29-51ea74e6c7d1
-# ╠═ac6f2dfc-5bf6-11eb-3dc0-b5368b466ff7
-# ╠═ac6f6634-5bf6-11eb-0929-b5ed20ab3036
-# ╠═ac8227b2-5bf6-11eb-27dd-09924b99e6c2
-# ╠═00ee9dc0-5c23-11eb-10c3-1dfb4f486e6f
-# ╠═5d5b8982-64b2-11eb-0ca9-b94e3197ff31
-# ╠═f253787c-64c3-11eb-2cd4-9322707100b7
-# ╠═b481987e-64c5-11eb-3d96-4b1e4adf242c
-# ╠═c938af32-64c5-11eb-3b78-53bd350c8e39
-# ╠═263e7030-657b-11eb-1614-89eb98d87ef8
-# ╠═b8dbc372-6565-11eb-2cce-5b005337c92a
-# ╠═4fbbe5bc-657b-11eb-149d-c7f3f1080d21
-# ╠═737b9faa-657b-11eb-2bbd-a5001aacefa5
-# ╠═90396b52-657b-11eb-018b-2b1d3e63083b
-# ╠═92040134-657b-11eb-3c45-47708152dc68
-# ╟─74d4016e-6563-11eb-0c3b-b7c4f81baca6

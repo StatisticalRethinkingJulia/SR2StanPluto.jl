@@ -1,5 +1,6 @@
 name = "StatisticalRethinkingStan"
 authors = ["Rob J. Goedman <goedman@icloud.com>"]
+#version = "1.2.3"
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"

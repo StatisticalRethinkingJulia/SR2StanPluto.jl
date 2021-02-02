@@ -1,23 +1,17 @@
-### A Pluto.jl notebook ###
-# v0.12.20
 
 using Markdown
 using InteractiveUtils
 
-# ╔═╡ 538f05be-5053-11eb-19a0-959e34e1c2a1
 using Pkg, DrWatson
 
-# ╔═╡ 5d84f90c-5053-11eb-076b-5f30fc9685e3
 begin
 	@quickactivate "StatisticalRethinkingStan"
 	using StanSample, StanOptimize
 	using StatisticalRethinking
 end
 
-# ╔═╡ 235c5298-5053-11eb-0608-435d1aa4716c
 md" ## Clip-07-16s.jl"
 
-# ╔═╡ 861accd4-5053-11eb-0432-81db212f4f38
 begin
 	sppnames = [:afarensis, :africanus, :hapilis, :boisei, :rudolfensis, :ergaster, :sapiens]
 	brainvol = [438, 452, 612, 521, 752, 871, 1350]
@@ -27,10 +21,8 @@ begin
 	df.brain_std = df.brain/maximum(df.brain)
 end;
 
-# ╔═╡ 290d19ae-59cf-11eb-1636-772efccc7cb9
 df
 
-# ╔═╡ 24328f84-541d-11eb-0ec3-4df5b8a8cb19
 begin
 	scatter(df.mass, df.brain, xlab="body mass [kg]", ylab="brain vol [cc]", 
 		lab="Observations")
@@ -41,7 +33,6 @@ begin
 	plot!()
 end
 
-# ╔═╡ ee275e7a-5067-11eb-325b-7760b758e85e
 stan7_6 = "
 data{
 	int N;
@@ -81,7 +72,6 @@ generated quantities{
 }
 ";
 
-# ╔═╡ 95cbb456-520e-11eb-2e0a-1d173ddc9dec
 begin
 	data = (N = 7, brain_std = df.brain_std, mass_std = df.mass_s)
 	m7_6s = SampleModel("m7.6s", stan7_6)
@@ -92,20 +82,16 @@ begin
 	end
 end;
 
-# ╔═╡ 19f6114a-6349-11eb-26fa-3dc20e36601c
 begin
 	log_lik = nt7_6s.log_lik'
 	n_sam, n_obs = size(log_lik)
 	lppd = reshape(logsumexp(log_lik .- log(n_sam); dims=1), n_obs)
 end
 
-# ╔═╡ b5f36364-6348-11eb-288d-a15bb85e31a4
 size(log_lik)
 
-# ╔═╡ 675109fc-59e6-11eb-247d-157746d5c626
 sum(lppd)
 
-# ╔═╡ e8343c86-5a79-11eb-1cd4-7b05ac85f7dd
 md"
 ```
     mean   sd  5.5% 94.5% n_eff Rhat4
@@ -119,24 +105,7 @@ b6  1.63 0.02  1.59  1.66    49  1.06
 ```
 "
 
-# ╔═╡ bc6292b4-5a75-11eb-2a11-a31ae9ae5c4f
 PRECIS(read_samples(m7_6s; output_format=:dataframe))
 
-# ╔═╡ 91e9af0a-5065-11eb-212c-f751fd114263
 md" ## End of clip-07-16s.jl"
 
-# ╔═╡ Cell order:
-# ╟─235c5298-5053-11eb-0608-435d1aa4716c
-# ╠═538f05be-5053-11eb-19a0-959e34e1c2a1
-# ╠═5d84f90c-5053-11eb-076b-5f30fc9685e3
-# ╠═861accd4-5053-11eb-0432-81db212f4f38
-# ╠═290d19ae-59cf-11eb-1636-772efccc7cb9
-# ╠═24328f84-541d-11eb-0ec3-4df5b8a8cb19
-# ╠═ee275e7a-5067-11eb-325b-7760b758e85e
-# ╠═95cbb456-520e-11eb-2e0a-1d173ddc9dec
-# ╠═19f6114a-6349-11eb-26fa-3dc20e36601c
-# ╠═b5f36364-6348-11eb-288d-a15bb85e31a4
-# ╠═675109fc-59e6-11eb-247d-157746d5c626
-# ╟─e8343c86-5a79-11eb-1cd4-7b05ac85f7dd
-# ╠═bc6292b4-5a75-11eb-2a11-a31ae9ae5c4f
-# ╟─91e9af0a-5065-11eb-212c-f751fd114263

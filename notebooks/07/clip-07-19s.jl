@@ -85,9 +85,9 @@ m7_9s = SampleModel("m7.9s", stan7_9);
 
 # ╔═╡ 5d5b8982-64b2-11eb-0ca9-b94e3197ff31
 begin
-	N = 20
+	N = 100
 	rho = [0.15, -0.4]
-	L = 1
+	L = 20
 	K = 6
 	k = K < 2 ? K : K - 1
 	in_sample_deviance = zeros(L, K)
@@ -125,10 +125,24 @@ begin
 end
 
 # ╔═╡ b481987e-64c5-11eb-3d96-4b1e4adf242c
-mean(in_sample_deviance, dims=1)
+mean_is = mean(in_sample_deviance, dims=1)
+
+# ╔═╡ 61bd0eba-657f-11eb-0593-072e7c8dc510
+std(in_sample_deviance, dims=1)
 
 # ╔═╡ c938af32-64c5-11eb-3b78-53bd350c8e39
-mean(out_of_sample_deviance, dims=1)
+mean_oos = mean(out_of_sample_deviance, dims=1)
+
+# ╔═╡ 736f7594-657f-11eb-239d-73cab1fd5e5d
+std(out_of_sample_deviance, dims=1)
+
+# ╔═╡ 7eb8b028-657f-11eb-0abf-37c3819aea78
+begin
+	scatter(mean_is[1,:], xlab = "No of parameters", ylab = "Deviance",
+		ylims=(200, 400), lab="In sample")
+	scatter!(mean_oos[1,:], xlab = "No of parameters", ylab = "Deviance",
+		lab = "Out of sample")
+end
 
 # ╔═╡ 263e7030-657b-11eb-1614-89eb98d87ef8
 begin
@@ -172,6 +186,13 @@ begin
 	plot(fig1f, fig2f, layout=(1, 2))
 end
 
+# ╔═╡ 7a185d54-657d-11eb-246e-672b0d809163
+begin
+	fig1g = pk_plot(pks_is[:, 2, 6])
+	fig2g = pk_plot(pks_oos[:, 2, 6])
+	plot(fig1g, fig2g, layout=(1, 2))
+end
+
 # ╔═╡ 74d4016e-6563-11eb-0c3b-b7c4f81baca6
 md" ## End of clip-07-18s.jl"
 
@@ -185,11 +206,15 @@ md" ## End of clip-07-18s.jl"
 # ╠═5d5b8982-64b2-11eb-0ca9-b94e3197ff31
 # ╠═f253787c-64c3-11eb-2cd4-9322707100b7
 # ╠═b481987e-64c5-11eb-3d96-4b1e4adf242c
+# ╠═61bd0eba-657f-11eb-0593-072e7c8dc510
 # ╠═c938af32-64c5-11eb-3b78-53bd350c8e39
+# ╠═736f7594-657f-11eb-239d-73cab1fd5e5d
+# ╠═7eb8b028-657f-11eb-0abf-37c3819aea78
 # ╠═263e7030-657b-11eb-1614-89eb98d87ef8
 # ╠═b8dbc372-6565-11eb-2cce-5b005337c92a
 # ╠═4fbbe5bc-657b-11eb-149d-c7f3f1080d21
 # ╠═737b9faa-657b-11eb-2bbd-a5001aacefa5
 # ╠═90396b52-657b-11eb-018b-2b1d3e63083b
 # ╠═92040134-657b-11eb-3c45-47708152dc68
+# ╠═7a185d54-657d-11eb-246e-672b0d809163
 # ╟─74d4016e-6563-11eb-0c3b-b7c4f81baca6

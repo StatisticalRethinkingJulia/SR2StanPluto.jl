@@ -48,6 +48,13 @@ model {
 
 fig7_4 = Vector{Plots.Plot{Plots.GRBackend}}(undef, 2);
 
+md"
+!!! tip
+	In this case `fnc` creates a polynomial mass matrix.
+
+	This could also a more compicated function.
+"
+
 for (findx, K) in enumerate([1, 6])
 	fig7_4[findx] = plot(;ylims=(200,1500), leg=false)
 	for i in 1:6
@@ -67,8 +74,9 @@ for (findx, K) in enumerate([1, 6])
 			lab="$(size(nt7_2s[Symbol(linkvars[2])], 1))-th degree polynomial"
 			title="R^2 = $(r2_is_bad(nt7_2s, df1))"
 			fig7_4[findx] = plot!(;lab, title)
-			fig7_4[findx] = plotlines(df1, :mass, :brain, nt7_2s, linkvars, fig7_4[findx];
-				stepsize=0.05, fnc, lab, title, leg=false)
+			fig7_4[findx] = plotlines(df1, :mass, :brain, nt7_2s,
+				linkvars, fig7_4[findx];
+			stepsize=0.05, fnc, lab, title, leg=false)
 		end
 	end
 	scatter!(fig7_4[findx], df.mass, df.brain;
