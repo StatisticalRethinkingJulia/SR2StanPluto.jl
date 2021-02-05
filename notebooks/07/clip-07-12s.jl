@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.18
+# v0.12.20
 
 using Markdown
 using InteractiveUtils
@@ -51,6 +51,9 @@ H(p)
 
 # ╔═╡ 90e27340-58f2-11eb-367e-cb2aae23b616
 H([0.01, 0.99])
+
+# ╔═╡ c0ee72a4-6668-11eb-1078-a5f09dfbecff
+H([0.7, 0.15, 0.15])
 
 # ╔═╡ 69d6127c-58f0-11eb-29c9-0ba1d12c61c2
 D(p, q)
@@ -111,6 +114,7 @@ md" ## End of clip-07-12s.jl"
 # ╠═48b01fc0-58f0-11eb-10e1-8969cfc5022f
 # ╠═65e714ae-58f0-11eb-0f86-bb6dad500c12
 # ╠═90e27340-58f2-11eb-367e-cb2aae23b616
+# ╠═c0ee72a4-6668-11eb-1078-a5f09dfbecff
 # ╠═69d6127c-58f0-11eb-29c9-0ba1d12c61c2
 # ╠═b6ffed52-58f0-11eb-1ab2-7902bd8a2b52
 # ╠═edf40570-58f3-11eb-0650-03caff8b1c72
