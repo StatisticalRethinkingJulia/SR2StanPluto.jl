@@ -121,6 +121,9 @@ begin
 	plot(fig..., layout=(1,2))
 end
 
+# ╔═╡ 918392e8-6888-11eb-344d-8d15802cfcac
+res
+
 # ╔═╡ 74d4016e-6563-11eb-0c3b-b7c4f81baca6
 md" ## End of clip-07-16-18as.jl"
 
@@ -133,4 +136,5 @@ md" ## End of clip-07-16-18as.jl"
 # ╠═5d5b8982-64b2-11eb-0ca9-b94e3197ff31
 # ╠═f253787c-64c3-11eb-2cd4-9322707100b7
 # ╠═7eb8b028-657f-11eb-0abf-37c3819aea78
+# ╠═918392e8-6888-11eb-344d-8d15802cfcac
 # ╟─74d4016e-6563-11eb-0c3b-b7c4f81baca6
