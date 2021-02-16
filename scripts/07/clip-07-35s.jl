@@ -73,6 +73,8 @@ begin
 	waic(lp5_1s_t)
 end
 
+size(mu5_1s_t)
+
 stan5_2_t = "
 data {
   int N;
@@ -200,7 +202,7 @@ begin
 		xlab="PSIS Pareto k", ylab="WAIC penalty", leg=false)
 	vline!([0.5])
 	for state in [13, 20, 34, 44, 50]
-		annotate!([([pk5_1s_t[state] + 0.12], [waic_5_1s_pw_t.penalty[state] + 0.3],
+		annotate!([([pk5_1s_t[state] + 0.02], [waic_5_1s_pw_t.penalty[state]],
 			Plots.text(df[state, :Loc], 6, :red, :right))])
 	end
 	plot!()
@@ -218,7 +220,7 @@ begin
 		xlab="PSIS Pareto k", ylab="WAIC penalty", leg=false)
 	vline!([0.5])
 	for state in [13, 20, 34, 44, 50]
-		annotate!([([pk5_3s_t[state] + 0.15], [waic_5_3s_pw_t.penalty[state] + 0.02],
+		annotate!([([pk5_3s_t[state] + 0.02], [waic_5_3s_pw_t.penalty[state]],
 			Plots.text(df[state, :Loc], 6, :red, :right))])
 	end
 	plot!()
@@ -236,7 +238,7 @@ begin
 		xlab="PSIS Pareto k", ylab="WAIC penalty", leg=false)
 	vline!([0.5])
 	for state in [13, 20, 34, 44, 50]
-		annotate!([([pk5_2s_t[state] + 0.1], [waic_5_2s_pw_t.penalty[state] + 0.02],
+		annotate!([([pk5_2s_t[state] + 0.01], [waic_5_2s_pw_t.penalty[state] + 0.01],
 			Plots.text(df[state, :Loc], 6, :red, :right))])
 	end
 	plot!()

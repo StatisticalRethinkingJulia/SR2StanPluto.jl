@@ -35,7 +35,7 @@ m5_2s = SampleModel("m5.2", stan5_2);
 
 data = (N=size(df, 1), divorce_s=df.Divorce_s, marriage_s=df.Marriage_s)
 init = (a=1.0, bM=1.0, sigma=10.0)
-q5_2s, m5_2s, o5_2s = quap("m4.7s", stan5_2; data, init);
+q5_2s, m5_2s, o5_2s = quap("m5.2s", stan5_2; data, init);
 
 if !isnothing(m5_2s)
   part5_2s = read_samples(m5_2s; output_format=:particles)

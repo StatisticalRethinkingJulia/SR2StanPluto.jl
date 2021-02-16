@@ -10,33 +10,105 @@ begin
 	using StatisticalRethinking
 end
 
-for i in 1:3
-  include(projectdir("models", "05", "m5.$(i)s.jl"))
-end
-
 md"## Clip-05-12s.jl"
 
-md"##### Include models [`m5_1s`](https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingStan.jl/blob/master/models/05/m5.1s.jl), [`m5_2s`](https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingStan.jl/blob/master/models/05/m5.2s.jl) and [`m5_3s`](https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingStan.jl/blob/master/models/05/m5.3s.jl):"
+begin
+	df = CSV.read(sr_datadir("WaffleDivorce.csv"), DataFrame);
+	scale!(df, [:Marriage, :MedianAgeMarriage, :Divorce])
+	data = (N=size(df, 1), D=df.Divorce_s, A=df.MedianAgeMarriage_s,
+		M=df.Marriage_s)
+end
+
+stan5_1 = "
+data {
+ int < lower = 1 > N; // Sample size
+ vector[N] D; // Outcome
+ vector[N] A; // Predictor
+}
+
+parameters {
+ real a; // Intercept
+ real bA; // Slope (regression coefficients)
+ real < lower = 0 > sigma;    // Error SD
+}
+
+model {
+  vector[N] mu;               // mu is a vector
+  a ~ normal(0, 0.2);         //Priors
+  bA ~ normal(0, 0.5);
+  sigma ~ exponential(1);
+  mu = a + bA * A;
+  D ~ normal(mu , sigma);     // Likelihood
+}
+";
+
+begin
+	m5_1s = SampleModel("m5.1s", stan5_1)
+	rc5_1s = stan_sample(m5_1s; data);
+end;
+
+stan5_2 = "
+data {
+  int N;
+  vector[N] D;
+  vector[N] M;
+}
+parameters {
+  real a;
+  real bM;
+  real<lower=0> sigma;
+}
+model {
+  vector[N] mu = a + bM * M;
+  a ~ normal( 0 , 0.2 );
+  bM ~ normal( 0 , 0.5 );
+  sigma ~ exponential( 1 );
+  D ~ normal( mu , sigma );
+}
+";
+
+begin
+	m5_2s = SampleModel("m5.2", stan5_2);
+	rc5_2s = stan_sample(m5_2s; data);
+end;
+
+stan5_3 = "
+data {
+  int N;
+  vector[N] D;
+  vector[N] M;
+  vector[N] A;
+}
+parameters {
+  real a;
+  real bA;
+  real bM;
+  real<lower=0> sigma;
+}
+model {
+  vector[N] mu = a + + bA * A + bM * M;
+  a ~ normal( 0 , 0.2 );
+  bA ~ normal( 0 , 0.5 );
+  bM ~ normal( 0 , 0.5 );
+  sigma ~ exponential( 1 );
+  D ~ normal( mu , sigma );
+}
+";
+
+begin
+	m5_3s = SampleModel("m5.3", stan5_3);
+	rc5_3s = stan_sample(m5_3s; data)
+end;
 
 md"##### Normal estimates:"
 
-if success(rc5_3s)
+if success(rc5_1s) && success(rc5_2s) && success(rc5_3s)
 	(s1, p1) = plotcoef([m5_1s, m5_2s, m5_3s], [:bA, :bM]; 
-		title="Particles (Normal) estimates")
+		title="Coefficient estimates")
 	p1
 end
 
 s1
-
-md"##### Quap estimates:"
-
-if success(rc5_3s)
-	(s2, p2) = plotcoef([m5_1s, m5_2s, m5_3s], [:bA, :bM];
-		title="Quap estimates", func=quap)
-	p2
-end
-
-s2
 
 md"## End of clip-05-12s.jl"
 

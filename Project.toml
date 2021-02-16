@@ -1,6 +1,5 @@
 name = "StatisticalRethinkingStan"
 authors = ["Rob J. Goedman <goedman@icloud.com>"]
-#version = "1.2.3"
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
@@ -13,6 +12,7 @@ GLM = "38e38edf-8417-5370-95a0-9cbb8c7f171a"
 LogDensityProblems = "6fdf6af0-433a-55f7-b3ed-c6c6e0b8df7c"
 MCMCChains = "c7f686f2-ff18-58e9-bc7b-31028e88f75d"
 NamedTupleTools = "d9ec5142-1e00-5aa0-9d6a-321866360f50"
+ParetoSmoothedImportanceSampling = "98f080ec-61e2-11eb-1c7b-31ea1097256f"
 PrettyTables = "08abe8d2-0d0c-5749-adfa-8a2ac140af0d"
 StanOptimize = "fbd8da12-e93d-5a64-9231-612a0707ab99"
 StanSample = "c1514b29-d3a0-5178-b312-660c88baa699"

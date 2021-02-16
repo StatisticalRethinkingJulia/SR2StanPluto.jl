@@ -87,7 +87,7 @@ size(log_lik)
 
 # ╔═╡ a3a6bcfe-6732-11eb-0b05-db55dac22d9c
 begin
-	pwaic = [var(log_lik[:, i]) for i in 1:n_obs]
+	pwaic = [var2(log_lik[:, i]) for i in 1:n_obs]
 	-2(sum(lppds) - sum(pwaic))
 end
 

@@ -15,7 +15,7 @@ begin
 end
 
 # ╔═╡ a4042486-5bf5-11eb-0183-33fd00d868e4
-md" ## Clip-07-16-18as.jl"
+md" ## Clip-07-16-18.2s.jl"
 
 # ╔═╡ 5f749200-6757-11eb-0345-6b094802c649
 function logprob(post_df::DataFrame, x::Matrix, y::Vector, k=k)
@@ -130,11 +130,51 @@ begin
 	plot(fig..., layout=(1,2))
 end
 
+# ╔═╡ 67d8698e-6faf-11eb-18f7-318ec55c1c7a
+begin
+	devs = Vector{Float64}(undef, 2)
+	y, x_train, x_test = sim_train_test(;N=100, K=5, rho)
+	data = (N = size(x_train, 1), K = size(x_train, 2),
+		y = y, x = x_train,
+		N_new = size(x_test, 1), x_new = x_test)
+	rc7_9s = stan_sample(m7_9s; data)
+	if success(rc7_9s)
+
+		# use `logprob()`
+
+		post7_9s_df = read_samples(m7_9s; output_format=:dataframe)
+		lp_train = logprob(post7_9s_df, x_train, y, 2)
+		devs[1] = -2sum(lppd(lp_train))
+		lp_test = logprob(post7_9s_df, x_test, y, 2)
+		devs[2] = -2sum(lppd(lp_test))
+	end
+end;
+
+# ╔═╡ 08703112-6fb0-11eb-28d7-83dcab6b1998
+md"
+!!! note
+	In some runs, out-of-sample deviance can be much larger than PSIS and WAIC estimates. In-sample deviance is always lower than PSIS and WAIC estimates. Re-run above cell several times to see this.
+"
+
+# ╔═╡ 8ffcd37a-6faf-11eb-329f-fb9ddfe5247c
+Text("In-sample deviance = $(devs[1]), out-of-sample deviance = $(devs[2])")
+
+# ╔═╡ 8ffd04ee-6faf-11eb-1e4b-f13d4d3bfe9c
+if success(rc7_9s)
+	waic(m7_9s)
+end
+
+# ╔═╡ 8ffdaed0-6faf-11eb-36fc-47790fcae672
+if success(rc7_9s)
+	loo7_9s, loos7_9s, pk7_9s = psisloo(m7_9s)
+	-2loo7_9s
+end
+
 # ╔═╡ 74d4016e-6563-11eb-0c3b-b7c4f81baca6
-md" ## End of clip-07-16-18as.jl"
+md" ## End of clip-07-16-18.2s.jl"
 
 # ╔═╡ Cell order:
-# ╠═a4042486-5bf5-11eb-0183-33fd00d868e4
+# ╟─a4042486-5bf5-11eb-0183-33fd00d868e4
 # ╠═265ed188-5bf6-11eb-0d29-51ea74e6c7d1
 # ╠═ac6f2dfc-5bf6-11eb-3dc0-b5368b466ff7
 # ╠═5f749200-6757-11eb-0345-6b094802c649
@@ -143,4 +183,9 @@ md" ## End of clip-07-16-18as.jl"
 # ╠═5d5b8982-64b2-11eb-0ca9-b94e3197ff31
 # ╠═f253787c-64c3-11eb-2cd4-9322707100b7
 # ╠═7eb8b028-657f-11eb-0abf-37c3819aea78
+# ╠═67d8698e-6faf-11eb-18f7-318ec55c1c7a
+# ╟─08703112-6fb0-11eb-28d7-83dcab6b1998
+# ╠═8ffcd37a-6faf-11eb-329f-fb9ddfe5247c
+# ╠═8ffd04ee-6faf-11eb-1e4b-f13d4d3bfe9c
+# ╠═8ffdaed0-6faf-11eb-36fc-47790fcae672
 # ╟─74d4016e-6563-11eb-0c3b-b7c4f81baca6

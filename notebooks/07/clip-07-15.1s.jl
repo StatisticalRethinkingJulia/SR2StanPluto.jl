@@ -125,6 +125,9 @@ pk_plot(pk)
 # ╔═╡ 7ce0cadc-61a2-11eb-1c20-353d2ad1df76
 waic(log_lik)
 
+# ╔═╡ bb780120-6ee5-11eb-2791-1903f6a16fa6
+waic(m7_6s)
+
 # ╔═╡ 91e9af0a-5065-11eb-212c-f751fd114263
 md" ## End of clip-07-15s.jl"
 
@@ -146,4 +149,5 @@ md" ## End of clip-07-15s.jl"
 # ╠═c429ee8a-5fe2-11eb-274e-31490ca32c5e
 # ╠═c42aa528-5fe2-11eb-0492-1fc418032f9c
 # ╠═7ce0cadc-61a2-11eb-1c20-353d2ad1df76
+# ╠═bb780120-6ee5-11eb-2791-1903f6a16fa6
 # ╟─91e9af0a-5065-11eb-212c-f751fd114263

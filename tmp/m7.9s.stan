@@ -14,8 +14,13 @@ transformed parameters {
     mu = a + x * b;
 }
 model {
-	a ~ normal(0, 100);
-	b ~ normal(0, 10);
-	sigma ~ exponential(1);
+    a ~ normal(0, 100);
+    b ~ normal(0, 10);
+    sigma ~ exponential(1);
     y ~ normal(mu, sigma);          // observed model
+}
+generated quantities {
+    vector[N] log_lik;
+    for (i in 1:N)
+        log_lik[i] = normal_lpdf(y[i] | mu[i], sigma);
 }
