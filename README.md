@@ -107,17 +107,22 @@ Draws:
 3. chns5_1s          : MCMCChains object (4000 samples from 4 chains)
 4. part5_1s          : Stan samples (Particles notation)
 5. quap5_1s          : Quap samples (Particles notation)
+6. nt5_1s            : NamedTuple with samples values (default for `read_samples(m5_1s)`)
 
 Results as a DataFrame:
 
-6. prior5_1s_df      : Prior samples (DataFrame)
-7. post5_1s_df       : Posterior samples (DataFrame)
-8. quap5_1s_df       : Quap approximation to posterior samples (DataFrame)
-9. pred5_1s_df       : Posterior predictions (DataFrame)
+7. prior5_1s_df      : Prior samples (DataFrame)
+8. post5_1s_df       : Posterior samples (DataFrame)
+9. quap5_1s_df       : Quap approximation to posterior samples (DataFrame)
+10.pred5_1s_df       : Posterior predictions (DataFrame)
 
 As before, the `s` at the end indicates Stan.
 
-Most models in the `models` subdirectory return 0, 1 and 4 out of the box. But `read_samples(m5_1s; output_format=:...)` makes it easy to create MCMCChains.jl Chains objects, a DataFrame with draws or a MonteCarloMeasurements.jl Particles object (item 4 in above list).
+Most models in the `models` subdirectory return 0, 1 and 4 out of the box. 
+
+By default `read_samples(m5_1s)` returns a NamedTuple with the results.
+
+Using `read_samples(m5_1s; output_format=:...)` makes it easy to create MCMCChains.jl Chains objects, a DataFrame with draws or a MonteCarloMeasurements.jl Particles object (item 4 in above list).
 
 ## Status
 
