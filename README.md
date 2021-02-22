@@ -4,6 +4,8 @@ As stated many times by the author in his [online lectures](https://www.youtube.
 
 StatisticalRethinkingStan is a Julia project that uses Pluto notebooks for this purpose. Each notebook demonstrates Julia versions of `code snippets` and `mcmc models` contained in the R package "rethinking" associated with the book [Statistical Rethinking](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath.
 
+If you prefer to work with scripts instead of notebooks, a utility in the `src` directory is provided (`generate_scripts.jl`) to create scripts from all notebooks and store those in a newly created `scripts` directory. Note that this a a simple tool and will override all files in the `scripts` directory. For exploration purposes I suggest to move some of those scripts to e.g. the `research` directory.
+
 This Julia project uses Stan (the `cmdstan` executable) as the underlying mcmc implementation. A companion project ( [StatisticalRethinkingTuring.jl](https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingTuring.jl) ) uses Turing.jl.
 
 ## Installation
@@ -39,23 +41,13 @@ julia> Pluto.run()
 
 3. A Pluto page should open in a browser.
 
-Select a notebook in the `open a file` entry box, e.g. type `./` and step to `./notebooks/00/clip-00-01-03s.jl`. All notebooks will activate the project `StatisticalRethinkingStan`.
-
 ## Usage
 
-Note: *StatisticalRethinkingStan v1.1 requires StatisticalRethinking.jl v 3.1.*
+Select a notebook in the `open a file` entry box, e.g. type `./` and step to `./notebooks/00/clip-00-01-03s.jl`. All notebooks will activate the project `StatisticalRethinkingStan`.
 
-StatisticalRethinkingStan.jl is a DrWatson project, with some added/re-purposed subdirectories:
+The `data` directory, in DrWatson accessible through `datadir()`, can be used for locally generated data, exercises, etc. All "rethinking" data files are stored and maintained in StatisticalRethinking.jl and can be accessed via `sr_datadir(...)`. DrWatson provides several other handy shortcuts, e.g. projectdir().
 
-1. `models`, which contains a subset of the Stan language models,
-2. `notebooks`, used to store the Pluto notebooks and
-3. `scripts`, Julia scripts (generated from the notebooks).
-
-The `data` directory, in DrWatson accessible through `datadir()`, can be used for locally generated data, exercises, etc. All "rethinking" data files are stored and maintained in StatisticalRethinking.jl and can be accessed via `sr_datadir(...)`.
-
-The scripts in the `scripts` subdirectory are directly generated from the notebooks and thus adhere to Pluto's programming restrictions.
-
-This leads to a typical set of opening lines in each notebook:
+A typical set of opening lines in each notebook:
 ```
 using Pkg, DrWatson
 
@@ -118,8 +110,6 @@ Results as a DataFrame:
 
 As before, the `s` at the end indicates Stan.
 
-Most models in the `models` subdirectory return 0, 1 and 4 out of the box. 
-
 By default `read_samples(m5_1s)` returns a NamedTuple with the results.
 
 Using `read_samples(m5_1s; output_format=:...)` makes it easy to create MCMCChains.jl Chains objects, a DataFrame with draws or a MonteCarloMeasurements.jl Particles object (item 4 in above list).
@@ -128,9 +118,9 @@ Using `read_samples(m5_1s; output_format=:...)` makes it easy to create MCMCChai
 
 StatisticalRethinkingStan.jl is compatible with the 2nd edition of the book. Version 1.0.0 covers pretty much the same as StatisticalRethinking.jl v2.2.9+.
 
-Expanded coverage of chapters 7 remains WIP. Examples of Stan language models in the later chapters can be found in the `models` sub-directory
-
 StructuralCausalModels.jl is included as en experimental dependency in the StatisticalRethinking.jl v3 package. Definitely WIP!
+
+Two other packages created to 
 
 Any feedback is appreciated. Please open an issue.
 
@@ -138,7 +128,7 @@ Any feedback is appreciated. Please open an issue.
 
 Of course, without the excellent textbook by Richard McElreath, this package would not have been possible. The author has also been supportive of this work and gave permission to use the datasets.
 
-This repository and format is derived from work by Karajan, previous versions of StatisticalRethinking.jl and many other contributors.
+This repository and format is derived from previous versions of StatisticalRethinking.jl, work by Karajan, and many other contributors.
 
 ### Version 1.0.0
 

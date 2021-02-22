@@ -129,6 +129,9 @@ begin
 	end
 end
 
+# ╔═╡ 8b889740-7142-11eb-3d74-b1b9dc6f3282
+plot_models([m8_1s, m8_2s], [:a, Symbol("a.1"), Symbol("a.2"), :b, :sigma])
+
 # ╔═╡ 4a5070f8-6af4-11eb-31ca-a7a3ae504821
 compare([m8_1s, m8_2s], :waic)
 
@@ -188,6 +191,7 @@ md" ## End of clip-08-07-12s.jl"
 # ╠═04a39568-6a6c-11eb-19ea-f55be3914a51
 # ╠═7e9e3674-6aea-11eb-3206-c1f775fe2d78
 # ╠═12db71d0-6aeb-11eb-341c-e3243ba74862
+# ╠═8b889740-7142-11eb-3d74-b1b9dc6f3282
 # ╠═4a5070f8-6af4-11eb-31ca-a7a3ae504821
 # ╠═4fa4b38c-7069-11eb-1202-7552c5dcd671
 # ╠═f6c60a90-6e29-11eb-1133-99ad7b37e0af

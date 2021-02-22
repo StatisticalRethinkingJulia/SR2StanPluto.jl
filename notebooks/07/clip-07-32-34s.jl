@@ -149,6 +149,14 @@ begin
 	end
 end
 
+# ╔═╡ 7310fa28-7132-11eb-32dc-e9aae12b4f9e
+md" ### Compare the model cofficients."
+
+# ╔═╡ 84d0ef98-7132-11eb-1d64-3d911674a004
+begin
+	plot_models([m5_1s, m5_2s, m5_3s], [:a, :bA, :bM, :sigma])
+end
+
 # ╔═╡ 8501f844-69b3-11eb-24f8-d3b87b745be7
 if success(rc5_3s)
 	waic(m5_3s)
@@ -236,6 +244,8 @@ md" ## End of clip-07-32-34s.jl"
 # ╠═cbb9ef56-68ed-11eb-387b-252ff6dc5b21
 # ╠═71a48f7a-68ee-11eb-1b0e-331393e95551
 # ╠═b5b487ec-68ee-11eb-3ee7-0d98367028ff
+# ╟─7310fa28-7132-11eb-32dc-e9aae12b4f9e
+# ╠═84d0ef98-7132-11eb-1d64-3d911674a004
 # ╠═8501f844-69b3-11eb-24f8-d3b87b745be7
 # ╠═c2ba84b0-68f2-11eb-3c5a-17e03541dcb1
 # ╠═9ee34a3a-6d4e-11eb-1e6e-b191bea5527b

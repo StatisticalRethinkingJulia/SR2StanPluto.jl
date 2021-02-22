@@ -43,18 +43,18 @@ data {
   vector[N] h1;
 }
 parameters{
-  real<lower=0> p;
+  real<lower=0> a;
   real<lower=0> sigma;
 }
 transformed parameters {
   vector[N] mu;
   for ( i in 1:N ) {
-    mu[i] = h0[i] * p;
+    mu[i] = h0[i] * a;
   }
 }
 
 model {
-  p ~ lognormal(0, 0.25);
+  a ~ lognormal(0, 0.25);
   sigma ~ exponential(1);
   h1 ~ normal(mu, sigma);
 }
@@ -77,7 +77,7 @@ begin
 
 	if success(rc6_6s)
 		post6_6s_df = read_samples(m6_6s; output_format=:dataframe)
-		PRECIS(post6_6s_df[:, [:p, :sigma]])
+		PRECIS(post6_6s_df[:, [:a, :sigma]])
 	end
 end
 
@@ -186,6 +186,12 @@ begin
 	end
 end
 
+# ╔═╡ 74a1acdc-7134-11eb-0b49-d75993dcac08
+md" ### Compare model coefficients."
+
+# ╔═╡ 84182092-7134-11eb-1d53-4ffd14327393
+plot_models([m6_6s, m6_7s, m6_8s], [:a, :bt, :bf, :sigma])
+
 # ╔═╡ 425a70dc-6bb3-11eb-1a7e-39f3133b7173
 if success(rc6_6s) && success(rc6_7s) && success(rc6_8s)
 	df_waic = compare([m6_6s, m6_7s, m6_8s], :waic)
@@ -222,6 +228,8 @@ md" ## End of clip-07-25-31s.jl"
 # ╠═98f0030e-6d77-11eb-0e7c-f1c2fb8a8e5e
 # ╠═1d33c052-68ce-11eb-1939-3b34b9b6d0ce
 # ╠═4f77eba6-68ce-11eb-23be-53c00ef45087
+# ╟─74a1acdc-7134-11eb-0b49-d75993dcac08
+# ╠═84182092-7134-11eb-1d53-4ffd14327393
 # ╠═425a70dc-6bb3-11eb-1a7e-39f3133b7173
 # ╠═7b280f48-705f-11eb-160f-d129eaa461f4
 # ╠═904b7004-6d69-11eb-07fe-65b5bb8c4dd2
