@@ -10,7 +10,7 @@ This Julia project uses Stan (the `cmdstan` executable) as the underlying mcmc i
 
 ## Installation
 
-To (locally) reproduce and use this project, do the following:
+To (locally) reproduce and use this project, do the following (just once):
 
 1. Download this [project](https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingStan.jl) from Github and move to the downloaded directory, e.g.:
 
@@ -28,6 +28,8 @@ julia> ]                                        # Actvate Pkg mode
 (StatisticalRethinkingStan) pkg> <delete>       # Exit package mode
 julia>
 ```
+
+If above procedure fails, if present, try to delete the Manifest.toml file and repeat above steps. As mentioned above, these steps are only needed the first time.
 
 The next step assumes your Julia setup includes `Pkg`, `DrWatson`, `Pluto` and `PlutoUI`.
 

@@ -56,7 +56,8 @@ end;
 
 begin
 	fig = Vector{Plots.Plot{Plots.GRBackend}}(undef, 2)
-	fig[1] = plot(walk[1:100], leg=false, xlabel="Week", ylabel="Island", title="First 100 steps")
+	fig[1] = plot(walk[1:100], leg=false, xlabel="Week", 
+		ylabel="Island", title="First 100 steps")
 	fig[2] = histogram(walk, leg=false, xlabel="Island", ylabel="Number of weeks",
 	  title="$N steps")
 	plot(fig..., layout=(1, 2))

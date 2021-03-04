@@ -1,0 +1,10 @@
+name = "StanToSR"
+uuid = "25196680-0650-4eca-955d-f073dc65e10d"
+authors = ["Rob J Goedman <goedman@mac.com>"]
+version = "0.1.0"
+
+[deps]
+Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
+
+[compat]
+julia = "1"
