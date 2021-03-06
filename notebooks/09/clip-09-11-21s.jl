@@ -17,9 +17,6 @@ end
 # ╔═╡ af1efcf4-779a-11eb-0d62-e3c63876a09b
 md" ## Clip-09-11-21s.jl"
 
-# ╔═╡ e8714e64-7bad-11eb-0e87-f996f6c280f1
-versioninfo()
-
 # ╔═╡ cb88768a-779b-11eb-1a4e-99f92ded29ca
 begin
 	df = CSV.read(sr_datadir("rugged.csv"), DataFrame)
@@ -113,7 +110,6 @@ md" ## End of clip-09-11-21s.jl"
 # ╠═af1efcf4-779a-11eb-0d62-e3c63876a09b
 # ╠═0b19c578-762b-11eb-34b6-01e80cef1406
 # ╠═3f814e9e-762b-11eb-1340-91617ca7b58a
-# ╠═e8714e64-7bad-11eb-0e87-f996f6c280f1
 # ╠═cb88768a-779b-11eb-1a4e-99f92ded29ca
 # ╠═e37331ea-779b-11eb-1b02-1fdb61aae124
 # ╠═3fafc7fe-762b-11eb-37da-254b6d75f5ca

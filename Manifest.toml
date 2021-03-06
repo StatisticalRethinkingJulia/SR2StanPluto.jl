@@ -129,9 +129,9 @@ version = "3.10.2"
 
 [[ColorTypes]]
 deps = ["FixedPointNumbers", "Random"]
-git-tree-sha1 = "4bffea7ed1a9f0f3d1a131bbcd4b925548d75288"
+git-tree-sha1 = "5e9769a17f17b587c951d57ba4319782b40c3513"
 uuid = "3da002f7-5984-5a60-b8a6-cbb66c0b333f"
-version = "0.10.9"
+version = "0.10.10"
 
 [[Colors]]
 deps = ["ColorTypes", "FixedPointNumbers", "InteractiveUtils", "Reexport"]
@@ -328,10 +328,10 @@ uuid = "f5851436-0d7a-5f13-b9de-f02708fd171a"
 version = "3.3.9+7"
 
 [[FileIO]]
-deps = ["Pkg"]
-git-tree-sha1 = "83a417f955d8073feb8e7bc8900d6beb0c7b69c2"
+deps = ["Pkg", "Requires", "UUIDs"]
+git-tree-sha1 = "fca4d06b629ba6ded40bc6562db3dfa330959c11"
 uuid = "5789e2e9-d7fb-5bc7-8068-2c6fae9b9549"
-version = "1.5.0"
+version = "1.6.0"
 
 [[FillArrays]]
 deps = ["LinearAlgebra", "Random", "SparseArrays"]
@@ -411,9 +411,9 @@ version = "0.53.0+0"
 
 [[GeometryBasics]]
 deps = ["EarCut_jll", "IterTools", "LinearAlgebra", "StaticArrays", "StructArrays", "Tables"]
-git-tree-sha1 = "4d4f72691933d5b6ee1ff20e27a102c3ae99d123"
+git-tree-sha1 = "82853ebc70db4f5a3084853738c68fd497b22c7c"
 uuid = "5c1252a2-5f33-56bf-86c9-59e7332b4326"
-version = "0.3.9"
+version = "0.3.10"
 
 [[Gettext_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Libiconv_jll", "Pkg", "XML2_jll"]
@@ -546,15 +546,15 @@ uuid = "dd4b983a-f0e5-5f8d-a1b7-129d4a5fb1ac"
 version = "2.10.0+3"
 
 [[LaTeXStrings]]
-git-tree-sha1 = "c7aebfecb1a60d59c0fe023a68ec947a208b1e6b"
+git-tree-sha1 = "c7f1c695e06c01b95a67f0cd1d34994f3e7db104"
 uuid = "b964fa9f-0449-5b57-a5c2-d3ea65f4040f"
-version = "1.2.0"
+version = "1.2.1"
 
 [[Latexify]]
 deps = ["Formatting", "InteractiveUtils", "LaTeXStrings", "MacroTools", "Markdown", "Printf", "Requires"]
-git-tree-sha1 = "3a0084cec7bf157edcb45a67fac0647f88fe5eaf"
+git-tree-sha1 = "a2484a6e0a48c694c41f69397657b6753e218923"
 uuid = "23fbe1c1-3f47-55db-b15f-69d7ec21a316"
-version = "0.14.7"
+version = "0.14.9"
 
 [[LazyArtifacts]]
 deps = ["Artifacts", "Pkg"]
@@ -646,7 +646,7 @@ uuid = "d3d80556-e9d4-5f37-9878-2ab0fcc64255"
 version = "7.1.1"
 
 [[LinearAlgebra]]
-deps = ["Libdl"]
+deps = ["Libdl", "libblastrampoline_jll"]
 uuid = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 
 [[LogDensityProblems]]
@@ -854,7 +854,7 @@ uuid = "30392449-352a-5448-841d-b1acce4e97dc"
 version = "0.40.0+0"
 
 [[Pkg]]
-deps = ["Artifacts", "Dates", "Downloads", "LibGit2", "Libdl", "Logging", "Markdown", "Printf", "REPL", "Random", "SHA", "Serialization", "TOML", "Tar", "UUIDs"]
+deps = ["Artifacts", "Dates", "Downloads", "LibGit2", "Libdl", "Logging", "Markdown", "Printf", "REPL", "Random", "SHA", "Serialization", "TOML", "Tar", "UUIDs", "p7zip_jll"]
 uuid = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 
 [[PlotThemes]]
@@ -1078,17 +1078,11 @@ git-tree-sha1 = "48a8ffc7a6e3e00c676e357e0e4e73e0925b17f0"
 uuid = "c1514b29-d3a0-5178-b312-660c88baa699"
 version = "3.0.7"
 
-[[StanToSR]]
-deps = ["Distributions"]
-path = "src/StanToSR"
-uuid = "25196680-0650-4eca-955d-f073dc65e10d"
-version = "0.1.0"
-
 [[Static]]
 deps = ["IfElse"]
-git-tree-sha1 = "98ace568bf638e89eac33c99337f3c8c6e2227b8"
+git-tree-sha1 = "1b0fdbbc15c5b13dcf52343ac681a3060ddb8ee4"
 uuid = "aedffcd0-7271-4cad-89d0-dc628f76c6d3"
-version = "0.2.0"
+version = "0.2.1"
 
 [[StaticArrays]]
 deps = ["LinearAlgebra", "Random", "Statistics"]
@@ -1098,9 +1092,9 @@ version = "1.0.1"
 
 [[StatisticalRethinking]]
 deps = ["AxisArrays", "BSplines", "CSV", "DataFrames", "Distributions", "DocStringExtensions", "Formatting", "GLM", "KernelDensity", "LaTeXStrings", "LinearAlgebra", "MCMCChains", "MonteCarloMeasurements", "NamedArrays", "NamedTupleTools", "Optim", "OrderedCollections", "Parameters", "PrettyTables", "Random", "Reexport", "Requires", "Statistics", "StatsBase", "StatsFuns", "StatsModelComparisons", "StatsPlots", "StructuralCausalModels", "Test", "Unicode"]
-path = "/Users/rob/.julia/dev/StatisticalRethinking"
+git-tree-sha1 = "f636ad4cda70b1501cd0a1cb6b29095bd2ffa53a"
 uuid = "2d09df54-9d0f-5258-8220-54c2a3d4fbee"
-version = "3.2.7"
+version = "3.2.8"
 
 [[StatisticalTraits]]
 deps = ["ScientificTypes"]
@@ -1126,9 +1120,9 @@ version = "0.9.6"
 
 [[StatsModelComparisons]]
 deps = ["RecipesBase", "Statistics", "StatsFuns"]
-path = "/Users/rob/.julia/dev/StatsModelComparisons"
+git-tree-sha1 = "dab481fc0f88d1a8b2c612e308140ec979e8ffe8"
 uuid = "854dedd9-9477-4a25-907d-7fd989bfdd01"
-version = "0.1.0"
+version = "0.1.2"
 
 [[StatsModels]]
 deps = ["DataAPI", "DataStructures", "LinearAlgebra", "Printf", "ShiftedArrays", "SparseArrays", "StatsBase", "StatsFuns", "Tables"]
@@ -1156,13 +1150,17 @@ version = "1.4.0"
 
 [[StructuralCausalModels]]
 deps = ["CSV", "Combinatorics", "DataFrames", "DataStructures", "Distributions", "DocStringExtensions", "LinearAlgebra", "NamedArrays", "Reexport", "Statistics"]
-git-tree-sha1 = "244661e5cc571968e9005058412e768a8ad4a989"
+git-tree-sha1 = "f61e8a5dd84524b7a3cfd0a0d58fce17388e381a"
 uuid = "a41e6734-49ce-4065-8b83-aff084c01dfd"
-version = "1.0.3"
+version = "1.0.5"
 
 [[SuiteSparse]]
-deps = ["Libdl", "LinearAlgebra", "Serialization", "SparseArrays"]
+deps = ["Libdl", "LinearAlgebra", "Serialization", "SparseArrays", "SuiteSparse_jll"]
 uuid = "4607b0f0-06f3-5cda-b6b1-a6196a1729e9"
+
+[[SuiteSparse_jll]]
+deps = ["Artifacts", "Libdl", "Pkg", "libblastrampoline_jll"]
+uuid = "bea87d4a-7f5b-5778-9afe-8cc45184846c"
 
 [[TOML]]
 deps = ["Dates"]
@@ -1419,6 +1417,12 @@ git-tree-sha1 = "acc685bcf777b2202a904cdcb49ad34c2fa1880c"
 uuid = "0ac62f75-1d6f-5e53-bd7c-93b484bb37c0"
 version = "0.14.0+4"
 
+[[libblastrampoline_jll]]
+deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
+git-tree-sha1 = "411ee75a5364426ef54afa88482ca84f35937923"
+uuid = "8e850b90-86db-534c-a0d3-1478176c7d93"
+version = "3.0.2+0"
+
 [[libfdk_aac_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
 git-tree-sha1 = "7a5780a0d9c6864184b3a2eeeb833a0c871f00ab"
@@ -1440,6 +1444,10 @@ version = "1.3.6+6"
 [[nghttp2_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "8e850ede-7688-5339-a07c-302acd2aaf8d"
+
+[[p7zip_jll]]
+deps = ["Artifacts", "Libdl"]
+uuid = "3f19e933-33d8-53b3-aaab-bd5110c3b7a0"
 
 [[x264_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
