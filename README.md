@@ -47,6 +47,8 @@ julia> Pluto.run()
 
 Select a notebook in the `open a file` entry box, e.g. type `./` and step to `./notebooks/00/clip-00-01-03s.jl`. All notebooks will activate the project `StatisticalRethinkingStan`.
 
+A good notebook to initially glance over if `./notebooks/intros/intro-stan/intro-stan-01s.jl`.
+
 The `data` directory, in DrWatson accessible through `datadir()`, can be used for locally generated data, exercises, etc. All "rethinking" data files are stored and maintained in StatisticalRethinking.jl and can be accessed via `sr_datadir(...)`. DrWatson provides several other handy shortcuts, e.g. projectdir().
 
 A typical set of opening lines in each notebook:

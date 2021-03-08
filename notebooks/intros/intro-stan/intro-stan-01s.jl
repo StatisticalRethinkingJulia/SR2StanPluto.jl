@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.17
+# v0.12.21
 
 using Markdown
 using InteractiveUtils
@@ -10,8 +10,7 @@ using Pkg, DrWatson
 # ╔═╡ 5d9316ec-f1dd-11ea-1c0d-0d8566ab3a90
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample
-	using StanOptimize            # Used to compute quadratic approximation
+	using StanSample, StanQuap
 	using StatisticalRethinking
 	using PlutoUI
 end
@@ -44,24 +43,45 @@ In the R package `rethinking`, posterior values can be approximated by
 # Simulate quadratic approximation (for simpler models)
 m4.31 <- quap(flist, data=d2)
 ```
+"
 
-or generated using Stan by:
+# ╔═╡ 46c64c28-803e-11eb-1b95-83fab3e00932
+md"
+or, in the second half of the book, generated using Stan by:
 
 ```
 # Generate a Stan model and run a simulation
 m4.32 <- ulam(flist, data=d2)
 ```
 
-In StatisticalRethinkingStan, R's ulam() has been replaced by StanSample.jl. This means that much earlier on than in the book, StatisticalRethinkingStan introduces the reader to the Stan language."
+In StatisticalRethinkingStan, R's ulam() has been replaced by StanSample.jl.
 
-
-
+This means that much earlier on than in the book, StatisticalRethinkingStan introduces the reader to the Stan language."
 
 # ╔═╡ 55ed2bde-f756-11ea-1f1d-7fbdf76c1b76
-md"To help out with this, in this notebook and a few additional notebooks in the subdirectory `notebooks/intro-stan` the Stan language is introduced and the execution of Stan language programs illustrated. Chapter 9 of the book contains a nice introduction to translating the `alist` R models to the Stan language (just before section 9.5)."
+md"To help out with this, in this notebook and a few additional notebooks in the subdirectory `notebooks/intros/intro-stan` the Stan language is introduced and the execution of Stan language programs illustrated.
+
+Chapter 9 of the book contains a nice introduction to translating the `alist` R models to the Stan language (just before section 9.5).
+"
+
+# ╔═╡ 04330a22-8020-11eb-38f3-15f03a13f217
+md"
+!!! note
+	In general StatisticalRethinkingStan relies on and shows more details (and capabilities!) of the full Stan Language than the above mentioned `alist`s in the book. Maybe in the Julia setting, if your preference is to use something closer to the `alist`s Turing.jl and DynamicHMC.jl are better alternatives, e.g. see the early version of [StatisticalRethinkingTuring](https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingTuring.jl) and a future version of [StatisticalRethinkingDHMC](https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingDHMC.jl).
+"
 
 # ╔═╡ 2e4c633e-f75a-11ea-2bcb-fb9800e518af
-md"The equivalent of the R function `quap()` in StatisticalRethinkingStan uses StanOptimize (or, as a further shortcut, the MAP density of the Stan samples) as the mean of the Normal distribution and reports the quap approximation as a NamedTuple. e.g. see `./notebooks/intro-stan/intro-stan-03.jl` and `./notebooks/intro-stan/intro-stan-04.jl`."
+md"A few ways to provide similar fuctionality to the R function `quap()` are illustrated in StatisticalRethinkingStan, i.e. using Optim.jl, using StanOptimize.jl and using StanQuap.jl.
+
+The use of Optim.jl is shown in `./notebooks/intros/intro-logpdf`. This is probably the best way of obtaining MAP estimates but requires rewriting the models in a logpdf format.
+
+The use of StanOptimize.jl is shown in `./notebooks/intros/intro-stan/intro-stan-03.jl` and `./notebooks/intros/intro-stan/intro-stan-04.jl`.
+"
+
+# ╔═╡ f2cd269c-801e-11eb-1e56-bfbb77a13ac9
+md"
+In the clips I have opted for a less efficient way of computing the quadratic approximation to the posterior distribution by using StanQuap.jl which uses both StanOptimize.jl and StanSample.jl. The advantage is that this way, as in the StanOptimize.jl approach, the same Stan Language model can be used and it returns both the quapdratic approximation and a full SampleModel which makes comparing the two results easier.
+"
 
 # ╔═╡ c7dd5b98-f1dd-11ea-168c-07c643e283a7
 md"## Introduction to a Stan Language program"
@@ -154,24 +174,22 @@ end;
 md"##### 3. Input data in the form of a Dict"
 
 # ╔═╡ 49b87dde-f1eb-11ea-0ee1-67edf7b90b1c
-m1_1_data = Dict("N" => N, "n" => n, "k" => k)
+data = (N = N, n = n, k = k);
 
 # ╔═╡ 5dd4b36a-f1dd-11ea-11af-a946fb4ac07a
 md"##### 4. Sample using stan_sample."
 
 # ╔═╡ 6f463898-f1eb-11ea-16f1-0b6de4bd69c4
-rc1_1s = stan_sample(m1_1s, data=m1_1_data);
+rc1_1s = stan_sample(m1_1s; data);
 
 # ╔═╡ 5ddf4cf6-f1dd-11ea-388f-77f48ba93c39
 md"##### 5. Describe and check the results"
 
 # ╔═╡ 73d0dd98-f1ec-11ea-2499-477a8024ecc6
 if success(rc1_1s)
-  post1_1s_df = read_samples(m1_1s; output_format=:dataframe)
-end;
-
-# ╔═╡ 06519646-2b5e-11eb-1093-43f360b702eb
-PRECIS(post1_1s_df)
+	post1_1s_df = read_samples(m1_1s; output_format=:dataframe)
+	PRECIS(post1_1s_df)
+end
 
 # ╔═╡ 208e7a70-f1ec-11ea-3ba9-d5e8c8c00553
 md"###### Sample Particles summary:"
@@ -187,9 +205,8 @@ md"###### NamedTuple representation of quap estimate:"
 
 # ╔═╡ a804833c-3a44-11eb-2cbd-997854743a0f
 begin
-	data = m1_1_data
 	init = Dict(:theta => 0.5)
-	q1_1s, sm, om = quap("m1.1s", stan1_1; data, init)
+	q1_1s, sm, om = stan_quap("m1.1s", stan1_1; data, init)
 	q1_1s
 end
 
@@ -198,6 +215,9 @@ begin
 	quap1_1s_df = sample(q1_1s)
 	PRECIS(quap1_1s_df)
 end
+
+# ╔═╡ c2ef6864-802c-11eb-1a86-858e8db6e45f
+√q1_1s.vcov
 
 # ╔═╡ d0006f7c-f1ec-11ea-3361-9baae166396a
 md"##### Check the chains using MCMCChains.jl"
@@ -233,11 +253,14 @@ md"## End of intros/intro-stan-01s.jl"
 # ╟─45929f5a-f759-11ea-1955-67ba740778e6
 # ╟─e27ece36-f756-11ea-250c-99d909d390f9
 # ╟─8819279a-f757-11ea-37ee-f7b0a267d351
+# ╟─46c64c28-803e-11eb-1b95-83fab3e00932
 # ╟─55ed2bde-f756-11ea-1f1d-7fbdf76c1b76
+# ╟─04330a22-8020-11eb-38f3-15f03a13f217
 # ╟─2e4c633e-f75a-11ea-2bcb-fb9800e518af
+# ╟─f2cd269c-801e-11eb-1e56-bfbb77a13ac9
 # ╟─c7dd5b98-f1dd-11ea-168c-07c643e283a7
 # ╟─57f0ec9a-f913-11ea-2e7e-ad16a359b82d
-# ╟─e1794cb4-f758-11ea-0888-9d7ce10db48f
+# ╠═e1794cb4-f758-11ea-0888-9d7ce10db48f
 # ╠═38677642-f1dd-11ea-2537-59511c140dab
 # ╠═5d9316ec-f1dd-11ea-1c0d-0d8566ab3a90
 # ╟─d12eb360-f1ea-11ea-1a2f-fd69805cb4b4
@@ -263,13 +286,13 @@ md"## End of intros/intro-stan-01s.jl"
 # ╠═6f463898-f1eb-11ea-16f1-0b6de4bd69c4
 # ╟─5ddf4cf6-f1dd-11ea-388f-77f48ba93c39
 # ╠═73d0dd98-f1ec-11ea-2499-477a8024ecc6
-# ╠═06519646-2b5e-11eb-1093-43f360b702eb
 # ╟─208e7a70-f1ec-11ea-3ba9-d5e8c8c00553
 # ╠═cfe9027e-f1ec-11ea-33df-65cd05965437
 # ╟─b82e2e82-f757-11ea-2696-6f294e3070f5
 # ╟─cfe95fee-f1ec-11ea-32a1-bbf3633ab8e7
 # ╠═a804833c-3a44-11eb-2cbd-997854743a0f
 # ╠═a0a04fa8-2b5e-11eb-0a44-4b31c17d9a57
+# ╠═c2ef6864-802c-11eb-1a86-858e8db6e45f
 # ╟─d0006f7c-f1ec-11ea-3361-9baae166396a
 # ╠═1ce58ec6-f1ed-11ea-1c05-99a463481fd8
 # ╟─2c465b0a-f1ed-11ea-35e3-017075244cd8
