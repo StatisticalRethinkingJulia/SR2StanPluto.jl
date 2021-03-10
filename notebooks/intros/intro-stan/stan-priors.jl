@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.11
+# v0.12.21
 
 using Markdown
 using InteractiveUtils
@@ -48,15 +48,19 @@ model {
 # ╔═╡ 2e0c33a8-0e8c-11eb-0605-737c37533499
 begin
 	m4_2s = SampleModel("p4_2s", m4_2)
-	prior4_2_data = Dict("N" => 0, "h" => [])
-	rc4_2s = stan_sample(m4_2s; data=prior4_2_data)
-end
+	data = (N = 0, h = [])
+	rc4_2s = stan_sample(m4_2s; data)
+end;
 
 # ╔═╡ 2e1fed7e-0e8c-11eb-0996-eb641a2c95ae
 if success(rc4_2s)
   priors4_2s = read_samples(m4_2s; output_format=:dataframe)
   PRECIS(priors4_2s)
 end
+
+# ╔═╡ 3146d9a2-805d-11eb-06d2-17420dbd5a96
+plot(density(priors4_2s.mu, lab="μ"), density(priors4_2s.sigma, lab="σ"),
+	layout=(1,2))
 
 # ╔═╡ 2e20929c-0e8c-11eb-0388-c34bd6d066e9
 md"## End of stan-priors.jl"
@@ -69,4 +73,5 @@ md"## End of stan-priors.jl"
 # ╠═2e01794a-0e8c-11eb-0825-973992a079a9
 # ╠═2e0c33a8-0e8c-11eb-0605-737c37533499
 # ╠═2e1fed7e-0e8c-11eb-0996-eb641a2c95ae
+# ╠═3146d9a2-805d-11eb-06d2-17420dbd5a96
 # ╟─2e20929c-0e8c-11eb-0388-c34bd6d066e9

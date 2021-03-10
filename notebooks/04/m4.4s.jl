@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.17
+# v0.12.21
 
 using Markdown
 using InteractiveUtils
@@ -10,7 +10,7 @@ using Pkg, DrWatson
 # ╔═╡ 4ed86460-2861-11eb-2bd8-43083b1529de
 begin
     @quickactivate "StatisticalRethinkingStan"
-    using StanSample, StanOptimize
+    using StanSample, StanQuap
     using StatisticalRethinking
 end
 
@@ -65,7 +65,7 @@ end;
 
 # ╔═╡ 4f12dab6-2861-11eb-2ab5-db94af68f01f
 begin
-	q4_4s, m4_4s, om = quap("m4_4s", stan4_4; data, init)
+	q4_4s, m4_4s, om = stan_quap("m4_4s", stan4_4; data, init)
 	q4_4s
 end
 
@@ -82,13 +82,9 @@ begin
 end
 
 # ╔═╡ bba94750-2861-11eb-0a53-99ef01630bb2
-pred4_4s_df = stan_generate_quantities(m4_4s, 1)		# Use draws of chain 1 to simulate predictions
-
-# ╔═╡ bbbf2c8c-2861-11eb-1324-a51c06a16e92
 begin
-	(ytilde, parameters) = read_generated_quantities(m4_4s)		# Read the generated quantities
-	pred4_4s_df2 = DataFrame(ytilde[:, :, 1], parameters)		# Convert to a DataFrame
-	PRECIS(pred4_4s_df2)										# Show summary
+	pred4_4s_df = stan_generate_quantities(m4_4s, 1) 	# Use chain 1 to predict
+	PRECIS(pred4_4s_df)									# Show summary
 end
 
 # ╔═╡ 4f20e764-2861-11eb-036a-89b36686b6e4
@@ -105,5 +101,4 @@ md"## End of m4.4s"
 # ╠═4f138b0a-2861-11eb-0985-1b00943863f2
 # ╠═bb990b7e-2861-11eb-0df7-13c6c6413b4b
 # ╠═bba94750-2861-11eb-0a53-99ef01630bb2
-# ╠═bbbf2c8c-2861-11eb-1324-a51c06a16e92
 # ╟─4f20e764-2861-11eb-036a-89b36686b6e4

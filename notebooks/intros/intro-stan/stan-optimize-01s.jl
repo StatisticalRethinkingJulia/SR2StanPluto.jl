@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.17
+# v0.12.21
 
 using Markdown
 using InteractiveUtils
@@ -10,8 +10,8 @@ using Pkg, DrWatson
 # ╔═╡ b878f13a-0e8b-11eb-3a3d-3df3931f026e
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample
-	using StanOptimize
+	using StanSample, StanOptimize
+	using StanQuap
 	using StatisticalRethinking
 end
 
@@ -50,8 +50,8 @@ model {
 
 # ╔═╡ b89c414e-0e8b-11eb-2056-bd70c5d493ee
 begin
-  m4_2_data = Dict(:N => length(df.height), :h => df.height)
-  m4_2_init = Dict(:mu => 174.0, :sigma => 5.0)
+  data = Dict(:N => length(df.height), :h => df.height)
+  init = Dict(:mu => 174.0, :sigma => 5.0)
 end;
 
 # ╔═╡ ddbc3e62-3a2f-11eb-06d0-e7a7abf38861
@@ -60,25 +60,25 @@ md"##### Create a SampleModel:"
 # ╔═╡ cb914d40-3345-11eb-1f96-81c4902b8193
 begin
   m4_2_sample_s = SampleModel("m4.2_sample_s", stan4_2)
-  rc4_2_sample_s = stan_sample(m4_2_sample_s; data=m4_2_data)
+  rc4_2_sample_s = stan_sample(m4_2_sample_s; data)
 end;
 
 # ╔═╡ 847d6bee-3347-11eb-0b71-312d18c967df
 begin
   if success(rc4_2_sample_s)
     m4_2_sample_s_df = read_samples(m4_2_sample_s; output_format=:dataframe)
-    precis(m4_2_sample_s_df)
+    PRECIS(m4_2_sample_s_df)
   end
 end
 
 # ╔═╡ cb766002-3a2f-11eb-25d6-d9aef3e9d398
-md"##### Create an OptimizeMdel:"
+md"##### Create an OptimizeModel and obtain map estimates:"
 
 # ╔═╡ a87dc40a-3345-11eb-191b-7f02f5ff8ee7
 begin
-	m4_2_opt_s = OptimizeModel("m4.2_opt_s", stan4_2)
-	rc4_2_opt_s = stan_optimize(m4_2_opt_s; data=m4_2_data, init=m4_2_init)
-end;
+	m4_2_opt_s = OptimizeModel("m4_2_opt_s", stan4_2)
+	rc4_2_opt_s = stan_optimize(m4_2_opt_s; data, init)
+end
 
 # ╔═╡ b8b1e70e-0e8b-11eb-0f10-7d74079e68f8
 if success(rc4_2_opt_s)
@@ -86,15 +86,12 @@ if success(rc4_2_opt_s)
   optim_stan
 end
 
-# ╔═╡ 0c4bcc62-3345-11eb-1d44-652ed085b8c5
-quap(m4_2_sample_s_df)
-
-# ╔═╡ 3ac54690-3345-11eb-33c0-a9981f2867a6
-quap(m4_2_sample_s)
+# ╔═╡ 36c1d07c-805c-11eb-3401-b1be978eb42a
+md"##### Combine SampleModel and OptimizeModel in StanQuap.jl."
 
 # ╔═╡ cf29cb5a-33e8-11eb-142c-319fcce6609b
 begin
-  q4_2s = quap(m4_2_sample_s, m4_2_opt_s)
+  q4_2s, m4_2s, om = stan_quap("m4.2s", stan4_2; data, init)
   quap4_2s_df = sample(q4_2s)
   precis(quap4_2s_df)
 end
@@ -123,6 +120,9 @@ A ╲ B │          :μ           :σ
 :σ    │ 0.000218032    0.0849058
 ```"
 
+# ╔═╡ 92734668-805b-11eb-0a16-51e77a8d2af6
+NamedArray(q4_2s.vcov, ( q4_2s.params, q4_2s.params ), ("Rows", "Cols"))
+
 # ╔═╡ b8bdd370-0e8b-11eb-0d2e-1174a6d67c88
 md"## End of stan-optimize-01s.jl intro"
 
@@ -137,11 +137,11 @@ md"## End of stan-optimize-01s.jl intro"
 # ╟─ddbc3e62-3a2f-11eb-06d0-e7a7abf38861
 # ╠═cb914d40-3345-11eb-1f96-81c4902b8193
 # ╠═847d6bee-3347-11eb-0b71-312d18c967df
-# ╟─cb766002-3a2f-11eb-25d6-d9aef3e9d398
+# ╠═cb766002-3a2f-11eb-25d6-d9aef3e9d398
 # ╠═a87dc40a-3345-11eb-191b-7f02f5ff8ee7
 # ╠═b8b1e70e-0e8b-11eb-0f10-7d74079e68f8
-# ╠═0c4bcc62-3345-11eb-1d44-652ed085b8c5
-# ╠═3ac54690-3345-11eb-33c0-a9981f2867a6
+# ╟─36c1d07c-805c-11eb-3401-b1be978eb42a
 # ╠═cf29cb5a-33e8-11eb-142c-319fcce6609b
 # ╟─314b3234-3348-11eb-0d37-c5aa7e3f6c94
+# ╠═92734668-805b-11eb-0a16-51e77a8d2af6
 # ╟─b8bdd370-0e8b-11eb-0d2e-1174a6d67c88

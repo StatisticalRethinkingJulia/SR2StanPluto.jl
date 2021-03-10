@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.17
+# v0.12.21
 
 using Markdown
 using InteractiveUtils
@@ -10,7 +10,7 @@ using Pkg, DrWatson
 # ╔═╡ 4ade84b6-fc0b-11ea-06ff-9517579c812c
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample, StanOptimize
+	using StanQuap
 	using StatisticalRethinking
 end
 
@@ -61,7 +61,6 @@ md"##### Define the SampleModel, etc,"
 
 # ╔═╡ 4b0b60fa-fc0b-11ea-3929-0f0077415fc7
 begin
-	m4_5s = SampleModel("m4.5s", stan4_5);
 	data = Dict(
 		:N => size(df, 1), 
 		:height => df.height, 
@@ -69,7 +68,7 @@ begin
 		:weight_sq => df.weight_sq_s
 	)
 	init = Dict(:alpha => 140.0, :beta1 => 15.0, :beta2 => -5.0, :sigma => 10.0)
-	q4_5s, m4_5s, _ = quap("m4.5s", stan4_5; data, init)
+	q4_5s, m4_5s, _ = stan_quap("m4.5s", stan4_5; data, init)
 	quap4_5s_df = sample(q4_5s)
 	PRECIS(quap4_5s_df)
 end

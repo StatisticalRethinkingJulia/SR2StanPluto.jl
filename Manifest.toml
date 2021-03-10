@@ -387,9 +387,9 @@ version = "0.53.0+0"
 
 [[GeometryBasics]]
 deps = ["EarCut_jll", "IterTools", "LinearAlgebra", "StaticArrays", "StructArrays", "Tables"]
-git-tree-sha1 = "82853ebc70db4f5a3084853738c68fd497b22c7c"
+git-tree-sha1 = "c7f81b22b6c255861be4007a16bfdeb60e1c7f9b"
 uuid = "5c1252a2-5f33-56bf-86c9-59e7332b4326"
-version = "0.3.10"
+version = "0.3.11"
 
 [[Gettext_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Libiconv_jll", "Pkg", "XML2_jll"]
@@ -948,9 +948,9 @@ uuid = "ea8e919c-243c-51af-8825-aaa63cd721ce"
 
 [[SLEEFPirates]]
 deps = ["IfElse", "Libdl", "VectorizationBase"]
-git-tree-sha1 = "ab6194c92dcf38036cd9513e4ab12cd76a613da1"
+git-tree-sha1 = "ba5cadfeda75313db740ca81fc351086f7212882"
 uuid = "476501e8-09a2-5ece-8869-fb82de89a1fa"
-version = "0.6.10"
+version = "0.6.11"
 
 [[ScientificTypes]]
 git-tree-sha1 = "1d3f5f8bdf5dd0c9951eb9c595ee08a728aec331"
@@ -1037,10 +1037,10 @@ uuid = "fbd8da12-e93d-5a64-9231-612a0707ab99"
 version = "2.2.2"
 
 [[StanQuap]]
-deps = ["CSV", "DataFrames", "Distributions", "MonteCarloMeasurements", "NamedTupleTools", "OrderedCollections", "Reexport", "StanBase", "StanOptimize", "StanSample", "Statistics"]
-git-tree-sha1 = "e5aef97032aee9bcbf8a35bce84d99a5bd0218a6"
+deps = ["CSV", "DataFrames", "Distributions", "DocStringExtensions", "MonteCarloMeasurements", "NamedTupleTools", "OrderedCollections", "Reexport", "StanBase", "StanOptimize", "StanSample", "Statistics"]
+git-tree-sha1 = "e31f317a7e7001f03f3dfaa5cfb0a4d85e504d51"
 uuid = "e4723793-2808-4fc5-8a98-c57f4c160c53"
-version = "0.1.0"
+version = "1.0.0"
 
 [[StanSample]]
 deps = ["CSV", "DataFrames", "DelimitedFiles", "Distributed", "DocStringExtensions", "MonteCarloMeasurements", "OrderedCollections", "Reexport", "Requires", "StanBase", "Unicode"]
@@ -1050,9 +1050,9 @@ version = "3.0.8"
 
 [[Static]]
 deps = ["IfElse"]
-git-tree-sha1 = "718958214486a81557e87f09762352239042d948"
+git-tree-sha1 = "e59fea643e12d4fa39098c833bd07cd0cd950297"
 uuid = "aedffcd0-7271-4cad-89d0-dc628f76c6d3"
-version = "0.2.2"
+version = "0.2.3"
 
 [[StaticArrays]]
 deps = ["LinearAlgebra", "Random", "Statistics"]
@@ -1062,9 +1062,9 @@ version = "1.0.1"
 
 [[StatisticalRethinking]]
 deps = ["AxisArrays", "BSplines", "CSV", "DataFrames", "Distributions", "DocStringExtensions", "Formatting", "GLM", "KernelDensity", "LaTeXStrings", "LinearAlgebra", "MCMCChains", "MonteCarloMeasurements", "NamedArrays", "NamedTupleTools", "Optim", "OrderedCollections", "Parameters", "PrettyTables", "Random", "Reexport", "Requires", "Statistics", "StatsBase", "StatsFuns", "StatsModelComparisons", "StatsPlots", "StructuralCausalModels", "Test", "Unicode"]
-git-tree-sha1 = "f636ad4cda70b1501cd0a1cb6b29095bd2ffa53a"
+path = "/Users/rob/.julia/dev/StatisticalRethinking"
 uuid = "2d09df54-9d0f-5258-8220-54c2a3d4fbee"
-version = "3.2.8"
+version = "3.3.0"
 
 [[StatisticalTraits]]
 deps = ["ScientificTypes"]
@@ -1150,9 +1150,9 @@ version = "1.0.0"
 
 [[Tables]]
 deps = ["DataAPI", "DataValueInterfaces", "IteratorInterfaceExtensions", "LinearAlgebra", "TableTraits", "Test"]
-git-tree-sha1 = "a716dde43d57fa537a19058d044b495301ba6565"
+git-tree-sha1 = "f03fc113290ee7726b173fc7ea661260d204b3f2"
 uuid = "bd369af6-aec1-5ad0-b16a-f7cc5008161c"
-version = "1.3.2"
+version = "1.4.0"
 
 [[Tar]]
 deps = ["ArgTools", "SHA"]
@@ -1192,10 +1192,10 @@ version = "1.0.2"
 uuid = "4ec0a83e-493e-50e2-b9ac-8f72acf5a8f5"
 
 [[VectorizationBase]]
-deps = ["ArrayInterface", "Hwloc", "IfElse", "Libdl", "LinearAlgebra"]
-git-tree-sha1 = "486842a62c4a1bc23f7c8457d64e683a00d6d0e9"
+deps = ["ArrayInterface", "Hwloc", "IfElse", "Libdl", "LinearAlgebra", "Static"]
+git-tree-sha1 = "d6a4c2f37e0f90c23d0ca7287b38b76822f9305f"
 uuid = "3d5dd08c-fd9d-11e8-17fa-ed2836048c2f"
-version = "0.18.14"
+version = "0.19.4"
 
 [[Wayland_jll]]
 deps = ["Artifacts", "Expat_jll", "JLLWrappers", "Libdl", "Libffi_jll", "Pkg", "XML2_jll"]

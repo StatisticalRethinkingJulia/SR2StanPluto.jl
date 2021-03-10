@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.17
+# v0.12.21
 
 using Markdown
 using InteractiveUtils
@@ -10,12 +10,9 @@ using Pkg, DrWatson
 # ╔═╡ a9e16b46-fc34-11ea-36de-ef647e4e4f6f
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample
+	using StanSample, StanQuap
 	using StatisticalRethinking
 end
-
-# ╔═╡ 864e52fc-fc39-11ea-2c30-43e6b888bf60
-include(projectdir("models", "05", "m5.2s.jl"))
 
 # ╔═╡ feebbe4e-fc33-11ea-2ee7-d14f977c6497
 md"## Clip-05-01-02s.jl"
@@ -79,8 +76,10 @@ stan5_1_priors = "
 # ╔═╡ db59a030-423e-11eb-3eb2-5d1f7d3dd0f5
 begin
 	m5_1s_priors = SampleModel("m5.1.priors", stan5_1_priors)
-	rc5_1s_priors = stan_sample(m5_1s_priors; data = Dict("N" => 0, "D" => [], "A" => []))
-	success(rc5_1s_priors) && (part5_1s_priors = read_samples(m5_1s_priors; output_format=:particles))
+	rc5_1s_priors = stan_sample(m5_1s_priors;
+		data = Dict("N" => 0, "D" => [], "A" => []))
+	success(rc5_1s_priors) && (part5_1s_priors = read_samples(m5_1s_priors;
+		output_format=:particles))
 end
 
 # ╔═╡ 55ef3d46-423f-11eb-1d83-55276a40b702
@@ -120,19 +119,34 @@ stan5_1 = "
 	}
 ";
 
+# ╔═╡ aa241f5e-fc34-11ea-21d5-1b03dfafd34f
+md"##### Result rethinking:"
+
+# ╔═╡ aa2a005e-fc34-11ea-09ab-290a8d6b6a9a
+rethinking = "
+	   mean   sd  5.5% 94.5%
+a      0.00 0.10 -0.16  0.16
+bA    -0.57 0.11 -0.74 -0.39
+sigma  0.79 0.08  0.66  0.91
+";
+
 # ╔═╡ cbd5fe10-01af-11eb-055b-bd009d0dca55
 begin
-	m5_1s = SampleModel("m5.1s", stan5_1)
-	m5_1_data = Dict("N" => size(df, 1), "D" => df.Divorce_s, "A" => df.MedianAgeMarriage_s)
-	rc5_1s = stan_sample(m5_1s, data=m5_1_data)
-	success(rc5_1s) && (part5_1s = read_samples(m5_1s; output_format=:particles))
+	data = (N = size(df, 1), D = df.Divorce_s, A = df.MedianAgeMarriage_s,
+		M = df.Marriage_s)
+	init = (a=1.0, bA=1.0, bM=1.0, sigma=10.0)
+	q5_1s, m5_1s, om5_1s = stan_quap("m5.1s", stan5_1; data, init)
+	if !isnothing(q5_1s)
+		quap5_1s_df = sample(q5_1s)
+		PRECIS(quap5_1s_df)
+	end
 end
 
 # ╔═╡ 9547a2a0-01c4-11eb-169c-17d6dbace4d9
 md"##### Compare below figure with the corresponding figure in clip-05-01-05s.jl."
 
 # ╔═╡ 07cfcaec-01c4-11eb-38b7-31dca6cafefb
-if success(rc5_1s)
+if !isnothing(m5_1s)
 	post5_1s_df = read_samples(m5_1s; output_format=:dataframe)
 	plot(xlab="Medium age marriage (scaled)", ylab="Divorce rate (scaled)",
 		title="Showing 50 regression lines")
@@ -141,6 +155,24 @@ if success(rc5_1s)
 		plot!(xi, yi, color=:lightgrey, leg=false)
 	end
 	scatter!(df[:, :MedianAgeMarriage_s], df[!, :Divorce_s], color=:darkblue)
+end
+
+# ╔═╡ aa064588-fc34-11ea-2153-59bc6c7f18a8
+md"### snippet 5.2"
+
+# ╔═╡ aa36edc8-fc34-11ea-3701-434917b6f7a3
+if !isnothing(q5_1s)
+
+	# Plot regression line D on A
+
+	title1 = "Divorce rate vs. median age at marriage" *
+		"\nshowing predicted and quantile range"
+	fig1 = plotbounds(
+		df, :MedianAgeMarriage, :Divorce,
+		quap5_1s_df, [:a, :bA, :sigma];
+		title=title1,
+		colors=[:lightblue, :darkgrey]
+	)
 end
 
 # ╔═╡ 683093dc-fc54-11ea-3be9-fdad0a8812f6
@@ -163,64 +195,51 @@ model {
 # ╔═╡ 3c3888ec-fc55-11ea-3542-c7df3ecc74b4
 md"##### Both D (Divorce rate) and A (Marriage rate) are standardized."
 
-# ╔═╡ aa064588-fc34-11ea-2153-59bc6c7f18a8
-md"### snippet 5.2"
-
-# ╔═╡ aa1005e6-fc34-11ea-08b5-635958beb6d7
-std(df.MedianAgeMarriage)
-
-# ╔═╡ aa1901d2-fc34-11ea-1d5b-df9e9eb109ec
-if success(rc5_2s)
-
-	# Compute quap approximation.
-
-	quap5_1s_df = quap(post5_1s_df)
-end
-
-# ╔═╡ aa241f5e-fc34-11ea-21d5-1b03dfafd34f
-md"##### Result rethinking:"
-
-# ╔═╡ aa2a005e-fc34-11ea-09ab-290a8d6b6a9a
-rethinking = "
-	   mean   sd  5.5% 94.5%
-a      0.00 0.10 -0.16  0.16
-bA    -0.57 0.11 -0.74 -0.39
-sigma  0.79 0.08  0.66  0.91
+# ╔═╡ 864e52fc-fc39-11ea-2c30-43e6b888bf60
+stan5_2 = "
+data {
+  int N;
+  vector[N] D;
+  vector[N] M;
+}
+parameters {
+  real a;
+  real bM;
+  real<lower=0> sigma;
+}
+model {
+  vector[N] mu = a + bM * M;
+  a ~ normal( 0 , 0.2 );
+  bM ~ normal( 0 , 0.5 );
+  sigma ~ exponential( 1 );
+  D ~ normal( mu , sigma );
+}
 ";
 
-# ╔═╡ aa36edc8-fc34-11ea-3701-434917b6f7a3
-if success(rc5_1s)
-
-	# Plot regression line D on A
-
-	title1 = "Divorce rate vs. median age at marriage" * "\nshowing predicted and quantile range"
-	fig1 = plotbounds(
-		df, :MedianAgeMarriage, :Divorce,
-		post5_1s_df, [:a, :bA, :sigma];
-		title=title1,
-		colors=[:lightblue, :darkgrey]
-	)
+# ╔═╡ 4a4b1284-80f7-11eb-01a4-452b4e2597e7
+begin
+	q5_2s, m5_2s, om = stan_quap("m5.2s", stan5_2; data)
+	if !isnothing(q5_2s)
+		quap5_2s_df = sample(q5_2s)
+	end
+	PRECIS(quap5_2s_df)
 end
 
 # ╔═╡ c206cdc6-fc55-11ea-2835-71c3067485f8
-if success(rc5_2s)
-
-	# Compute quap approximation.
-
+if !isnothing(m5_2s)
 	post5_2s_df = read_samples(m5_2s; output_format=:dataframe)
-	quap5_2s = quap(post5_2s_df)
+	PRECIS(post5_2s_df)
 end
 
 # ╔═╡ 279006d8-fc56-11ea-2792-d1c2678a1e08
-if success(rc5_2s)
+if !isnothing(q5_2s)
 
 	# Plot regression line D on M
-
 
 	title2 = "Divorce rate vs. marriage rate" * "\nshowing predicted and hpdi range"
 	fig2 = plotbounds(
 		df, :Marriage, :Divorce,
-		post5_2s_df, [:a, :bM, :sigma];
+		quap5_2s_df, [:a, :bM, :sigma];
 		title=title2,
 		colors=[:lightblue, :darkgrey]
 	)
@@ -247,19 +266,18 @@ md"## End of clip-05-01-02s.jl"
 # ╠═db59a030-423e-11eb-3eb2-5d1f7d3dd0f5
 # ╠═55ef3d46-423f-11eb-1d83-55276a40b702
 # ╠═fad134cc-423f-11eb-3398-b7d0e22aad9c
+# ╟─aa241f5e-fc34-11ea-21d5-1b03dfafd34f
+# ╠═aa2a005e-fc34-11ea-09ab-290a8d6b6a9a
 # ╠═cbd5fe10-01af-11eb-055b-bd009d0dca55
 # ╟─9547a2a0-01c4-11eb-169c-17d6dbace4d9
 # ╠═07cfcaec-01c4-11eb-38b7-31dca6cafefb
+# ╟─aa064588-fc34-11ea-2153-59bc6c7f18a8
+# ╠═aa36edc8-fc34-11ea-3701-434917b6f7a3
 # ╟─683093dc-fc54-11ea-3be9-fdad0a8812f6
 # ╟─77cb9670-fc54-11ea-38fe-3b8c48e2ce09
 # ╟─3c3888ec-fc55-11ea-3542-c7df3ecc74b4
 # ╠═864e52fc-fc39-11ea-2c30-43e6b888bf60
-# ╟─aa064588-fc34-11ea-2153-59bc6c7f18a8
-# ╠═aa1005e6-fc34-11ea-08b5-635958beb6d7
-# ╠═aa1901d2-fc34-11ea-1d5b-df9e9eb109ec
-# ╟─aa241f5e-fc34-11ea-21d5-1b03dfafd34f
-# ╠═aa2a005e-fc34-11ea-09ab-290a8d6b6a9a
-# ╠═aa36edc8-fc34-11ea-3701-434917b6f7a3
+# ╠═4a4b1284-80f7-11eb-01a4-452b4e2597e7
 # ╠═c206cdc6-fc55-11ea-2835-71c3067485f8
 # ╠═279006d8-fc56-11ea-2792-d1c2678a1e08
 # ╠═41bc0716-fc56-11ea-1cfe-3db82349a2d2

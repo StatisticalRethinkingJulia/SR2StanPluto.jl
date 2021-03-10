@@ -192,16 +192,18 @@ if success(rc1_1s)
 end
 
 # ╔═╡ 208e7a70-f1ec-11ea-3ba9-d5e8c8c00553
-md"###### Sample Particles summary:"
+md"###### Sample `Particles` summary:"
 
 # ╔═╡ cfe9027e-f1ec-11ea-33df-65cd05965437
 part1_1s = read_samples(m1_1s; output_format=:particles)
 
 # ╔═╡ b82e2e82-f757-11ea-2696-6f294e3070f5
-md"The increasing use of Particles to represent quap-like approximations is possible thanks to the package [MonteCarloMeasurements.jl](https://github.com/baggepinnen/MonteCarloMeasurements.jl). [Soss.jl](https://github.com/cscherrer/Soss.jl) and [related write-ups](https://cscherrer.github.io) introduced me to that option."
+md"The use of Particles to represent quap-like approximations is possible thanks to the package [MonteCarloMeasurements.jl](https://github.com/baggepinnen/MonteCarloMeasurements.jl).
+
+[Soss.jl](https://github.com/cscherrer/Soss.jl) and [related write-ups](https://cscherrer.github.io) introduced me to that option."
 
 # ╔═╡ cfe95fee-f1ec-11ea-32a1-bbf3633ab8e7
-md"###### NamedTuple representation of quap estimate:"
+md"###### Generate a quadratic approximation of the posterior distribution and show the NamedTuple representation of such a quap estimate. Click on the little triangle to show the full NamedTuple:"
 
 # ╔═╡ a804833c-3a44-11eb-2cbd-997854743a0f
 begin
@@ -209,6 +211,9 @@ begin
 	q1_1s, sm, om = stan_quap("m1.1s", stan1_1; data, init)
 	q1_1s
 end
+
+# ╔═╡ 094310f4-8046-11eb-0073-950f55104695
+md" ##### Sample from the quadratic approximation:"
 
 # ╔═╡ a0a04fa8-2b5e-11eb-0a44-4b31c17d9a57
 begin
@@ -291,6 +296,7 @@ md"## End of intros/intro-stan-01s.jl"
 # ╟─b82e2e82-f757-11ea-2696-6f294e3070f5
 # ╟─cfe95fee-f1ec-11ea-32a1-bbf3633ab8e7
 # ╠═a804833c-3a44-11eb-2cbd-997854743a0f
+# ╟─094310f4-8046-11eb-0073-950f55104695
 # ╠═a0a04fa8-2b5e-11eb-0a44-4b31c17d9a57
 # ╠═c2ef6864-802c-11eb-1a86-858e8db6e45f
 # ╟─d0006f7c-f1ec-11ea-3361-9baae166396a

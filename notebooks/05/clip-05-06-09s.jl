@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.17
+# v0.12.21
 
 using Markdown
 using InteractiveUtils
@@ -10,12 +10,9 @@ using Pkg, DrWatson
 # ╔═╡ 9f11214e-fcec-11ea-2002-6541f7abc779
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample
+	using StanQuap
 	using StatisticalRethinking
 end
-
-# ╔═╡ 9f11aca4-fcec-11ea-0d60-2549341d0fc8
-include(projectdir("models", "05", "m5.2s.jl"))
 
 # ╔═╡ e2e2c948-fceb-11ea-20e0-f19b598a9e90
 md"## Clip-05-06-09s.jl"
@@ -23,14 +20,38 @@ md"## Clip-05-06-09s.jl"
 # ╔═╡ 7edf5ec4-4243-11eb-08fe-9b57cc817ea8
 md"##### This is an example how to include a previously defined model. Note that Pluto will not allow reloading in the same session."
 
-# ╔═╡ 9f1dddee-fcec-11ea-2328-dbd9ddc2be94
-if success(rc5_2s)
-	post5_2s_df = read_samples(m5_2s; output_format=:dataframe)
-	part5_2s = Particles(post5_2s_df) 
-end
+# ╔═╡ 9f11aca4-fcec-11ea-0d60-2549341d0fc8
+stan5_2 = "
+data {
+  int N;
+  vector[N] D;
+  vector[N] M;
+}
+parameters {
+  real a;
+  real bM;
+  real<lower=0> sigma;
+}
+model {
+  vector[N] mu = a + bM * M;
+  a ~ normal( 0 , 0.2 );
+  bM ~ normal( 0 , 0.5 );
+  sigma ~ exponential( 1 );
+  D ~ normal( mu , sigma );
+}
+";
 
-# ╔═╡ 9f1e7e82-fcec-11ea-203c-bf2312bf2fc6
-success(rc5_2s) && quap(post5_2s_df)
+# ╔═╡ 9f1dddee-fcec-11ea-2328-dbd9ddc2be94
+begin
+	data = (N = size(df, 1), D = df.Divorce_s, A = df.MedianAgeMarriage_s,
+		M = df.Marriage_s)
+	init = (a=1.0, bA=1.0, bM=1.0, sigma=10.0)
+	q5_2s, m5_2s, om5_2 = stan_quap("m5.2s", stan5_2; data, init)
+	if !isnothing(q5_2s)
+		quap5_2s_df = sample(q5_2s)
+		PRECIS(quap5_2s_df)
+	end
+end
 
 # ╔═╡ 9f27c84a-fcec-11ea-005e-97c59812d16e
 # Rethinking results
@@ -43,12 +64,12 @@ sigma 0.91 0.09  0.77  1.05
 ";
 
 # ╔═╡ 9f284e50-fcec-11ea-3eec-4160f696255c
-if success(rc5_2s)
+if !isnothing(q5_2s)
 	begin
 		title = "Divorce rate vs. Marriage rate" * "\nshowing sample and hpd range"
 		plotbounds(
 			df, :Marriage, :Divorce,
-			post5_2s_df, [:a, :bM, :sigma];
+			quap5_2s_df, [:a, :bM, :sigma];
 			title=title,
 			colors=[:lightgrey, :darkgrey]
 		)
@@ -65,7 +86,6 @@ md"## End of clip-05-06-10s.jl"
 # ╟─7edf5ec4-4243-11eb-08fe-9b57cc817ea8
 # ╠═9f11aca4-fcec-11ea-0d60-2549341d0fc8
 # ╠═9f1dddee-fcec-11ea-2328-dbd9ddc2be94
-# ╠═9f1e7e82-fcec-11ea-203c-bf2312bf2fc6
 # ╠═9f27c84a-fcec-11ea-005e-97c59812d16e
 # ╠═9f284e50-fcec-11ea-3eec-4160f696255c
 # ╟─9f329860-fcec-11ea-012b-b59bc79f7336

@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.17
+# v0.12.21
 
 using Markdown
 using InteractiveUtils
@@ -11,7 +11,7 @@ using Pkg, DrWatson
 begin
 	@quickactivate "StatisticalRethinkingStan"
 	using StanSample
-	using StanOptimize
+	using StanQuap
 	using StatisticalRethinking
 end
 
@@ -49,7 +49,7 @@ end
 
 # ╔═╡ 4ff9f050-3e36-11eb-0e80-2b7e791d4ba5
 begin
-	q1_1s, m1_1s, om = quap("m1.1s", stan1_1; data, init)
+	q1_1s, m1_1s, om = stan_quap("m1.1s", stan1_1; data, init)
 	if !isnothing(m1_1s)
 		post1_1s_df = read_samples(m1_1s, output_format=:dataframe)
 	end

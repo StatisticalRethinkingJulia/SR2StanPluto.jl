@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.17
+# v0.12.21
 
 using Markdown
 using InteractiveUtils
@@ -10,7 +10,7 @@ using Pkg, DrWatson
 # ╔═╡ bf85db88-fb7d-11ea-0372-67375f0b8d43
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample, StanOptimize
+	using StanQuap
 	using StatisticalRethinking
 end
 
@@ -57,7 +57,7 @@ md"##### Quadratic approximation."
 begin
 	data = Dict(:N => length(df.height), :height => df.height, :weight => df.weight_c)
 	init = Dict(:alpha => 170.0, :beta => 2.0, :sigma => 10.0)
-	q4_3s, m4_3s, _ = quap("m4.3s", stan4_3; data, init)
+	q4_3s, m4_3s, _ = stan_quap("m4.3s", stan4_3; data, init)
 end;
 
 # ╔═╡ bfe69b8a-fb7d-11ea-10e6-150a3c3ef3eb

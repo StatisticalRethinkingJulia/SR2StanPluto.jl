@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.17
+# v0.12.21
 
 using Markdown
 using InteractiveUtils
@@ -11,7 +11,7 @@ using Pkg, DrWatson
 begin
 	@quickactivate "StatisticalRethinkingStan"
 	using StanSample
-	using StanOptimize
+	using StanQuap
 	using StatisticalRethinking
 end
 
@@ -60,7 +60,7 @@ md"##### Create a quadratic approximation."
 
 # ╔═╡ 114a04d4-f20b-11ea-0c10-e5c266f4ea8d
 begin
-	q1_1s, m1_1s, om = quap("m1.1s", stan1_1; data, init)
+	q1_1s, m1_1s, om = stan_quap("m1.1s", stan1_1; data, init)
 	q1_1s
 end
 
@@ -69,9 +69,11 @@ md"##### Describe the optimize result"
 
 # ╔═╡ 11602dea-f20b-11ea-1243-fd37bbd57993
 if !isnothing(om)
-  optim_stan, cnames = read_optimize(om)
-  optim_stan
+  om.optim
 end
+
+# ╔═╡ 914dbe76-8047-11eb-36aa-4161ca779950
+PRECIS(read_samples(m1_1s; output_format=:dataframe))
 
 # ╔═╡ 1160f5d8-f20b-11ea-317b-012bdf4d331f
 md"## End of intro/intro-stan-03s.jl"
@@ -88,4 +90,5 @@ md"## End of intro/intro-stan-03s.jl"
 # ╠═114a04d4-f20b-11ea-0c10-e5c266f4ea8d
 # ╟─115537b2-f20b-11ea-030c-478dea20fdbe
 # ╠═11602dea-f20b-11ea-1243-fd37bbd57993
+# ╠═914dbe76-8047-11eb-36aa-4161ca779950
 # ╟─1160f5d8-f20b-11ea-317b-012bdf4d331f

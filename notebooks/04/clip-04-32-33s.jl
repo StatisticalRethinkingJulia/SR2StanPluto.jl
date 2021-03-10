@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.17
+# v0.12.21
 
 using Markdown
 using InteractiveUtils
@@ -10,7 +10,7 @@ using Pkg, DrWatson
 # ╔═╡ 62916bce-fb76-11ea-1d36-77a8b156aabb
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample, StanOptimize
+	using StanSample, StanQuap
 	using StatisticalRethinking
 end
 
@@ -54,7 +54,7 @@ md"### Snippet 4.31"
 begin
 	data = Dict(:N => length(df.height), :h => df.height)
 	init = Dict(:mu => 180.0, :sigma => 10.0)
-	q4_1s, m4_1s, om = quap("m4.1s", stan4_1; data, init)
+	q4_1s, m4_1s, om = stan_quap("m4.1s", stan4_1; data, init)
 end;
 
 # ╔═╡ 62c16610-fb76-11ea-36d5-51093f07a76a
@@ -73,7 +73,7 @@ end
 md"### snippet 4.32"
 
 # ╔═╡ 62e3e746-fb76-11ea-327a-21f83959bb7c
-md"##### Computed covariance matrix by quap()."
+md"##### Computed covariance matrix by stan_quap()."
 
 # ╔═╡ bf7e6a2e-0ef6-11eb-3753-d5cddb8365c2
 q4_1s.vcov
@@ -85,7 +85,8 @@ diag(q4_1s.vcov) .|> sqrt
 md"##### Use Particles."
 
 # ╔═╡ fcb54d46-0b67-11eb-221d-87a459b88a94
- part_sim = Particles(4000, MvNormal([mean(quap4_1s_df.mu), mean(quap4_1s_df.sigma)], q4_1s.vcov))
+part_sim = Particles(4000, MvNormal([mean(quap4_1s_df.mu),
+	mean(quap4_1s_df.sigma)], q4_1s.vcov))
 
 # ╔═╡ 4fb21aa6-0be5-11eb-3ff7-d55646170d94
 begin
@@ -127,4 +128,4 @@ md"## End of clip-04-32-33s.jl"
 # ╟─62ef3826-fb76-11ea-2369-c157a18c626c
 # ╟─62f79ff0-fb76-11ea-323d-074b61eb40f0
 # ╠═62feda92-fb76-11ea-32a4-454502ca4488
-# ╠═6306bcf8-fb76-11ea-2feb-af94851021ba
+# ╟─6306bcf8-fb76-11ea-2feb-af94851021ba
