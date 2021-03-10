@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.20
+# v0.12.21
 
 using Markdown
 using InteractiveUtils
@@ -10,7 +10,7 @@ using Pkg, DrWatson
 # ╔═╡ 5d84f90c-5053-11eb-076b-5f30fc9685e3
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample, StanOptimize
+	using StanQuap
 	using StatisticalRethinking
 end
 
@@ -81,7 +81,7 @@ for K in 1:6
 	N = size(df, 1)
 	data = (N = N, K = K, brain = df.brain_s, mass = mass)
 	init = (a = 0.0, bA = ones(K), sigma = 2)
-	q7_2s, m7_2s, o7_2s = quap("m7.2s", stan7_2; data, init)
+	q7_2s, m7_2s, o7_2s = stan_quap("m7.2s", stan7_2; data, init)
 	linkvars = [:a, :bA, :sigma]
 	fnc=create_observation_matrix
 

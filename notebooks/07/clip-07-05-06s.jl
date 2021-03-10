@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.20
+# v0.12.21
 
 using Markdown
 using InteractiveUtils
@@ -10,7 +10,7 @@ using Pkg, DrWatson
 # ╔═╡ 5d84f90c-5053-11eb-076b-5f30fc9685e3
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample, StanOptimize
+	using StanQuap
 	using StatisticalRethinking
 end
 
@@ -61,7 +61,7 @@ model {
 begin
 	data = (N = size(df, 1), brain = df.brain_std, mass = df.mass_s)
 	init = (a = 0.0, bA = 1, sigma = 2)
-	q7_1as, m7_1as, o7_1as = quap("m7.1as", stan7_1a; data, init)
+	q7_1as, m7_1as, o7_1as = stan_quap("m7.1as", stan7_1a; data, init)
 end;
 
 # ╔═╡ 084d9bcc-506b-11eb-3246-75bd606e5c6a

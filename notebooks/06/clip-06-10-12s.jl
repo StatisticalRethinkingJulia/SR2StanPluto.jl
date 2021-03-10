@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.16
+# v0.12.21
 
 using Markdown
 using InteractiveUtils
@@ -71,7 +71,7 @@ success(rc6_5s) && (p6_5s = Particles(post6_5s_df))
 # ╔═╡ 0f4126fc-fea8-11ea-3fde-3f1ded9aaedb
 if success(rc6_5s)
 	(s6_5s, f6_5s) = plotcoef([m6_3s, m6_4s, m6_5s], [:a, :bF, :bL, :sigma];
-		title="Multicollinearity for milk model using quap()", func=quap)
+		title="Multicollinearity for milk model using quap()")
 	f6_5s
 end
 

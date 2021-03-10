@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.11
+# v0.12.21
 
 using Markdown
 using InteractiveUtils
@@ -10,7 +10,7 @@ using Pkg, DrWatson
 # ╔═╡ 822b886e-fe75-11ea-3fd5-313bd9474e67
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample
+	using StanQuap
 	using StatisticalRethinking
 end
 
@@ -47,17 +47,23 @@ model{
 
 # ╔═╡ 82435d7e-fe75-11ea-3f52-7daa1879898d
 begin
-	m6_3s = SampleModel("m6.3", stan6_3);
-	m6_3_data = Dict("N" => size(df, 1), "F" => df.perc_fat_s, "K" => df.kcal_per_g_s);
-	rc6_3s = stan_sample(m6_3s, data=m6_3_data);
-	success(rc6_3s) && (post6_3s_df = read_samples(m6_3s; output_format=:dataframe))
-end;
+	data = (N = size(df, 1), F = df.perc_fat_s, K = df.kcal_per_g_s)
+	init = (a=0.0, bF=1.0, sigma=1.0)
+	q6_3s, m6_3s, o6_3s = stan_quap("m6.3s", stan6_3; data, init);
+	if !isnothing(m6_3s)
+		post6_3s_df = read_samples(m6_3s; output_format=:dataframe)
+		PRECIS(post6_3s_df)
+	end
+end
 
 # ╔═╡ 82456bc6-fe75-11ea-3e9a-256e1fb9844f
-success(rc6_3s) && (part6_3s = Particles(post6_3s_df))
+!isnothing(m6_3s) && (part6_3s = Particles(post6_3s_df))
 
 # ╔═╡ 82509064-fe75-11ea-16cb-e506f49efd72
-success(rc6_3s) && quap(post6_3s_df)
+if !isnothing(q6_3s)
+	quap6_3s_df = sample(q6_3s)
+	PRECIS(quap6_3s_df)
+end
 
 # ╔═╡ 8251194e-fe75-11ea-1403-d743608a5169
 hpdi(part6_3s.bF.particles, alpha=0.11)

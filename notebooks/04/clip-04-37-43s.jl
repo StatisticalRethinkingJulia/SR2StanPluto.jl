@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.17
+# v0.12.21
 
 using Markdown
 using InteractiveUtils
@@ -10,7 +10,7 @@ using Pkg, DrWatson
 # ╔═╡ 92d465d0-fb7f-11ea-09ac-dba2e8262027
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample, StanOptimize
+	using StanQuap
 	using StatisticalRethinking
 end
 
@@ -66,9 +66,9 @@ md"##### Compute quadratic approximations."
 # ╔═╡ 933be70a-fb7f-11ea-085b-1f1e155132e1
 begin
 	init = Dict(:alpha => 170.0, :beta => 2.0)
-	q4_3as, _, _ = quap("m4.4as", stan4_3a; init)
+	q4_3as, _, _ = stan_quap("m4.4as", stan4_3a; init)
 	quap4_3as_df = sample(q4_3as)
-	q4_3bs, _, _ = quap("m4.3bs", stan4_3b; init)
+	q4_3bs, _, _ = stan_quap("m4.3bs", stan4_3b; init)
 	quap4_3bs_df = sample(q4_3bs)
 end;|
 
@@ -129,7 +129,7 @@ model {
 
 # ╔═╡ afc73d92-40bd-11eb-0cc7-6f4a94bdab5c
 begin
-	q4_3cs, sm, om = quap("m4.3cs", stan4_3c; init)
+	q4_3cs, sm, om = stan_quap("m4.3cs", stan4_3c; init)
 	quap4_3cs_df = sample(q4_3cs)
 	PRECIS(quap4_3cs_df)
 end

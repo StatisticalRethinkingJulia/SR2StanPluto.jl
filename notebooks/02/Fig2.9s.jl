@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.11
+# v0.12.21
 
 using Markdown
 using InteractiveUtils
@@ -64,7 +64,7 @@ end;
 md"##### Describe the chain."
 
 # ╔═╡ 9ee2b730-f771-11ea-0cb3-4380b1093306
-Text(sprint(show, "text/plain", chn))
+CHNS(chn)
 
 # ╔═╡ 9ee425c0-f771-11ea-1eec-2966da179664
 md"##### Compute the MAP (Maximum A Posteriori) estimate."

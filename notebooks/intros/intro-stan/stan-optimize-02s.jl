@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.16
+# v0.12.21
 
 using Markdown
 using InteractiveUtils
@@ -11,7 +11,7 @@ using Pkg, DrWatson
 begin
 	@quickactivate "StatisticalRethinkingStan"
 	using StanSample
-	using StanOptimize
+	using StanQuap
 	using StatisticalRethinking
 end
 
@@ -47,17 +47,16 @@ model {
 
 # ╔═╡ b89c414e-0e8b-11eb-2056-bd70c5d493ee
 begin
-  m4_2_data = Dict(:N => length(df.height), :h => df.height)
-  m4_2_init = Dict(:mu => 174.0, :sigma => 5.0)
+  data = (N = length(df.height), h = df.height)
+  init = (mu = 174.0, sigma = 5.0)
 end;
 
 # ╔═╡ a109cbc0-3803-11eb-114c-09042c8e43aa
-md"##### Single quap() call to compoute the quadratic approximation to std (sigma) and mean (mu). Note that the SampleModel and the OptimizeModel are accessable later on."
+md" ##### Single stan_quap() call to compute the quadratic approximation to std (sigma) and mean (mu). Note that the SampleModel and the OptimizeModel are accessable later on."
 
 # ╔═╡ cf29cb5a-33e8-11eb-142c-319fcce6609b
 begin
-	(q4_2s, sm, om) = quap("m4.2s", stan4_2;
-		data=m4_2_data, init=m4_2_init)
+	q4_2s, m4_2s, om = stan_quap("m4.2s", stan4_2; data, init=init)
 	q4_2s.coef
 end
 
@@ -93,7 +92,7 @@ md"##### Original draws from Stan model."
 
 # ╔═╡ b4df80fc-3802-11eb-0234-5d8def35738f
 begin
-	m4_2_sample_s_df = read_samples(sm; output_format=:dataframe)
+	m4_2_sample_s_df = read_samples(m4_2s; output_format=:dataframe)
     PRECIS(m4_2_sample_s_df)
 end
 
@@ -101,10 +100,7 @@ end
 md"##### MAP estimates using stan_optimize (4 chains)."
 
 # ╔═╡ c998ac88-3802-11eb-2d23-25478d2c3786
-begin
-  optim_stan, _ = read_optimize(om)
-  optim_stan
-end	
+om.optim
 
 # ╔═╡ 314b3234-3348-11eb-0d37-c5aa7e3f6c94
 md"##### Turing quap results:
@@ -130,6 +126,9 @@ A ╲ B │          :μ           :σ
 :σ    │ 0.000218032    0.0849058
 ```"
 
+# ╔═╡ 31e6392e-804a-11eb-1c72-ad024862e93c
+NamedArray(q4_2s.vcov, (q4_2s.params, q4_2s.params), ("rows", "columns"))
+
 # ╔═╡ b8bdd370-0e8b-11eb-0d2e-1174a6d67c88
 md"## End of stan-optimize-02s.jl"
 
@@ -140,7 +139,7 @@ md"## End of stan-optimize-02s.jl"
 # ╠═b88588d8-0e8b-11eb-096f-f152abbd3d1e
 # ╠═b89107b4-0e8b-11eb-0c7f-437f9e4a9d19
 # ╠═b89c414e-0e8b-11eb-2056-bd70c5d493ee
-# ╠═a109cbc0-3803-11eb-114c-09042c8e43aa
+# ╟─a109cbc0-3803-11eb-114c-09042c8e43aa
 # ╠═cf29cb5a-33e8-11eb-142c-319fcce6609b
 # ╟─32dfec2e-3808-11eb-23a6-9beab7ea7ad9
 # ╠═253abe0c-3808-11eb-34ed-e326357b5ef1
@@ -155,4 +154,5 @@ md"## End of stan-optimize-02s.jl"
 # ╟─2464df32-3804-11eb-255f-adc24b6c47d8
 # ╠═c998ac88-3802-11eb-2d23-25478d2c3786
 # ╟─314b3234-3348-11eb-0d37-c5aa7e3f6c94
+# ╠═31e6392e-804a-11eb-1c72-ad024862e93c
 # ╟─b8bdd370-0e8b-11eb-0d2e-1174a6d67c88

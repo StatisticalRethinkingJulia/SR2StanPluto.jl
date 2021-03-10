@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.17
+# v0.12.21
 
 using Markdown
 using InteractiveUtils
@@ -10,7 +10,7 @@ using Pkg, DrWatson
 # ╔═╡ e78a7856-fd1b-11ea-362d-838028fbb539
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample
+	using StanQuap, GLM
 	using StructuralCausalModels
 	using StatisticalRethinking
 end
@@ -53,13 +53,14 @@ model {
 
 # ╔═╡ e58a4fa4-fd20-11ea-3e5e-a518a746f06a
 begin
-	m5_4_RSs = SampleModel("m5.4", stan5_4_RS);
-	m5_4_RS_data = Dict("N" => size(df, 1), "R" => df[:, :R_s], "S" => df[:, :S_s]);
-	rc5_4_RSs = stan_sample(m5_4_RSs, data=m5_4_RS_data);
-	if success(rc5_4_RSs)
+	data = (N = size(df, 1), R = df.R_s, S = df.S_s)
+	init = (a=0.0, bRS=1.0, sigma=1.0)
+	q5_4_RSs, m5_4_RSs, om5_4_RSs = stan_quap("m5.4.RSs", stan5_4_RS; data, init);
+	if !isnothing(q5_4_RSs)
 		post5_4_RSs_df = read_samples(m5_4_RSs; output_format=:dataframe)
 		part5_4_RSs = Particles(post5_4_RSs_df)
-		quap5_4_RSs = quap(post5_4_RSs_df)
+		quap5_4_RSs_df = sample(q5_4_RSs)
+		PRECIS(quap5_4_RSs_df)
 	end
 end
 
@@ -86,25 +87,24 @@ model {
 }
 ";
 
-# ╔═╡ be0e0f32-fd3a-11ea-0d07-6f89080d556f
+# ╔═╡ 484fab24-8119-11eb-305c-7fca0887fcc3
 begin
-	m5_4_SRs = SampleModel("m5.4", stan5_4_SR);
-	m5_4_SR_data = Dict("N" => size(df, 1),  "R" => df[:, :R_s], "S" => df[:, :S_s]);
-	rc5_4_SRs = stan_sample(m5_4_SRs, data=m5_4_SR_data)
-	if success(rc5_4_SRs)
+	q5_4_SRs, m5_4_SRs, om5_4_SRs = stan_quap("m5.4.SRs", stan5_4_SR; data, init);
+	if !isnothing(q5_4_SRs)
 		post5_4_SRs_df = read_samples(m5_4_SRs; output_format=:dataframe)
 		part5_4_SRs = Particles(post5_4_SRs_df)
-		quap5_4_SRs_df = quap(post5_4_SRs_df)
+		quap5_4_SRs_df = sample(q5_4_SRs)
+		PRECIS(quap5_4_SRs_df)
 	end
 end
 
 # ╔═╡ e7cb19ce-fd1b-11ea-2ca5-e5f14a1e1d8b
-if success(rc5_4_RSs)
+if !isnothing(m5_4_RSs)
 	pRS = plotbounds(df, :R, :S, post5_4_RSs_df, [:a, :bRS, :sigma])
 end;
 
 # ╔═╡ e7d70126-fd1b-11ea-16ad-31564fc648de
-if success(rc5_4_SRs)
+if !isnothing(m5_4_SRs)
 	pSR = plotbounds(df, :S, :R, post5_4_SRs_df, [:a, :bSR, :sigma])
 end;
 
@@ -112,7 +112,7 @@ end;
 plot(pRS, pSR, layout=(1, 2))
 
 # ╔═╡ e7e35a5c-fd1b-11ea-33da-a32b17168eb2
-if success(rc5_4_RSs) && success(rc5_4_SRs)
+if !isnothing(m5_4_RSs) && !isnothing(m5_4_SRs)
   # Compute standardized residuals
 
   figs = Vector{Plots.Plot{Plots.GRBackend}}(undef, 4)
@@ -182,7 +182,7 @@ md"## End of clip-05-18s.jl"
 # ╠═e7c914b2-fd1b-11ea-3cf6-2bf799ff7370
 # ╠═e58a4fa4-fd20-11ea-3e5e-a518a746f06a
 # ╠═89ee52d2-fd1e-11ea-3c23-dfea31e14847
-# ╠═be0e0f32-fd3a-11ea-0d07-6f89080d556f
+# ╠═484fab24-8119-11eb-305c-7fca0887fcc3
 # ╠═e7cb19ce-fd1b-11ea-2ca5-e5f14a1e1d8b
 # ╠═e7d70126-fd1b-11ea-16ad-31564fc648de
 # ╠═e7d799e2-fd1b-11ea-27c6-7f2c85fb9b62

@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.17
+# v0.12.21
 
 using Markdown
 using InteractiveUtils
@@ -10,7 +10,7 @@ using Pkg, DrWatson
 # ╔═╡ 50cd42e6-fbbc-11ea-08af-4b4a08ff30ab
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample, StanOptimize
+	using StanQuap
 	using StatisticalRethinking
 end
 
@@ -62,7 +62,7 @@ md"##### Define the SampleModel."
 begin
 	data = Dict(:N => size(df, 1), :height => df.height, :weight => df.weight, :xbar => mean(df.weight));
 	init = Dict(:alpha => 170.0, :beta => 2.0, :sigma => 10.0)
-	q4_3s, m4_3s, _ = quap("m4.3s", stan4_3; data, init)
+	q4_3s, m4_3s, _ = stan_quap("m4.3s", stan4_3; data, init)
 	quap4_3s_df = sample(q4_3s)
 	PRECIS(quap4_3s_df)
 end
@@ -105,11 +105,14 @@ end
 begin
 	figs[2] = plot(xlab="weight", ylab="height", legend=:topleft)
 	title!(figs[2], "89% Compatibility interval mu")
-	scatter!(figs[2], df[:, :weight], df[:, :height], markersize=2, lab="Observations")
+	scatter!(figs[2], df[:, :weight], df[:, :height], markersize=2,
+		lab="Observations")
 	for (ind, m) in enumerate(mu_range)
-		plot!(figs[2], [m, m], quantile(mu[ind], [0.055, 0.945]), color=:grey, leg=false)
+		plot!(figs[2], [m, m], quantile(mu[ind], [0.055, 0.945]), color=:grey,
+			leg=false)
 	end
-	plot!(figs[2], mu_range, [mean(mu[i]) for i in 1:length(mu_range)], color=:red, lab="Means of mu")
+	plot!(figs[2], mu_range, [mean(mu[i]) for i in 1:length(mu_range)], color=:red,
+		lab="Means of mu")
 end
 
 # ╔═╡ fea7af86-4159-11eb-1551-7faa9623c247

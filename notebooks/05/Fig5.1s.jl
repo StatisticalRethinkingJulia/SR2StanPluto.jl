@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.17
+# v0.12.21
 
 using Markdown
 using InteractiveUtils
@@ -10,7 +10,7 @@ using Pkg, DrWatson
 # ╔═╡ 15862766-fc0e-11ea-160b-09995fb8e8fc
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample
+	using StanQuap
 	using StatisticalRethinking
 end
 
@@ -54,39 +54,30 @@ model {
 }
 ";
 
-# ╔═╡ 15952660-fc0e-11ea-0820-a350ee0a6326
-md"##### Define the SampleModel."
-
-# ╔═╡ 15a204fc-fc0e-11ea-2b27-75d4236363d6
-m5_0s = SampleModel("Fig5.1", stan5_0);
-
 # ╔═╡ 15a36108-fc0e-11ea-310b-d50e8725f62c
 md"##### Input data."
 
 # ╔═╡ 15afbdfe-fc0e-11ea-15a5-9bf6506abf5d
-wd_data = Dict("N" => size(df, 1), "D" => df[:, :Divorce_s],
-    "W" => df[:, :WaffleHouses_s]);
+begin
+	data = (N = size(df, 1), D = df.Divorce_s, W = df.WaffleHouses_s)
+	init = (a=0.0, bA=1.0, sigma=1.0)
+end;
 
 # ╔═╡ 15b07488-fc0e-11ea-2bdd-558c18e223f5
 md"##### Sample using StanSample."
 
 # ╔═╡ 15bce25e-fc0e-11ea-3c0d-a761765fd79f
-rc5_0s = stan_sample(m5_0s, data=wd_data);
-
-# ╔═╡ 15c8b926-fc0e-11ea-0b2d-55290b7dfe24
-if success(rc5_0s)
-	begin
-
-	  # Plot regression line using means and observations
-
-	  post5_0s_df = read_samples(m5_0s; output_format=:dataframe)
-	  part5_0s = Particles(post5_0s_df)
+begin
+	q5_0s, m5_0s, o5_0s = stan_quap("m5.0s", stan5_0; data, init)
+	if !isnothing(m5_0s)
+		post5_0s_df = read_samples(m5_0s; output_format=:dataframe)
+		part5_0s = Particles(post5_0s_df)
 	end
+	PRECIS(post5_0s_df)
 end
 
 # ╔═╡ 15ca02e2-fc0e-11ea-281e-194a9b83623d
-if success(rc5_0s)
-	q5_0s = quap(m5_0s)
+if !isnothing(q5_0s)
 	quap5_0s_df = sample(q5_0s)
 	PRECIS(quap5_0s_df)
 end
@@ -101,7 +92,7 @@ df[[1, 4, 11, 20, 30, 40], [1, 2, 7, 9]]
 df[:,1]
 
 # ╔═╡ 15d19672-fc0e-11ea-093b-bff8eaf427d2
-if success(rc5_0s)
+if !isnothing(m5_0s)
 	begin
 		p2 = plotbounds(
 			df, :WaffleHouses, :Divorce,
@@ -129,13 +120,10 @@ md"## End of Fig5.1s.jl"
 # ╠═33c69ba4-01af-11eb-337e-19ecbe1fe80b
 # ╠═db17d86a-fc0e-11ea-2df9-716728b916e6
 # ╠═15937fa4-fc0e-11ea-0aaf-e7049b6392bf
-# ╟─15952660-fc0e-11ea-0820-a350ee0a6326
-# ╠═15a204fc-fc0e-11ea-2b27-75d4236363d6
 # ╟─15a36108-fc0e-11ea-310b-d50e8725f62c
 # ╠═15afbdfe-fc0e-11ea-15a5-9bf6506abf5d
 # ╟─15b07488-fc0e-11ea-2bdd-558c18e223f5
 # ╠═15bce25e-fc0e-11ea-3c0d-a761765fd79f
-# ╠═15c8b926-fc0e-11ea-0b2d-55290b7dfe24
 # ╠═15ca02e2-fc0e-11ea-281e-194a9b83623d
 # ╟─3e6621a0-fc42-11ea-0790-6fdef3820273
 # ╠═53b10c8c-fc3d-11ea-0cfa-f9a16db84264

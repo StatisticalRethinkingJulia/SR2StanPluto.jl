@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.17
+# v0.12.21
 
 using Markdown
 using InteractiveUtils
@@ -10,7 +10,7 @@ using Pkg, DrWatson
 # ╔═╡ 8b927db6-fb7a-11ea-2f69-0b162e382593
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample, StanOptimize
+	using StanSample, StanQuap
 	using StatisticalRethinking
 end
 
@@ -54,7 +54,7 @@ md"### Snippet 4.31"
 begin
 	data = Dict(:N => length(df.height), :h => df.height)
 	init = Dict(:mu => 180, :sigma => 10)
-	q4_1s, m4_1s, _ = quap("m4.1s", stan4_1; data, init)
+	q4_1s, m4_1s, _ = stan_quap("m4.1s", stan4_1; data, init)
 	if !isnothing(m4_1s)
 		part4_1s = read_samples(m4_1s; output_format=:particles)
 	end
