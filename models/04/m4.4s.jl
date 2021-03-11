@@ -4,7 +4,7 @@ using Pkg, DrWatson
 
 begin
     @quickactivate "StatisticalRethinkingStan"
-    using StanSample, StanOptimize
+    using StanQuap
     using StatisticalRethinking
 end
 
@@ -48,28 +48,11 @@ data = (
   x_new = [-30, -10, 0, +10, +30]
 )
 init = (alpha = 180.0, beta = 1.0, sigma = 10.0)
-q4_4s, m4_4s, o4_4s = quap("m4.2s", stan4_4; data, init);
+q4_4s, m4_4s, o4_4s = stan_quap("m4.2s", stan4_4; data, init);
 
-if !isnothing(m4_4s)
-  part4_4s = read_samples(m4_4s; output_format=:particles)
-end
-
-if q4_4s.converged
+if !isnothing(q4_4s)
   quap4_4s_df = sample(q4_4s)          # DataFrame with samples
-  Particles(quap4_4s_df)
-end
-
-if !isnothing(o4_4s)
-  read_optimize(o4_4s)
-end
-
-if !isnothing(m4_4s)
-  precis(m4_4s)
-
-  stan_generate_quantities(m4_4s, 1);
-  (ytilde, parameters) = read_generated_quantities(m4_4s);
-  pred4_4s_df = DataFrame(ytilde[:,:, 1], parameters);
-  precis(pred4_4s_df)
+  precis(quap4_4s_df)
 end
 
 # End of m4.4s.jl

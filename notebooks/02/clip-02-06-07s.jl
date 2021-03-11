@@ -10,7 +10,7 @@ using Pkg, DrWatson
 # ╔═╡ f4e5213c-f2de-11ea-15a6-b1b36f79b689
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample, StanQuap
+	using StanQuap
 	using StatisticalRethinking
 end
 
@@ -58,6 +58,14 @@ md"##### Obtain stan_quap() samples."
 # ╔═╡ e0bb5132-1006-11eb-3136-3bbc6301f8c2
 begin
 	q2_0s, m2_0s, om2_0s = stan_quap("m2.0s", stan2_0; data)
+	if !isnothing(m2_0s)
+		post2_0s_df = read_samples(m2_0s; output_format=:dataframe)
+		PRECIS(post2_0s_df)
+	end
+end
+
+# ╔═╡ f654a0e6-81ca-11eb-1166-2bfaeebe1d4d
+if !isnothing(q2_0s)
 	quap2_0s_df = sample(q2_0s)
 	PRECIS(quap2_0s_df)
 end
@@ -68,11 +76,9 @@ md"### snippet 2.7"
 # ╔═╡ f52f5d6a-f2de-11ea-2bf4-5175c412ef56
 if !isnothing(q2_0s)
 	x = 0.0:0.01:1.0
- 	df = read_samples(m2_0s; output_format=:dataframe)
- 	quapfit = sample(q2_0s)
- 	density(df.theta, lab="Stan samples")
+ 	density(post2_0s_df.theta, lab="Stan samples")
  	plot!( x, pdf.(Beta( w+1 , l+1 ) , x ), lab="Conjugate solution")
- 	plot!( x, pdf.(Normal(mean(quapfit.theta), std(quapfit.theta)) , x ),
+ 	plot!( x, pdf.(Normal(mean(quap2_0s_df.theta), std(quap2_0s_df.theta)) , x ),
 		lab="Stan quap solution")
 	density!(quap2_0s_df.theta, lab="Particle quap solution")
 end
@@ -91,6 +97,7 @@ md"## End of clip-02-06-07s.jl"
 # ╠═f50cd894-f2de-11ea-2246-33ef06f78d3c
 # ╟─f1a9ca74-29e6-11eb-0a25-a5e20b4e9db7
 # ╠═e0bb5132-1006-11eb-3136-3bbc6301f8c2
+# ╠═f654a0e6-81ca-11eb-1166-2bfaeebe1d4d
 # ╟─f521d852-f2de-11ea-2ed5-2bd626644c7c
 # ╠═f52f5d6a-f2de-11ea-2bf4-5175c412ef56
 # ╟─f5377072-f2de-11ea-3703-05a2357a9cfa

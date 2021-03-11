@@ -4,7 +4,7 @@ using Pkg, DrWatson
 
 begin
     @quickactivate "StatisticalRethinkingStan"
-    using StanSample, StanOptimize
+    using StanQuap
     using StatisticalRethinking
 end
 
@@ -42,7 +42,7 @@ init = (theta = 0.5,);
 
 # Sample using cmdstan
  
-q2_1s, m2_1s, o2_1s = quap("m2.1", stan2_1; data, init);
+q2_1s, m2_1s, o2_1s = stan_quap("m2.1", stan2_1; data, init);
 
 # Describe the draws
 
@@ -51,7 +51,6 @@ if !isnothing(m2_1s)
 end
 
 if q2_1s.converged
-  quap2_1s = sample(q2_1s)
-  Particles(quap2_1s)
-  read_optimize(o2_1s)
+  quap2_1s_df = sample(q2_1s)
+  precis(quap2_1s_df)
 end

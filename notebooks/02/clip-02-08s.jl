@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.11
+# v0.12.21
 
 using Markdown
 using InteractiveUtils
@@ -24,7 +24,7 @@ md"##### Simple Metropolis algorithm."
 
 # ╔═╡ 7ef91c84-f2e1-11ea-1ed4-c3ef76963769
 begin
-	n_samples = 10000
+	n_samples = 100000
 	a3d = ones(n_samples,1,1)
 	w = 6; l = 3; n = w +l
 	p = [0.5]

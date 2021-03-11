@@ -55,7 +55,7 @@ md"##### Define the SampleModel."
 begin
 	data = (N = size(df, 1), clade_id = df.clade_id,
     	K = df.kcal_per_g_s, k = length(unique(df[:, :clade_id])))
-	init = Dict("sigma" => 1.0)
+	init = (a = [-1.0, 0,0, 1.0, 1.0], sigma = 1.0,)
 	q5_9s, m5_9s, _ = stan_quap("m5.9", stan5_9; data, init)
 
 	if !isnothing(m5_9s)

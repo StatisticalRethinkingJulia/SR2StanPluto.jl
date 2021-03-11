@@ -2,7 +2,7 @@
 
 using Pkg, DrWatson
 @quickactivate "StatisticalRethinkingStan"
-using StanSample, StanOptimize
+using StanQuap
 using StatisticalRethinking
 
 df = CSV.read(sr_datadir("WaffleDivorce.csv"), DataFrame);
@@ -28,26 +28,13 @@ model {
 }
 ";
 
-# Define the SampleModel
-m5_2s = SampleModel("m5.2", stan5_2);
-
-# Input data
-
 data = (N=size(df, 1), divorce_s=df.Divorce_s, marriage_s=df.Marriage_s)
 init = (a=1.0, bM=1.0, sigma=10.0)
-q5_2s, m5_2s, o5_2s = quap("m5.2s", stan5_2; data, init);
-
-if !isnothing(m5_2s)
-  part5_2s = read_samples(m5_2s; output_format=:particles)
-end
+q5_2s, m5_2s, o5_2s = stan_quap("m5.2s", stan5_2; data, init);
 
 if !isnothing(q5_2s)
   quap5_2s_df = sample(q5_2s)
-  Particles(quap5_2s_df)
-end
-
-if !isnothing(o5_2s)
-  read_optimize(o5_2s)
+  precis(quap5_2s_df)
 end
 
 rethinking = "

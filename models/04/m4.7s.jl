@@ -2,7 +2,7 @@ using Pkg, DrWatson
 
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample, StanOptimize
+	using StanQuap
 	using StatisticalRethinking
 end
 
@@ -42,19 +42,10 @@ model {
 
 data = (n = size(B, 1), k = size(B, 2), doy = df.doy, B = B)
 init = (a = 100.0, sigma = 20.0)
-q4_7s, m4_7s, o4_7s = quap("m4.7s", stan4_7; data, init)
+q4_7s, m4_7s, o4_7s = stan_quap("m4.7s", stan4_7; data, init)
 
 if !isnothing(m4_7s)
   part4_7s = read_samples(m4_7s; output_format=:particles)
   nt4_7s = read_samples(m4_7s)
+  nt4_7s |> display
 end
-
-if !isnothing(q4_7s)
-  quap4_7s_df = sample(q4_7s)
-  quap4_7s = Particles(quap4_7s_df)
-end
-
-if !isnothing(o4_7s)
-  read_optimize(o4_7s)
-end
-

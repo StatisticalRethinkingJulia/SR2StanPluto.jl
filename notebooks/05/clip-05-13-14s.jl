@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.17
+# v0.12.21
 
 using Markdown
 using InteractiveUtils
@@ -10,17 +10,102 @@ using Pkg, DrWatson
 # ╔═╡ f4f1e034-fcde-11ea-08da-b7f09891f0a5
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample
+	using StanSample, GLM
 	using StatisticalRethinking
-end
-
-# ╔═╡ f4f26af4-fcde-11ea-0020-45e8f5b3ad00
-for suf in ["MA", "AM"]
-  include(projectdir("models", "05", "m5.4.$(suf)s.jl"))
 end
 
 # ╔═╡ 1bfdf3ee-fcde-11ea-0161-539e0e2b0932
 md"## Clip-05-13-14s.jl"
+
+# ╔═╡ 4fa2fe54-81dd-11eb-00c8-89b0092adf2c
+begin
+	df = CSV.read(sr_datadir("WaffleDivorce.csv"), DataFrame)
+	df = DataFrame(
+		:A => df[:, :MedianAgeMarriage],
+		:M => df[:, :Marriage],
+		:D => df[:, :Divorce]
+	)
+	scale!(df, [:M, :A, :D])
+end;
+
+# ╔═╡ 6ba505f2-81dd-11eb-311d-5f1944f30ca6
+# Define the Stan language model
+
+stan5_4_AM = "
+data {
+  int N;
+  vector[N] A;
+  vector[N] M;
+}
+parameters {
+  real a;
+  real bAM;
+  real<lower=0> sigma;
+}
+model {
+  vector[N] mu = a + bAM * M;
+  a ~ normal( 0 , 0.2 );
+  bAM ~ normal( 0 , 0.5 );
+  sigma ~ exponential( 1 );
+  A ~ normal( mu , sigma );
+}
+";
+
+# ╔═╡ 6bc53098-81dd-11eb-17d8-23c55ba9bfee
+begin
+	m5_4_AMs = SampleModel("m5.4.AM", stan5_4_AM)
+	m5_4_data = Dict(
+		"N" => size(df, 1), 
+		"M" => df[:, :M_s],
+		"A" => df[:, :A_s] 
+	)
+	rc5_4_AMs = stan_sample(m5_4_AMs, data=m5_4_data)
+	if success(rc5_4_AMs)
+		part5_4_AMs = read_samples(m5_4_AMs; output_format=:particles)
+		part5_4_AMs
+	end
+end
+
+# ╔═╡ a3421202-81dd-11eb-2583-d9cc66c08963
+stan5_4_MA = "
+data {
+  int N;
+  vector[N] A;
+  vector[N] M;
+}
+parameters {
+  real a;
+  real bMA;
+  real<lower=0> sigma;
+}
+model {
+  vector[N] mu = a + bMA * A;
+  a ~ normal( 0 , 0.2 );
+  bMA ~ normal( 0 , 0.5 );
+  sigma ~ exponential( 1 );
+  M ~ normal( mu , sigma );
+}
+";
+
+# ╔═╡ a1eb539c-81de-11eb-2f32-7dfa617502a4
+begin
+	m5_4_MAs = SampleModel("m5.4", stan5_4_MA);
+	rc5_4_MAs = stan_sample(m5_4_MAs, data=m5_4_data);
+	if success(rc5_4_MAs)
+
+	  # Rethinking results
+
+	  rethinking_results = "
+			   mean   sd  5.5% 94.5%
+		a      0.00 0.09 -0.14  0.14
+		bMA   -0.69 0.10 -0.85 -0.54
+		sigma  0.68 0.07  0.57  0.79
+	  ";
+
+	  part5_4_MAs = read_samples(m5_4_MAs; output_format=:particles)
+	  part5_4_MAs |> display
+	end
+end
 
 # ╔═╡ f501e93e-fcde-11ea-2bc3-256fb8778233
 if success(rc5_4_AMs)
@@ -117,7 +202,11 @@ md"## End of clip-05-13-14s.jl"
 # ╟─1bfdf3ee-fcde-11ea-0161-539e0e2b0932
 # ╠═f4f1a9d4-fcde-11ea-24d9-efff04ac07bc
 # ╠═f4f1e034-fcde-11ea-08da-b7f09891f0a5
-# ╠═f4f26af4-fcde-11ea-0020-45e8f5b3ad00
+# ╠═4fa2fe54-81dd-11eb-00c8-89b0092adf2c
+# ╠═6ba505f2-81dd-11eb-311d-5f1944f30ca6
+# ╠═6bc53098-81dd-11eb-17d8-23c55ba9bfee
+# ╠═a3421202-81dd-11eb-2583-d9cc66c08963
+# ╠═a1eb539c-81de-11eb-2f32-7dfa617502a4
 # ╠═f501e93e-fcde-11ea-2bc3-256fb8778233
 # ╟─f502a090-fcde-11ea-37d0-233bf56ce068
 # ╠═f50ffec0-fcde-11ea-2670-534a1a8a9725

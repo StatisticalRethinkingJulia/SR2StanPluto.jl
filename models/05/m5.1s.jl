@@ -41,9 +41,5 @@ end
 
 if !isnothing(q5_1s)
   quap5_1s_df = sample(q5_1s)
-  Particles(quap5_1s_df)
-end
-
-if !isnothing(o5_1s)
-  read_optimize(o5_1s)
+  precis(quap5_1s_df)
 end

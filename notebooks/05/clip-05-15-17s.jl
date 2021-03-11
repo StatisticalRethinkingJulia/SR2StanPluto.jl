@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.17
+# v0.12.21
 
 using Markdown
 using InteractiveUtils
@@ -10,15 +10,69 @@ using Pkg, DrWatson
 # ╔═╡ 7931d048-fce9-11ea-3644-cbdb925b4031
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample
+	using StanSample, GLM
 	using StatisticalRethinking
 end
 
-# ╔═╡ 79326280-fce9-11ea-2611-614636b5084e
-include(projectdir("models", "05", "m5.3s.jl"))
-
 # ╔═╡ 9670408e-fce1-11ea-1d03-51e8376f67e1
 md"## Clip-05-15-17s.jl"
+
+# ╔═╡ 32dfbbfe-81e2-11eb-29f8-754d6aebcb49
+begin
+	df = CSV.read(sr_datadir("WaffleDivorce.csv"), DataFrame);
+	scale!(df, [:Marriage, :MedianAgeMarriage, :Divorce])
+end;
+
+# ╔═╡ 851c9784-81e2-11eb-01f0-073edd961499
+stan5_3 = "
+data {
+  int N;
+  vector[N] divorce_s;
+  vector[N] marriage_s;
+  vector[N] medianagemarriage_s;
+}
+parameters {
+  real a;
+  real bA;
+  real bM;
+  real<lower=0> sigma;
+}
+model {
+  vector[N] mu = a + + bA * medianagemarriage_s + bM * marriage_s;
+  a ~ normal( 0 , 0.2 );
+  bA ~ normal( 0 , 0.5 );
+  bM ~ normal( 0 , 0.5 );
+  sigma ~ exponential( 1 );
+  divorce_s ~ normal( mu , sigma );
+}
+";
+
+# ╔═╡ 851cc740-81e2-11eb-0af3-7f59f78c706e
+# Rethinking results
+rethinking_results = "
+	   mean   sd  5.5% 94.5%
+a      0.00 0.10 -0.16  0.16
+bM    -0.07 0.15 -0.31  0.18
+bA    -0.61 0.15 -0.85 -0.37
+sigma  0.79 0.08  0.66  0.91
+";
+
+# ╔═╡ 851d5eda-81e2-11eb-1174-4fc6ec7295b1
+begin
+	m5_3s = SampleModel("m5.3", stan5_3);
+	m5_3_data = Dict(
+	  "N" => size(df, 1), 
+	  "divorce_s" => df[:, :Divorce_s],
+	  "marriage_s" => df[:, :Marriage_s],
+	  "medianagemarriage_s" => df[:, :MedianAgeMarriage_s] 
+	)
+	rc5_3s = stan_sample(m5_3s, data=m5_3_data);
+	if success(rc5_3s)
+
+		post5_3s_df = read_samples(m5_3s; output_format=:dataframe)
+		PRECIS(post5_3s_df)
+	end
+end
 
 # ╔═╡ 794c76b4-fce9-11ea-3d4b-cdb6ca10a383
 if success(rc5_3s)
@@ -32,14 +86,17 @@ if success(rc5_3s)
 			mu = mean(part5_3s.bM) * df[i, :Marriage_s] + 
 				mean(part5_3s.bA) * df[i, :MedianAgeMarriage_s]
 			if i == 13
-				annotate!([(df[i, :Divorce_s]-0.05, mu, Plots.text("ID", 6, :red, :right))])
+				annotate!([(df[i, :Divorce_s]-0.05, mu,
+					Plots.text("ID", 6, :red, :right))])
 			end
 			if i == 39
-				annotate!([(df[i, :Divorce_s]-0.05, mu, Plots.text("RI", 6, :red, :right))])
+				annotate!([(df[i, :Divorce_s]-0.05, mu,
+					Plots.text("RI", 6, :red, :right))])
 			end
 			scatter!([df[i, :Divorce_s]], [mu], color=:red)
 			s = rand(Normal(mu, mean(part5_3s.sigma)), 1000)
-			v[i, :] = [maximum(s), hpdi(s, alpha=0.11)[2], hpdi(s, alpha=0.11)[1], minimum(s)]
+			v[i, :] = [maximum(s), hpdi(s, alpha=0.11)[2],
+				hpdi(s, alpha=0.11)[1], minimum(s)]
 		end
 		for i in 1:N
 			plot!([df[i, :Divorce_s], df[i, :Divorce_s]], [v[i,1], v[i, 4]], 
@@ -68,6 +125,9 @@ md"## End of clip-05-15-17s.jl"
 # ╟─9670408e-fce1-11ea-1d03-51e8376f67e1
 # ╠═793190e2-fce9-11ea-0f94-8d23919bbda3
 # ╠═7931d048-fce9-11ea-3644-cbdb925b4031
-# ╠═79326280-fce9-11ea-2611-614636b5084e
+# ╠═32dfbbfe-81e2-11eb-29f8-754d6aebcb49
+# ╠═851c9784-81e2-11eb-01f0-073edd961499
+# ╠═851cc740-81e2-11eb-0af3-7f59f78c706e
+# ╠═851d5eda-81e2-11eb-1174-4fc6ec7295b1
 # ╠═794c76b4-fce9-11ea-3d4b-cdb6ca10a383
 # ╟─7957c32a-fce9-11ea-09a4-6fdd2e231a7d
