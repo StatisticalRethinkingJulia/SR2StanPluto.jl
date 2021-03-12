@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.18
+# v0.12.21
 
 using Markdown
 using InteractiveUtils
@@ -10,18 +10,71 @@ using Pkg, DrWatson
 # ╔═╡ 55da724c-fd40-11ea-3868-3baa56009723
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample
+	using StanQuap
 	using StatisticalRethinking
 end
-
-# ╔═╡ 55e7d3f6-fd40-11ea-14c5-21a0ef390e6d
-include(projectdir("models", "05", "m5.3.As.jl"))
 
 # ╔═╡ c46bb522-fd3b-11ea-1165-63af86a6f974
 md"## Clip-05-19-24s.jl"
 
+# ╔═╡ 788c3970-833b-11eb-3e93-93e43770b0fd
+begin
+	df = CSV.read(sr_datadir("WaffleDivorce.csv"), DataFrame)
+	scale!(df, [:Marriage, :MedianAgeMarriage, :Divorce])
+end
+
 # ╔═╡ 55e74cfe-fd40-11ea-20b3-1519e2e34159
 md"##### Include snippets 5.19-5.21."
+
+# ╔═╡ 55e7d3f6-fd40-11ea-14c5-21a0ef390e6d
+stan5_3_A = "
+data {
+  int N;
+  vector[N] divorce_s;
+  vector[N] marriage_s;
+  vector[N] medianagemarriage_s;
+}
+parameters {
+  real a;
+  real bA;
+  real bM;
+  real aM;
+  real bAM;
+  real<lower=0> sigma;
+  real<lower=0> sigma_M;
+}
+model {
+  // A -> D <- M
+  vector[N] mu = a + bA * medianagemarriage_s + bM * marriage_s;
+  a ~ normal( 0 , 0.2 );
+  bA ~ normal( 0 , 0.5 );
+  bM ~ normal( 0 , 0.5 );
+  sigma ~ exponential( 1 );
+  divorce_s ~ normal( mu , sigma );
+  // A -> M
+  vector[N] mu_M = aM + bAM * medianagemarriage_s;
+  aM ~ normal( 0 , 0.2 );
+  bAM ~ normal( 0 , 0.5 );
+  sigma_M ~ exponential( 1 );
+  marriage_s ~ normal( mu_M , sigma_M );
+}
+";
+
+# ╔═╡ f6fe6174-82a1-11eb-04bb-3be618429897
+begin
+	data = (N = size(df, 1), divorce_s = df.Divorce_s,
+	  marriage_s = df.Marriage_s, medianagemarriage_s = df.MedianAgeMarriage_s)
+	init = (a = 0.0, bM = 0.0, bA = -1.0, sigma = 1.0,
+		aM = 0.0, bAM = -1.0, sigma_m = 1.0)
+	q5_3_As, m5_3_As, o5_3_As = stan_quap("m5.3_A", stan5_3_A; data, init)
+	if !isnothing(q5_3_As)
+		quap5_3_As_df = sample(q5_3_As)
+	end
+	if !isnothing(m5_3_As)
+	  post5_3_As_df = read_samples(m5_3_As; output_format=:dataframe)
+	  PRECIS(post5_3_As_df)
+	end
+end
 
 # ╔═╡ 55f30276-fd40-11ea-3e70-d1600cb0f556
 # Rethinking results
@@ -37,8 +90,10 @@ rethinking_results = "
   sigma_M  0.68 0.07  0.57  0.79
 ";
 
-# ╔═╡ 55f8123e-fd40-11ea-375c-6df3d346a96f
-part5_3_As = read_samples(m5_3_As; output_format=:particles)
+# ╔═╡ d02e57a0-82a1-11eb-0305-e71ad0138683
+	if !isnothing(q5_3_As)
+		PRECIS(quap5_3_As_df)
+	end
 
 # ╔═╡ 55fefeaa-fd40-11ea-2c88-a910f049dcf0
 md"## Snippet 5.22"
@@ -51,9 +106,9 @@ md"## Snippet 5.23"
 
 # ╔═╡ 560dcb42-fd40-11ea-0b2e-f14e70a7425a
 begin
-	post5_3_As_df = read_samples(m5_3_As; output_format=:dataframe)
-	m_sim, d_sim = simulate(post5_3_As_df, [:aM, :bAM, :sigma_M], a_seq, [:bM, :sigma])
-end
+	m_sim, d_sim = simulate(post5_3_As_df, [:aM, :bAM, :sigma_M],
+		a_seq, [:bM, :sigma])
+end;
 
 # ╔═╡ 5618ec0c-fd40-11ea-3a0f-85fb3e33f1b1
 md"## Snippet 5.24"
@@ -115,10 +170,12 @@ md"## End of clip-05-19-24s.jl"
 # ╟─c46bb522-fd3b-11ea-1165-63af86a6f974
 # ╠═55da2efe-fd40-11ea-1fb2-237b206602b5
 # ╠═55da724c-fd40-11ea-3868-3baa56009723
+# ╠═788c3970-833b-11eb-3e93-93e43770b0fd
 # ╟─55e74cfe-fd40-11ea-20b3-1519e2e34159
 # ╠═55e7d3f6-fd40-11ea-14c5-21a0ef390e6d
+# ╠═f6fe6174-82a1-11eb-04bb-3be618429897
 # ╠═55f30276-fd40-11ea-3e70-d1600cb0f556
-# ╠═55f8123e-fd40-11ea-375c-6df3d346a96f
+# ╠═d02e57a0-82a1-11eb-0305-e71ad0138683
 # ╟─55fefeaa-fd40-11ea-2c88-a910f049dcf0
 # ╠═55fff1b6-fd40-11ea-38e0-3b694162f66e
 # ╟─560a4aa6-fd40-11ea-1103-7191fff677fb

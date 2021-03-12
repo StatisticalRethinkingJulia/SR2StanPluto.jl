@@ -73,6 +73,9 @@ begin
 	Text(sprint(show, "text/plain", summarize(chns9_4s)))
 end
 
+# ╔═╡ 453b6b34-8356-11eb-0049-51a7363b24d4
+CHNS(chns9_4s)
+
 # ╔═╡ 6fbfa790-7eb9-11eb-0360-ed6fc7fa11a3
 plot(chns9_4s)
 
@@ -123,6 +126,9 @@ begin
 	Text(sprint(show, "text/plain", summarize(chns9_5s)))
 end
 
+# ╔═╡ 6748f438-8380-11eb-312d-cbfe0500b586
+CHNS(chns9_5s)
+
 # ╔═╡ 43b362c6-7eba-11eb-389e-fb53b3783e8d
 plot(chns9_5s)
 
@@ -141,6 +147,7 @@ md" ## End of clip-09-25-27s.jl"
 # ╠═7b4bc93e-7ebb-11eb-1912-f152a5e76df6
 # ╠═728ad3aa-7eb7-11eb-2fea-634a82832501
 # ╠═059b3ada-7eb8-11eb-10aa-459e3ec2bc55
+# ╠═453b6b34-8356-11eb-0049-51a7363b24d4
 # ╠═6fbfa790-7eb9-11eb-0360-ed6fc7fa11a3
 # ╠═a93a71e4-7eb9-11eb-2a36-d33e7b88e2d6
 # ╠═b4ea8d58-7eb9-11eb-172f-3941a1b8fe98
@@ -148,5 +155,6 @@ md" ## End of clip-09-25-27s.jl"
 # ╠═f042277e-7ebb-11eb-33d4-b7edd9539943
 # ╠═29b1d698-7eba-11eb-00aa-e95796579cc6
 # ╠═39bb0f76-7eba-11eb-1bc2-293259d12dfc
+# ╠═6748f438-8380-11eb-312d-cbfe0500b586
 # ╠═43b362c6-7eba-11eb-389e-fb53b3783e8d
 # ╟─ca61c622-779a-11eb-1292-3f272953867f

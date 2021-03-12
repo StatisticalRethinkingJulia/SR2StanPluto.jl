@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.20
+# v0.12.21
 
 using Markdown
 using InteractiveUtils
@@ -117,6 +117,9 @@ pk_qualify(pk)
 # ╔═╡ 83adace8-6733-11eb-33af-c3d49d9385b1
 pk_plot(pk)
 
+# ╔═╡ 0552e952-8385-11eb-1d2f-154960f187ba
+md" ### End of clip-07-19-24s.jl"
+
 # ╔═╡ Cell order:
 # ╠═31b32634-6730-11eb-1eb6-d512e0afd93c
 # ╠═417ce078-6730-11eb-0150-d515235783f0
@@ -135,3 +138,4 @@ pk_plot(pk)
 # ╠═bb0ef2de-6733-11eb-0b0e-5339d80ffdfd
 # ╠═7b69ec38-6733-11eb-02a2-25ea26f08d22
 # ╠═83adace8-6733-11eb-33af-c3d49d9385b1
+# ╟─0552e952-8385-11eb-1d2f-154960f187ba

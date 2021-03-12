@@ -15,7 +15,7 @@ begin
 end
 
 # ╔═╡ 6a448eee-28fa-11eb-0e64-bdb834986306
-md"## Model m10_4s"
+md"## Model `m10.4s`"
 
 # ╔═╡ 71d33876-28fb-11eb-0c00-451155bac735
 df = CSV.read(sr_datadir("chimpanzees.csv"), DataFrame);
@@ -52,19 +52,19 @@ model{
 
 # ╔═╡ 71e84fea-28fb-11eb-3f65-7b750dee322c
 begin
-
 	m10_4s = SampleModel("m10.4s", stan10_4s);
-
-	m10_4_data = Dict("N" => size(df, 1), "N_actors" => length(unique(df[!, :actor])), 
-		"actor" => df[!, :actor], "pulled_left" => df[!, :pulled_left],
-		"prosoc_left" => df[!, :prosoc_left], "condition" => df[!, :condition]);
-
-	rc10_4s = stan_sample(m10_4s, data=m10_4_data);
+	data = (N = size(df, 1), N_actors = length(unique(df.actor)), 
+		actor = df.actor, pulled_left = df.pulled_left,
+		prosoc_left = df.prosoc_left, condition = df.condition)
+	rc10_4s = stan_sample(m10_4s; data)
+	if success(rc10_4s)
+		post10_4s_df = read_samples(m10_4s; output_format=:dataframe)
+		PRECIS(post10_4s_df)
+	end
 end
 
 # ╔═╡ 71eab852-28fb-11eb-3219-c3bb82330495
 # Result rethinking
-
 rethinking = "
       mean   sd  5.5% 94.5% n_eff Rhat
 bp    0.84 0.26  0.43  1.26  2271    1
@@ -79,34 +79,32 @@ a[6]  0.22 0.27 -0.22  0.65  3877    1
 a[7]  1.81 0.39  1.22  2.48  3807    1
 ";
 
+# ╔═╡ bd229228-8386-11eb-3558-e572b18c9c87
+begin
+	nt10_4s = read_samples(m10_4s)
+	mean(nt10_4s.a, dims=2)
+end
+
 # ╔═╡ 71f5eb14-28fb-11eb-2d38-d301b4ee827c
 # Update sections 
 
 if success(rc10_4s)
-	
 	chns = read_samples(m10_4s; output_format=:mcmcchains, include_internals=true)
-
 	chn10_4s = set_section(chns, 
 		Dict(
 		  :parameters => ["bp", "bpC"],
 		  :pooled => ["a.$i" for i in 1:7],
-		  :internals => ["lp__", "accept_stat__", "stepsize__", "treedepth__", "n_leapfrog__",
-			"divergent__", "energy__"]
-		)
+		  :internals => ["lp__", "accept_stat__", "stepsize__",
+				"treedepth__", "n_leapfrog__", "divergent__", "energy__"])
 	)
-
-	# Output will go to terminal.
-	
-	
-	
-	Text(sprint(show, "text/plain", chn10_4s))
+	CHNS(chn10_4s)
 end
 
 # ╔═╡ 7a8c9016-2905-11eb-27e8-4fcfd2b70f45
-Text(sprint(show, "text/plain", Chains(chn10_4s, [:pooled])))
+CHNS(Chains(chn10_4s, [:pooled]))
 
 # ╔═╡ a995ab9a-2905-11eb-21c0-711bf47af518
-Text(sprint(show, "text/plain", Chains(chn10_4s, [:internals])))
+CHNS(Chains(chn10_4s, [:internals]))
 
 # ╔═╡ Cell order:
 # ╠═6a448eee-28fa-11eb-0e64-bdb834986306
@@ -116,6 +114,7 @@ Text(sprint(show, "text/plain", Chains(chn10_4s, [:internals])))
 # ╠═71d9e6d0-28fb-11eb-194f-497dd82267b5
 # ╠═71e84fea-28fb-11eb-3f65-7b750dee322c
 # ╠═71eab852-28fb-11eb-3219-c3bb82330495
+# ╠═bd229228-8386-11eb-3558-e572b18c9c87
 # ╠═71f5eb14-28fb-11eb-2d38-d301b4ee827c
 # ╠═7a8c9016-2905-11eb-27e8-4fcfd2b70f45
 # ╠═a995ab9a-2905-11eb-21c0-711bf47af518

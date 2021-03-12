@@ -10,12 +10,15 @@ using Pkg, DrWatson
 # ╔═╡ 91489170-68ec-11eb-3611-150d5febf223
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample
+	using StanQuap
 	using StatisticalRethinking
 end
 
 # ╔═╡ 7046ea12-68ec-11eb-18ae-a724ca79a21f
 md" ## Clip-07-32-34s.jl"
+
+# ╔═╡ d603e8be-8381-11eb-1c62-8d87639fc38b
+versioninfo()
 
 # ╔═╡ ace5ed4c-68ec-11eb-05ed-1f1ff2d72e1b
 begin
@@ -140,10 +143,10 @@ generated quantities{
 
 # ╔═╡ b5b487ec-68ee-11eb-3ee7-0d98367028ff
 begin
-	m5_3s = SampleModel("m5.3s", stan5_3);
-	rc5_3s = stan_sample(m5_3s; data);
+	init = (a = 0.0, bA = -1.0, bM = 0.0, sigma = 1.0)
+	q5_3s, m5_3s, o5_3s = stan_quap("m5.3s", stan5_3; data, init)
 
-	if success(rc5_3s)
+	if !isnothing(m5_3s)
 		post5_3s_df = read_samples(m5_3s; output_format=:dataframe)
 		PRECIS(post5_3s_df[:, [:a, :bA, :bM, :sigma]])
 	end
@@ -158,7 +161,7 @@ begin
 end
 
 # ╔═╡ 8501f844-69b3-11eb-24f8-d3b87b745be7
-if success(rc5_3s)
+if !isnothing(m5_3s)
 	waic(m5_3s)
 end
 
@@ -174,6 +177,9 @@ end
 # ╔═╡ 9ee34a3a-6d4e-11eb-1e6e-b191bea5527b
     df_waic = compare([m5_1s, m5_2s, m5_3s], :waic)
 
+# ╔═╡ b05f0250-7009-11eb-0370-4969eb2fd5ce
+plot_models([m5_1s, m5_2s, m5_3s], :waic)
+
 # ╔═╡ 85a11cf4-6d40-11eb-3424-5b873aa5bc88
 md"
 ```
@@ -183,9 +189,6 @@ md"
  m5.2 140.6 11.21  13.1  10.82    3.8    0.00
 ```
 "
-
-# ╔═╡ b05f0250-7009-11eb-0370-4969eb2fd5ce
-plot_models([m5_1s, m5_2s, m5_3s], :waic)
 
 # ╔═╡ c6955180-6d40-11eb-0723-e55c69316f63
 df_psis = compare([m5_1s, m5_2s, m5_3s], :psis)
@@ -237,6 +240,7 @@ md" ## End of clip-07-32-34s.jl"
 # ╟─7046ea12-68ec-11eb-18ae-a724ca79a21f
 # ╠═837951f4-68ec-11eb-048d-6b27b9055428
 # ╠═91489170-68ec-11eb-3611-150d5febf223
+# ╠═d603e8be-8381-11eb-1c62-8d87639fc38b
 # ╠═ace5ed4c-68ec-11eb-05ed-1f1ff2d72e1b
 # ╠═4c47f312-68ed-11eb-37de-ff782118d258
 # ╠═4c482dfa-68ed-11eb-2db9-a54ab816beb7
@@ -249,8 +253,8 @@ md" ## End of clip-07-32-34s.jl"
 # ╠═8501f844-69b3-11eb-24f8-d3b87b745be7
 # ╠═c2ba84b0-68f2-11eb-3c5a-17e03541dcb1
 # ╠═9ee34a3a-6d4e-11eb-1e6e-b191bea5527b
-# ╟─85a11cf4-6d40-11eb-3424-5b873aa5bc88
 # ╠═b05f0250-7009-11eb-0370-4969eb2fd5ce
+# ╟─85a11cf4-6d40-11eb-3424-5b873aa5bc88
 # ╠═c6955180-6d40-11eb-0723-e55c69316f63
 # ╠═2c4b5ffc-68f4-11eb-21d6-7d2db834d3f8
 # ╠═3e956c3c-6ee6-11eb-2aff-d73d8c0d9dcd

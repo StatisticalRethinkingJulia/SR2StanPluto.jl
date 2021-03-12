@@ -10,7 +10,7 @@ using Pkg, DrWatson
 # ╔═╡ 7931d048-fce9-11ea-3644-cbdb925b4031
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample, GLM
+	using StanQuap, GLM
 	using StatisticalRethinking
 end
 
@@ -47,6 +47,24 @@ model {
 }
 ";
 
+# ╔═╡ 851d5eda-81e2-11eb-1174-4fc6ec7295b1
+begin
+	data = (N = size(df, 1), divorce_s = df.Divorce_s,
+		marriage_s = df.Marriage_s, medianagemarriage_s = df.MedianAgeMarriage_s)
+	init = (a = 0.0, bM = 0.0, bA = 1.0, sigma = 1.0)
+	q5_3s, m5_3s, o5_3s = stan_quap("m5.3s", stan5_3; data, init);
+	if !isnothing(q5_3s)
+		quap5_3s_df = sample(q5_3s)
+	end
+	if !isnothing(m5_3s)
+		post5_3s_df = read_samples(m5_3s; output_format=:dataframe)
+		PRECIS(post5_3s_df)
+	end
+end
+
+# ╔═╡ 952ba332-828b-11eb-2511-bff99eaa1236
+md"##### Quadratic approximation:"
+
 # ╔═╡ 851cc740-81e2-11eb-0af3-7f59f78c706e
 # Rethinking results
 rethinking_results = "
@@ -57,25 +75,13 @@ bA    -0.61 0.15 -0.85 -0.37
 sigma  0.79 0.08  0.66  0.91
 ";
 
-# ╔═╡ 851d5eda-81e2-11eb-1174-4fc6ec7295b1
-begin
-	m5_3s = SampleModel("m5.3", stan5_3);
-	m5_3_data = Dict(
-	  "N" => size(df, 1), 
-	  "divorce_s" => df[:, :Divorce_s],
-	  "marriage_s" => df[:, :Marriage_s],
-	  "medianagemarriage_s" => df[:, :MedianAgeMarriage_s] 
-	)
-	rc5_3s = stan_sample(m5_3s, data=m5_3_data);
-	if success(rc5_3s)
-
-		post5_3s_df = read_samples(m5_3s; output_format=:dataframe)
-		PRECIS(post5_3s_df)
-	end
+# ╔═╡ 2e11fb74-828b-11eb-012d-67e9445387d5
+if !isnothing(q5_3s)
+	PRECIS(quap5_3s_df)
 end
 
 # ╔═╡ 794c76b4-fce9-11ea-3d4b-cdb6ca10a383
-if success(rc5_3s)
+if !isnothing(m5_3s)
 	begin
 		part5_3s = read_samples(m5_3s; output_format=:particles)
 		N = size(df, 1)
@@ -112,7 +118,6 @@ if success(rc5_3s)
 		m1 = lm(@formula(y ~ x), df2)
 		x = -2.1:0.1:2.2
 		y = coef(m1)[2] * x
-		#plot!(x, x, line=(2, :dash), color=:green)
 		plot!(x, y, line=:dash, color=:red)
 
 	end
@@ -127,7 +132,9 @@ md"## End of clip-05-15-17s.jl"
 # ╠═7931d048-fce9-11ea-3644-cbdb925b4031
 # ╠═32dfbbfe-81e2-11eb-29f8-754d6aebcb49
 # ╠═851c9784-81e2-11eb-01f0-073edd961499
-# ╠═851cc740-81e2-11eb-0af3-7f59f78c706e
 # ╠═851d5eda-81e2-11eb-1174-4fc6ec7295b1
+# ╟─952ba332-828b-11eb-2511-bff99eaa1236
+# ╠═851cc740-81e2-11eb-0af3-7f59f78c706e
+# ╠═2e11fb74-828b-11eb-012d-67e9445387d5
 # ╠═794c76b4-fce9-11ea-3d4b-cdb6ca10a383
 # ╟─7957c32a-fce9-11ea-09a4-6fdd2e231a7d

@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.18
+# v0.12.21
 
 using Markdown
 using InteractiveUtils
@@ -24,6 +24,12 @@ md"## Clip-05-39s.jl"
 
 # ╔═╡ 30fda02a-fdb3-11ea-2037-6f772dd59330
 md"### snippet 5.39"
+
+# ╔═╡ 8f2d61f8-8346-11eb-12a0-c5989da2d4db
+md"
+!!! note
+	In below cell `include()` is used. If this cell needs to be executed again, the notebook needs to be restarted.
+"
 
 # ╔═╡ 3108f92a-fdb3-11ea-0959-9b1b6d094a4c
 begin
@@ -53,6 +59,7 @@ md"## End of clip-05-39s.jl"
 # ╠═30fce022-fdb3-11ea-1059-f97f38c19c0f
 # ╠═30fd1a06-fdb3-11ea-2118-a1facb5194e2
 # ╟─30fda02a-fdb3-11ea-2037-6f772dd59330
+# ╟─8f2d61f8-8346-11eb-12a0-c5989da2d4db
 # ╠═3105a0f4-fdb3-11ea-22d8-8b6e68afa993
 # ╠═3108f92a-fdb3-11ea-0959-9b1b6d094a4c
 # ╠═310f3100-fdb3-11ea-0c35-b3014ae7e73d

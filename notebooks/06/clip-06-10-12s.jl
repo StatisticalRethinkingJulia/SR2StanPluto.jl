@@ -28,6 +28,12 @@ begin
 	scale!(df, [:kcal_per_g, :perc_fat, :perc_lactose])
 end;
 
+# ╔═╡ 966d4c74-834d-11eb-3b15-a5c73f6d2ba7
+md"
+!!! note
+	Restart this notebook to execute below `include()` cell again.
+"
+
 # ╔═╡ 0f2e35d6-fea8-11ea-0034-cfd003aea49b
 stan6_5 = "
 data{
@@ -98,6 +104,7 @@ md"## End of clip-06-10-12s.jl"
 # ╠═0f1a134c-fea8-11ea-012a-dd9ffc2c4404
 # ╠═0f1a4e18-fea8-11ea-272e-9f7fb0ad303e
 # ╠═0f1adcca-fea8-11ea-3331-5b9bd92e1368
+# ╟─966d4c74-834d-11eb-3b15-a5c73f6d2ba7
 # ╠═0f21786e-fea8-11ea-2ba5-c97874afaae5
 # ╠═0f2e35d6-fea8-11ea-0034-cfd003aea49b
 # ╟─0f2f0862-fea8-11ea-3968-3d8494532b8b

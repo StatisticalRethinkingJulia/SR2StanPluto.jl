@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.18
+# v0.12.21
 
 using Markdown
 using InteractiveUtils
@@ -24,6 +24,12 @@ md"## Clip-05-40.2s.jl"
 
 # ╔═╡ 13ca9958-fdb9-11ea-000f-2d2d5d211e5b
 md"### snippet 5.39"
+
+# ╔═╡ 3c99c6ec-8347-11eb-2916-8d9f3651ad37
+md"
+!!! note
+	Restart this notebook to re-execute below `include()`.
+"
 
 # ╔═╡ 13d72238-fdb9-11ea-364d-8db015412817
 if success(rc5_5s)
@@ -77,6 +83,7 @@ md"## End of clip-05-40.2s.jl"
 # ╠═13c9b84e-fdb9-11ea-2e2f-bd38a244317f
 # ╠═13ca0af6-fdb9-11ea-2956-45f2849a856c
 # ╟─13ca9958-fdb9-11ea-000f-2d2d5d211e5b
+# ╟─3c99c6ec-8347-11eb-2916-8d9f3651ad37
 # ╠═13d69b68-fdb9-11ea-3eaf-612320346d53
 # ╠═13d72238-fdb9-11ea-364d-8db015412817
 # ╠═13e216fa-fdb9-11ea-38d0-83247639f99e
