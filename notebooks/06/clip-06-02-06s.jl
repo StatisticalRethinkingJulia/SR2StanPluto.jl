@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.10
+# v0.12.21
 
 using Markdown
 using InteractiveUtils
@@ -10,7 +10,7 @@ using Pkg, DrWatson
 # ╔═╡ 98210cc2-fe50-11ea-0fec-cfe81a89d0cb
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample
+	using StanSample, GLM
 	using StatisticalRethinking
 end
 
@@ -61,7 +61,8 @@ model {
 
 # ╔═╡ 9851b4a8-fe50-11ea-083b-17e3c182a55a
 begin
-	m6_1s = SampleModel("m6.1s", stan6_1, method=StanSample.Sample(num_samples=1000))
+	m6_1s = SampleModel("m6.1s", stan6_1,
+		method=StanSample.Sample(num_samples=1000))
 	m_6_1_data = Dict(
 	  :H => df[:, :height],
 	  :LL => df[:, :leg_left],
@@ -74,8 +75,8 @@ end
 
 # ╔═╡ eb921ad4-fe50-11ea-2450-7dfe19847755
 if success(rc6_1s)
-	(s0, p0) = plotcoef([m6_1s], [:a, :bL, :bR, :sigma];
-		title="Multicollinearity between bL and bR", func=quap)
+	(s0, p0) = plot_model_coef([m6_1s], [:a, :bL, :bR, :sigma];
+		title="Multicollinearity between bL and bR")
 	p0
 end
 

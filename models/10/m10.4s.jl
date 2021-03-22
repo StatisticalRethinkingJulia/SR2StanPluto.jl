@@ -46,6 +46,11 @@ data = (N = size(df, 1), N_actors = length(unique(df.actor)),
 m10_4s = SampleModel("m10.4s", stan10_4)
 rc10_4s = stan_sample(m10_4s; data);
 
+if success(rc10_4s)
+  nt10_4s = read_samples(m10_4s)
+  mean(nt10_4s.a, dims=2) |> display
+end
+
 # Result rethinking
 
 rethinking = "

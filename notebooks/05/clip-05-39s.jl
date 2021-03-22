@@ -43,8 +43,8 @@ s1
 
 # ╔═╡ 3115a60c-fdb3-11ea-16d2-75f8753f7f0f
 begin
-	(s2, p2) = plotcoef([m5_5s, m5_6s, m5_7s], [:a, :bN, :bM];
-		title="Masked relationships: bN & bM Normal estimates", func=quap)
+	(s2, p2) = plot_model_coef([m5_5s, m5_6s, m5_7s], [:a, :bN, :bM];
+		title="Masked relationships: bN & bM Normal estimates")
 	p2
 end
 
