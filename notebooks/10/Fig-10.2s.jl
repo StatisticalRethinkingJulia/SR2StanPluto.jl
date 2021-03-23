@@ -29,10 +29,10 @@ begin
 	σ = [α[i]^2 * gamma(3/β[i]) / gamma(1/β[i]) for i in 1:length(β)]
 	
 	x = -4.0:0.01:4.0
-	fig1 = plot(xlims=(-4,0, 4.0))
+	fig1 = plot(xlims=(-4,0, 4.0), xlab="x", ylab="Density")
 	for i in 1:length(β)
 		y = pdf(PGeneralizedGaussian(0.0, α[i], β[i]), x)
-		plot!(x, y, lab = "α=$(round(α[i], digits=1)), β=$(β[i])")
+		plot!(x, y, lab = "α=$(round(α[i], digits=1)), β[$i]=$(β[i])")
 	end
 	plot!(x, pdf(Normal(), x), line=(:dash, 2), color=:darkblue,
 		lab = "Normal(0, 1)")
@@ -48,17 +48,17 @@ begin
 	for i in 1:length(β2)
 		α2 = alpha(1.0, β2[i])
 		σ2 = α2^2 * gamma(3/β2[i]) / gamma(1/β2[i])
-		p = pdf(PGeneralizedGaussian(0.0, α2, β2[i]), x)
+		local p = pdf(PGeneralizedGaussian(0.0, α2, β2[i]), x)
 		h2 = -sum([p[i] * log(p[i]) for i in 1:length(p)])
 		append!(y2, [h2])
 	end
-	plot!(β2, y2, xlab = "Shape", ylab="Entropy")
+	plot!(β2, y2, xlab = "Shape (β2)", ylab="Entropy")
 	vline!([2.0], line=:dash)
 	fig2
 end
 
 # ╔═╡ deb0ea70-8901-11eb-37c6-5dc0a9b2d0dd
-
+plot(fig1, fig2, layout=(1,2))
 
 # ╔═╡ 22d43054-8661-11eb-0dd7-fb846edb81c4
 md" ### End Fig-10.2s.jl"
