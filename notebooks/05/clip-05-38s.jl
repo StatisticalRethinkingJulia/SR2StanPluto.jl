@@ -123,7 +123,7 @@ end;
 
 # ╔═╡ 0bc2f976-fdaa-11ea-0212-29e5fd84c264
 if success(rc5_5s) && success(rc5_6s) && success(rc5_7s)
-	(s1, p1) = plotcoef([m5_5s, m5_6s, m5_7s], [:a, :bN, :bM];
+	(s1, p1) = plot_model_coef([m5_5s, m5_6s, m5_7s], [:a, :bN, :bM];
 		title="Masked relationships: bN & bM Normal estimates")
 	p1
 end

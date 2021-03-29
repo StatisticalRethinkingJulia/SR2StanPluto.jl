@@ -33,7 +33,7 @@ md"
 
 # ╔═╡ 3108f92a-fdb3-11ea-0959-9b1b6d094a4c
 begin
-	(s1, p1) = plotcoef([m5_5s, m5_6s, m5_7s], [:a, :bN, :bM];
+	(s1, p1) = plot_model_coef([m5_5s, m5_6s, m5_7s], [:a, :bN, :bM];
 		title="Masked relationships: bN & bM Normal estimates")
 	p1
 end

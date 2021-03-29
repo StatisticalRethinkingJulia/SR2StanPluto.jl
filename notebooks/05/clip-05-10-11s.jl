@@ -156,7 +156,7 @@ md"##### Normal estimates:"
 
 # ╔═╡ ce8e68c0-fc77-11ea-30eb-3fcbdd292d2c
 if !isnothing(m5_1s) &&!isnothing(m5_2s) && !isnothing(m5_3s) 
-	(s1, p1) = plotcoef([m5_1s, m5_2s, m5_3s], [:bA, :bM]; 
+	(s1, p1) = plot_model_coef([m5_1s, m5_2s, m5_3s], [:bA, :bM]; 
 		title="Particles (Normal) estimates")
 	p1
 end

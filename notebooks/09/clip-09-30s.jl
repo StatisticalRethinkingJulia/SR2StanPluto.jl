@@ -129,7 +129,7 @@ success(rc6_2s) && PRECIS(post6_2s_df)
 
 # ╔═╡ 6aac1dd2-840f-11eb-1e9c-6392658b0a67
 if success(rc6_1s) && success(rc6_2s)
-	(s2, p2) = plotcoef([m6_1s, m6_2s], [:a, :bL, :bR, :sigma];
+	(s2, p2) = plot_model_coef([m6_1s, m6_2s], [:a, :bL, :bR, :sigma];
 		title="Multicollinearity between bL and bR, bR > 0")
 	p2
 end

@@ -42,7 +42,7 @@ md"##### Execute m6.7s & m6.8s."
 
 # ╔═╡ 55103e56-ff38-11ea-0825-8b25859b9e32
 begin
-	(s, p) = plotcoef([m6_7s, m6_8s], [:a, :bt, :bf])
+	(s, p) = plot_model_coef([m6_7s, m6_8s], [:a, :bt, :bf])
 	p
 end
 

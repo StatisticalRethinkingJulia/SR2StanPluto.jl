@@ -81,7 +81,7 @@ end
 
 # ╔═╡ 3676ee36-ff42-11ea-200c-594878417287
 if success(rc6_12s)
-	(s6_12s, p6_12s) = plotcoef([m6_11s, m6_12s], [:a, :b_PC, :b_GC, :b_U])
+	(s6_12s, p6_12s) = plot_model_coef([m6_11s, m6_12s], [:a, :b_PC, :b_GC, :b_U])
 	p6_12s
 end
 

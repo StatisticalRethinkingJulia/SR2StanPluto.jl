@@ -83,7 +83,7 @@ success(rc6_7s) && (Text(precis(post6_7s_df; io=String)))
 
 # ╔═╡ b4b8301e-ff30-11ea-2a3c-a11e3745616e
 if success(rc6_7s)
-	(part6_7s, fig6_7s) = plotcoef([m6_7s], [:a, :bt, :bf])
+	(part6_7s, fig6_7s) = plot_model_coef([m6_7s], [:a, :bt, :bf])
 	fig6_7s
 end
 
