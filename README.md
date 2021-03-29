@@ -140,6 +140,12 @@ Of course, without the excellent textbook by Richard McElreath, this package wou
 
 This repository and format is derived from previous versions of StatisticalRethinking.jl, work by Karajan, and many other contributors.
 
+## Versions
+
+### Version 3.4.0
+
+StatisticalRethinkingStan v3.4.0 is in sync with StatisticalRethinking v3.4.0.
+
 ### Version 1.0.0
 
 1. Initial version (late Nov 2020).
