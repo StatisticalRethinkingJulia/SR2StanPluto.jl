@@ -1068,9 +1068,9 @@ version = "1.1.0"
 
 [[StatisticalRethinking]]
 deps = ["AxisArrays", "BSplines", "CSV", "DataFrames", "Distributions", "DocStringExtensions", "Formatting", "GLM", "KernelDensity", "LaTeXStrings", "LinearAlgebra", "MCMCChains", "MonteCarloMeasurements", "NamedArrays", "NamedTupleTools", "Optim", "OrderedCollections", "Parameters", "PrettyTables", "Random", "Reexport", "Requires", "Statistics", "StatsBase", "StatsFuns", "StatsModelComparisons", "StatsPlots", "StructuralCausalModels", "Test", "Unicode"]
-path = "/Users/rob/.julia/dev/StatisticalRethinking"
+git-tree-sha1 = "b705df163bb61100b20bc4b1efe88073047baef0"
 uuid = "2d09df54-9d0f-5258-8220-54c2a3d4fbee"
-version = "3.3.2"
+version = "3.4.0"
 
 [[StatisticalTraits]]
 deps = ["ScientificTypes"]
