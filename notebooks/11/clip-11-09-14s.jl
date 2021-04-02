@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.21
+# v0.14.0
 
 using Markdown
 using InteractiveUtils
@@ -114,11 +114,20 @@ s_a[1]
 # ╔═╡ 098f6a8c-9004-11eb-347d-2144dd33fd8f
 begin
 	b_pars = Symbol.(["b.$i" for i in 1:4])
-	s_b, p_b = plot_logistic_coef(post11_4s_df, b_pars, name)
-end;
+	s_b, p_b = plot_model_coef(m11_4s, b_pars)
+	p_b
+end
 
-# ╔═╡ d7805972-9004-11eb-2a4e-21449cdf132e
-s_b[1]
+# ╔═╡ 997c1663-9ec3-4bb9-ad2a-23b5539b8fb6
+begin
+	dfb = DataFrame()
+	diff_b_pars = [:db13, :db24]
+	dfb[!, :db13] = post11_4s_df[:, "b.1"] - post11_4s_df[:, "b.3"]
+	dfb[!, :db24] = post11_4s_df[:, "b.2"] - post11_4s_df[:, "b.4"]
+	s_b_diff1, p_b_diff1 = plot_model_coef(dfb, diff_b_pars;
+		mname = "m11.4s")
+	p_b_diff1
+end
 
 # ╔═╡ 2456f812-8db1-11eb-2e37-8f274b4509cc
 md" ## End of clip-11-09-14s.jl"
@@ -137,5 +146,5 @@ md" ## End of clip-11-09-14s.jl"
 # ╠═5830c0b0-9001-11eb-1a21-b9b059a0e0a0
 # ╠═eab67364-8fff-11eb-3dee-f55af5f7b21c
 # ╠═098f6a8c-9004-11eb-347d-2144dd33fd8f
-# ╠═d7805972-9004-11eb-2a4e-21449cdf132e
+# ╠═997c1663-9ec3-4bb9-ad2a-23b5539b8fb6
 # ╟─2456f812-8db1-11eb-2e37-8f274b4509cc
