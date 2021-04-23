@@ -15,14 +15,13 @@ begin
 end
 
 # ╔═╡ 3cb90c0e-8db1-11eb-324a-0f66762c31f6
-md" ## Clip-11-09-14s.jl"
+md" ## `plot_model_coef1`.jl"
 
 # ╔═╡ dd81af5c-8d97-11eb-10e4-73daebcd8875
 begin
     df = CSV.read(sr_datadir("chimpanzees.csv"), DataFrame)
     df[!, "treatment"] = 1 .+ df.prosoc_left + 2 * df.condition
-	[count(==(element), df.treatment) for element in unique(df.treatment) ]
-end
+end;
 
 # ╔═╡ dd82254a-8d97-11eb-3f3d-59b7642304f5
 stan11_4 = "
@@ -94,47 +93,59 @@ b[4]  0.35 0.29 -0.10  0.82   651  1.00
 ```
 "
 
-# ╔═╡ 41ccd42e-8db0-11eb-1ed5-9f897b54a7cc
-begin
-	nt11_4s = read_samples(m11_4s)
-	p_left = [logistic.(nt11_4s.a[i]) for i in 1:7]
-	mean.([p_left[i] for i in 1:7])
+# ╔═╡ 51ca94ce-2f1e-48c4-b85f-a0e0f3588265
+md"
+
+Example of a `lift()` function as suggested by Tamas Papp:
+
+E.g., create a Pair object:
+```
+pair11_4s = (\"m11.4s\" => df_b_pars)
+```
+
+and then:
+
+```
+lift(pair_object, f, args....) = pair_object[1] => f(pair_object[2], args...)
+```
+"
+
+# ╔═╡ 4a279710-ec9c-4484-9430-fd7b610598d4
+function plot_model_coef1((name, df), pars::Vector{Symbol};
+    row_labels=[], fig="", title="")
+
+  if length(name) > 9
+    name = name[1:9]
+  end
+ 
+  s = Vector{NamedTuple}(undef, 1)
+  for mindx in 1:1
+    m, l, u = estimparam(df)
+    d = Dict{Symbol, NamedTuple}()
+    for (indx, par) in enumerate(names(df))
+      d[Symbol(par)] = (mean=m[indx], lower=l[indx], upper=u[indx])
+    end
+    s[mindx] =   (; d...)
+  end
+
+  plot_model_coef(s, pars; mnames=[name], fig, title)
 end
 
-# ╔═╡ 5830c0b0-9001-11eb-1a21-b9b059a0e0a0
+
+# ╔═╡ c671a6d4-01ef-47a3-920f-ae20f463b06f
 begin
-	name = "m11.4s"
-	a_pars = Symbol.(["a.$i" for i in 1:7])
-	s_a, p_a = plot_logistic_coef(post11_4s_df, a_pars, name)
-	p_a
+	df_b_pars = DataFrame()
+	row_labels = Symbol.(["R/N", "L/N", "R/P", "L/P"])
+	for i in 1:length(row_labels)
+		df_b_pars[!, row_labels[i]] = post11_4s_df[:, "b.$i"]
+	end
+	pair11_4s = ("m11.4s" => df_b_pars)
+	s4, p4 = plot_model_coef1(pair11_4s, row_labels)
+	p4
 end
-
-# ╔═╡ eab67364-8fff-11eb-3dee-f55af5f7b21c
-s_a[1]
-
-# ╔═╡ 098f6a8c-9004-11eb-347d-2144dd33fd8f
-begin
-	b_pars = Symbol.(["b.$i" for i in 1:4])
-	s_b, p_b = plot_model_coef(m11_4s, b_pars)
-	p_b
-end
-
-# ╔═╡ 997c1663-9ec3-4bb9-ad2a-23b5539b8fb6
-begin
-	dfb = DataFrame()
-	diff_b_pars = [:db13, :db24]
-	dfb[!, :db13] = post11_4s_df[:, "b.1"] - post11_4s_df[:, "b.3"]
-	dfb[!, :db24] = post11_4s_df[:, "b.2"] - post11_4s_df[:, "b.4"]
-	s_b_diff1, p_b_diff1 = plot_model_coef(dfb, diff_b_pars;
-		mname = "m11.4s")
-	p_b_diff1
-end
-
-# ╔═╡ 2456f812-8db1-11eb-2e37-8f274b4509cc
-md" ## End of clip-11-09-14s.jl"
 
 # ╔═╡ Cell order:
-# ╟─3cb90c0e-8db1-11eb-324a-0f66762c31f6
+# ╠═3cb90c0e-8db1-11eb-324a-0f66762c31f6
 # ╠═79789782-8d97-11eb-112c-fd8c2c294527
 # ╠═dd81850e-8d97-11eb-0cff-8bf4f38f0660
 # ╠═dd81af5c-8d97-11eb-10e4-73daebcd8875
@@ -143,9 +154,6 @@ md" ## End of clip-11-09-14s.jl"
 # ╠═dd96b924-8d97-11eb-0d47-ffa72b39a875
 # ╟─83d6ef06-8e48-11eb-3cf2-f93f08c47e5d
 # ╟─75bc9c60-8e48-11eb-2eaa-5fac58b91570
-# ╠═41ccd42e-8db0-11eb-1ed5-9f897b54a7cc
-# ╠═5830c0b0-9001-11eb-1a21-b9b059a0e0a0
-# ╠═eab67364-8fff-11eb-3dee-f55af5f7b21c
-# ╠═098f6a8c-9004-11eb-347d-2144dd33fd8f
-# ╠═997c1663-9ec3-4bb9-ad2a-23b5539b8fb6
-# ╟─2456f812-8db1-11eb-2e37-8f274b4509cc
+# ╠═51ca94ce-2f1e-48c4-b85f-a0e0f3588265
+# ╠═4a279710-ec9c-4484-9430-fd7b610598d4
+# ╠═c671a6d4-01ef-47a3-920f-ae20f463b06f

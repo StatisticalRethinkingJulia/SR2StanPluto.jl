@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.20
+# v0.14.1
 
 using Markdown
 using InteractiveUtils
@@ -10,12 +10,15 @@ using Pkg, DrWatson
 # ╔═╡ 6db218c6-59a8-11eb-2a8b-7107354cf590
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample, StanOptimize
+	using StanSample
 	using StatisticalRethinking
 end
 
 # ╔═╡ 51fc19b8-59a8-11eb-2214-15aca59b807b
 md" ## Clip-08-07-12s.jl"
+
+# ╔═╡ f346a9a1-de24-40ef-bf2f-eb046ed800d5
+@quickactivate "StatisticalRethinkingStan"
 
 # ╔═╡ 8aaa4bcc-59a8-11eb-2003-f1213b116565
 begin
@@ -30,6 +33,26 @@ begin
 		G = df.log_gdp_s, R = df.rugged_s, cid=df.cid)
 	PRECIS(df[:, [:log_gdp, :log_gdp_s, :rugged, :rugged_s, :cid]])
 end
+
+# ╔═╡ 4c3738f0-ba84-456a-a53f-c2690be9c077
+df[1:8, [:log_gdp, :rugged, :cont_africa, :log_gdp_s, :rugged_s]]
+
+# ╔═╡ 60053fa4-f1f9-4754-825e-170a095a284d
+md"
+```
+8×5 DataFrame
+ Row │ log_gdp  rugged   cont_africa  log_gdp_std  rugged_std
+     │ Float64  Float64  Int64        Float64      Float64
+─────┼────────────────────────────────────────────────────────
+   1 │ 7.49261    0.858            1     1.00276    0.138342
+   2 │ 6.43238    1.78             1     0.860869   0.287004
+   3 │ 6.86612    0.141            1     0.918918   0.0227346
+   4 │ 6.90617    0.236            1     0.924278   0.0380522
+   5 │ 8.9493     0.181            1     1.19772    0.0291841
+   6 │ 7.04582    0.197            1     0.942968   0.0317639
+   7 │ 7.36241    0.224            1     0.985338   0.0361174
+   8 │ 7.54046    0.515            1     1.00917    0.0830377
+```"
 
 # ╔═╡ e890c59c-6a68-11eb-0d33-4d52a21d0ccf
 stan8_1 = "
@@ -184,8 +207,11 @@ md" ## End of clip-08-07-12s.jl"
 # ╔═╡ Cell order:
 # ╟─51fc19b8-59a8-11eb-2214-15aca59b807b
 # ╠═63ba08cc-59a8-11eb-0a0f-27efac60d779
+# ╠═f346a9a1-de24-40ef-bf2f-eb046ed800d5
 # ╠═6db218c6-59a8-11eb-2a8b-7107354cf590
 # ╠═8aaa4bcc-59a8-11eb-2003-f1213b116565
+# ╠═4c3738f0-ba84-456a-a53f-c2690be9c077
+# ╟─60053fa4-f1f9-4754-825e-170a095a284d
 # ╠═e890c59c-6a68-11eb-0d33-4d52a21d0ccf
 # ╠═8e815d5c-6a66-11eb-21dc-99734c31f4e1
 # ╠═04a39568-6a6c-11eb-19ea-f55be3914a51
