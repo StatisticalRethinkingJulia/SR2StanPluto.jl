@@ -1,0 +1,85 @@
+#
+# This example assumes below packages are available in your environment
+#
+
+using Pkg, DrWatson
+
+@quickactivate "StatisticalRethinkingStan"
+using StatsModelComparisons, StanSample
+using StatsFuns, CSV, Random
+using ParetoSmooth
+using StatisticalRethinking
+
+df = CSV.read(sr_datadir("chimpanzees.csv"), DataFrame)
+
+ProjDir = @__DIR__
+
+stan11_4 = "
+data{
+    int<lower=1> N;
+    int y[N];
+    int prosoc[N];
+}
+parameters{
+    real a;
+    real bP;
+}
+model{
+    vector[N] p;
+    bP ~ normal( 0 , 1 );
+    a ~ normal( 0 , 10 );
+    for ( i in 1:N ) {
+        p[i] = a + bP * prosoc[i];
+    }
+    y ~ binomial_logit( 1 , p );
+}
+generated quantities{
+    vector[N] p;
+    vector[N] log_lik;
+    for ( i in 1:N ) {
+        p[i] = a + bP * prosoc[i];
+        log_lik[i] = binomial_logit_lpmf( y[i] | 1 , p[i] );
+    }
+}
+";
+
+m11_4s = SampleModel("m11_4s", stan11_4)
+data = (N = size(df, 1), y = df.pulled_left, prosoc = df.prosoc_left)
+rc11_4s = stan_sample(m11_4s; data)
+
+if success(rc11_4s)
+    #stan_summary(m11_4s, true)
+    nt11_4s = read_samples(m11_4s);
+end
+
+log_lik = nt11_4s.log_lik'
+n_sam, n_obs = size(log_lik)
+lppd = reshape(logsumexp(log_lik .- log(n_sam); dims=1), n_obs)
+
+pwaic = [var(log_lik[:, i]) for i in 1:n_obs]
+@show -2(sum(lppd) - sum(pwaic))
+println()
+
+@show waic(log_lik)
+println()
+
+loo, loos, pk = psisloo(log_lik)
+@show -2loo
+
+#Random.seed!(123)
+ll = reshape(nt11_4s.log_lik, 504, 1000, 4);
+psis_ll = psis(ll);
+
+lwp = deepcopy(ll);
+lwp += psis_ll.weights;
+lwpt = Matrix(reshape(lwp, 504, 4000)');
+loos = reshape(logsumexp(lwpt; dims=1), size(lwpt, 2));
+
+@show loo = sum(loos)
+@show 2loo
+
+pk_plot(pk)
+savefig(joinpath(ProjDir, "pk.png"))
+
+pk_plot(psis_ll.pareto_k)
+savefig(joinpath(ProjDir, "pareto_k.png"))

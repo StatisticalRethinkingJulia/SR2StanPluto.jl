@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.21
+# v0.14.8
 
 using Markdown
 using InteractiveUtils
@@ -35,7 +35,7 @@ md"
 begin
 	(s1, p1) = plot_model_coef([m5_5s, m5_6s, m5_7s], [:a, :bN, :bM];
 		title="Masked relationships: bN & bM Normal estimates")
-	p1
+	plot(p1;dpi = 460)
 end
 
 # ╔═╡ 310f3100-fdb3-11ea-0c35-b3014ae7e73d
@@ -45,8 +45,8 @@ s1
 begin
 	(s2, p2) = plot_model_coef([m5_5s, m5_6s, m5_7s], [:a, :bN, :bM];
 		title="Masked relationships: bN & bM Normal estimates")
-	p2
-end
+	plot(p2; dpi=460)
+ end
 
 # ╔═╡ 31163fc2-fdb3-11ea-03a4-9dc90236e2d6
 s2

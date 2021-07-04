@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.20
+# v0.14.8
 
 using Markdown
 using InteractiveUtils
@@ -190,6 +190,9 @@ if success(rc5_3s_t)
 	waic_m5_3s_t = waic(log_lik_3_t)
 end
 
+# ╔═╡ 51d570db-4ff0-49b4-b4c1-8e709a6b1564
+nt5_3s_t
+
 # ╔═╡ c2ba84b0-68f2-11eb-3c5a-17e03541dcb1
 begin
     b5_3s_t = post5_3s_t_df[:, [:a, :bA, :bM, :sigma]]
@@ -293,6 +296,7 @@ md" ## End of clip-07-35s.jl"
 # ╠═71a48f7a-68ee-11eb-1b0e-331393e95551
 # ╠═b5b487ec-68ee-11eb-3ee7-0d98367028ff
 # ╠═4e7a00e8-69b4-11eb-15ef-df1a53282396
+# ╠═51d570db-4ff0-49b4-b4c1-8e709a6b1564
 # ╠═c2ba84b0-68f2-11eb-3c5a-17e03541dcb1
 # ╠═7b051a2e-68f3-11eb-3ee8-e77c639fc390
 # ╠═ed4469dc-68f3-11eb-3b0f-f54305283306
