@@ -181,12 +181,20 @@ end
 plot_models([m5_1s, m5_2s, m5_3s], :waic)
 
 # ╔═╡ 85a11cf4-6d40-11eb-3424-5b873aa5bc88
-md"
+md"With quap():
 ```
       PSIS    SE   dPSIS   dSE   pPSIS   weight
  m5.1 127.6 14.69   0.0    NA     4.7    0.71
  m5.3 129.4 15.10   1.8   0.90    5.9    0.29
  m5.2 140.6 11.21  13.1  10.82    3.8    0.00
+```
+
+or, with ulam():
+```
+       PSIS    SE dPSIS  dSE pPSIS weight
+m5.1u 126.0 12.83   0.0   NA   3.7   0.67
+m5.3u 127.4 12.75   1.4 0.75   4.7   0.33
+m5.2u 139.5  9.95  13.6 9.33   3.0   0.00
 ```
 "
 
