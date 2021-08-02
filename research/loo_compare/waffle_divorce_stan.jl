@@ -113,10 +113,37 @@ function loo_compare(models::Vector{SampleModel};
 
     for i in 1:length(models)
         ka[i] = read_samples(models[i]; output_format=:keyedarray)
-        ll[i] = permutedims(Array(matrix(ka[i], loglikelihood_name)), [3, 1, 2])
+        ll[i] = permutedims(Array(matrix(ka[i], loglikelihood_name)), [1, 3, 2])
     end
 
     loo_compare(ll; model_names=mnames, sort_models)
+end
+
+function waic_compare(models::Vector{SampleModel}; 
+    loglikelihood_name="log_lik", model_names=nothing, sort_models=true)
+
+    if isnothing(model_names)
+        mnames = [models[i].name for i in 1:length(models)]
+    end
+
+    nmodels = length(models)
+
+    ka = Vector{KeyedArray}(undef, nmodels)
+    ll = Vector{Array{Float64, 3}}(undef, nmodels)
+    llp = Vector{Array{Float64, 3}}(undef, nmodels)
+    llpr = Vector{Array{Float64, 3}}(undef, nmodels)
+
+    for i in 1:length(models)
+        ka[i] = read_samples(models[i]; output_format=:keyedarray)
+        ll[i] = permutedims(Array(matrix(ka[i], loglikelihood_name)), [1, 3, 2])
+        llp[i] = permutedims(ll[1],[ 1, 3, 2])
+        if i == 1
+            ndraws, nchains, nobs = size(llp[1])
+        end
+        llpr[i] = reshape(llp, ndraws*nchains, nobs)
+    end
+
+    compare(llpr, Val(:waic); mnames=mnames)
 end
 
 m5_1s = SampleModel("m5.1s", stan5_1)
@@ -130,12 +157,12 @@ rc5_3s = stan_sample(m5_3s; data)
 
 if success(rc5_1s) && success(rc5_2s) && success(rc5_3s)
 
-    nt5_1s = read_samples(m5_1s; output_format=:particles)
-    NamedTupleTools.select(nt5_1s, (:a, :bA, :sigma)) |> display
-    nt5_2s = read_samples(m5_2s; output_format=:particles)
-    NamedTupleTools.select(nt5_2s, (:a, :bM, :sigma)) |> display
-    nt5_3s = read_samples(m5_3s; output_format=:particles)
-    NamedTupleTools.select(nt5_3s, (:a, :bA, :bM, :sigma)) |> display
+    p5_1s = read_samples(m5_1s; output_format=:particles)
+    NamedTupleTools.select(p5_1s, (:a, :bA, :sigma)) |> display
+    p5_2s = read_samples(m5_2s; output_format=:particles)
+    NamedTupleTools.select(p5_2s, (:a, :bM, :sigma)) |> display
+    p5_3s = read_samples(m5_3s; output_format=:particles)
+    NamedTupleTools.select(p5_3s, (:a, :bA, :bM, :sigma)) |> display
 
     models = [m5_1s, m5_2s, m5_3s]
     loglikelihood_name = :log_lik
