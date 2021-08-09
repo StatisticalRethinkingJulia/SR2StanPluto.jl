@@ -17,7 +17,7 @@ and in the Julia REPL:
 
 ```
 julia> ]                                        # Actvate Pkg mode
-(@v1.5) pkg> activate .                         # Activate pkg in .
+(@v1.6) pkg> activate .                         # Activate pkg in .
 (StatisticalRethinkingStan) pkg> instantiate    # Install in pkg environment
 (StatisticalRethinkingStan) pkg> <delete>       # Exit package mode
 julia>

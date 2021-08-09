@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.21
+# v0.15.1
 
 using Markdown
 using InteractiveUtils
@@ -71,7 +71,7 @@ end
 
 # ╔═╡ 4f138b0a-2861-11eb-0985-1b00943863f2
 if !isnothing(m4_4s)
-  chns4_4s = read_samples(m4_4s; output_format=:mcmcchains)
+  chns4_4s = read_samples(m4_4s, :mcmcchains)
   Particles(chns4_4s)
 end
 

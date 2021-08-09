@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.17
+# v0.15.1
 
 using Markdown
 using InteractiveUtils
@@ -88,7 +88,7 @@ md"### Snippet 4.61"
 
 # ╔═╡ 614e8dc6-fc09-11ea-16c9-19a4d2eed3e6
 begin
-	dfa4_3s = read_samples(m4_3s; output_format=:dataframe)
+	dfa4_3s = read_samples(m4_3s, :dataframe)
 
 	title = "Height vs. Weight regions" * "\n89% of prediction interval for heights" *
 		"\nand 89% hpd interval around mu"

@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.12
+# v0.15.1
 
 using Markdown
 using InteractiveUtils
@@ -7,14 +7,14 @@ using InteractiveUtils
 # ╔═╡ 5d783968-f503-11ea-2a7f-c178016c9aee
 using Pkg, DrWatson
 
+# ╔═╡ 5d9ff58c-f503-11ea-1e45-85013f83f4b2
+@quickactivate "StatisticalRethinkingStan"
+
 # ╔═╡ 5da06014-f503-11ea-3247-9d56efd51315
 using StatisticalRethinking
 
 # ╔═╡ 1d31f6f8-f503-11ea-3be1-471a142ee605
 md"## Clip-03-17-19s.jl"
-
-# ╔═╡ 5d9ff58c-f503-11ea-1e45-85013f83f4b2
-@quickactivate "StatisticalRethinkingStan"
 
 # ╔═╡ 5dad7252-f503-11ea-0fcd-2d550e087c4b
 md"### snippet 3.11"

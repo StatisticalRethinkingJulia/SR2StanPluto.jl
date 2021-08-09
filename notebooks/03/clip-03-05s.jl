@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.12
+# v0.15.1
 
 using Markdown
 using InteractiveUtils
@@ -76,8 +76,8 @@ md"##### Retrieve samples as an MCMCChains.Chain object and as a Particles summa
 
 # ╔═╡ add0c3ac-f368-11ea-1e7d-650962e47ef9
 if success(rc3_5s)
-  chns3_5s = read_samples(m3_5s; output_format=:mcmcchains)
-  part3_5s = read_samples(m3_5s; output_format=:particles)
+  chns3_5s = read_samples(m3_5s, :mcmcchains)
+  part3_5s = read_samples(m3_5s, :particles)
 end;
 
 # ╔═╡ 90b9a838-f368-11ea-11d9-61225ef012fc

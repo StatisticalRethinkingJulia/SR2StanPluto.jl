@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.21
+# v0.15.1
 
 using Markdown
 using InteractiveUtils
@@ -13,6 +13,7 @@ begin
 	using StanSample, StanOptimize
 	using StanQuap
 	using StatisticalRethinking
+	using PlutoUI
 end
 
 # ╔═╡ 766ea8e6-0e8b-11eb-15fa-477197ab5a31
@@ -66,7 +67,7 @@ end;
 # ╔═╡ 847d6bee-3347-11eb-0b71-312d18c967df
 begin
   if success(rc4_2_sample_s)
-    m4_2_sample_s_df = read_samples(m4_2_sample_s; output_format=:dataframe)
+    m4_2_sample_s_df = read_samples(m4_2_sample_s, :dataframe)
     PRECIS(m4_2_sample_s_df)
   end
 end
@@ -78,7 +79,7 @@ md"##### Create an OptimizeModel and obtain map estimates:"
 begin
 	m4_2_opt_s = OptimizeModel("m4_2_opt_s", stan4_2)
 	rc4_2_opt_s = stan_optimize(m4_2_opt_s; data, init)
-end
+end;
 
 # ╔═╡ b8b1e70e-0e8b-11eb-0f10-7d74079e68f8
 if success(rc4_2_opt_s)
@@ -91,10 +92,15 @@ md"##### Combine SampleModel and OptimizeModel in StanQuap.jl."
 
 # ╔═╡ cf29cb5a-33e8-11eb-142c-319fcce6609b
 begin
-  q4_2s, m4_2s, om = stan_quap("m4.2s", stan4_2; data, init)
-  quap4_2s_df = sample(q4_2s)
-  precis(quap4_2s_df)
+	q4_2s, m4_2s, om = stan_quap("m4.2s", stan4_2; data, init)
+ 	quap4_2s_df = sample(q4_2s)
+	with_terminal() do
+  		precis(quap4_2s_df)
+	end
 end
+
+# ╔═╡ c06df784-bd6e-4fc3-9495-d9a237c84b49
+q4_2s
 
 # ╔═╡ 314b3234-3348-11eb-0d37-c5aa7e3f6c94
 md"##### Turing quap results:
@@ -142,6 +148,7 @@ md"## End of stan-optimize-01s.jl intro"
 # ╠═b8b1e70e-0e8b-11eb-0f10-7d74079e68f8
 # ╟─36c1d07c-805c-11eb-3401-b1be978eb42a
 # ╠═cf29cb5a-33e8-11eb-142c-319fcce6609b
+# ╠═c06df784-bd6e-4fc3-9495-d9a237c84b49
 # ╟─314b3234-3348-11eb-0d37-c5aa7e3f6c94
 # ╠═92734668-805b-11eb-0a16-51e77a8d2af6
 # ╟─b8bdd370-0e8b-11eb-0d2e-1174a6d67c88

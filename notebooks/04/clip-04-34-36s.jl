@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.21
+# v0.15.1
 
 using Markdown
 using InteractiveUtils
@@ -56,7 +56,7 @@ begin
 	init = Dict(:mu => 180, :sigma => 10)
 	q4_1s, m4_1s, _ = stan_quap("m4.1s", stan4_1; data, init)
 	if !isnothing(m4_1s)
-		part4_1s = read_samples(m4_1s; output_format=:particles)
+		part4_1s = read_samples(m4_1s, :particles)
 	end
 end
 
@@ -65,7 +65,7 @@ md"##### Stan quap estimate."
 
 # ╔═╡ 8bd83964-fb7a-11ea-2a5f-9b23b6992c80
 begin
-	post4_1s_df = read_samples(m4_1s; output_format=:dataframe)
+	post4_1s_df = read_samples(m4_1s, :dataframe)
 	quap4_1s_df = sample(q4_1s)
 	PRECIS(quap4_1s_df)
 end
@@ -106,7 +106,7 @@ end
 
 # ╔═╡ 8bfcef7a-fb7a-11ea-1b75-890ae0af98b2
 begin
-	dfs4_1s = read_samples(m4_1s; output_format=:dataframes)
+	dfs4_1s = read_samples(m4_1s, :dataframes)
 	figs = Vector{Plots.Plot{Plots.GRBackend}}(undef, size(dfs4_1s[1], 2))
 
 	for (indx, par) in enumerate(names(dfs4_1s[1]))

@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.21
+# v0.15.1
 
 using Markdown
 using InteractiveUtils
@@ -51,7 +51,7 @@ end
 begin
 	q1_1s, m1_1s, om = stan_quap("m1.1s", stan1_1; data, init)
 	if !isnothing(m1_1s)
-		post1_1s_df = read_samples(m1_1s, output_format=:dataframe)
+		post1_1s_df = read_samples(m1_1s, :dataframe)
 	end
 	PRECIS(post1_1s_df)
 end

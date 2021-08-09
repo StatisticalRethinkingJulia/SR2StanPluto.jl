@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.21
+# v0.15.1
 
 using Markdown
 using InteractiveUtils
@@ -67,7 +67,7 @@ end
 
 # ╔═╡ 9e4ba502-3c2c-11eb-0e99-ad512c8ca8e4
 begin
-	post4_1s_df = read_samples(m4_1s; output_format=:dataframe)
+	post4_1s_df = read_samples(m4_1s, :dataframe)
 	e = ecdf(post4_1s_df.mu)
 	f = ecdf(quap4_1s_df.mu)
 	g = ecdf(rand(Normal(mean(post4_1s_df.mu), std(post4_1s_df.mu)), 4000))
@@ -85,7 +85,7 @@ if !isnothing(m4_1s)
 
 	# Array of DataFrames, 1 Dataframe/chain
 	
-	dfs4_1s = read_samples(m4_1s; output_format=:dataframes)
+	dfs4_1s = read_samples(m4_1s, :dataframes)
 	figs = Vector{Plots.Plot{Plots.GRBackend}}(undef, size(dfs4_1s[1], 2))
 
 	for (indx, par) in enumerate(names(dfs4_1s[1]))
@@ -106,7 +106,7 @@ md"##### Particle summary."
 
 # ╔═╡ 855315e8-fb5f-11ea-1be3-fd3515317471
 if !isnothing(m4_1s)
-	part4_1s = read_samples(m4_1s; output_format=:particles)
+	part4_1s = read_samples(m4_1s, :particles)
 end
 
 # ╔═╡ 8573377e-fb5f-11ea-05ef-1b6568304ef8

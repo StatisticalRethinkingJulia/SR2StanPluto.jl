@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.21
+# v0.15.1
 
 using Markdown
 using InteractiveUtils
@@ -59,7 +59,7 @@ end;
 
 # ╔═╡ 62c16610-fb76-11ea-36d5-51093f07a76a
 if !isnothing(m4_1s)
-	post4_1s_df = read_samples(m4_1s; output_format=:dataframe)
+	post4_1s_df = read_samples(m4_1s, :dataframe)
 	PRECIS(post4_1s_df)
 end
 
@@ -104,6 +104,15 @@ md"##### Compute correlation matrix."
 # ╔═╡ 62feda92-fb76-11ea-32a4-454502ca4488
 cor(Array(sample(q4_1s)))
 
+# ╔═╡ 9d3356ac-9b22-411a-a2c0-dbde136826ed
+begin
+	chns = read_samples(m4_1s)
+	chns.data
+end
+
+# ╔═╡ c4d58d17-aedf-4a92-b77f-3e4256beb4a8
+axiskeys(chns)
+
 # ╔═╡ 6306bcf8-fb76-11ea-2feb-af94851021ba
 md"## End of clip-04-32-33s.jl"
 
@@ -128,4 +137,6 @@ md"## End of clip-04-32-33s.jl"
 # ╟─62ef3826-fb76-11ea-2369-c157a18c626c
 # ╟─62f79ff0-fb76-11ea-323d-074b61eb40f0
 # ╠═62feda92-fb76-11ea-32a4-454502ca4488
+# ╠═9d3356ac-9b22-411a-a2c0-dbde136826ed
+# ╠═c4d58d17-aedf-4a92-b77f-3e4256beb4a8
 # ╟─6306bcf8-fb76-11ea-2feb-af94851021ba

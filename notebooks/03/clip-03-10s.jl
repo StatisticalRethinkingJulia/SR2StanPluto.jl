@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.12
+# v0.15.1
 
 using Markdown
 using InteractiveUtils
@@ -72,7 +72,7 @@ rc3_1s = stan_sample(m3_1s, data=m3_1_data);
 
 # ╔═╡ 4f06f9e0-f36d-11ea-3bcf-51b2ce61f1a5
 if success(rc3_1s)
-	chn = read_samples(m3_1s; output_format=:mcmcchains)
+	chn = read_samples(m3_1s, :mcmcchains)
 	CHNS(chn)
 end
 

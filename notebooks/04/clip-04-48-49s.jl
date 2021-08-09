@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.17
+# v0.15.1
 
 using Markdown
 using InteractiveUtils
@@ -62,7 +62,7 @@ end;
 
 # ╔═╡ dcf7ac28-fb8c-11ea-09ee-9fe5c75f668a
 if success(rc4_3s)
-  post4_3s_df = read_samples(m4_3s; output_format=:dataframe)
+  post4_3s_df = read_samples(m4_3s, :dataframe)
 end;
 
 # ╔═╡ dcf84386-fb8c-11ea-18ef-0b8ff5c50351
@@ -98,7 +98,7 @@ begin
 
 		if success(rc)
 
-		sample_df = read_samples(m4_3s; output_format=:dataframe)
+		sample_df = read_samples(m4_3s, :dataframe)
 		xi = -2.5:0.1:3.0
 		figs[i] = scatter(df[1:N, :weight_c], df[1:N, :height],
 			leg=false, xlab="weight_c")

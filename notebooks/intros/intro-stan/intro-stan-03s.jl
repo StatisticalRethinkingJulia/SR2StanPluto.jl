@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.21
+# v0.15.1
 
 using Markdown
 using InteractiveUtils
@@ -13,6 +13,7 @@ begin
 	using StanSample
 	using StanQuap
 	using StatisticalRethinking
+	using PlutoUI
 end
 
 # ╔═╡ c705c7c4-f209-11ea-3651-a72bfc0f1756
@@ -72,8 +73,10 @@ if !isnothing(om)
   om.optim
 end
 
-# ╔═╡ 914dbe76-8047-11eb-36aa-4161ca779950
-PRECIS(read_samples(m1_1s; output_format=:dataframe))
+# ╔═╡ d654d772-cd88-4a0f-bba1-33b957c5febc
+with_terminal() do
+	precis(read_samples(m1_1s, :dataframe))
+end
 
 # ╔═╡ 1160f5d8-f20b-11ea-317b-012bdf4d331f
 md"## End of intro/intro-stan-03s.jl"
@@ -90,5 +93,5 @@ md"## End of intro/intro-stan-03s.jl"
 # ╠═114a04d4-f20b-11ea-0c10-e5c266f4ea8d
 # ╟─115537b2-f20b-11ea-030c-478dea20fdbe
 # ╠═11602dea-f20b-11ea-1243-fd37bbd57993
-# ╠═914dbe76-8047-11eb-36aa-4161ca779950
+# ╠═d654d772-cd88-4a0f-bba1-33b957c5febc
 # ╟─1160f5d8-f20b-11ea-317b-012bdf4d331f

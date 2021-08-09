@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.21
+# v0.15.1
 
 using Markdown
 using InteractiveUtils
@@ -60,7 +60,8 @@ md"##### Define the SampleModel."
 
 # ╔═╡ 50f8139a-fbbc-11ea-1bc0-8342bf3499f8
 begin
-	data = Dict(:N => size(df, 1), :height => df.height, :weight => df.weight, :xbar => mean(df.weight));
+	data = Dict(:N => size(df, 1), :height => df.height, 
+		:weight => df.weight, :xbar => mean(df.weight));
 	init = Dict(:alpha => 170.0, :beta => 2.0, :sigma => 10.0)
 	q4_3s, m4_3s, _ = stan_quap("m4.3s", stan4_3; data, init)
 	quap4_3s_df = sample(q4_3s)

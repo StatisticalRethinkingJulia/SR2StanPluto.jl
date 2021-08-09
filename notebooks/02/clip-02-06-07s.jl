@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.21
+# v0.15.1
 
 using Markdown
 using InteractiveUtils
@@ -12,6 +12,7 @@ begin
 	@quickactivate "StatisticalRethinkingStan"
 	using StanQuap
 	using StatisticalRethinking
+	using PlutoUI
 end
 
 # ╔═╡ 2301974a-f2de-11ea-123c-6d4e743fa71c
@@ -59,7 +60,7 @@ md"##### Obtain stan_quap() samples."
 begin
 	q2_0s, m2_0s, om2_0s = stan_quap("m2.0s", stan2_0; data)
 	if !isnothing(m2_0s)
-		post2_0s_df = read_samples(m2_0s; output_format=:dataframe)
+		post2_0s_df = read_samples(m2_0s, :dataframe)
 		PRECIS(post2_0s_df)
 	end
 end
@@ -67,7 +68,9 @@ end
 # ╔═╡ f654a0e6-81ca-11eb-1166-2bfaeebe1d4d
 if !isnothing(q2_0s)
 	quap2_0s_df = sample(q2_0s)
-	PRECIS(quap2_0s_df)
+	with_terminal() do
+		precis(quap2_0s_df)
+	end
 end
 
 # ╔═╡ f521d852-f2de-11ea-2ed5-2bd626644c7c

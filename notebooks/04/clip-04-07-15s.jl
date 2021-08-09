@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.17
+# v0.15.1
 
 using Markdown
 using InteractiveUtils
@@ -212,7 +212,7 @@ md"##### Read in the samples and show a chain summary."
 
 # ╔═╡ dc3a5122-f82c-11ea-1eff-c745d65ab11b
 if success(rc4_1s)
-	chns4_1s = read_samples(m4_1s; output_format=:mcmcchains)
+	chns4_1s = read_samples(m4_1s, :mcmcchains)
 	CHNS(chns4_1s)
 end
 

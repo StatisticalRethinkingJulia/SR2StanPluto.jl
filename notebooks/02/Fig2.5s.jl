@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.21
+# v0.15.1
 
 using Markdown
 using InteractiveUtils
@@ -63,7 +63,7 @@ begin
 		figs[n] = plot(xlims=(0.0, 1.0), ylims=(0.0, 3.0), leg=false)
 		m2_0_data = Dict("n" => n, "k" => sum(k[1:n]));
 		rc = stan_sample(m2_0s, data=m2_0_data);
-		df = read_samples(m2_0s; output_format=:dataframe)
+		df = read_samples(m2_0s, :dataframe)
 		if n == 1
 			hline!([1.0], line=(:dash))
 		else

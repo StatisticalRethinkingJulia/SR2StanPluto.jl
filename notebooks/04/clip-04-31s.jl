@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.21
+# v0.15.1
 
 using Markdown
 using InteractiveUtils
@@ -53,8 +53,8 @@ begin
 	init = Dict(:mu => 180.0, :sigma => 50.0)
 	q4_2s, m4_2s, _ = stan_quap("m4.2s", stan4_2; data, init)
 	if !isnothing(m4_2s)
-		post4_2s_df = read_samples(m4_2s; output_format=:dataframe)
-		part4_2s = read_samples(m4_2s; output_format=:particles)
+		post4_2s_df = read_samples(m4_2s, :dataframe)
+		part4_2s = read_samples(m4_2s, :particles)
 	end
 end
 
@@ -66,6 +66,9 @@ end
 
 # ╔═╡ 56dddfda-3ff5-11eb-35a5-ad21c023fbb5
 PRECIS(post4_2s_df)
+
+# ╔═╡ 89ffb2af-ad2f-4ab3-867c-d43315d3e7d0
+read_samples(m4_2s).data
 
 # ╔═╡ 058373e2-fb70-11ea-2fbe-634f17946677
 md"## End of clip-04-31s.jl"
@@ -80,4 +83,5 @@ md"## End of clip-04-31s.jl"
 # ╠═057a5a8a-fb70-11ea-087f-7f1562f46764
 # ╠═32553622-3ff5-11eb-1c77-d764df9673ed
 # ╠═56dddfda-3ff5-11eb-35a5-ad21c023fbb5
+# ╠═89ffb2af-ad2f-4ab3-867c-d43315d3e7d0
 # ╟─058373e2-fb70-11ea-2fbe-634f17946677

@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.21
+# v0.15.1
 
 using Markdown
 using InteractiveUtils
@@ -92,7 +92,7 @@ md"##### Original draws from Stan model."
 
 # ╔═╡ b4df80fc-3802-11eb-0234-5d8def35738f
 begin
-	m4_2_sample_s_df = read_samples(m4_2s; output_format=:dataframe)
+	m4_2_sample_s_df = read_samples(m4_2s, :dataframe)
     PRECIS(m4_2_sample_s_df)
 end
 

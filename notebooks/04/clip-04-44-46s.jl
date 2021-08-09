@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.21
+# v0.15.1
 
 using Markdown
 using InteractiveUtils
@@ -74,7 +74,7 @@ md"##### Read the Stan samples."
 
 # ╔═╡ bfc7a900-fb7d-11ea-088f-1f908ced09d8
 if !isnothing(m4_3s)
-	post4_3s = read_samples(m4_3s; output_format=:dataframe)
+	post4_3s = read_samples(m4_3s, :dataframe)
 	part4_3s = Particles(post4_3s)
 end
 

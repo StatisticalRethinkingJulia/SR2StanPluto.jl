@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.21
+# v0.15.1
 
 using Markdown
 using InteractiveUtils
@@ -21,7 +21,7 @@ begin
 	figs = Vector{Plots.Plot{Plots.GRBackend}}(undef, 3)
 	N = [5, 20, 50]
 
-	for i in 1:3                                         # Decrease p_grip step size
+	for i in 1:3  # Decrease p_grid step size
 		p_grid = range( 0 , stop=1 , length=N[i] )
 		prior = pdf.(Uniform(0, 1), p_grid)
 		likelihood = [pdf.(Binomial(9, p), 6) for p in p_grid]

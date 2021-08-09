@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.21
+# v0.15.1
 
 using Markdown
 using InteractiveUtils
@@ -11,6 +11,8 @@ using Pkg, DrWatson
 begin
 	@quickactivate "StatisticalRethinkingStan"
 	using StanSample, StanQuap
+	using Makie, AlgebraOfGraphics, CairoMakie, CategoricalArrays
+	using StatsPlots, MCMCChains
 	using StatisticalRethinking
 	using PlutoUI
 end
@@ -187,15 +189,20 @@ md"##### 5. Describe and check the results"
 
 # ╔═╡ 73d0dd98-f1ec-11ea-2499-477a8024ecc6
 if success(rc1_1s)
-	post1_1s_df = read_samples(m1_1s; output_format=:dataframe)
-	PRECIS(post1_1s_df)
+	post1_1s_df = read_samples(m1_1s, :dataframe)
+	with_terminal() do
+		precis(post1_1s_df)
+	end
+	post1_1s_df[!, :chain] = repeat(collect(1:m1_1s.n_chains[1]);
+		inner=m1_1s.method.num_samples)
+	post1_1s_df[!, :chain] = categorical(post1_1s_df.chain)
 end
 
 # ╔═╡ 208e7a70-f1ec-11ea-3ba9-d5e8c8c00553
 md"###### Sample `Particles` summary:"
 
 # ╔═╡ cfe9027e-f1ec-11ea-33df-65cd05965437
-part1_1s = read_samples(m1_1s; output_format=:particles)
+part1_1s = read_samples(m1_1s, :particles)
 
 # ╔═╡ b82e2e82-f757-11ea-2696-6f294e3070f5
 md"The use of Particles to represent quap-like approximations is possible thanks to the package [MonteCarloMeasurements.jl](https://github.com/baggepinnen/MonteCarloMeasurements.jl).
@@ -218,8 +225,38 @@ md" ##### Sample from the quadratic approximation:"
 # ╔═╡ a0a04fa8-2b5e-11eb-0a44-4b31c17d9a57
 begin
 	quap1_1s_df = sample(q1_1s)
-	PRECIS(quap1_1s_df)
+	with_terminal() do
+		precis(quap1_1s_df)
+	end
 end
+
+# ╔═╡ e5aa65de-4ccf-4cc8-8b4c-23014f8da80f
+typeof(post1_1s_df)
+
+# ╔═╡ e051b63a-1864-4564-b860-5cb5ef2f7735
+let
+	fig = Figure()
+	plt = AlgebraOfGraphics.data(post1_1s_df)
+
+	let
+		plt1 = plt * visual(Lines) * mapping(:theta; color=:chain)
+		axis = (; xlabel="draws", ylabel="theta", title="Traces")
+  		draw!(fig[1, 1], plt1; axis)
+	end
+	
+	let
+		plt2 = plt * mapping(:theta; color=:chain) *
+			AlgebraOfGraphics.density()
+		axis = (; title="Density")
+		draw!(fig[2,1], plt2; axis)
+	end
+	
+	fig
+end
+
+
+# ╔═╡ 11de190e-4cbc-4d73-89a1-4062ae3b8e16
+post1_1s_df
 
 # ╔═╡ c2ef6864-802c-11eb-1a86-858e8db6e45f
 √q1_1s.vcov
@@ -229,27 +266,42 @@ md"##### Check the chains using MCMCChains.jl"
 
 # ╔═╡ 1ce58ec6-f1ed-11ea-1c05-99a463481fd8
 begin
-	chns1_1s = read_samples(m1_1s; output_format=:mcmcchains)
+	chns1_1s = read_samples(m1_1s)
 	
 	# Display the chns
 	
-	CHNS(chns1_1s)
+	chns1_1s.data
+end
+
+# ╔═╡ db2850a5-2334-4758-8a50-30ffe907920b
+size(vcat(chns1_1s(:theta)...))
+
+# ╔═╡ 299be88d-18ec-4b9d-973b-71d579e4ce7c
+begin
+	chns = read_samples(m1_1s, :mcmcchains)
+	CHNS(chns)
 end
 
 # ╔═╡ 2c465b0a-f1ed-11ea-35e3-017075244cd8
 md"##### Plot the chains."
 
 # ╔═╡ d00180d8-f1ec-11ea-0d29-350fac31122f
-plot(chns1_1s; seriestype=:traceplot)
+StatsPlots.plot(chns; seriestype=:traceplot)
 
 # ╔═╡ 3db08936-f914-11ea-1d74-d33b946ef534
-plot(chns1_1s; seriestype=:density)
+StatsPlots.plot(chns; seriestype=:density)
 
 # ╔═╡ d00c24de-f1ec-11ea-1c83-cb2584421f6f
 md"##### Display the stansummary result"
 
 # ╔═╡ 0e3309b2-f1ed-11ea-0d57-2f0e5b83c8dd
 success(rc1_1s) && read_summary(m1_1s)
+
+# ╔═╡ bc8dccca-96a0-4b6a-bdd0-c19e0be4bcfc
+begin
+	res = trankplot(m1_1s, :theta)
+	StatsPlots.plot(res[1]; dpi=460)
+end
 
 # ╔═╡ 5de8c1c8-f1dd-11ea-1b97-5bbb6c6316ae
 md"## End of intros/intro-stan-01s.jl"
@@ -265,7 +317,7 @@ md"## End of intros/intro-stan-01s.jl"
 # ╟─f2cd269c-801e-11eb-1e56-bfbb77a13ac9
 # ╟─c7dd5b98-f1dd-11ea-168c-07c643e283a7
 # ╟─57f0ec9a-f913-11ea-2e7e-ad16a359b82d
-# ╠═e1794cb4-f758-11ea-0888-9d7ce10db48f
+# ╟─e1794cb4-f758-11ea-0888-9d7ce10db48f
 # ╠═38677642-f1dd-11ea-2537-59511c140dab
 # ╠═5d9316ec-f1dd-11ea-1c0d-0d8566ab3a90
 # ╟─d12eb360-f1ea-11ea-1a2f-fd69805cb4b4
@@ -298,12 +350,18 @@ md"## End of intros/intro-stan-01s.jl"
 # ╠═a804833c-3a44-11eb-2cbd-997854743a0f
 # ╟─094310f4-8046-11eb-0073-950f55104695
 # ╠═a0a04fa8-2b5e-11eb-0a44-4b31c17d9a57
+# ╠═e5aa65de-4ccf-4cc8-8b4c-23014f8da80f
+# ╠═e051b63a-1864-4564-b860-5cb5ef2f7735
+# ╠═11de190e-4cbc-4d73-89a1-4062ae3b8e16
 # ╠═c2ef6864-802c-11eb-1a86-858e8db6e45f
 # ╟─d0006f7c-f1ec-11ea-3361-9baae166396a
 # ╠═1ce58ec6-f1ed-11ea-1c05-99a463481fd8
+# ╠═db2850a5-2334-4758-8a50-30ffe907920b
+# ╠═299be88d-18ec-4b9d-973b-71d579e4ce7c
 # ╟─2c465b0a-f1ed-11ea-35e3-017075244cd8
 # ╠═d00180d8-f1ec-11ea-0d29-350fac31122f
 # ╠═3db08936-f914-11ea-1d74-d33b946ef534
 # ╟─d00c24de-f1ec-11ea-1c83-cb2584421f6f
 # ╠═0e3309b2-f1ed-11ea-0d57-2f0e5b83c8dd
+# ╠═bc8dccca-96a0-4b6a-bdd0-c19e0be4bcfc
 # ╟─5de8c1c8-f1dd-11ea-1b97-5bbb6c6316ae

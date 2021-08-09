@@ -73,7 +73,7 @@ begin
 	rc9_1s = stan_sample(m9_1s; data)
 
 	if success(rc9_1s)
-		m9_1s_df = read_samples(m9_1s; output_format=:dataframe)
+		m9_1s_df = read_samples(m9_1s, :dataframe)
 		params = [Symbol("a.1"), Symbol("a.2"), Symbol("b.1"), Symbol("b.2")]
 		PRECIS(m9_1s_df[:, append!(params, [:sigma])])
 	end

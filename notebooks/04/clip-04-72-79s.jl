@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.17
+# v0.15.1
 
 using Markdown
 using InteractiveUtils
@@ -99,7 +99,7 @@ end
 # ╔═╡ b174fb64-4209-11eb-0aee-4d7971312ef2
 begin
 	if success(rc4_7s)
-		post4_7s_df = read_samples(m4_7s; output_format=:dataframe)
+		post4_7s_df = read_samples(m4_7s, :dataframe)
 		PRECIS(post4_7s_df[:, cols])
 	end
 end

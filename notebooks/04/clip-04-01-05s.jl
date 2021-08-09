@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.17
+# v0.15.1
 
 using Markdown
 using InteractiveUtils
@@ -14,7 +14,7 @@ macro bind(def, element)
 end
 
 # ╔═╡ 3bd0847c-f2b4-11ea-35d8-c7657a170cf9
-using DrWatson
+using Pkg, DrWatson
 
 # ╔═╡ 3bd0c52c-f2b4-11ea-09e6-05dbd556433f
 begin
