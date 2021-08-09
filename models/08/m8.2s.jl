@@ -37,7 +37,7 @@ rc8_2s = stan_sample(m8_2s; data=m8_2_data, init=m8_2_init);
 
 # Describe the draws
 if success(rc8_2s)
-  part8_2s = read_samples(m8_2s; output_format=:particles)
+  part8_2s = read_samples(m8_2s, :particles)
   part8_2s |> display
 end
 

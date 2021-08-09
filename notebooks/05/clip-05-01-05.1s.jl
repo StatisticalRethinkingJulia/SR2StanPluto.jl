@@ -78,13 +78,13 @@ begin
 	m5_1s_priors = SampleModel("m5.1.priors", stan5_1_priors)
 	rc5_1s_priors = stan_sample(m5_1s_priors;
 		data = Dict("N" => 0, "D" => [], "A" => []))
-	success(rc5_1s_priors) && (part5_1s_priors = read_samples(m5_1s_priors;
-		output_format=:particles))
+	success(rc5_1s_priors) && 
+		(part5_1s_priors = read_samples(m5_1s_priors, :particles))
 end
 
 # ╔═╡ 55ef3d46-423f-11eb-1d83-55276a40b702
 if success(rc5_1s_priors)
-	priors5_1s_df = read_samples(m5_1s_priors; output_format=:dataframe)
+	priors5_1s_df = read_samples(m5_1s_priors, :dataframe)
 	xi = -3.0:0.1:3.0
 	plot(xlab="Medium age marriage (scaled)", ylab="Divorce rate (scaled)",
 		title="Showing 50 regression lines")
@@ -147,7 +147,7 @@ md"##### Compare below figure with the corresponding figure in clip-05-01-05s.jl
 
 # ╔═╡ 07cfcaec-01c4-11eb-38b7-31dca6cafefb
 if !isnothing(m5_1s)
-	post5_1s_df = read_samples(m5_1s; output_format=:dataframe)
+	post5_1s_df = read_samples(m5_1s, :dataframe)
 	plot(xlab="Medium age marriage (scaled)", ylab="Divorce rate (scaled)",
 		title="Showing 50 regression lines")
 	for i in 1:50
@@ -227,7 +227,7 @@ end
 
 # ╔═╡ c206cdc6-fc55-11ea-2835-71c3067485f8
 if !isnothing(m5_2s)
-	post5_2s_df = read_samples(m5_2s; output_format=:dataframe)
+	post5_2s_df = read_samples(m5_2s, :dataframe)
 	PRECIS(post5_2s_df)
 end
 

@@ -48,7 +48,7 @@ begin
 	m8_1_1s = SampleModel("m8.1.1s", stan8_1_1)
 	rc8_1_1s = stan_sample(m8_1_1s)
 	if success(rc8_1_1s)
-		post8_1_1s_df = read_samples(m8_1_1s; output_format=:dataframe)
+		post8_1_1s_df = read_samples(m8_1_1s, :dataframe)
 		PRECIS(post8_1_1s_df[:, [:a, :b]])
 	end
 end
@@ -82,7 +82,7 @@ begin
 	m8_1_2s = SampleModel("m8.1.2s", stan8_1_2)
 	rc8_1_2s = stan_sample(m8_1_2s)
 	if success(rc8_1_2s)
-		post8_1_2s_df = read_samples(m8_1_2s; output_format=:dataframe)
+		post8_1_2s_df = read_samples(m8_1_2s, :dataframe)
 		PRECIS(post8_1_2s_df[:, [:a, :b]])
 	end
 end
@@ -119,7 +119,7 @@ begin
 	m8_1_3s = SampleModel("m8.1.3s", stan8_1_3)
 	rc8_1_3s = stan_sample(m8_1_3s; data)
 	if success(rc8_1_3s)
-		post8_1_3s_df = read_samples(m8_1_3s; output_format=:dataframe)
+		post8_1_3s_df = read_samples(m8_1_3s, :dataframe)
 		PRECIS(post8_1_3s_df[:, [:a, :b, :sigma]])
 	end
 end
@@ -166,7 +166,7 @@ begin
 	m8_1_4s = SampleModel("m8.1.4s", stan8_1_4)
 	rc8_1_4s = stan_sample(m8_1_4s; data)
 	if success(rc8_1_4s)
-		post8_1_4s_df = read_samples(m8_1_4s; output_format=:dataframe)
+		post8_1_4s_df = read_samples(m8_1_4s, :dataframe)
 		PRECIS(post8_1_4s_df[:, [:a, :b, :sigma]])
 	end
 end

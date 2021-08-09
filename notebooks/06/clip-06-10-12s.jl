@@ -68,7 +68,7 @@ begin
 	m6_5_data = Dict("N" => size(df, 1), "L" => df.perc_lactose_s, "F" => df.perc_fat_s,
 		"K" => 	df.kcal_per_g_s);
 	rc6_5s = stan_sample(m6_5s, data=m6_5_data)
-	success(rc6_5s) && (post6_5s_df = read_samples(m6_5s; output_format=:dataframe))
+	success(rc6_5s) && (post6_5s_df = read_samples(m6_5s, :dataframe))
 end;
 
 # ╔═╡ 0f408786-fea8-11ea-3868-89d746f4fb34

@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.11
+# v0.15.1
 
 using Markdown
 using InteractiveUtils
@@ -56,12 +56,12 @@ begin
 	)
 	u = [:u]
 
-	dag6_1 = DAG("dag6.1", d, df=df)
+	dag6_1 = DAG("dag6_1", d, df=df)
 end
 
 # ╔═╡ fb10c140-0fc8-11eb-282c-6fd55a6ad00a
 begin
-	fname = joinpath(mktempdir(), "sr6.1.dot")
+	fname = joinpath(mktempdir(), "sr6_1.dot")
 	to_graphviz(dag6_1, fname)
 	Sys.isapple() && run(`open -a GraphViz.app $(fname)`)
 end;

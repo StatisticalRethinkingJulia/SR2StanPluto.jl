@@ -75,7 +75,7 @@ begin
 	  "NC" => df[:, :NC_s] 
 	);
 	rc5_7_As = stan_sample(m5_7_As, data=m5_7_A_data);
-	post5_7_As_df = read_samples(m5_7_As,; output_format=:dataframe);
+	post5_7_As_df = read_samples(m5_7_As, :dataframe);
 end;
 
 # ╔═╡ ea213eae-fdbd-11ea-17f4-1309b4bd31da

@@ -71,7 +71,7 @@ begin
 		quap5_3_As_df = sample(q5_3_As)
 	end
 	if !isnothing(m5_3_As)
-	  post5_3_As_df = read_samples(m5_3_As; output_format=:dataframe)
+	  post5_3_As_df = read_samples(m5_3_As, :dataframe)
 	  PRECIS(post5_3_As_df)
 	end
 end

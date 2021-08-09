@@ -38,7 +38,7 @@ begin
 end
 
 if success(rc6_3s)
-  part6_3s = read_samples(m6_3s; output_format=:particles)
+  part6_3s = read_samples(m6_3s, :particles)
   part6_3s |> display
 end
 

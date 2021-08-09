@@ -51,7 +51,7 @@ m6_11_data = Dict(:N => nrow(df), :C => df.c, :P => df.p, :G => df.g)
 rc6_11s = stan_sample(m6_11s, data=m6_11_data)
 
 if success(rc6_11s)
-  part6_11s = read_samples(m6_11s, output_format=:particles)
+  part6_11s = read_samples(m6_11s, :particles)
   part6_11s |> display
 end
 

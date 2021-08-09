@@ -108,7 +108,7 @@ if success(rc6_7s)
 end
 
 if success(rc6_7s)
-    post6_7s_df = read_samples(m6_7s; output_format=:dataframe)
+    post6_7s_df = read_samples(m6_7s, :dataframe)
     b6_7s = post6_7s_df[:, [:a, :bt, :bf, :sigma]]
     p6_7s = b6_7s.a .+ b6_7s.bt * df.treatment' + b6_7s.bf * df.fungus'
     mu6_7s = p6_7s .* df.h0'

@@ -64,7 +64,7 @@ begin
 	m6_8_data = Dict(:N => nrow(df), :h0 => df.h0, :h1 => df.h1, :treatment => df.treatment)
 	rc6_8s = stan_sample(m6_8s; data=m6_8_data)
 	if success(rc6_8s)
-		dfa6_8s = read_samples(m6_8s; output_format=:dataframe)
+		dfa6_8s = read_samples(m6_8s, :dataframe)
 		p6_8s = Particles(dfa6_8s)
 	end
 end

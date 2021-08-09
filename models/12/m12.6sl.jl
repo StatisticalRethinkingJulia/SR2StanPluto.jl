@@ -1,6 +1,7 @@
-using StanSample, MCMCChains, CSV
+using StanSample, MCMCChains
+using StatisticalRethinking
 
-df = CSV.read(joinpath(@__DIR__, "..",  "..", "data",  "Kline.csv"), DataFrame);
+df = CSV.read(sr_datadir("Kline.csv"), DataFrame);
 
 # New col log_pop, set log() for population data
 df[!, :log_pop] = map((x) -> log(x), df[!, :population]);
@@ -60,6 +61,9 @@ rc = stan_sample(m_12_6sl, data=m12_6_data);
 # Describe the draws
 
 if success(rc)
-  chn = read_samples(m_12_6sl; output_format=:mcmcchains)
-  describe(chn)
+  chns12_6s = read_samples(m_12_6sl)
+  chns12_6s |> display
 end
+println()
+
+axiskeys(chns12_6s) |> display

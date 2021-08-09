@@ -57,7 +57,7 @@ rc5_4_AMs = stan_sample(m5_4_AMs, data=m5_4_data);
 
 if success(rc5_4_AMs)
 
-  part5_4_AMs = read_samples(m5_4_AMs; output_format=:particles)
+  part5_4_AMs = read_samples(m5_4_AMs, :particles)
   part5_4_AMs |> display
 
 end

@@ -54,8 +54,8 @@ if success(rc5_5s)
 
   # Describe the draws
 
-  post5_5s_df = read_samples(m5_5s; output_format=:dataframe)
-  part5_5s = read_samples(m5_5s; output_format=:particles)
+  post5_5s_df = read_samples(m5_5s, :dataframe)
+  part5_5s = read_samples(m5_5s, :particles)
   quap(m5_5s).particles |> display
 
 end

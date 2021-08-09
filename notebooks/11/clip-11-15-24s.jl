@@ -68,7 +68,7 @@ end;
 
 # ╔═╡ dd96b924-8d97-11eb-0d47-ffa72b39a875
 if success(rc11_4s)
-	post11_4s_df = read_samples(m11_4s; output_format=:dataframe)
+	post11_4s_df = read_samples(m11_4s, :dataframe)
 	PRECIS(post11_4s_df[:, 1:11])
 end
 

@@ -75,7 +75,7 @@ begin
 	  :U => df[:, :u]
 	)
 	rc6_12s = stan_sample(m6_12s, data=m6_12_data)
-	post6_12s_df = read_samples(m6_12s, output_format=:dataframe)
+	post6_12s_df = read_samples(m6_12s, :dataframe)
 	Text(precis(post6_12s_df; io=String))
 end
 

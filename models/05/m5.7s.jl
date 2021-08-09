@@ -55,7 +55,7 @@ rc5_7s = stan_sample(m5_7s, data=m5_7_data);
 
 if success(rc5_7s)
 
-  part5_7s = read_samples(m5_7s; output_format=:particles)
+  part5_7s = read_samples(m5_7s, :particles)
   part5_7s |> display
   
   rethinking = "

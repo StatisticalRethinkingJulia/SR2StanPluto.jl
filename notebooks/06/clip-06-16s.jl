@@ -12,6 +12,7 @@ begin
 	@quickactivate "StatisticalRethinkingStan"
 	using StanSample
 	using StatisticalRethinking
+	using PlutoUI
 end
 
 # ╔═╡ b0e1bc4a-ff2f-11ea-1dca-f78fefb58b8f
@@ -29,7 +30,9 @@ begin
 end;
 
 # ╔═╡ 221f1e8a-00f6-11eb-3504-a91f4659a8a6
-Text(precis(df; io=String))
+with_terminal() do
+	precis(df; io=String)
+end
 
 # ╔═╡ b4a2fe56-ff30-11ea-255b-bbe592530dac
 stan6_7 = "
@@ -72,7 +75,7 @@ begin
 	  :treatment => df[:, :treatment]
 	)
 	rc6_7s = stan_sample(m6_7s; data=m6_7_data)
-	success(rc6_7s) && (post6_7s_df = read_samples(m6_7s; output_format=:dataframe))
+	success(rc6_7s) && (post6_7s_df = read_samples(m6_7s, :dataframe))
 end;
 
 # ╔═╡ b4a98408-ff30-11ea-2918-9b5d39692695

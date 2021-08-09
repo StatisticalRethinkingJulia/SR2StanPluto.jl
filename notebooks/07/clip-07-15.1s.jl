@@ -105,7 +105,7 @@ b6  1.63 0.02  1.59  1.66    49  1.06
 "
 
 # ╔═╡ bc6292b4-5a75-11eb-2a11-a31ae9ae5c4f
-PRECIS(read_samples(m7_6s; output_format=:dataframe))
+PRECIS(read_samples(m7_6s, :dataframe))
 
 # ╔═╡ 77373916-5fe2-11eb-2df1-4bf002248937
 begin

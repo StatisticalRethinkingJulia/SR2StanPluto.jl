@@ -69,6 +69,6 @@ m14_1_data = Dict(
 rc14_1s = stan_sample(m14_1s, data=m14_1_data)
 
 if success(rc14_1s)
-  part14_1s = read_samples(m14_1s; output_format=:particles)
+  part14_1s = read_samples(m14_1s, :particles)
   part14_1s |> display
 end

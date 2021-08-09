@@ -10,8 +10,9 @@ using Pkg, DrWatson
 # ╔═╡ f4f1e034-fcde-11ea-08da-b7f09891f0a5
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample, GLM
+	using StanSample
 	using StatisticalRethinking
+	using GLM
 end
 
 # ╔═╡ 1bfdf3ee-fcde-11ea-0161-539e0e2b0932
@@ -61,7 +62,7 @@ begin
 	)
 	rc5_4_AMs = stan_sample(m5_4_AMs, data=m5_4_data)
 	if success(rc5_4_AMs)
-		part5_4_AMs = read_samples(m5_4_AMs; output_format=:particles)
+		part5_4_AMs = read_samples(m5_4_AMs, :particles)
 		part5_4_AMs
 	end
 end
@@ -102,7 +103,7 @@ begin
 		sigma  0.68 0.07  0.57  0.79
 	  ";
 
-	  part5_4_MAs = read_samples(m5_4_MAs; output_format=:particles)
+	  part5_4_MAs = read_samples(m5_4_MAs, :particles)
 	  part5_4_MAs |> display
 	end
 end
@@ -110,8 +111,8 @@ end
 # ╔═╡ f501e93e-fcde-11ea-2bc3-256fb8778233
 if success(rc5_4_AMs)
 	begin
-		post5_4_MAs_df = read_samples(m5_4_MAs; output_format=:dataframe)
-		post5_4_AMs_df = read_samples(m5_4_AMs; output_format=:dataframe)
+		post5_4_MAs_df = read_samples(m5_4_MAs, :dataframe)
+		post5_4_AMs_df = read_samples(m5_4_AMs, :dataframe)
 
 		pMA = plotbounds(df, :M, :A, post5_4_MAs_df,
 			[:a, :bMA, :sigma]; ylims=(10, 30))

@@ -57,7 +57,7 @@ begin
 	init = (a=0.0, bRS=1.0, sigma=1.0)
 	q5_4_RSs, m5_4_RSs, om5_4_RSs = stan_quap("m5.4.RSs", stan5_4_RS; data, init);
 	if !isnothing(q5_4_RSs)
-		post5_4_RSs_df = read_samples(m5_4_RSs; output_format=:dataframe)
+		post5_4_RSs_df = read_samples(m5_4_RSs, :dataframe)
 		part5_4_RSs = Particles(post5_4_RSs_df)
 		quap5_4_RSs_df = sample(q5_4_RSs)
 		PRECIS(quap5_4_RSs_df)
@@ -91,7 +91,7 @@ model {
 begin
 	q5_4_SRs, m5_4_SRs, om5_4_SRs = stan_quap("m5.4.SRs", stan5_4_SR; data, init);
 	if !isnothing(q5_4_SRs)
-		post5_4_SRs_df = read_samples(m5_4_SRs; output_format=:dataframe)
+		post5_4_SRs_df = read_samples(m5_4_SRs, :dataframe)
 		part5_4_SRs = Particles(post5_4_SRs_df)
 		quap5_4_SRs_df = sample(q5_4_SRs)
 		PRECIS(quap5_4_SRs_df)

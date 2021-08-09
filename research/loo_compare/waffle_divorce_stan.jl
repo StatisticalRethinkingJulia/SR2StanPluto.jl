@@ -112,7 +112,7 @@ function loo_compare(models::Vector{SampleModel};
     ll = Vector{Array{Float64, 3}}(undef, nmodels)
 
     for i in 1:length(models)
-        ka[i] = read_samples(models[i]; output_format=:keyedarray)
+        ka[i] = read_samples(models[i], :keyedarray)
         ll[i] = permutedims(Array(matrix(ka[i], loglikelihood_name)), [1, 3, 2])
     end
 
@@ -134,7 +134,7 @@ function waic_compare(models::Vector{SampleModel};
     llpr = Vector{Array{Float64, 3}}(undef, nmodels)
 
     for i in 1:length(models)
-        ka[i] = read_samples(models[i]; output_format=:keyedarray)
+        ka[i] = read_samples(models[i], :keyedarray)
         ll[i] = permutedims(Array(matrix(ka[i], loglikelihood_name)), [1, 3, 2])
         llp[i] = permutedims(ll[1],[ 1, 3, 2])
         if i == 1
@@ -157,11 +157,11 @@ rc5_3s = stan_sample(m5_3s; data)
 
 if success(rc5_1s) && success(rc5_2s) && success(rc5_3s)
 
-    p5_1s = read_samples(m5_1s; output_format=:particles)
+    p5_1s = read_samples(m5_1s, :particles)
     NamedTupleTools.select(p5_1s, (:a, :bA, :sigma)) |> display
-    p5_2s = read_samples(m5_2s; output_format=:particles)
+    p5_2s = read_samples(m5_2s, :particles)
     NamedTupleTools.select(p5_2s, (:a, :bM, :sigma)) |> display
-    p5_3s = read_samples(m5_3s; output_format=:particles)
+    p5_3s = read_samples(m5_3s, :particles)
     NamedTupleTools.select(p5_3s, (:a, :bA, :bM, :sigma)) |> display
 
     models = [m5_1s, m5_2s, m5_3s]

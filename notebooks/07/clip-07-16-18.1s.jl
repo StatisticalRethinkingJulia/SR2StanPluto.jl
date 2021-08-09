@@ -85,7 +85,7 @@ begin
 					
 					# use `logprob()`
 					
-					post7_9s_df = read_samples(m7_9s; output_format=:dataframe)
+					post7_9s_df = read_samples(m7_9s, :dataframe)
 					lp_train = logprob(post7_9s_df, x_train, y, j)
 					dev_is[i, j] = -2sum(lppd(lp_train))
 					lp_test = logprob(post7_9s_df, x_test, y, j)
@@ -153,7 +153,7 @@ begin
 
 		# use `logprob()`
 
-		post7_9s_df = read_samples(m7_9s; output_format=:dataframe)
+		post7_9s_df = read_samples(m7_9s, :dataframe)
 		lp_train = logprob(post7_9s_df, x_train, y, 2)
 		devs[1] = -2sum(lppd(lp_train))
 		lp_test = logprob(post7_9s_df, x_test, y, 2)

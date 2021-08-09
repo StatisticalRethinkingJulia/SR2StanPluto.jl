@@ -76,7 +76,7 @@ begin
 	rc6_6s = stan_sample(m6_6s; data)
 
 	if success(rc6_6s)
-		post6_6s_df = read_samples(m6_6s; output_format=:dataframe)
+		post6_6s_df = read_samples(m6_6s, :dataframe)
 		PRECIS(post6_6s_df[:, [:a, :sigma]])
 	end
 end
@@ -123,7 +123,7 @@ begin
 	m6_7s = SampleModel("m6.7s", stan6_7)
 	rc6_7s = stan_sample(m6_7s; data)
 	if success(rc6_7s)
- 		post6_7s_df = read_samples(m6_7s; output_format=:dataframe);
+ 		post6_7s_df = read_samples(m6_7s, :dataframe);
  		PRECIS(post6_7s_df[:, [:a, :bt, :bf, :sigma]])
 	end
 end
@@ -181,7 +181,7 @@ begin
 	m6_8s = SampleModel("m6.8s", stan6_8)
 	rc6_8s = stan_sample(m6_8s; data)
 	if success(rc6_8s)
-	 	post6_8s_df = read_samples(m6_8s; output_format=:dataframe);
+	 	post6_8s_df = read_samples(m6_8s, :dataframe);
 	 	PRECIS(post6_8s_df[:, [:a, :bt, :sigma]])
 	end
 end

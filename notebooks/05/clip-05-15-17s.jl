@@ -57,7 +57,7 @@ begin
 		quap5_3s_df = sample(q5_3s)
 	end
 	if !isnothing(m5_3s)
-		post5_3s_df = read_samples(m5_3s; output_format=:dataframe)
+		post5_3s_df = read_samples(m5_3s, :dataframe)
 		PRECIS(post5_3s_df)
 	end
 end
@@ -83,7 +83,7 @@ end
 # ╔═╡ 794c76b4-fce9-11ea-3d4b-cdb6ca10a383
 if !isnothing(m5_3s)
 	begin
-		part5_3s = read_samples(m5_3s; output_format=:particles)
+		part5_3s = read_samples(m5_3s, :particles)
 		N = size(df, 1)
 		plot(xlab="Observed divorce", ylab="Predicted divorce",
 			title="Posterior predictive plot")

@@ -69,7 +69,7 @@ begin
 	rc5_3s = stan_sample(m5_3s, data=m5_3_data);
 	if success(rc5_3s)
 
-		post5_3s_df = read_samples(m5_3s; output_format=:dataframe)
+		post5_3s_df = read_samples(m5_3s, :dataframe)
 		PRECIS(post5_3s_df)
 	end
 end

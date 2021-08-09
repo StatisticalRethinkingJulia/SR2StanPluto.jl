@@ -72,7 +72,7 @@ sigma  0.96 0.05  0.87  1.04   339    1
 # Describe the draws
 
 if success(rc)
-  part8_1s = read_samples(m8_1s; output_format=:particles)
+  part8_1s = read_samples(m8_1s, :particles)
   part8_1s |> display
 end
 

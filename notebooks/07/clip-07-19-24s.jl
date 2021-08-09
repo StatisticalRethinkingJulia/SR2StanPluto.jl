@@ -70,7 +70,7 @@ end;
 
 # ╔═╡ 1d99951e-673c-11eb-3920-49db0451c1cd
 begin
-	post_df = read_samples(cars_stan_model; output_format=:dataframe)
+	post_df = read_samples(cars_stan_model, :dataframe)
 	PRECIS(post_df[:, [:a, :b, :sigma]])
 end
 

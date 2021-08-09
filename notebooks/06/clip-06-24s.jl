@@ -51,12 +51,12 @@ begin
 	m6_10s = SampleModel("m6.10s", stan6_10)
 	m6_10_data = Dict(:N => nrow(df), :happiness => df.happiness, :A => df.A,)
 	rc6_10s = stan_sample(m6_10s, data=m6_10_data)
-	success(rc6_10s) && (part6_10s = read_samples(m6_10s, output_format=:particles))
+	success(rc6_10s) && (part6_10s = read_samples(m6_10s, :particles))
 end
 
 # ╔═╡ ba209362-ff3e-11ea-168c-1d6dd60dae6c
 if success(rc6_10s)
-  post6_10s_df = read_samples(m6_10s, output_format=:dataframe)
+  post6_10s_df = read_samples(m6_10s, :dataframe)
   Text(precis(post6_10s_df; io=String))
 end
 

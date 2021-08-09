@@ -45,7 +45,7 @@ init = (a = 100.0, sigma = 20.0)
 q4_7s, m4_7s, o4_7s = stan_quap("m4.7s", stan4_7; data, init)
 
 if !isnothing(m4_7s)
-  part4_7s = read_samples(m4_7s; output_format=:particles)
-  nt4_7s = read_samples(m4_7s)
-  nt4_7s |> display
+  part4_7s = read_samples(m4_7s, :particles)
+  chns = read_samples(m4_7s)
+  chns |> display
 end

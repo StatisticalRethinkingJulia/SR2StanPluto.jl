@@ -55,7 +55,7 @@ if success(rc5_5s)
 
   # Describe the draws
 
-  part5_5s = read_samples(m5_5s; output_format=:particles)
+  part5_5s = read_samples(m5_5s, :particles)
   part5_5s |> display
   
   retinking = "

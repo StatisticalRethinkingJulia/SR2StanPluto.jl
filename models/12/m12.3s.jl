@@ -67,6 +67,6 @@ rc12_3s = stan_sample(m12_3s, data=m12_3_data);
 # Describe the draws
 
 if success(rc12_3s)
-  part12_3s = read_samples(m12_3s; output_format=:particles)
+  part12_3s = read_samples(m12_3s, :particles)
   part12_3s |> display
 end

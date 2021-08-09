@@ -63,7 +63,7 @@ begin
 	data = (N = size(df, 1), male = df.male, weight = df.weight,
 		height = df.height, age = df.age, sex = df.sex)
 	q5_8s, m5_8s, o5_8s = stan_quap("m5.8", stan5_8; data);
-	post5_8s_df = read_samples(m5_8s; output_format=:dataframe)
+	post5_8s_df = read_samples(m5_8s, :dataframe)
 	PRECIS(post5_8s_df)
 end
 

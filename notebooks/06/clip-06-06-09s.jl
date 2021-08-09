@@ -69,7 +69,7 @@ begin
 	  :treatment => df[:, :treatment]
 	)
 	rc6_7s = stan_sample(m6_7s; data=m6_7_data)
-	success(rc6_7s) && (post6_7s_df = read_samples(m6_7s; output_format=:dataframe))
+	success(rc6_7s) && (post6_7s_df = read_samples(m6_7s, :dataframe))
 end;
 
 # ╔═╡ d2c2b71c-feb7-11ea-124d-6114c352b17b

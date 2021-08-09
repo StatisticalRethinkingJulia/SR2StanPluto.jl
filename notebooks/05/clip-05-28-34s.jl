@@ -64,7 +64,7 @@ end;
 
 # ╔═╡ 407845b4-fd4a-11ea-1ed5-65581b68ccda
 if success(rc5_5_drafts)
-  post5_5_drafts_df = read_samples(m5_5_drafts; output_format=:dataframe)
+  post5_5_drafts_df = read_samples(m5_5_drafts, :dataframe)
 end;
 
 # ╔═╡ d8d01f36-fda3-11ea-2b26-59b86a4e23ca

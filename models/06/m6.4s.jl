@@ -36,7 +36,7 @@ m6_4_data = Dict("N" => size(df, 1), "L" => df[:, :perc_lactose_s],
     "K" => df[!, :kcal_per_g_s]);
 rc6_4s = stan_sample(m6_4s, data=m6_4_data);
 if success(rc6_4s)
-  part6_4s = read_samples(m6_4s; output_format=:particles)
+  part6_4s = read_samples(m6_4s, :particles)
   part6_4s |> display
 end
 

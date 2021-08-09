@@ -78,6 +78,6 @@ a[7]  1.81 0.39  1.22  2.48  3807    1
 # Update sections 
 
 if success(rc10_4sl)
-  part10_4sl = read_samples(m10_4sl; output_format=:particles)
+  part10_4sl = read_samples(m10_4sl, :particles)
   part10_4sl |> display
 end

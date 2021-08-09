@@ -66,7 +66,7 @@ end;
 
 # ╔═╡ 63bc7bba-fda6-11ea-1e4e-3deb1786b246
 if success(rc5_5s)
-  post5_5s_df = read_samples(m5_5s; output_format=:dataframe)
+  post5_5s_df = read_samples(m5_5s, :dataframe)
   title = "Kcal_per_g vs. neocortex_perc" * "\nshowing predicted and hpd range"
   plotbounds(
     df, :neocortex_perc, :kcal_per_g,

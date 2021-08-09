@@ -65,7 +65,7 @@ if success(rc5_4_MAs)
     sigma  0.68 0.07  0.57  0.79
   ";
 
-  part5_4_MAs = read_samples(m5_4_MAs; output_format=:particles)
+  part5_4_MAs = read_samples(m5_4_MAs, :particles)
   part5_4_MAs |> display
 
 end

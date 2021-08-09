@@ -40,7 +40,7 @@ begin
 	rc9_0s = stan_sample(m9_0s; data)
 
 	if success(rc9_0s)
-		m9_0s_df = read_samples(m9_0s; output_format=:dataframe)
+		m9_0s_df = read_samples(m9_0s, :dataframe)
 		PRECIS(m9_0s_df)
 	end
 end

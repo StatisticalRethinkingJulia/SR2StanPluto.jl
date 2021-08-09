@@ -151,7 +151,7 @@ begin
 
 		if success(rc7_2s)
 			nt7_2s = read_samples(m7_2s)
-			post7_2s_df = read_samples(m7_2s; output_format=:dataframe)
+			post7_2s_df = read_samples(m7_2s, :dataframe)
 		end
 
 		log_lik = nt7_2s.log_lik'

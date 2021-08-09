@@ -39,7 +39,12 @@ model {
 md"##### D (Divorce rate), M (Marriage rate) and A (MediumAgeMarriage) are all standardized."
 
 # ╔═╡ ce861b20-fc77-11ea-0b79-8dd922420260
-md"##### Include models [`m5_1s`](https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingStan.jl/blob/master/models/05/m5.1s.jl), [`m5_2s`](https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingStan.jl/blob/master/models/05/m5.2s.jl) and [`m5_3s`](https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingStan.jl/blob/master/models/05/m5.3s.jl):"
+begin
+	df = CSV.read(sr_datadir("WaffleDivorce.csv"), DataFrame);
+	scale!(df, [:Marriage, :MedianAgeMarriage, :Divorce])
+	data = (N=size(df, 1), D=df.Divorce_s, A=df.MedianAgeMarriage_s,
+		M=df.Marriage_s)
+end
 
 # ╔═╡ ce8df1ec-fc77-11ea-1c7d-ad620c19fbbd
 stan5_1 = "

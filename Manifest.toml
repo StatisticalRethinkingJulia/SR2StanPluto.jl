@@ -1,6 +1,6 @@
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.8.0-DEV.317"
+julia_version = "1.8.0-DEV.322"
 manifest_format = "2.0"
 
 [[deps.ANSIColoredPrinters]]
@@ -93,9 +93,9 @@ version = "0.4.4"
 
 [[deps.AxisKeys]]
 deps = ["AbstractFFTs", "CovarianceEstimation", "IntervalSets", "InvertedIndices", "LazyStack", "LinearAlgebra", "NamedDims", "OffsetArrays", "Statistics", "StatsBase", "Tables"]
-git-tree-sha1 = "f7a17e0381cd8e627d9793433074823a2c1d7096"
+path = "/Users/rob/.julia/dev/AxisKeys"
 uuid = "94b1ba4f-4ee9-5380-92f1-94cde586c3c5"
-version = "0.1.18"
+version = "0.1.19"
 
 [[deps.BSplines]]
 deps = ["LinearAlgebra", "OffsetArrays", "RecipesBase"]
@@ -476,9 +476,9 @@ uuid = "9fa8497b-333b-5362-9e8d-4d0656e87820"
 
 [[deps.FuzzyCompletions]]
 deps = ["REPL"]
-git-tree-sha1 = "b62fa7b1fe8716459846db4efbe786283d318a46"
+git-tree-sha1 = "2cc2791b324e8ed387a91d7226d17be754e9de61"
 uuid = "fb4132e2-a121-4a70-b8a1-d5b831dcdcc2"
-version = "0.4.2"
+version = "0.4.3"
 
 [[deps.GLFW_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Libglvnd_jll", "Pkg", "Xorg_libXcursor_jll", "Xorg_libXi_jll", "Xorg_libXinerama_jll", "Xorg_libXrandr_jll"]
@@ -882,9 +882,9 @@ uuid = "20f20a25-4f0e-4fdf-b5d1-57303727442b"
 version = "0.1.3"
 
 [[deps.ManualMemory]]
-git-tree-sha1 = "71c64ebe61a12bad0911f8fc4f91df8a448c604c"
+git-tree-sha1 = "9cb207b18148b2199db259adfa923b45593fe08e"
 uuid = "d125e4d3-2237-4719-b19c-fa641b8a4667"
-version = "0.1.4"
+version = "0.1.6"
 
 [[deps.MappedArrays]]
 git-tree-sha1 = "e8b359ef06ec72e8c030463fe02efe5527ee5142"
@@ -1244,9 +1244,10 @@ uuid = "b3c3ace0-ae52-54e7-9d0b-2c1406fd6b9d"
 version = "0.3.2"
 
 [[deps.Ratios]]
-git-tree-sha1 = "37d210f612d70f3f7d57d488cb3b6eff56ad4e41"
+deps = ["Requires"]
+git-tree-sha1 = "7dff99fbc740e2f8228c6878e2aad6d7c2678098"
 uuid = "c84ed2f1-dad5-54f0-aa8e-dbefe2724439"
-version = "0.4.0"
+version = "0.4.1"
 
 [[deps.RecipesBase]]
 git-tree-sha1 = "b3fb709f3c97bfc6e948be68beeecb55a0b340ae"
@@ -1610,9 +1611,9 @@ version = "0.4.1"
 
 [[deps.VectorizationBase]]
 deps = ["ArrayInterface", "Hwloc", "IfElse", "Libdl", "LinearAlgebra", "Static"]
-git-tree-sha1 = "56cb725da95439248e6b60ea776f22eac20d56a7"
+git-tree-sha1 = "32a3252a00a8e4aa23129e2c36a237e812f71eeb"
 uuid = "3d5dd08c-fd9d-11e8-17fa-ed2836048c2f"
-version = "0.20.32"
+version = "0.20.33"
 
 [[deps.Wayland_jll]]
 deps = ["Artifacts", "Expat_jll", "JLLWrappers", "Libdl", "Libffi_jll", "Pkg", "XML2_jll"]

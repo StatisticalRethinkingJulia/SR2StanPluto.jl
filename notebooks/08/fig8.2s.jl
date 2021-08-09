@@ -71,7 +71,7 @@ begin
 	m8_1s = SampleModel("m8.1s", stan8_0)
 	rc8_1_1s = stan_sample(m8_1s; data=data1)
 	if success(rc8_1_1s)
-		post8_1_1s_df = read_samples(m8_1s; output_format=:dataframe)
+		post8_1_1s_df = read_samples(m8_1s, :dataframe)
 		PRECIS(post8_1_1s_df[:, [:a, :b, :sigma]])
 	end
 end
@@ -82,7 +82,7 @@ begin
 		R = df_non_africa.rugged_s)
 	rc8_1_2s = stan_sample(m8_1s; data=data2)
 	if success(rc8_1_2s)
-		post8_1_2s_df = read_samples(m8_1s; output_format=:dataframe)
+		post8_1_2s_df = read_samples(m8_1s, :dataframe)
 		PRECIS(post8_1_2s_df[:, [:a, :b, :sigma]])
 	end
 end

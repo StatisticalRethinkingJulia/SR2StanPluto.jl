@@ -44,7 +44,7 @@ end;
 
 # ╔═╡ dd96b924-8d97-11eb-0d47-ffa72b39a875
 if success(rc11_1_1s)
-	post11_1_1s_df = read_samples(m11_1_1s; output_format=:dataframe)
+	post11_1_1s_df = read_samples(m11_1_1s, :dataframe)
 	PRECIS(post11_1_1s_df)
 end
 
@@ -72,7 +72,7 @@ end;
 
 # ╔═╡ dc1a5f76-8e3a-11eb-1a9d-4374c4fadbc2
 if success(rc11_1_2s)
-	post11_1_2s_df = read_samples(m11_1_2s; output_format=:dataframe)
+	post11_1_2s_df = read_samples(m11_1_2s, :dataframe)
 	PRECIS(post11_1_2s_df)
 end
 
@@ -116,7 +116,7 @@ end;
 
 # ╔═╡ dcd4235c-8e30-11eb-2130-a5027eb07957
 if success(rc11_2s)
-	post11_2s_df = read_samples(m11_2s; output_format=:dataframe)
+	post11_2s_df = read_samples(m11_2s, :dataframe)
 	PRECIS(post11_2s_df)
 end
 

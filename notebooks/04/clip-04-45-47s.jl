@@ -78,7 +78,7 @@ begin
 		if success(rc4_3s)
 
 			local xi = 30.0:0.1:65.0
-			sample_df = read_samples(m4_5s; output_format=:dataframe)
+			sample_df = read_samples(m4_3s, :dataframe)
 			figs[i] = scatter(df[1:N, :weight], df[1:N, :height], 
 				leg=false, xlab="weight_c")
 			for j in 1:N

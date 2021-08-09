@@ -186,7 +186,7 @@ md"##### 5. Describe and check the results"
 
 # ╔═╡ 73d0dd98-f1ec-11ea-2499-477a8024ecc6
 if success(rc1_1s)
-	post1_1s_df = read_samples(m1_1s; output_format=:dataframe)
+	post1_1s_df = read_samples(m1_1s, :dataframe)
 	PRECIS(post1_1s_df)
 end
 
@@ -194,7 +194,7 @@ end
 md"###### Sample `Particles` summary:"
 
 # ╔═╡ cfe9027e-f1ec-11ea-33df-65cd05965437
-part1_1s = read_samples(m1_1s; output_format=:particles)
+part1_1s = read_samples(m1_1s, :particles)
 
 # ╔═╡ b82e2e82-f757-11ea-2696-6f294e3070f5
 md"The use of Particles to represent quap-like approximations is possible thanks to the package [MonteCarloMeasurements.jl](https://github.com/baggepinnen/MonteCarloMeasurements.jl).
@@ -228,7 +228,7 @@ md"##### Check the chains using MCMCChains.jl"
 
 # ╔═╡ 1ce58ec6-f1ed-11ea-1c05-99a463481fd8
 begin
-	chns1_1s = read_samples(m1_1s; output_format=:mcmcchains)
+	chns1_1s = read_samples(m1_1s, :mcmcchains)
 	
 	# Display the chns
 	

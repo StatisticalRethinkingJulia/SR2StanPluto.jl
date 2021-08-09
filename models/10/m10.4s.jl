@@ -70,7 +70,7 @@ a[7]  1.81 0.39  1.22  2.48  3807    1
 # Update sections 
 
 if success(rc10_4s)
-  chns = read_samples(m10_4s; output_format=:mcmcchains, include_internals=true)
+  chns = read_samples(m10_4s, :mcmcchains, include_internals=true)
   
   chn10_4s = set_section(chns, 
     Dict(

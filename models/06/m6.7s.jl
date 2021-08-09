@@ -55,7 +55,7 @@ m6_7s = SampleModel("m6.7", stan6_7)
 rc6_7s = stan_sample(m6_7s; data=m6_7_data)
 
 if success(rc6_7s)
-  part6_7s = read_samples(m6_7s; output_format=:particles);
+  part6_7s = read_samples(m6_7s, :particles);
   part6_7s |> display
 end
 

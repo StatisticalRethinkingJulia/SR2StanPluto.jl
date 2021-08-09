@@ -46,7 +46,7 @@ m6_5_data = Dict("N" => size(df, 1), "L" => df[:, :perc_lactose_s],
 rc6_5s = stan_sample(m6_5s, data=m6_5_data);
 
 if success(rc6_5s)
-  part6_5s = read_samples(m6_5s; output_format=:particles)
+  part6_5s = read_samples(m6_5s, :particles)
   part6_5s |> display
 end
 

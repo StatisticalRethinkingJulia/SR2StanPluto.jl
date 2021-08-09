@@ -71,7 +71,7 @@ if success(rc5_6s)
 
   # Describe the draws
 
-  post5_6s_df = read_samples(m5_6s; output_format=:dataframe)
+  post5_6s_df = read_samples(m5_6s, :dataframe)
 
   title = "Kcal_per_g vs. log mass" * "\nshowing 89% predicted and hpd range"
   plotbounds(

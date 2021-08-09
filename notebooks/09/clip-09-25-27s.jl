@@ -50,7 +50,7 @@ begin
 	rc9_4s = stan_sample(m9_4s; data)
 
 	if success(rc9_4s)
-		m9_4s_df = read_samples(m9_4s; output_format=:dataframe)
+		m9_4s_df = read_samples(m9_4s, :dataframe)
 		PRECIS(m9_4s_df)
 	end
 end
@@ -69,7 +69,7 @@ trankplot(m9_4s, :sigma)[1]
 
 # ╔═╡ 059b3ada-7eb8-11eb-10aa-459e3ec2bc55
 begin
-	chns9_4s = read_samples(m9_4s; output_format=:mcmcchains)
+	chns9_4s = read_samples(m9_4s, :mcmcchains)
 	Text(sprint(show, "text/plain", summarize(chns9_4s)))
 end
 
@@ -106,7 +106,7 @@ begin
 	rc9_5s = stan_sample(m9_5s; data)
 
 	if success(rc9_5s)
-		m9_5s_df = read_samples(m9_5s; output_format=:dataframe)
+		m9_5s_df = read_samples(m9_5s, :dataframe)
 		PRECIS(m9_5s_df)
 	end
 end
@@ -122,7 +122,7 @@ trankplot(m9_5s, :sigma)[1]
 
 # ╔═╡ 39bb0f76-7eba-11eb-1bc2-293259d12dfc
 begin
-	chns9_5s = read_samples(m9_5s; output_format=:mcmcchains)
+	chns9_5s = read_samples(m9_5s, :mcmcchains)
 	Text(sprint(show, "text/plain", summarize(chns9_5s)))
 end
 

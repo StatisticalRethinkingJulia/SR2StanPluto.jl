@@ -70,7 +70,7 @@ begin
 	  :N => size(df, 1)
 	)
 	rc6_1s = stan_sample(m6_1s, data=m_6_1_data)
-	success(rc6_1s) && (part6_1s = read_samples(m6_1s, output_format=:particles))
+	success(rc6_1s) && (part6_1s = read_samples(m6_1s, :particles))
 end
 
 # ╔═╡ eb921ad4-fe50-11ea-2450-7dfe19847755
@@ -85,7 +85,7 @@ s0
 
 # ╔═╡ 985265b0-fe50-11ea-0594-05ac311d2e87
 if success(rc6_1s)
-	post6_1s_df = read_samples(m6_1s, output_format=:dataframe)
+	post6_1s_df = read_samples(m6_1s, :dataframe)
 
 	# Fit a linear regression
 

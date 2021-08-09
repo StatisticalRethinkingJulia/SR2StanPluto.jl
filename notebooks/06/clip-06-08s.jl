@@ -51,7 +51,7 @@ begin
 	init = (a=0.0, bF=1.0, sigma=1.0)
 	q6_3s, m6_3s, o6_3s = stan_quap("m6.3s", stan6_3; data, init);
 	if !isnothing(m6_3s)
-		post6_3s_df = read_samples(m6_3s; output_format=:dataframe)
+		post6_3s_df = read_samples(m6_3s, :dataframe)
 		PRECIS(post6_3s_df)
 	end
 end

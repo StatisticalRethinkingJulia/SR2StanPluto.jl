@@ -48,6 +48,6 @@ a 0.32 0.09 0.18  0.46   166    1
 # Describe the draws
 
 if success(rc10_1s)
-  part10_1s = read_samples(m10_1s; output_format=:particles)
+  part10_1s = read_samples(m10_1s, :particles)
   part10_1s |> display
 end

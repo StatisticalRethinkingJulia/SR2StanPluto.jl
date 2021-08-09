@@ -68,7 +68,7 @@ begin
 	  :N => size(selected_df, 1)
 	)
 	rc6_0s = stan_sample(m6_0s, data=m_6_0_data)
-	success(rc6_0s) && (part6_0s = read_samples(m6_0s, output_format=:particles))
+	success(rc6_0s) && (part6_0s = read_samples(m6_0s, :particles))
 end
 
 # ╔═╡ c0e0cf76-fe4b-11ea-0130-3f2bb12f36a0
@@ -83,7 +83,7 @@ end
 
 # ╔═╡ 5bfe710c-fe4c-11ea-16c2-fdb21351103b
 if success(rc6_0s)
-  post6_0s_df = read_samples(m6_0s, output_format=:dataframe)
+  post6_0s_df = read_samples(m6_0s, :dataframe)
   fig1 = plotbounds(df, :nw, :tw, post6_0s_df , [:a, :aS, :sigma])
   scatter!(unselected_df[:, :nw], unselected_df[:, :tw], color=:lightgrey, lab="unselected")
 end

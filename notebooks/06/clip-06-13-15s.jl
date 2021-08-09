@@ -63,7 +63,7 @@ begin
 	m6_6s = SampleModel("m6.6s", stan6_6)
 	m6_6_data = Dict(:N => nrow(df), :h0 => df.h0, :h1 => df.h1)
 	rc6_6s = stan_sample(m6_6s; data=m6_6_data)
-	success(rc6_6s) && (post6_6s_df = read_samples(m6_6s; output_format=:dataframe))
+	success(rc6_6s) && (post6_6s_df = read_samples(m6_6s, :dataframe))
 end;
 
 # ╔═╡ 2ef5aa9c-feac-11ea-1da4-67356630f549

@@ -43,12 +43,12 @@ begin
 	  :m => [:a]
 	);
 
-	dag6_2 = DAG("dag6.2", d, df=df)
+	dag6_2 = DAG("dag6_2", d, df=df)
 end
 
 # ╔═╡ 4bbb315c-0fd3-11eb-0b32-f70ce8b38cd3
 begin
-	fname = mktempdir() * "/dag6.2.dot"
+	fname = mktempdir() * "/dag6_2.dot"
 	to_graphviz(dag6_2, fname)
 	Sys.isapple() && run(`open -a GraphViz.app $(fname)`)
 end;

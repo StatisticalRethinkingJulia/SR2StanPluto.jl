@@ -59,7 +59,7 @@ begin
 	q5_9s, m5_9s, _ = stan_quap("m5.9", stan5_9; data, init)
 
 	if !isnothing(m5_9s)
-		post5_9s_df = read_samples(m5_9s; output_format=:dataframe)
+		post5_9s_df = read_samples(m5_9s, :dataframe)
 		PRECIS(post5_9s_df)
 	end
 end

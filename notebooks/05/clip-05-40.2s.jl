@@ -34,7 +34,7 @@ md"
 # ╔═╡ 13d72238-fdb9-11ea-364d-8db015412817
 if success(rc5_5s)
 
-  post5_5s_df = read_samples(m5_5s; output_format=:dataframe)
+  post5_5s_df = read_samples(m5_5s, :dataframe)
   title5 = "Kcal_per_g vs. neocortex_perc" * "\n89% predicted and mean range"
   fig1 = plotbounds(
     df, :neocortex_perc, :kcal_per_g,
@@ -43,7 +43,7 @@ if success(rc5_5s)
     rescale_axis=false
   )
 
-  post5_6s_df = read_samples(m5_6s; output_format=:dataframe)
+  post5_6s_df = read_samples(m5_6s, :dataframe)
   title6 = "Kcal_per_g vs. log mass" * "\nshowing 89% predicted and mean range"
   fig2 = plotbounds(
     df, :lmass, :kcal_per_g,
@@ -52,7 +52,7 @@ if success(rc5_5s)
     rescale_axis=false
   )
 
-  post5_7s_df = read_samples(m5_7s; output_format=:dataframe)
+  post5_7s_df = read_samples(m5_7s, :dataframe)
   title7 = "Counterfactual,\nholding M=0.0"
   fig3 = plotbounds(
     df, :neocortex_perc, :kcal_per_g,

@@ -7,7 +7,7 @@ using StatisticalRethinking
 include("$(@__DIR__)/rstar.jl")
 include("$(@__DIR__)/clip-04-31s.jl");
 
-chns = read_samples(sm; output_format=:mcmcchains)
+chns = read_samples(sm, :mcmcchains)
 
 rstar(chns, 1)
 

@@ -65,7 +65,7 @@ if success(rc5_3_As)
 
   # Describe the draws
 
-  part5_3_As = read_samples(m5_3_As; output_format=:particles)
+  part5_3_As = read_samples(m5_3_As, :particles)
   part5_3_As |> display
 
 end

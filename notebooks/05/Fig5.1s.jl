@@ -70,7 +70,7 @@ md"##### Sample using StanSample."
 begin
 	q5_0s, m5_0s, o5_0s = stan_quap("m5.0s", stan5_0; data, init)
 	if !isnothing(m5_0s)
-		post5_0s_df = read_samples(m5_0s; output_format=:dataframe)
+		post5_0s_df = read_samples(m5_0s, :dataframe)
 		part5_0s = Particles(post5_0s_df)
 	end
 	PRECIS(post5_0s_df)

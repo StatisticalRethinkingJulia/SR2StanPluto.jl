@@ -1,8 +1,9 @@
 # m5_1s.jl
 
 using Pkg, DrWatson
+
 @quickactivate "StatisticalRethinkingStan"
-using StanSample, StanOptimize
+using StanQuap
 using StatisticalRethinking
 
 df = CSV.read(sr_datadir("WaffleDivorce.csv"), DataFrame);
@@ -33,10 +34,10 @@ model {
 
 data = (N=size(df, 1), D=df.Divorce_s, A=df.MedianAgeMarriage_s)
 init = (a=1.0, bA=1.0, sigma=10.0)
-q5_1s, m5_1s, o5_1s = quap("m5_1s", stan5_1; data, init);
+q5_1s, m5_1s, o5_1s = stan_quap("m5.2s", stan5_1; data, init);
 
 if !isnothing(m5_1s)
-  part5_1s = read_samples(m5_1s; output_format=:particles)
+  part5_1s = read_samples(m5_1s, :particles)
 end
 
 if !isnothing(q5_1s)

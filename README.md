@@ -122,7 +122,7 @@ As before, the `s` at the end indicates Stan.
 
 By default `read_samples(m5_1s)` returns a NamedTuple with the results.
 
-Using `read_samples(m5_1s; output_format=:...)` makes it easy to create MCMCChains.jl Chains objects, a DataFrame with draws or a MonteCarloMeasurements.jl Particles object (item 4 in above list).
+Using `read_samples(m5_1s, :...)` makes it easy to create MCMCChains.jl Chains objects, a DataFrame with draws or a MonteCarloMeasurements.jl Particles object (item 4 in above list).
 
 ## Status
 
@@ -144,7 +144,7 @@ This repository and format is derived from previous versions of StatisticalRethi
 
 ### Version 3.4.0
 
-StatisticalRethinkingStan v3.4.0 is in sync with StatisticalRethinking v3.4.0.
+StatisticalRethinkingStan v4.0.0 is in sync with StatisticalRethinking v4.0.0.
 
 ### Version 1.0.0
 

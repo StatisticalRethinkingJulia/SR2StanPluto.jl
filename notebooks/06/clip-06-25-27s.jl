@@ -61,7 +61,7 @@ begin
 	m6_11_data = Dict(:N => nrow(df), :C => df.c, :P => df.p, :G => df.g)
 	rc6_11s = stan_sample(m6_11s, data=m6_11_data)
 	if success(rc6_11s)
-		post6_11s_df = read_samples(m6_11s, output_format=:dataframe)
+		post6_11s_df = read_samples(m6_11s, :dataframe)
 		Text(precis(post6_11s_df; io=String))
 	end
 end

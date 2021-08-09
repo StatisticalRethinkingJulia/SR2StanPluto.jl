@@ -68,7 +68,7 @@ begin
 		quap5_3_As_df = sample(q5_3_As)
 	end
 	if !isnothing(m5_3_As)
-	  post5_3_As_df = read_samples(m5_3_As; output_format=:dataframe)
+	  post5_3_As_df = read_samples(m5_3_As, :dataframe)
 	  PRECIS(post5_3_As_df)
 	end
 end
@@ -95,7 +95,7 @@ if !isnothing(q5_3_As)
 md"##### Rethinking results"
 
 # ╔═╡ b9af5a04-fd49-11ea-07ba-fb61574aed90
-part5_3_As = read_samples(m5_3_As; output_format=:particles)
+part5_3_As = read_samples(m5_3_As, :particles)
 
 # ╔═╡ 988ca05a-fd46-11ea-2ae3-910f7baa2b3f
 md"## Snippet 5.25"

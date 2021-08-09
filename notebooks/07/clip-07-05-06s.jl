@@ -71,7 +71,7 @@ if !isnothing(q7_1as)
 end
 
 # ╔═╡ 278f62e2-5079-11eb-003f-cfc6b482ea79
-post7_1as_df = read_samples(m7_1as; output_format=:dataframe);
+post7_1as_df = read_samples(m7_1as, :dataframe);
 
 # ╔═╡ 93d1db36-5118-11eb-3183-212c07cdf0eb
 md" ### Snippet 7.5"

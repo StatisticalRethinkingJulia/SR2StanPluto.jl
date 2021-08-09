@@ -74,7 +74,7 @@ data = (N = size(x_train, 1), K = size(x_train, 2), y = y,
     x = x_train, N_new = size(x_test, 1), x_new = x_test)
 rc = stan_sample(sm; data)
 if success(rc)
-    sm_df = read_samples(sm; output_format=:dataframe)
+    sm_df = read_samples(sm, :dataframe)
     precis(sm_df[:, vcat([:a], [Symbol("b.$i") for i in 1:k])])
 end
 

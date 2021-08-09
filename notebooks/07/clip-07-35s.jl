@@ -63,7 +63,7 @@ begin
 	rc5_1s_t = stan_sample(m5_1s_t; data)
 
 	if success(rc5_1s_t)
-		post5_1s_t_df = read_samples(m5_1s_t; output_format=:dataframe)
+		post5_1s_t_df = read_samples(m5_1s_t, :dataframe)
 		PRECIS(post5_1s_t_df[:, [:a, :bA, :sigma]])
 	end
 end
@@ -120,7 +120,7 @@ begin
 	m5_2s_t = SampleModel("m5.2_t", stan5_2_t);
 	rc5_2s_t = stan_sample(m5_2s_t; data)
 	if success(rc5_2s_t)
-		post5_2s_t_df = read_samples(m5_2s_t; output_format=:dataframe)
+		post5_2s_t_df = read_samples(m5_2s_t, :dataframe)
 		PRECIS(post5_2s_t_df[:, [:a, :bM, :sigma]])
 	end
 end
@@ -178,7 +178,7 @@ begin
 	rc5_3s_t = stan_sample(m5_3s_t; data);
 
 	if success(rc5_3s_t)
-		post5_3s_t_df = read_samples(m5_3s_t; output_format=:dataframe)
+		post5_3s_t_df = read_samples(m5_3s_t, :dataframe)
 		PRECIS(post5_3s_t_df[:, [:a, :bA, :bM, :sigma]])
 	end
 end

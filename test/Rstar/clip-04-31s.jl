@@ -40,7 +40,7 @@ rc = stan_sample(sm, data=heightsdata);
 
 if success(rc)
 	println()
-	q = read_samples(sm; output_format=:particles)
+	q = read_samples(sm, :particles)
   q |> display
 end
 

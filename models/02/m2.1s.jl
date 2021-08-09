@@ -47,7 +47,7 @@ q2_1s, m2_1s, o2_1s = stan_quap("m2.1", stan2_1; data, init);
 # Describe the draws
 
 if !isnothing(m2_1s)
-  part2_1s = read_samples(m2_1s; output_format=:particles)
+  part2_1s = read_samples(m2_1s, :particles)
 end
 
 if q2_1s.converged

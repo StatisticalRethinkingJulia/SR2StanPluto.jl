@@ -66,7 +66,7 @@ a[7]  1.81 0.39  1.22  2.48  3807    1
 # Update sections 
 
 if success(rc10_4s)
-        ka = read_samples(m10_4s; output_format=:keyedarray)
+        ka = read_samples(m10_4s, :keyedarray)
         kb = ka(Symbol("a.1"))
 
         # Other manipulations

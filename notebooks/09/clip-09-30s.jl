@@ -91,14 +91,14 @@ begin
 	data = (H = df.height, LL = df.leg_left, LR = df.leg_right, N = size(df, 1))
 	rc6_1s = stan_sample(m6_1s; data)
 	if success(rc6_1s)
-		post6_1s_df = read_samples(m6_1s, output_format=:dataframe)
+		post6_1s_df = read_samples(m6_1s, :dataframe)
 	end
 	m6_2s = SampleModel("m6.2s", stan6_2,
 		method=StanSample.Sample(num_samples=1000))
 	rc6_2s = stan_sample(m6_2s; data)
 	
 	if success(rc6_2s)
-		post6_2s_df = read_samples(m6_2s, output_format=:dataframe)
+		post6_2s_df = read_samples(m6_2s, :dataframe)
 	end
 end;
 

@@ -63,7 +63,7 @@ begin
 	m5_1s = SampleModel("m5.1s", stan5_1)
 	rc5_1s = stan_sample(m5_1s; data)
 	if success(rc5_1s)
-		post5_1s_df = read_samples(m5_1s; output_format=:dataframe)
+		post5_1s_df = read_samples(m5_1s, :dataframe)
 		PRECIS(post5_1s_df[:, [:a, :bA, :sigma]])
 	end
 end
@@ -104,7 +104,7 @@ begin
 	m5_2s = SampleModel("m5.2s", stan5_2);
 	rc5_2s = stan_sample(m5_2s; data)
 	if success(rc5_2s)
-		post5_2s_df = read_samples(m5_2s; output_format=:dataframe)
+		post5_2s_df = read_samples(m5_2s, :dataframe)
 		PRECIS(post5_2s_df[:, [:a, :bM, :sigma]])
 	end
 end
@@ -147,7 +147,7 @@ begin
 	q5_3s, m5_3s, o5_3s = stan_quap("m5.3s", stan5_3; data, init)
 
 	if !isnothing(m5_3s)
-		post5_3s_df = read_samples(m5_3s; output_format=:dataframe)
+		post5_3s_df = read_samples(m5_3s, :dataframe)
 		PRECIS(post5_3s_df[:, [:a, :bA, :bM, :sigma]])
 	end
 end

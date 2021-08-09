@@ -65,13 +65,13 @@ begin
 	m6_2s = SampleModel("m6.2s", m6_2)
 	m6_2_data = Dict(:H => df.height, :LL => df.leg_left, :N => size(df, 1))
 	rc6_2s = stan_sample(m6_2s, data=m6_2_data)
-	success(rc6_2s) && (part6_2s = read_samples(m6_2s, output_format=:particles))
+	success(rc6_2s) && (part6_2s = read_samples(m6_2s, :particles))
 end
 
 # ╔═╡ b09dac48-fe6d-11ea-3927-f5a982c7b715
 if success(rc6_2s)
-	chns6_2s = read_samples(m6_2s, output_format=:mcmcchains)
-	Text(sprint(show, "text/plain", chns6_2s))
+	chns6_2s = read_samples(m6_2s, :mcmcchains)
+	CHNS(chns6_2s)
 end
 
 # ╔═╡ b0a8ce2a-fe6d-11ea-19e5-d7f5a9022680

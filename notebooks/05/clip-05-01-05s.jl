@@ -64,7 +64,7 @@ begin
 	m5_1s = SampleModel("MedianAgeMarriage", stan5_1_alt_priors)
 	m5_1_data = Dict("N" => size(df, 1), "D" => df.Divorce_s, "A" => df.MedianAgeMarriage_s)
 	rc5_1s = stan_sample(m5_1s, data=m5_1_data)
-	success(rc5_1s) && (post5_1s_df = read_samples(m5_1s; output_format=:dataframe))
+	success(rc5_1s) && (post5_1s_df = read_samples(m5_1s, :dataframe))
 end;
 
 # ╔═╡ a4a9351a-01c6-11eb-28d0-71f8fb243719
