@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.14
+# v0.15.1
 
 using Markdown
 using InteractiveUtils
@@ -45,12 +45,6 @@ Text('hello world!')
 </p>
 </details>"
 
-# ╔═╡ 0aae967c-318e-11eb-1a3c-49dded4f4592
-
-
-# ╔═╡ 0a83d37e-318e-11eb-1d36-61bd49bcc9bb
-
-
 # ╔═╡ 48625f5c-3103-11eb-3d51-4b70ff04ba9b
 md"## End of intro-pluto-10.jl"
 
@@ -61,6 +55,4 @@ md"## End of intro-pluto-10.jl"
 # ╠═ad970090-3102-11eb-2aa8-6122b50d6069
 # ╠═964f8476-3101-11eb-168e-438a10661092
 # ╠═0aaeaef0-318e-11eb-289b-978a9a86418b
-# ╠═0aae967c-318e-11eb-1a3c-49dded4f4592
-# ╠═0a83d37e-318e-11eb-1d36-61bd49bcc9bb
 # ╟─48625f5c-3103-11eb-3d51-4b70ff04ba9b

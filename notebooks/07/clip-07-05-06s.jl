@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.21
+# v0.15.1
 
 using Markdown
 using InteractiveUtils
@@ -78,7 +78,7 @@ md" ### Snippet 7.5"
 
 # ╔═╡ 7d5c3db8-5110-11eb-130e-072858e16d80
 begin
-	nt7_1as = read_samples(m7_1as)
+	nt7_1as = read_samples(m7_1as, :namedtuple)
 	nt7_1as.mu'
 end
 
@@ -89,18 +89,41 @@ s = mean(nt7_1as.mu, dims=2)
 r = s - df.brain_std
 
 # ╔═╡ bceef71c-5116-11eb-1ee7-61f648076c8a
-function r2_is_bad(model::NamedTuple, df::DataFrame)
+function r2_is_bad_1(model::NamedTuple, df::DataFrame)
 	local var2(x) = mean(x.^2) .- mean(x)^2
 	s = mean(model.mu, dims=2)
 	r = s - df.brain_std
 	1 - var2(r) / var2(df.brain_std)
 end
 
+# ╔═╡ afeecdee-ee8f-443c-9f01-8a7445db15cb
+function r2_is_bad_2(model::NamedTuple, df::DataFrame)
+	local var2(x) = mean(x.^2) .- mean(x)^2
+	s = mean(model.mu, dims=2)
+	r = s - df.brain_std
+	1 - var(r; corrected=false) / var(df.brain_std; corrected=false)
+end
+
 # ╔═╡ a4319250-5118-11eb-0b52-0d7c576d061c
 md" ### Snippet 7.6"
 
 # ╔═╡ 34e0d218-5117-11eb-2b05-afbbee902f2d
-r2_is_bad(nt7_1as, df)
+r2_is_bad_1(nt7_1as, df)
+
+# ╔═╡ e85278ff-8a08-4813-959b-586e35c1ae88
+r2_is_bad_2(nt7_1as, df)
+
+# ╔═╡ eec1f9a6-6d80-432e-b9df-2a014d6d0517
+mu_mean=mean(nt7_1as.mu)
+
+# ╔═╡ 2a860e88-624a-4cec-942f-9be41fcfabe1
+mu_var=var(nt7_1as.mu)
+
+# ╔═╡ 2c703d49-7017-4177-9865-ffc1efc0e71b
+mu_var_nc=var(nt7_1as.mu; corrected=false)
+
+# ╔═╡ ed1adae6-62b1-4a62-bcab-700cf41ebf25
+mu_var2=StatisticalRethinking.var2(nt7_1as.mu)
 
 # ╔═╡ 91e9af0a-5065-11eb-212c-f751fd114263
 md" ## End of clip-07-05-06s.jl"
@@ -120,6 +143,12 @@ md" ## End of clip-07-05-06s.jl"
 # ╠═cbd70d32-5111-11eb-2182-a90fe78014f3
 # ╠═0286215a-5113-11eb-1a3b-2d2e38773964
 # ╠═bceef71c-5116-11eb-1ee7-61f648076c8a
+# ╠═afeecdee-ee8f-443c-9f01-8a7445db15cb
 # ╟─a4319250-5118-11eb-0b52-0d7c576d061c
 # ╠═34e0d218-5117-11eb-2b05-afbbee902f2d
+# ╠═e85278ff-8a08-4813-959b-586e35c1ae88
+# ╠═eec1f9a6-6d80-432e-b9df-2a014d6d0517
+# ╠═2a860e88-624a-4cec-942f-9be41fcfabe1
+# ╠═2c703d49-7017-4177-9865-ffc1efc0e71b
+# ╠═ed1adae6-62b1-4a62-bcab-700cf41ebf25
 # ╟─91e9af0a-5065-11eb-212c-f751fd114263

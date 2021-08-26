@@ -10,7 +10,8 @@ using Pkg, DrWatson
 # ╔═╡ 9a7e9840-f770-11ea-3bc2-e765554021a1
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample
+	using StanSample, Distributions, StatsBase, KernelDensity
+	using StatisticalRethinkingPlots, Plots, StatsPlots
 	using StatisticalRethinking
 end
 
@@ -43,7 +44,7 @@ begin
 		  # Quadratic approximation using StatisticalRethinking.jl quap()
 
 		  df = DataFrame(:toss => samples)
-		  q = quap(df)
+		  q = stan_quap(df)
 		  q_df = sample(q)
 		  plot!( figs[j], x, pdf.(Normal(mean(q_df.toss), std(q_df.toss) ) , x ),
 			lab="quap")

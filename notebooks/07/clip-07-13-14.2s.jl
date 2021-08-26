@@ -11,6 +11,7 @@ using Pkg, DrWatson
 begin
 	@quickactivate "StatisticalRethinkingStan"
 	using StanSample, StanOptimize
+	using StatsModelComparisons
 	using StatisticalRethinking
 end
 
@@ -103,7 +104,7 @@ begin
 		rc7_2s = stan_sample(m7_2s; data=data)
 
 		if success(rc7_2s)
-			nt7_2s = read_samples(m7_2s)
+			nt7_2s = read_samples(m7_2s, :namedtuple)
 			post7_2s_df = read_samples(m7_2s, :dataframe)
 		end
 
@@ -140,10 +141,10 @@ loos
 sum.(loos)
 
 # ╔═╡ 1ed9cb28-5fe5-11eb-0e3e-29e68eb14885
-pk_qualify(pk[1])
+StatsModelComparisons.pk_qualify(pk[1])
 
 # ╔═╡ 3ae2831e-5fe5-11eb-24ec-d36a56204b4e
-pk_plot(pk[1]; title="PSIS diagnostic plot (K = 1)")
+StatisticalRethinking.pk_plot(pk[1]; title="PSIS diagnostic plot (K = 1)")
 
 # ╔═╡ 5246f7ba-5f7f-11eb-2a0b-b77c47d6bdcc
 begin

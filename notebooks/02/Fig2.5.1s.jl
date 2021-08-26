@@ -21,6 +21,7 @@ begin
 	@quickactivate "StatisticalRethinkingStan"
 	using StanSample
 	using StatisticalRethinking
+	using StatisticalRethinkingPlots, StatsPlots
 	using PlutoUI
 end
 

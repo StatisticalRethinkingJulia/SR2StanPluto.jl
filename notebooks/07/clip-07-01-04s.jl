@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.21
+# v0.15.1
 
 using Markdown
 using InteractiveUtils
@@ -10,7 +10,7 @@ using Pkg, DrWatson
 # ╔═╡ 5d84f90c-5053-11eb-076b-5f30fc9685e3
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanQuap, GLM
+	using StanQuap
 	using StatisticalRethinking
 end
 
@@ -22,7 +22,8 @@ md" ### Snippet 7.1"
 
 # ╔═╡ 861accd4-5053-11eb-0432-81db212f4f38
 begin
-	sppnames = [:afarensis, :africanus, :hapilis, :boisei, :rudolfensis, :ergaster, :sapiens]
+	sppnames = [:afarensis, :africanus, :hapilis,
+		:boisei, :rudolfensis, :ergaster, :sapiens]
 	brainvol = [438, 452, 612, 521, 752, 871, 1350]
 	masskg = [37, 35.5, 34.5, 41.5, 55.5, 61, 53.5]
 	df = DataFrame(species = sppnames, brain = brainvol, mass = masskg)
@@ -34,10 +35,11 @@ end
 
 # ╔═╡ 92f3db9e-5053-11eb-0b61-3d8e0bce57ec
 begin
-	fig7_2 = scatter(df.mass, df.brain, xlab="body mass [kg]", ylab="brain vol [cc]", leg=false)
+	fig7_2 = scatter(df.mass, df.brain, xlab="body mass [kg]",
+		ylab="brain vol [cc]", leg=false)
 	for (ind, species) in pairs(df.species)
-		annotate!(fig7_2, [(df[ind, :mass] + 0.8, df[ind, :brain] + 25, Plots.text(df[ind, :species],
-			6, :red, :right))])
+		annotate!(fig7_2, [(df[ind, :mass] + 0.8, df[ind, :brain] + 25,
+			Plots.text(df[ind, :species], 6, :red, :right))])
 	end
 	plot(fig7_2)
 end
@@ -111,7 +113,7 @@ md" ## End of clip-07-01-04s.jl"
 # ╟─d6b75816-5066-11eb-1cc3-4367cdcd36ef
 # ╠═861accd4-5053-11eb-0432-81db212f4f38
 # ╠═92f3db9e-5053-11eb-0b61-3d8e0bce57ec
-# ╠═abcc19ec-5076-11eb-1fd1-5bbc8fab188c
+# ╟─abcc19ec-5076-11eb-1fd1-5bbc8fab188c
 # ╠═ee275e7a-5067-11eb-325b-7760b758e85e
 # ╠═72cdb516-5068-11eb-386c-7d52a078d56f
 # ╠═084d9bcc-506b-11eb-3246-75bd606e5c6a

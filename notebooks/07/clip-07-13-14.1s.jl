@@ -150,7 +150,7 @@ begin
 		rc7_2s = stan_sample(m7_2s; data=data)
 
 		if success(rc7_2s)
-			nt7_2s = read_samples(m7_2s)
+			nt7_2s = read_samples(m7_2s, :namedtuple)
 			post7_2s_df = read_samples(m7_2s, :dataframe)
 		end
 

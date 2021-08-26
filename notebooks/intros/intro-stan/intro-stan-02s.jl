@@ -10,7 +10,8 @@ using Pkg, DrWatson
 # ╔═╡ 5629f3f2-f206-11ea-3549-57a35939b10d
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample
+	using Distributions, StanSample
+	using Plots, StatsPlots
 	using StatisticalRethinking
 end
 
@@ -90,10 +91,10 @@ if success(rc1_1s)
 end
 
 # ╔═╡ fb787125-a3d0-4403-94d7-02f7393a6523
-chns1_1s.data
+CHNS(chns1_1s)
 
 # ╔═╡ 4dc1d4fd-cd3f-4874-af98-e8ba975a5bf1
-mean(chns1_1s, dims=1)
+mean(chns1_1s; dims=1)
 
 # ╔═╡ 4966c366-1f48-4bd7-b26b-2431ae7c56a8
 chns1_1s(param=:theta, chain=2)

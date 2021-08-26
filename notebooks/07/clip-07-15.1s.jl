@@ -12,6 +12,7 @@ begin
 	@quickactivate "StatisticalRethinkingStan"
 	using StanSample, StanOptimize
 	using StatisticalRethinking
+	using StatsModelComparisons
 end
 
 # ╔═╡ 235c5298-5053-11eb-0608-435d1aa4716c
@@ -76,7 +77,7 @@ begin
 	rc7_6s = stan_sample(m7_6s; data=data)
 
 	if success(rc7_6s)
-		nt7_6s = read_samples(m7_6s)
+		nt7_6s = read_samples(m7_6s, :namedtuple)
 	end
 end;
 
@@ -117,16 +118,16 @@ end
 sum(loos)
 
 # ╔═╡ c429ee8a-5fe2-11eb-274e-31490ca32c5e
-pk_qualify(pk)
+StatsModelComparisons.pk_qualify(pk)
 
 # ╔═╡ c42aa528-5fe2-11eb-0492-1fc418032f9c
-pk_plot(pk)
+StatisticalRethinking.pk_plot(pk)
 
 # ╔═╡ 7ce0cadc-61a2-11eb-1c20-353d2ad1df76
-waic(log_lik)
+StatisticalRethinking.waic(log_lik)
 
 # ╔═╡ bb780120-6ee5-11eb-2791-1903f6a16fa6
-waic(m7_6s)
+StatisticalRethinking.waic(m7_6s)
 
 # ╔═╡ 91e9af0a-5065-11eb-212c-f751fd114263
 md" ## End of clip-07-15s.jl"

@@ -12,6 +12,7 @@ begin
 	@quickactivate "StatisticalRethinkingStan"
 	using StanSample
 	using StatisticalRethinking
+	using StatisticalRethinkingPlots, Plots, StatsPlots
 end
 
 # ╔═╡ d8ea5d90-e0cc-11ea-0d2d-25c807c1ae80

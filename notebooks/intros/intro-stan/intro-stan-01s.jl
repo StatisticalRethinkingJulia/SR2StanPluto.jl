@@ -11,14 +11,14 @@ using Pkg, DrWatson
 begin
 	@quickactivate "StatisticalRethinkingStan"
 	using StanSample, StanQuap
-	using Makie, AlgebraOfGraphics, CairoMakie, CategoricalArrays
-	using StatsPlots, MCMCChains
+	using CategoricalArrays
 	using StatisticalRethinking
+	using StatsPlots, StatisticalRethinkingPlots
 	using PlutoUI
 end
 
 # ╔═╡ 45929f5a-f759-11ea-1955-67ba740778e6
-md"## Rethinking vs. StatisticalRethinking.jl."
+md"## Rethinking vs. StatisticalRethinking.jl"
 
 # ╔═╡ e27ece36-f756-11ea-250c-99d909d390f9
 md"In the book and associated R package `rethinking`, statistical models are defined as illustrated below:
@@ -37,7 +37,7 @@ flist <- alist(
 # ╔═╡ 8819279a-f757-11ea-37ee-f7b0a267d351
 md"The author of the book states: *If that (the statistical model) doesn't make much sense, good. ... you're holding the right textbook, since this book teaches you how to read and write these mathematical descriptions* (page 77).
 
-The Pluto notebooks in [StatisticalRethinkingJuliaStan](https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingStan.jl) are intended to allow experimenting with this learning process using [Stan](https://github.com/StanJulia) and [Julia](https://julialang.org).
+The Pluto notebooks in [StatisticalRethinkingStan](https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingStan.jl) are intended to allow experimenting with this learning process using [Stan](https://github.com/StanJulia) and [Julia](https://julialang.org).
 
 In the R package `rethinking`, posterior values can be approximated by
  
@@ -56,9 +56,7 @@ or, in the second half of the book, generated using Stan by:
 m4.32 <- ulam(flist, data=d2)
 ```
 
-In StatisticalRethinkingStan, R's ulam() has been replaced by StanSample.jl.
-
-This means that much earlier on than in the book, StatisticalRethinkingStan introduces the reader to the Stan language."
+In StatisticalRethinkingStan, R's ulam() has been replaced by StanSample.jl and occasionally used much earlier on than in the book."
 
 # ╔═╡ 55ed2bde-f756-11ea-1f1d-7fbdf76c1b76
 md"To help out with this, in this notebook and a few additional notebooks in the subdirectory `notebooks/intros/intro-stan` the Stan language is introduced and the execution of Stan language programs illustrated.
@@ -69,7 +67,7 @@ Chapter 9 of the book contains a nice introduction to translating the `alist` R 
 # ╔═╡ 04330a22-8020-11eb-38f3-15f03a13f217
 md"
 !!! note
-	In general StatisticalRethinkingStan relies on and shows more details (and capabilities!) of the full Stan Language than the above mentioned `alist`s in the book. Maybe in the Julia setting, if your preference is to use something closer to the `alist`s Turing.jl and DynamicHMC.jl are better alternatives, e.g. see the early version of [StatisticalRethinkingTuring](https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingTuring.jl) and a future version of [StatisticalRethinkingDHMC](https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingDHMC.jl).
+	In general StatisticalRethinkingStan relies on and shows more details (and capabilities!) of the full Stan Language than the above mentioned `alist`s in the book. In the Julia setting, if your preference is to use something closer to the `alist`s, Turing.jl is a better alternative, e.g. see the early version of [StatisticalRethinkingTuring](https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingTuring.jl).
 "
 
 # ╔═╡ 2e4c633e-f75a-11ea-2bcb-fb9800e518af
@@ -179,7 +177,7 @@ md"##### 3. Input data in the form of a Dict"
 data = (N = N, n = n, k = k);
 
 # ╔═╡ 5dd4b36a-f1dd-11ea-11af-a946fb4ac07a
-md"##### 4. Sample using stan_sample."
+md"##### 4. Sample using stan_sample (the equivalent of `rethinking`'s ulam()."
 
 # ╔═╡ 6f463898-f1eb-11ea-16f1-0b6de4bd69c4
 rc1_1s = stan_sample(m1_1s; data);
@@ -193,9 +191,6 @@ if success(rc1_1s)
 	with_terminal() do
 		precis(post1_1s_df)
 	end
-	post1_1s_df[!, :chain] = repeat(collect(1:m1_1s.n_chains[1]);
-		inner=m1_1s.method.num_samples)
-	post1_1s_df[!, :chain] = categorical(post1_1s_df.chain)
 end
 
 # ╔═╡ 208e7a70-f1ec-11ea-3ba9-d5e8c8c00553
@@ -230,11 +225,9 @@ begin
 	end
 end
 
-# ╔═╡ e5aa65de-4ccf-4cc8-8b4c-23014f8da80f
-typeof(post1_1s_df)
-
 # ╔═╡ e051b63a-1864-4564-b860-5cb5ef2f7735
 let
+	#=
 	fig = Figure()
 	plt = AlgebraOfGraphics.data(post1_1s_df)
 
@@ -252,17 +245,18 @@ let
 	end
 	
 	fig
+	=#
 end
 
-
-# ╔═╡ 11de190e-4cbc-4d73-89a1-4062ae3b8e16
-post1_1s_df
 
 # ╔═╡ c2ef6864-802c-11eb-1a86-858e8db6e45f
 √q1_1s.vcov
 
 # ╔═╡ d0006f7c-f1ec-11ea-3361-9baae166396a
-md"##### Check the chains using MCMCChains.jl"
+md"##### Show the structure and contents of a KeyedArray chains object."
+
+# ╔═╡ 2759963f-7cbd-4c8e-9cb3-85e175b1e0e6
+md"###### Note the draws are in the first dimension, the chains in the second dimension, while the parameters (in this case just theta) are the third dimension."
 
 # ╔═╡ 1ce58ec6-f1ed-11ea-1c05-99a463481fd8
 begin
@@ -270,26 +264,17 @@ begin
 	
 	# Display the chns
 	
-	chns1_1s.data
+	CHNS(chns1_1s)
 end
+
+# ╔═╡ 5b0670c0-b38a-45a1-9fe0-27dfd39584a6
+md"###### Append all chains and select theta."
 
 # ╔═╡ db2850a5-2334-4758-8a50-30ffe907920b
 size(vcat(chns1_1s(:theta)...))
 
-# ╔═╡ 299be88d-18ec-4b9d-973b-71d579e4ce7c
-begin
-	chns = read_samples(m1_1s, :mcmcchains)
-	CHNS(chns)
-end
-
 # ╔═╡ 2c465b0a-f1ed-11ea-35e3-017075244cd8
 md"##### Plot the chains."
-
-# ╔═╡ d00180d8-f1ec-11ea-0d29-350fac31122f
-StatsPlots.plot(chns; seriestype=:traceplot)
-
-# ╔═╡ 3db08936-f914-11ea-1d74-d33b946ef534
-StatsPlots.plot(chns; seriestype=:density)
 
 # ╔═╡ d00c24de-f1ec-11ea-1c83-cb2584421f6f
 md"##### Display the stansummary result"
@@ -300,7 +285,7 @@ success(rc1_1s) && read_summary(m1_1s)
 # ╔═╡ bc8dccca-96a0-4b6a-bdd0-c19e0be4bcfc
 begin
 	res = trankplot(m1_1s, :theta)
-	StatsPlots.plot(res[1]; dpi=460)
+	plot(res[1]; dpi=460)
 end
 
 # ╔═╡ 5de8c1c8-f1dd-11ea-1b97-5bbb6c6316ae
@@ -350,17 +335,14 @@ md"## End of intros/intro-stan-01s.jl"
 # ╠═a804833c-3a44-11eb-2cbd-997854743a0f
 # ╟─094310f4-8046-11eb-0073-950f55104695
 # ╠═a0a04fa8-2b5e-11eb-0a44-4b31c17d9a57
-# ╠═e5aa65de-4ccf-4cc8-8b4c-23014f8da80f
-# ╠═e051b63a-1864-4564-b860-5cb5ef2f7735
-# ╠═11de190e-4cbc-4d73-89a1-4062ae3b8e16
+# ╟─e051b63a-1864-4564-b860-5cb5ef2f7735
 # ╠═c2ef6864-802c-11eb-1a86-858e8db6e45f
 # ╟─d0006f7c-f1ec-11ea-3361-9baae166396a
+# ╟─2759963f-7cbd-4c8e-9cb3-85e175b1e0e6
 # ╠═1ce58ec6-f1ed-11ea-1c05-99a463481fd8
+# ╟─5b0670c0-b38a-45a1-9fe0-27dfd39584a6
 # ╠═db2850a5-2334-4758-8a50-30ffe907920b
-# ╠═299be88d-18ec-4b9d-973b-71d579e4ce7c
 # ╟─2c465b0a-f1ed-11ea-35e3-017075244cd8
-# ╠═d00180d8-f1ec-11ea-0d29-350fac31122f
-# ╠═3db08936-f914-11ea-1d74-d33b946ef534
 # ╟─d00c24de-f1ec-11ea-1c83-cb2584421f6f
 # ╠═0e3309b2-f1ed-11ea-0d57-2f0e5b83c8dd
 # ╠═bc8dccca-96a0-4b6a-bdd0-c19e0be4bcfc

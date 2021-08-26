@@ -10,7 +10,8 @@ using Pkg, DrWatson
 # ╔═╡ 9e7c4612-f771-11ea-18ab-53b0327f84f9
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample
+	using StanSample, Distributions, Optim, StatsBase
+	using StatisticalRethinkingPlots, Plots, StatsPlots
 	using StatisticalRethinking
 end
 
@@ -57,7 +58,7 @@ md"##### Sample using the computed posterior values as weights."
 begin
 	N = 10000
 	samples = sample(p_grid, Weights(posterior), N);
-	chn = MCMCChains.Chains(reshape(samples, N, 1, 1), ["toss"]);
+	#chn = MCMCChains.Chains(reshape(samples, N, 1, 1), ["toss"]);
 end;
 
 # ╔═╡ 9eda9df2-f771-11ea-2b33-0d04da6b3b8e
@@ -119,7 +120,7 @@ begin
 	# quadratic approximation using StatisticalRethinking.jl quap()
 
 	df = DataFrame(:toss => samples)
-	q = sample(quap(df))
+	q = sample(stan_quap(df))
 	figs[3] = plot( x, pdf.(Beta( w+1 , n-w+1 ) , x ), xlims=(-0.5, 1.0),
 	  lab="Conjugate solution", leg=:topleft)
 	plot!( figs[3], x, pdf.(Normal(mean(q.toss), std(q.toss) ) , x ),

@@ -15,9 +15,6 @@ begin
 	using PrettyTables
 end
 
-# ╔═╡ cf719eab-b57f-4ddc-be4b-1ff11fad2ee8
-Pkg.add("PrettyTables")
-
 # ╔═╡ b3057494-f791-11ea-3ec6-1587562245eb
 md"## Intro-logpdf-1s.jl"
 
@@ -65,7 +62,7 @@ rc = stan_sample(sm, data=heightsdata);
 # ╔═╡ 3fefbbe4-f792-11ea-3602-612bbf22dc17
 if success(rc)
  	chns = read_samples(sm)
-	chns.data
+	CHNS(chns)
 end
 
 # ╔═╡ 1288ad5f-1a74-4ed4-9065-420c9bb28139
@@ -74,16 +71,12 @@ axiskeys(chns)
 # ╔═╡ cdd365e8-92f0-442c-9714-d005d0897a7b
 HTML(pretty_table(String, chns[1:3, 1:2, :], backend=:html))
 
-# ╔═╡ eaafe15a-f605-48e5-b363-e5450fafefd5
-chns
-
 # ╔═╡ 3ff6ee3c-f792-11ea-1aa9-e129fcaf7171
 md"## End intro-logpdf-1s.jl"
 
 # ╔═╡ Cell order:
 # ╟─b3057494-f791-11ea-3ec6-1587562245eb
 # ╠═3fbe924e-f792-11ea-1cb2-5d1fb71e77b3
-# ╠═cf719eab-b57f-4ddc-be4b-1ff11fad2ee8
 # ╠═3fbec6ec-f792-11ea-0a62-83a272a57a5b
 # ╠═3fbf493c-f792-11ea-06b2-adf07fe86716
 # ╟─3fca0eaa-f792-11ea-2a3d-75f1f0db58b2
@@ -95,5 +88,4 @@ md"## End intro-logpdf-1s.jl"
 # ╠═3fefbbe4-f792-11ea-3602-612bbf22dc17
 # ╠═1288ad5f-1a74-4ed4-9065-420c9bb28139
 # ╠═cdd365e8-92f0-442c-9714-d005d0897a7b
-# ╠═eaafe15a-f605-48e5-b363-e5450fafefd5
 # ╟─3ff6ee3c-f792-11ea-1aa9-e129fcaf7171

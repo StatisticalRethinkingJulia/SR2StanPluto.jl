@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.21
+# v0.15.1
 
 using Markdown
 using InteractiveUtils
@@ -88,7 +88,7 @@ for K in 1:6
 	# R2_is_bad() can be found in StatisticalRethinking/src/srtools.jl
 
 	if !isnothing(q7_2s)
-		nt7_2s = read_samples(m7_2s)
+		nt7_2s = read_samples(m7_2s, :namedtuple)
 		lab="$(size(nt7_2s[Symbol(linkvars[2])], 1))-th degree polynomial"
 		title="R^2 = $(r2_is_bad(nt7_2s, df))"
 		fig7_3[K] = plotbounds(df, :mass, :brain, nt7_2s, linkvars;

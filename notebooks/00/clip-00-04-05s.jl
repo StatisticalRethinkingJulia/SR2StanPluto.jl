@@ -10,6 +10,8 @@ using Pkg, DrWatson
 # ╔═╡ 0b586340-de65-11ea-39a9-1be72fd535d5
 begin
 	@quickactivate "StatisticalRethinkingStan"
+	using DataFrames, CSV, GLM
+	using StatisticalRethinkingPlots, StatsPlots
 	using StatisticalRethinking
 end
 

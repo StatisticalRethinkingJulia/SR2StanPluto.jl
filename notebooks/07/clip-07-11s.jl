@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.18
+# v0.15.1
 
 using Markdown
 using InteractiveUtils
@@ -10,16 +10,20 @@ using Pkg, DrWatson
 # ╔═╡ 5d84f90c-5053-11eb-076b-5f30fc9685e3
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanSample, StanOptimize
+	using StanQuap
 	using StatisticalRethinking
 end
+
+# ╔═╡ 05d45c8f-0500-4142-8dae-b6208127fe6f
+#include(joinpath(sr_path(), "require", "stan", "optimize.jl"))
 
 # ╔═╡ 235c5298-5053-11eb-0608-435d1aa4716c
 md" ## Clip-07-11s.jl"
 
 # ╔═╡ 861accd4-5053-11eb-0432-81db212f4f38
 begin
-	sppnames = [:afarensis, :africanus, :hapilis, :boisei, :rudolfensis, :ergaster, :sapiens]
+	sppnames = [:afarensis, :africanus, :hapilis, :boisei,
+		:rudolfensis, :ergaster, :sapiens]
 	brainvol = [438, 452, 612, 521, 752, 871, 1350]
 	masskg = [37, 35.5, 34.5, 41.5, 55.5, 61, 53.5]
 	df = DataFrame(species = sppnames, brain = brainvol, mass = masskg)
@@ -61,8 +65,14 @@ md"
 !!! tip
 	In this case `fnc` creates a polynomial mass matrix.
 
-	This could also a more compicated function.
+	This could also be a more complicated function.
 "
+
+# ╔═╡ b3fc5ef8-2309-465d-873f-05690bcad3cf
+methods(quap)
+
+# ╔═╡ a9980819-c0eb-49dc-9b07-aef79409b87c
+methods(quap)
 
 # ╔═╡ 95cbb456-520e-11eb-2e0a-1d173ddc9dec
 for (findx, K) in enumerate([1, 6])
@@ -75,12 +85,12 @@ for (findx, K) in enumerate([1, 6])
 		N = size(df1, 1)
 		data = (N = N, K = K, brain = df1.brain_s, mass = mass)
 		init = (a = 0.0, bA = ones(K), sigma = 2)
-		q7_2s, m7_2s, o7_2s = quap("m7.2s", stan7_2; data, init)
+		q7_2s, m7_2s, o7_2s = stan_quap("m7.2s", stan7_2; data, init)
 		linkvars = [:a, :bA, :sigma]
 		fnc=create_observation_matrix
 		
 		if !isnothing(q7_2s)
-			nt7_2s = read_samples(m7_2s)
+			nt7_2s = read_samples(m7_2s, :namedtuple)
 			lab="$(size(nt7_2s[Symbol(linkvars[2])], 1))-th degree polynomial"
 			title="R^2 = $(r2_is_bad(nt7_2s, df1))"
 			fig7_4[findx] = plot!(;lab, title)
@@ -114,6 +124,9 @@ md" ## End of clip-07-11s.jl"
 # ╠═ee275e7a-5067-11eb-325b-7760b758e85e
 # ╠═bc44cdc8-5422-11eb-0034-93d8626c23f7
 # ╟─919ade48-5a83-11eb-2fd5-75d756d4f4d6
+# ╠═b3fc5ef8-2309-465d-873f-05690bcad3cf
+# ╠═05d45c8f-0500-4142-8dae-b6208127fe6f
+# ╠═a9980819-c0eb-49dc-9b07-aef79409b87c
 # ╠═95cbb456-520e-11eb-2e0a-1d173ddc9dec
 # ╟─2389915c-51c7-11eb-15c6-4fe1fa67fbfe
 # ╠═eae3bf44-51c6-11eb-19b7-a79473f2bf36

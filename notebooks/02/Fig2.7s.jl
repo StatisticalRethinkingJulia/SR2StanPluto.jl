@@ -10,6 +10,8 @@ using Pkg, DrWatson
 # ╔═╡ de612664-f76f-11ea-32f9-493c9b688096
 begin
 	@quickactivate "StatisticalRethinkingStan"
+	using StatisticalRethinkingPlots, Plots, StatsPlots
+	using Distributions
 	using StatisticalRethinking
 end
 
