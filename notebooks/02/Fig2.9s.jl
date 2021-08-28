@@ -11,7 +11,7 @@ using Pkg, DrWatson
 begin
 	@quickactivate "StatisticalRethinkingStan"
 	using StanSample, Distributions, Optim, StatsBase
-	using StatisticalRethinkingPlots, Plots, StatsPlots
+	using StatisticalRethinkingPlots, StatsPlots, Plots
 	using StatisticalRethinking
 end
 
@@ -58,14 +58,9 @@ md"##### Sample using the computed posterior values as weights."
 begin
 	N = 10000
 	samples = sample(p_grid, Weights(posterior), N);
-	#chn = MCMCChains.Chains(reshape(samples, N, 1, 1), ["toss"]);
-end;
-
-# ╔═╡ 9eda9df2-f771-11ea-2b33-0d04da6b3b8e
-md"##### Describe the chain."
-
-# ╔═╡ 9ee2b730-f771-11ea-0cb3-4380b1093306
-CHNS(chn)
+	samples_df = DataFrame(:theta => samples)
+	PRECIS(samples_df)
+end
 
 # ╔═╡ 9ee425c0-f771-11ea-1eec-2966da179664
 md"##### Compute the MAP (Maximum A Posteriori) estimate."
@@ -157,8 +152,6 @@ md"## End of Fig2.9s.jl"
 # ╠═9eb26684-f771-11ea-2f72-9158a703be12
 # ╟─9eca0c1a-f771-11ea-267d-519ccb35777e
 # ╠═9ed22960-f771-11ea-03aa-dfe49b859ac9
-# ╟─9eda9df2-f771-11ea-2b33-0d04da6b3b8e
-# ╠═9ee2b730-f771-11ea-0cb3-4380b1093306
 # ╟─9ee425c0-f771-11ea-1eec-2966da179664
 # ╠═9eebf08e-f771-11ea-0b37-e39eae2dfac4
 # ╠═9ef4614c-f771-11ea-1e8f-1d0aa4f1abdf
