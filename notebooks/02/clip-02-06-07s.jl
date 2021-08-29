@@ -10,7 +10,7 @@ using Pkg, DrWatson
 # ╔═╡ f4e5213c-f2de-11ea-15a6-b1b36f79b689
 begin
 	@quickactivate "StatisticalRethinkingStan"
-	using StanQuap
+	using StanSample, StanQuap
 	using StatisticalRethinking
 	using PlutoUI
 end
@@ -58,7 +58,7 @@ md"##### Obtain stan_quap() samples."
 
 # ╔═╡ e0bb5132-1006-11eb-3136-3bbc6301f8c2
 begin
-	q2_0s, m2_0s, om2_0s = stan_quap("m2.0s", stan2_0; data)
+	q2_0s, m2_0s, om2_0s = StanQuap.stan_quap("m2.0s", stan2_0; data)
 	if !isnothing(m2_0s)
 		post2_0s_df = read_samples(m2_0s, :dataframe)
 		PRECIS(post2_0s_df)
