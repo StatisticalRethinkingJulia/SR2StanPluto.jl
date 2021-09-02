@@ -210,7 +210,7 @@ md"###### Generate a quadratic approximation of the posterior distribution and s
 # ╔═╡ a804833c-3a44-11eb-2cbd-997854743a0f
 begin
 	init = Dict(:theta => 0.5)
-	q1_1s, sm, om = stan_quap("m1.1s", stan1_1; data, init)
+	q1_1s, sm, om = StanQuap.stan_quap("m1.1s", stan1_1; data, init)
 	q1_1s
 end
 
