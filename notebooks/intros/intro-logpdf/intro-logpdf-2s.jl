@@ -9,7 +9,7 @@ using Pkg, DrWatson
 
 # ╔═╡ b8809a8c-f793-11ea-382c-5763b1d11ca5
 begin
-	@quickactivate "StatisticalRethinkingStan"
+	#@quickactivate "StatisticalRethinkingStan"
 	using DataFrames, CSV, Distributions, Optim
 	using StatisticalRethinking
 end

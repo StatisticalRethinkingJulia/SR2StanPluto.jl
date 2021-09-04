@@ -1,6 +1,6 @@
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.8.0-DEV.459"
+julia_version = "1.8.0-DEV.472"
 manifest_format = "2.0"
 
 [[deps.ANSIColoredPrinters]]
@@ -43,9 +43,9 @@ version = "3.5.0+3"
 
 [[deps.ArrayInterface]]
 deps = ["IfElse", "LinearAlgebra", "Requires", "SparseArrays", "Static"]
-git-tree-sha1 = "85d03b60274807181bae7549bb22b2204b6e5a0e"
+git-tree-sha1 = "019303a0f26d6012f35ecdfa4618551d145fb9f2"
 uuid = "4fba245c-0d91-5ea0-9b3e-6abc04ee57a9"
-version = "3.1.30"
+version = "3.1.31"
 
 [[deps.Artifacts]]
 uuid = "56f22d72-fd6d-98f1-02f0-08ddc0907c33"
@@ -265,9 +265,9 @@ version = "1.5.1"
 
 [[deps.DrWatson]]
 deps = ["Dates", "FileIO", "LibGit2", "MacroTools", "Pkg", "Random", "Requires", "UnPack"]
-git-tree-sha1 = "66bf318e41be55e721223464893566c81a782aa9"
+git-tree-sha1 = "7c70bb2f029bcd4988e48604995ccd1d2782d556"
 uuid = "634d3b9d-ee7a-5ddf-bec9-22491ea816e1"
-version = "2.3.0"
+version = "2.4.0"
 
 [[deps.EarCut_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -744,9 +744,9 @@ uuid = "a63ad114-7e13-5084-954f-fe012c677804"
 
 [[deps.MonteCarloMeasurements]]
 deps = ["Distributed", "Distributions", "LinearAlgebra", "MacroTools", "Random", "RecipesBase", "Requires", "SLEEFPirates", "StaticArrays", "Statistics", "StatsBase", "Test"]
-git-tree-sha1 = "a07cce45459bcfbc34d89a504dd0fe32304259ac"
+git-tree-sha1 = "fcefbe707597ce0628f19cb355757f281f37f15e"
 uuid = "0987c9cc-fe09-11e8-30f0-b96dd679fdca"
-version = "1.0.1"
+version = "1.0.2"
 
 [[deps.MozillaCACerts_jll]]
 uuid = "14a3606d-f60d-562e-9121-12d972cd8159"
@@ -783,9 +783,9 @@ version = "0.9.6"
 
 [[deps.NamedDims]]
 deps = ["AbstractFFTs", "CovarianceEstimation", "LinearAlgebra", "Pkg", "Requires", "Statistics"]
-git-tree-sha1 = "5e9fa065450d351911531662d73b158171331f8a"
+git-tree-sha1 = "69d23c528c5f298c80ac2e8bfab244822bdd0578"
 uuid = "356022a1-0364-5f58-8944-0da4b18d706f"
-version = "0.2.36"
+version = "0.2.37"
 
 [[deps.NamedTupleTools]]
 git-tree-sha1 = "63831dcea5e11db1c0925efe5ef5fc01d528c522"
@@ -873,9 +873,9 @@ version = "0.12.2"
 
 [[deps.ParetoSmooth]]
 deps = ["AxisKeys", "Distributions", "DocStringExtensions", "FFTW", "InteractiveUtils", "LinearAlgebra", "LoopVectorization", "MCMCDiagnosticTools", "NamedDims", "Polyester", "PrettyTables", "Printf", "Random", "Requires", "Statistics", "StatsFuns", "Tullio"]
-git-tree-sha1 = "0abe8ba340d70c8eba4aabca6541d105c58c98d6"
+git-tree-sha1 = "32fd19116e46eac56b5f5e446f3fafd706c96ac9"
 uuid = "a68b5a21-f429-434e-8bfa-46b447300aac"
-version = "0.6.2"
+version = "0.6.3"
 
 [[deps.Parsers]]
 deps = ["Dates"]
@@ -1130,15 +1130,15 @@ version = "1.2.12"
 
 [[deps.StatisticalRethinking]]
 deps = ["AxisKeys", "DataFrames", "Distributions", "DocStringExtensions", "Formatting", "KernelDensity", "LinearAlgebra", "MonteCarloMeasurements", "NamedArrays", "NamedTupleTools", "OrderedCollections", "Parameters", "ParetoSmooth", "PrettyTables", "Random", "Requires", "Statistics", "StatsBase", "StatsFuns", "StructuralCausalModels", "Tables", "Test", "Unicode"]
-path = "/Users/rob/.julia/dev/StatisticalRethinking"
+git-tree-sha1 = "83a9d9e563f02b61b9f8b6b11e90f50a87828491"
 uuid = "2d09df54-9d0f-5258-8220-54c2a3d4fbee"
-version = "4.0.2"
+version = "4.0.3"
 
 [[deps.StatisticalRethinkingPlots]]
 deps = ["DataFrames", "DocStringExtensions", "GR", "LaTeXStrings", "Parameters", "Plots", "Requires", "StatsBase", "StatsPlots"]
-path = "/Users/rob/.julia/dev/StatisticalRethinkingPlots"
+git-tree-sha1 = "df0b9242b6099f79a3112beaabcc6af9cde3d654"
 uuid = "e1a513d0-d9d9-49ff-a6dd-9d2e9db473da"
-version = "0.1.0"
+version = "0.3.0"
 
 [[deps.StatisticalTraits]]
 deps = ["ScientificTypesBase"]
@@ -1280,9 +1280,9 @@ uuid = "4ec0a83e-493e-50e2-b9ac-8f72acf5a8f5"
 
 [[deps.VectorizationBase]]
 deps = ["ArrayInterface", "CPUSummary", "HostCPUFeatures", "Hwloc", "IfElse", "LayoutPointers", "Libdl", "LinearAlgebra", "SIMDTypes", "Static"]
-git-tree-sha1 = "ca3f7f8b708d713b2a96735153282a65b1c1c466"
+git-tree-sha1 = "e7ad67a528cf7de002cdc1113e4d08e80da689bd"
 uuid = "3d5dd08c-fd9d-11e8-17fa-ed2836048c2f"
-version = "0.21.2"
+version = "0.21.3"
 
 [[deps.Wayland_jll]]
 deps = ["Artifacts", "Expat_jll", "JLLWrappers", "Libdl", "Libffi_jll", "Pkg", "XML2_jll"]
