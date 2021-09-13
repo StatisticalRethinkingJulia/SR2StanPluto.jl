@@ -15,27 +15,36 @@ To (locally) reproduce and use this project, do the following (just once):
 1. Download this [project](https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingStan.jl) from Github and move to the downloaded directory, e.g.:
 
 ```
-$ git clone https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingStan.jl
+$ git clone https://github.com/StatisticalRethinkingJulia/
+      StatisticalRethinkingStan.jl
 $ cd StatisticalRethinkingStan.jl
-$ julia
 ```
+
+If you want a specific tagged version, use:
+
+```
+# cd to cloned directory
+
+$ git tag -l # To see available tags, followed by:
+
+$ git checkout tags/<tag_name>
+
+# or
+
+git checkout v1.1.1
+```
+
 and in the Julia REPL:
 
 ```
 julia> ]                                        # Actvate Pkg mode
-(@v1.5) pkg> activate .                         # Activate pkg in .
+(@v1.6) pkg> activate .                         # Activate pkg in .
 (StatisticalRethinkingStan) pkg> instantiate    # Install in pkg environment
 (StatisticalRethinkingStan) pkg> <delete>       # Exit package mode
 julia>
 ```
 
 If above procedure fails, if present, try to delete the Manifest.toml file and repeat above steps. As mentioned above, these steps are only needed the first time.
-
-If you want to use a specific tagged version, use:
-```
-#cd to cloned directory
-git checkout v2.0.0
-```
 
 The next step assumes your Julia setup includes `Pkg`, `DrWatson`, `Pluto` and `PlutoUI`.
 
@@ -51,11 +60,13 @@ julia> Pluto.run()
 
 ## Usage
 
-Select a notebook in the `open a file` entry box, e.g. type `./` and step to `./notebooks/00/clip-00-01-03s.jl`. All notebooks will activate the project `StatisticalRethinkingStan`.
+Select a notebook in the `open a file` entry box, e.g. type `./` and step to `./notebooks/00/clip-00-01-03s.jl`. 
 
 A good notebook to initially glance over if `./notebooks/intros/intro-stan/intro-stan-01s.jl`.
 
-The `data` directory, in DrWatson accessible through `datadir()`, can be used for locally generated data, exercises, etc. All "rethinking" data files are stored and maintained in StatisticalRethinking.jl and can be accessed via `sr_datadir(...)`. DrWatson provides several other handy shortcuts, e.g. projectdir().
+The `data` directory, in DrWatson accessible through `datadir()`, can be used for locally generated data, exercises, etc. 
+
+All "rethinking" data files are stored and maintained in StatisticalRethinking.jl and can be accessed via `sr_datadir(...)`. DrWatson provides several other handy shortcuts, e.g. projectdir().
 
 A typical set of opening lines in each notebook:
 ```
@@ -66,10 +77,11 @@ using Pkg, DrWatson
 # scripts use StatisticalRethinking. If mcmc sampling is
 # needed, it must be loaded before StatisticalRethinking:
 
-@quickactivate "StatisticalRethinkingStan"
 using StanSample
-using StanOptimize              # If quap() is used.
+using StanQuap             # If quap() is used.
+using GLM, Distributions, StatsBase    # ,... Possibly many more.
 using StatisticalRethinking
+using StatisticalRethinkingPlots, StatsPlots, Plots
 
 # To access e.g. the Howell1.csv data file:
 df = CSV.read(sr_datadir("Howell1.csv"), DataFrame)
