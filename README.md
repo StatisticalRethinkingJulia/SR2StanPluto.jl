@@ -1,3 +1,5 @@
+## Note: v4 is under development and uses the setup described in StatisticalRethinking.jl v4 README.
+
 ## Purpose of StatisticalRethinkingStan.jl
 
 As stated many times by the author in his [online lectures](https://www.youtube.com/watch?v=ENxTrFf9a7c&list=PLDcUM9US4XdNM4Edgs7weiyIguLSToZRI), StatisticalRethinking is a hands-on course. This project is intended to assist with the hands-on aspect of learning the key ideas in StatisticalRethinking. 
