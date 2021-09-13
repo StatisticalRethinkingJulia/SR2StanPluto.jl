@@ -25,15 +25,9 @@ $ cd StatisticalRethinkingStan.jl
 If you want a specific tagged version, use:
 
 ```
-# cd to cloned directory
-
 $ git tag -l # To see available tags, followed by:
-
-$ git checkout tags/<tag_name>
-
-# or
-
-git checkout v1.1.1
+$ git checkout tags/<tag_name> # or simply:
+$ git checkout v1.1.1
 ```
 
 and in the Julia REPL:
@@ -140,11 +134,8 @@ Using `read_samples(m5_1s, :...)` makes it easy to create MCMCChains.jl Chains o
 
 ## Status
 
-StatisticalRethinkingStan.jl is compatible with the 2nd edition of the book. Version 1.0.0 covers pretty much the same as StatisticalRethinking.jl v2.2.9+.
-
-StructuralCausalModels.jl is included as en experimental dependency in the StatisticalRethinking.jl v3 package. Definitely WIP!
-
-Two other packages created to 
+StatisticalRethinkingStan.jl is compatible with the 2nd edition of the book. 
+StructuralCausalModels.jl is included as en experimental dependency in the StatisticalRethinking.jl v3+ package. Definitely WIP!
 
 Any feedback is appreciated. Please open an issue.
 
@@ -156,11 +147,16 @@ This repository and format is derived from previous versions of StatisticalRethi
 
 ## Versions
 
-### Version 3.4.0
+### Version 4.0.0 (Under development)
 
-StatisticalRethinkingStan v4.0.0 is in sync with StatisticalRethinking v4.0.0.
+1. StatisticalRethinkingStan v4+ requires StatisticalRethinking v4+.
 
-### Version 1.0.0
+### versions 2 & 3
 
-1. Initial version (late Nov 2020).
+1. Many additions for 2nd edition of Statistical Rethinking book.
+2. Version 3 switched to using StanSample and StanQuap
+
+### Version 1
+
+1. Initial versions (late Nov 2020).
 
