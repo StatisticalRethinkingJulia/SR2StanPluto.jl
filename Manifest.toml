@@ -1136,15 +1136,15 @@ version = "1.2.12"
 
 [[deps.StatisticalRethinking]]
 deps = ["AxisKeys", "DataFrames", "Distributions", "DocStringExtensions", "Documenter", "Formatting", "KernelDensity", "LinearAlgebra", "MonteCarloMeasurements", "NamedArrays", "NamedTupleTools", "OrderedCollections", "Parameters", "ParetoSmooth", "PrettyTables", "Random", "Requires", "Statistics", "StatsBase", "StatsFuns", "StructuralCausalModels", "Tables", "Test", "Unicode"]
-git-tree-sha1 = "480c3f92f892e18e5966b3c06d9c04bf42c2c484"
+git-tree-sha1 = "f0280939946d2af83a175202f5e12b80724a761f"
 uuid = "2d09df54-9d0f-5258-8220-54c2a3d4fbee"
-version = "4.0.8"
+version = "4.0.9"
 
 [[deps.StatisticalRethinkingPlots]]
 deps = ["DataFrames", "DocStringExtensions", "GR", "LaTeXStrings", "Parameters", "Plots", "Requires", "StatisticalRethinking", "StatsBase", "StatsPlots"]
-git-tree-sha1 = "b0c0d2ff2b644d2d91054653036f917dd8118843"
+git-tree-sha1 = "a6ac11d30e9b76486e0e16b096dfa0677c33affa"
 uuid = "e1a513d0-d9d9-49ff-a6dd-9d2e9db473da"
-version = "0.5.0"
+version = "0.6.0"
 
 [[deps.StatisticalTraits]]
 deps = ["ScientificTypesBase"]
@@ -1298,9 +1298,9 @@ version = "1.18.0+4"
 
 [[deps.Widgets]]
 deps = ["Colors", "Dates", "Observables", "OrderedCollections"]
-git-tree-sha1 = "eae2fbbc34a79ffd57fb4c972b08ce50b8f6a00d"
+git-tree-sha1 = "80661f59d28714632132c73779f8becc19a113f2"
 uuid = "cc8bc4a8-27d6-5769-a93b-9d913e69aa62"
-version = "0.6.3"
+version = "0.6.4"
 
 [[deps.WoodburyMatrices]]
 deps = ["LinearAlgebra", "SparseArrays"]
