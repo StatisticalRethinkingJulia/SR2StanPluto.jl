@@ -3,7 +3,6 @@
 using Pkg, DrWatson
 
 begin
-    @quickactivate "StatisticalRethinkingStan"
     using StanQuap
     using StatisticalRethinking
 end
@@ -17,29 +16,29 @@ end;
 
 stan4_3 = "
 data {
-  int<lower=1> N;
-  vector[N] weight;
-  vector[N] height;
+    int<lower=1> N;
+    vector[N] weight;
+    vector[N] height;
 }
 parameters {
-  real a;
-  real<lower=0> b;
-  real<lower=0, upper=50> sigma;
+    real a;
+    real<lower=0> b;
+    real<lower=0, upper=50> sigma;
 }
 model {
-  // Define mu as a vector.
-  vector[N] mu;
+    // Define mu as a vector.
+    vector[N] mu;
 
-  // Priors for mu and sigma
-  sigma ~ uniform(0 , 50);
-  a ~ normal($(mean_weight), 20);
-  b ~ lognormal(0, 1);
+    // Priors for mu and sigma
+    sigma ~ uniform(0 , 50);
+    a ~ normal($(mean_weight), 20);
+    b ~ lognormal(0, 1);
 
-  // Observed heights
-  for (i in 1:N) {
+    // Observed heights
+    for (i in 1:N) {
     mu[i] = a + b * (weight[i] - $(mean_weight));
-  }
-  height ~ normal(mu, sigma);
+    }
+    height ~ normal(mu, sigma);
 }
 ";
 
@@ -48,8 +47,10 @@ init = (a = 180.0, b = 1.0, sigma = 10.0)
 q4_3s, m4_3s, o4_3s = stan_quap("m4.2s", stan4_3; data, init);
 
 if q4_3s.converged  
-  quap4_3s_df = sample(q4_3s)          # DataFrame with samples
-  precis(quap4_3s_df)
+    quap4_3s_df = sample(q4_3s)          # DataFrame with samples
+    precis(quap4_3s_df)
+    post4_3s = read_samples(m4_3s)
+    post4_3s |> display
 end
 
 # End of m4.3as.jl

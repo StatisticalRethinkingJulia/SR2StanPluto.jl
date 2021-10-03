@@ -3,7 +3,6 @@
 using Pkg, DrWatson
 
 begin
-    @quickactivate "StatisticalRethinkingStan"
     using StanQuap
     using StatisticalRethinking
 end
@@ -39,6 +38,8 @@ q4_1s, m4_1s, o4_1s = stan_quap("m4.1s", stan4_1; data, init);
 if q4_1s.converged  
   quap4_1s_df = sample(q4_1s)          # DataFrame with samples
   precis(quap4_1s_df)
+  post4_1s = read_samples(m4_1s)
+  post4_1s |> display
 end
 
 # End of m4.1s.jl

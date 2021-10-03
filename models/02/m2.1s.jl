@@ -3,7 +3,7 @@
 using Pkg, DrWatson
 
 begin
-    @quickactivate "StatisticalRethinkingStan"
+    using Distributions
     using StanQuap
     using StatisticalRethinking
 end

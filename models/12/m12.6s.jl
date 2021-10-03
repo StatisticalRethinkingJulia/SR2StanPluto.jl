@@ -2,7 +2,7 @@
 
 using Pkg, DrWatson
 
-@quickactivate "StatisticalRethinkingStan"
+using MonteCarloMeasurements
 using StanSample
 using StatisticalRethinking
 

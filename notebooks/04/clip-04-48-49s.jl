@@ -9,9 +9,11 @@ using Pkg, DrWatson
 
 # ╔═╡ dccecdd0-fb8c-11ea-0845-cf3d76112352
 begin
-	@quickactivate "StatisticalRethinkingStan"
+	using Distributions
 	using StanSample
 	using StatisticalRethinking
+	using StatisticalRethinkingPlots
+	using PlutoUI
 end
 
 # ╔═╡ 81d0320a-fb8b-11ea-1b06-cf4512e17696

@@ -1,5 +1,5 @@
 using Pkg, DrWatson
-@quickactivate "StatisticalRethinkingStan"
+#@quickactivate "StatisticalRethinkingStan"
 
 function tf1(f::Number; l=12, kwargs...)
     x = range(f, stop=l, length=10)

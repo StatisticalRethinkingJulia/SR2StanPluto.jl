@@ -5,11 +5,10 @@ using Markdown
 using InteractiveUtils
 
 # ╔═╡ 3fbe924e-f792-11ea-1cb2-5d1fb71e77b3
-using Pkg, DrWatson
+using Pkg
 
 # ╔═╡ 3fbec6ec-f792-11ea-0a62-83a272a57a5b
 begin
-	#@quickactivate "StatisticalRethinkingStan"
 	using StanSample
 	using StatisticalRethinking
 	using PrettyTables

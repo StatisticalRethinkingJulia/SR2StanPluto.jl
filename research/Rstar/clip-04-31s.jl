@@ -1,7 +1,7 @@
 # Load Julia packages (libraries) needed for clip
 
 using DrWatson
-@quickactivate "StatisticalRethinkingStan"
+#@quickactivate "StatisticalRethinkingStan"
 using StanSample
 using StatisticalRethinking
 

@@ -2,7 +2,7 @@
 
 using Pkg, DrWatson
 
-@quickactivate "StatisticalRethinkingStan"
+using MonteCarloMeasurements
 using StanSample
 using StatisticalRethinking
 
@@ -12,36 +12,36 @@ df = CSV.read(sr_datadir("chimpanzees.csv"), DataFrame);
 
 stan10_4sl = "
 data {
-  int N;
-  int<lower=0, upper=1> L[N];
-  vector[N] P;
-  vector[N] C;
-  
-  int<lower=1, upper=N> N_chimps;
-  int<lower=1, upper=N_chimps> chimp[N];
+    int N;
+    int<lower=0, upper=1> L[N];
+    vector[N] P;
+    vector[N] C;
+
+    int<lower=1, upper=N> N_chimps;
+    int<lower=1, upper=N_chimps> chimp[N];
 }
 parameters {
-  real a_chimp[N_chimps];
-  real bp;
-  real bpc;
+    real a_chimp[N_chimps];
+    real bp;
+    real bpc;
 }
 model {
-  vector[N] p;
-  target += normal_lpdf(a_chimp | 0, 10);
-  target += normal_lpdf(bp | 0, 10);
-  target += normal_lpdf(bpc | 0, 10);
-  for (i in 1:N) p[i] = a_chimp[chimp[i]] + (bp + bpc * C[i]) * P[i];
-  target += binomial_logit_lpmf(L | 1, p);
+    vector[N] p;
+    target += normal_lpdf(a_chimp | 0, 10);
+    target += normal_lpdf(bp | 0, 10);
+    target += normal_lpdf(bpc | 0, 10);
+    for (i in 1:N) p[i] = a_chimp[chimp[i]] + (bp + bpc * C[i]) * P[i];
+    target += binomial_logit_lpmf(L | 1, p);
 }
 generated quantities {
-  vector[N] log_lik;
-  {
-    vector[N] p;
-    for(n in 1:N) {
-      p[n] = a_chimp[chimp[n]] + (bp + bpc * C[n]) * P[n];
-      log_lik[n] = binomial_logit_lpmf(L[n] | 1, p[n]);
+    vector[N] log_lik;
+    {
+        vector[N] p;
+        for(n in 1:N) {
+          p[n] = a_chimp[chimp[n]] + (bp + bpc * C[n]) * P[n];
+          log_lik[n] = binomial_logit_lpmf(L[n] | 1, p[n]);
+        }
     }
-  }
 }
 ";
 
@@ -78,6 +78,6 @@ a[7]  1.81 0.39  1.22  2.48  3807    1
 # Update sections 
 
 if success(rc10_4sl)
-  part10_4sl = read_samples(m10_4sl, :particles)
-  part10_4sl |> display
+    part10_4sl = read_samples(m10_4sl, :particles)
+    part10_4sl |> display
 end

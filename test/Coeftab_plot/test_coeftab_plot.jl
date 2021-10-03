@@ -1,4 +1,5 @@
-using StanSample, StatsPlots, StatsBase
+using CSV, DataFrames, StatsBase
+using StanSample, StatsPlots
 using StatisticalRethinkingPlots, StatisticalRethinking
 
 df = CSV.read(sr_datadir("WaffleDivorce.csv"), DataFrame);
@@ -98,6 +99,9 @@ generated quantities{
 }
 ";
 
+fname = joinpath(@__DIR__, "coeftab_plot.png")
+isfile(fname) && rm(fname)
+
 m5_1s = SampleModel("m5.1s", stan5_1)
 rc5_1s = stan_sample(m5_1s; data)
 
@@ -106,15 +110,19 @@ rc5_2s = stan_sample(m5_2s; data)
 
 m5_3s = SampleModel("m5.3s", stan5_3)
 rc5_3s = stan_sample(m5_3s; data)
+models = [m5_1s, m5_2s, m5_3s]
 
 if success(rc5_1s) && success(rc5_2s) && success(rc5_3s)
 
     m5_1s_df = read_samples(m5_1s, :dataframe)
     m5_2s_df = read_samples(m5_2s, :dataframe)
     m5_3s_df = read_samples(m5_3s, :dataframe)
+
     if isinteractive()
+
         coeftab_plot(m5_1s_df, m5_2s_df, m5_3s_df; pars=(:bA, :bM),
             names=["m5.1", "m5.2", "m5.3"])
         savefig(joinpath(@__DIR__, "coeftab_plot.png"))
+
     end
 end

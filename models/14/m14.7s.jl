@@ -2,7 +2,6 @@
 
 using Pkg, DrWatson
 
-@quickactivate "StatisticalRethinkingStan"
 using StanSample
 using StatisticalRethinking
 
@@ -67,8 +66,12 @@ m14_7s_data = Dict(
 m14_7s = SampleModel("m14.7s", stan14_7)
 rc14_7s = stan_sample(m14_7s; data = m14_7s_data)
 if success(rc14_7s)
-  chns14_7s = read_samples(m14_7s, :mcmcchains)
+  chns14_7s = read_samples(m14_7s)
   chns14_7s |> display
+
+  println()
+
+  read_summary(m14_7s) |> display
 end
 
 m14_7s_results = "

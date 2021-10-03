@@ -2,7 +2,7 @@
 
 using Pkg, DrWatson
 
-@quickactivate "StatisticalRethinkingStan"
+using MonteCarloMeasurements
 using StanSample
 using StatisticalRethinking
 
@@ -16,27 +16,27 @@ scale!(df, [:kcal_per_g, :neocortex_perc, :lmass])
 
 stan5_7 = "
 data {
- int < lower = 1 > N; // Sample size
- vector[N] K; // Outcome
- vector[N] NC; // Predictor
- vector[N] M; // Predictor
+    int < lower = 1 > N; // Sample size
+    vector[N] K; // Outcome
+    vector[N] NC; // Predictor
+    vector[N] M; // Predictor
 }
 
 parameters {
- real a; // Intercept
- real bM; // Slope (regression coefficients)
- real bN; // Slope (regression coefficients)
- real < lower = 0 > sigma;    // Error SD
+    real a; // Intercept
+    real bM; // Slope (regression coefficients)
+    real bN; // Slope (regression coefficients)
+    real < lower = 0 > sigma;    // Error SD
 }
 
 model {
-  vector[N] mu;               // mu is a vector
-  a ~ normal(0, 0.2);           //Priors
-  bN ~ normal(0, 0.5);
-  bM ~ normal(0, 0.5);
-  sigma ~ exponential(1);
-  mu = a + bM * M + bN * NC;
-  K ~ normal(mu , sigma);     // Likelihood
+    vector[N] mu;               // mu is a vector
+    a ~ normal(0, 0.2);           //Priors
+    bN ~ normal(0, 0.5);
+    bM ~ normal(0, 0.5);
+    sigma ~ exponential(1);
+    mu = a + bM * M + bN * NC;
+    K ~ normal(mu , sigma);     // Likelihood
 }
 ";
 
@@ -55,15 +55,15 @@ rc5_7s = stan_sample(m5_7s, data=m5_7_data);
 
 if success(rc5_7s)
 
-  part5_7s = read_samples(m5_7s, :particles)
-  part5_7s |> display
-  
-  rethinking = "
+    part5_7s = read_samples(m5_7s, :particles)
+    part5_7s |> display
+
+    rethinking = "
              mean   sd  5.5% 94.5%
     a      0.07 0.13 -0.15  0.28
     bN     0.68 0.25  0.28  1.07
     bM    -0.70 0.22 -1.06 -0.35
     sigma  0.74 0.13  0.53  0.95
-  "
+    "
 
 end

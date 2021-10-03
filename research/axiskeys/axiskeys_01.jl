@@ -2,7 +2,7 @@
 
 using Pkg, DrWatson, Test
 
-@quickactivate "StatisticalRethinkingStan"
+#@quickactivate "StatisticalRethinkingStan"
 using AxisKeys
 using StanSample
 using StatisticalRethinking

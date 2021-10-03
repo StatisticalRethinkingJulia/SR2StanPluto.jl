@@ -1,9 +1,9 @@
-
-using StanSample, ParetoSmooth
 using AxisKeys, NamedTupleTools
-using PrettyTables, StatsPlots
+using PrettyTables, ParetoSmooth
+using StanSample
 using StatisticalRethinking
-using StatisticalRethinkingPlots, Test
+using StatisticalRethinkingPlots
+using Test
 
 df = CSV.read(sr_datadir("WaffleDivorce.csv"), DataFrame);
 scale!(df, [:Marriage, :MedianAgeMarriage, :Divorce])
@@ -217,15 +217,23 @@ if success(rc5_1s) && success(rc5_2s) && success(rc5_3s)
     println()
 
     models = [m5_1s, m5_2s, m5_3s]
+    for i in 1:length(models)
+        pngfname = joinpath(@__DIR__, "m5.$(i)s.png")
+        isfile(pngfname) && rm(pngfname)
+    end
+    
     loo_comparison = loo_compare1(models)
     println()
     
-    for i in 1:length(models)
-        pw = loo_comparison.psis[i].pointwise
-        pk_plot(pw(:pareto_k))
-        savefig(joinpath(@__DIR__, "m5.$(i)s.png"))
+    if isinteractive()
+            
+        for i in 1:length(models)
+            pw = loo_comparison.psis[i].pointwise
+            pk_plot(pw(:pareto_k))
+            savefig(joinpath(@__DIR__, "m5.$(i)s.png"))
+        end
     end
-    
+
     loo_comparison |> display
 end
 #=

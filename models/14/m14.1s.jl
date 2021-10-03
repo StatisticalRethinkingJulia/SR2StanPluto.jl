@@ -2,7 +2,6 @@
 
 using Pkg, DrWatson
 
-@quickactivate "StatisticalRethinkingStan"
 using StanSample
 using StatisticalRethinking
 
@@ -10,8 +9,8 @@ df = CSV.read(sr_datadir("WaffleDivorce.csv"), DataFrame);
 
 mean_ma = mean(df[!, :MedianAgeMarriage])
 df[!, :MedianAgeMarriage_s] = 
-  convert(Vector{Float64},  (df[!, :MedianAgeMarriage]) .-
-    mean_ma)/std(df[!, :MedianAgeMarriage]);
+    convert(Vector{Float64},  (df[!, :MedianAgeMarriage]) .-
+        mean_ma)/std(df[!, :MedianAgeMarriage]);
 df.Divorce_SE = df[:, "Divorce SE"]
 
 stan14_1 = "
@@ -59,16 +58,16 @@ stan14_1 = "
 m14_1s = SampleModel("m14.1s", stan14_1)
 
 m14_1_data = Dict(
-  "N" => size(df, 1),
-  "A" => df[!, :MedianAgeMarriage],
-  "R" => df[!, :Marriage],
-  "Dobs" => df[!, :Divorce],
-  "Dsd" => df[!, :Divorce_SE]
+    "N" => size(df, 1),
+    "A" => df[!, :MedianAgeMarriage],
+    "R" => df[!, :Marriage],
+    "Dobs" => df[!, :Divorce],
+    "Dsd" => df[!, :Divorce_SE]
 )
 
 rc14_1s = stan_sample(m14_1s, data=m14_1_data)
 
 if success(rc14_1s)
-  part14_1s = read_samples(m14_1s, :particles)
-  part14_1s |> display
+    chns14_1s = read_samples(m14_1s)
+    chns14_1s |> display
 end

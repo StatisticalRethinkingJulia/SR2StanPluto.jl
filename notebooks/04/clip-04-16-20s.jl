@@ -9,9 +9,12 @@ using Pkg, DrWatson
 
 # ╔═╡ f6b0ee5a-f8e8-11ea-3427-c5eda9c27be2
 begin
-	@quickactivate "StatisticalRethinkingStan"
+	using Distributions
+	using MCMCChains
 	using StanSample
 	using StatisticalRethinking
+	using StatisticalRethinkingPlots
+	using PlutoUI
 end
 
 # ╔═╡ eb0545fc-f8e7-11ea-0c5f-d93cf6088ae0
@@ -130,7 +133,7 @@ begin
 	a2d = hcat(samples[:, :mu], samples[:, :sigma])
 	a3d = reshape(a2d, (size(a2d, 1), size(a2d, 2), 1))
 	chn = StanSample.convert_a3d(a3d, ["mu", "sigma"], Val(:mcmcchains); start=1)
-	CHNS(chn)
+	Text(sprint(show, "text/plain", hpd(chn)))
 end
 
 # ╔═╡ f75b7bf6-f8e8-11ea-3702-7df2f3263677
@@ -139,7 +142,6 @@ md"##### Show hpd regions."
 # ╔═╡ f7661370-f8e8-11ea-0af3-97ae384db28c
 begin
 	bnds = MCMCChains.hpd(chn)
-	HPD(chn)
 end
 
 # ╔═╡ f76fece2-f8e8-11ea-1a99-7148dc026dad

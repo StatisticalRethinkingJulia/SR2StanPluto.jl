@@ -9,7 +9,7 @@ using Pkg, DrWatson
 
 # ╔═╡ 6db218c6-59a8-11eb-2a8b-7107354cf590
 begin
-	@quickactivate "StatisticalRethinkingStan"
+	#@quickactivate "StatisticalRethinkingStan"
 	using StanSample
 	using StatisticalRethinking
 end
@@ -18,7 +18,7 @@ end
 md" ## Clip-08-07-12s.jl"
 
 # ╔═╡ f346a9a1-de24-40ef-bf2f-eb046ed800d5
-@quickactivate "StatisticalRethinkingStan"
+#@quickactivate "StatisticalRethinkingStan"
 
 # ╔═╡ 8aaa4bcc-59a8-11eb-2003-f1213b116565
 begin

@@ -9,7 +9,7 @@ using Pkg, DrWatson
 
 # ╔═╡ 42984312-ff34-11ea-0ad3-2f757db72417
 begin
-	@quickactivate "StatisticalRethinkingStan"
+	#@quickactivate "StatisticalRethinkingStan"
 	using StanSample
 	using StatisticalRethinking
 end

@@ -2,7 +2,7 @@
 
 using Pkg, DrWatson
 
-@quickactivate "StatisticalRethinkingStan"
+using MonteCarloMeasurements
 using StanSample
 using StatisticalRethinking
 
@@ -16,24 +16,24 @@ scale!(df, [:kcal_per_g, :neocortex_perc, :lmass])
 
 stan5_6 = "
 data {
- int < lower = 1 > N; // Sample size
- vector[N] K; // Outcome
- vector[N] M; // Predictor
+     int < lower = 1 > N; // Sample size
+     vector[N] K; // Outcome
+     vector[N] M; // Predictor
 }
 
 parameters {
- real a; // Intercept
- real bM; // Slope (regression coefficients)
- real < lower = 0 > sigma;    // Error SD
+     real a; // Intercept
+     real bM; // Slope (regression coefficients)
+     real < lower = 0 > sigma;    // Error SD
 }
 
 model {
-  vector[N] mu;               // mu is a vector
-  a ~ normal(0, 0.2);           //Priors
-  bM ~ normal(0, 0.5);
-  sigma ~ exponential(1);
-  mu = a + bM * M;
-  K ~ normal(mu , sigma);     // Likelihood
+      vector[N] mu;               // mu is a vector
+      a ~ normal(0, 0.2);           //Priors
+      bM ~ normal(0, 0.5);
+      sigma ~ exponential(1);
+      mu = a + bM * M;
+      K ~ normal(mu , sigma);     // Likelihood
 }
 ";
 
@@ -52,14 +52,14 @@ rc5_6s = stan_sample(m5_6s, data=m5_6_data);
 
 if success(rc5_6s)
 
-  part5_6s = read_samples(m5_6s, :particles)
-  part5_6s |> display
+      part5_6s = read_samples(m5_6s, :particles)
+      part5_6s |> display
 
-  rethinking = "
-             mean   sd  5.5% 94.5%
-    a      0.05 0.15 -0.20  0.29
-    bM    -0.28 0.19 -0.59  0.03
-    sigma  0.95 0.16  0.70  1.20
-  "
+      rethinking = "
+                 mean   sd  5.5% 94.5%
+        a      0.05 0.15 -0.20  0.29
+        bM    -0.28 0.19 -0.59  0.03
+        sigma  0.95 0.16  0.70  1.20
+      "
 
 end

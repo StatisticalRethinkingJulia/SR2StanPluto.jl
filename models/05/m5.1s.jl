@@ -2,7 +2,7 @@
 
 using Pkg, DrWatson
 
-@quickactivate "StatisticalRethinkingStan"
+using MonteCarloMeasurements
 using StanQuap
 using StatisticalRethinking
 
@@ -11,24 +11,24 @@ scale!(df, [:Marriage, :MedianAgeMarriage, :Divorce])
 
 stan5_1 = "
 data {
- int < lower = 1 > N; // Sample size
- vector[N] D; // Outcome
- vector[N] A; // Predictor
+    int < lower = 1 > N; // Sample size
+    vector[N] D; // Outcome
+    vector[N] A; // Predictor
 }
 
 parameters {
- real a; // Intercept
- real bA; // Slope (regression coefficients)
- real < lower = 0 > sigma;    // Error SD
+    real a; // Intercept
+    real bA; // Slope (regression coefficients)
+    real < lower = 0 > sigma;    // Error SD
 }
 
 model {
-  vector[N] mu;               // mu is a vector
-  a ~ normal(0, 0.2);         //Priors
-  bA ~ normal(0, 0.5);
-  sigma ~ exponential(1);
-  mu = a + bA * A;
-  D ~ normal(mu , sigma);     // Likelihood
+    vector[N] mu;               // mu is a vector
+    a ~ normal(0, 0.2);         //Priors
+    bA ~ normal(0, 0.5);
+    sigma ~ exponential(1);
+    mu = a + bA * A;
+    D ~ normal(mu , sigma);     // Likelihood
 }
 ";
 

@@ -2,9 +2,9 @@
 
 using Pkg, DrWatson
 
-@quickactivate "StatisticalRethinkingStan"
-using StanSample
+using MonteCarloMeasurements
 using Random
+using StanSample
 using StatisticalRethinking
 
 Random.seed!(12345)

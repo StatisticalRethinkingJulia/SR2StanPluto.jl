@@ -8,20 +8,20 @@ df[!, :log_pop] = map((x) -> log(x), df[!, :population]);
 df[!, :society] = 1:10;
 
 m12_6sl = "
-  data {
+data {
     int N;
     int T[N];
     int N_societies;
     int society[N];
     int P[N];
-  }
-  parameters {
+}
+parameters {
     real alpha;
     real bp;
     vector[N_societies] a_society;
     real<lower=0> sigma_society;
-  }
-  model {
+}
+model {
     vector[N_societies] mu;
     target += normal_lpdf(alpha | 0, 10);
     target += normal_lpdf(bp | 0, 1);
@@ -31,16 +31,16 @@ m12_6sl = "
       mu[i] = alpha + a_society[society[i]] + bp * log(P[i]);
     }
     target += poisson_log_lpmf(T | mu);
-  }
-  generated quantities {
+}
+generated quantities {
     vector[N] log_lik;
     {
-    vector[N] mu;
-    for(i in 1:N) {
-      mu[i] = alpha + a_society[society[i]] + bp * log(P[i]);
-      log_lik[i] = poisson_log_lpmf(T[i] | mu[i]);
+        vector[N] mu;
+        for(i in 1:N) {
+            mu[i] = alpha + a_society[society[i]] + bp * log(P[i]);
+            log_lik[i] = poisson_log_lpmf(T[i] | mu[i]);
+        }
     }
-  }
 }
 ";
 
@@ -61,9 +61,6 @@ rc = stan_sample(m_12_6sl, data=m12_6_data);
 # Describe the draws
 
 if success(rc)
-  chns12_6s = read_samples(m_12_6sl)
-  chns12_6s |> display
+    chns12_6s = read_samples(m_12_6sl)
+    chns12_6s |> display
 end
-println()
-
-axiskeys(chns12_6s) |> display

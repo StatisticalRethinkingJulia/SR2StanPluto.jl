@@ -2,7 +2,6 @@
 
 using Pkg, DrWatson
 
-@quickactivate "StatisticalRethinkingStan"
 using StanSample
 using StatisticalRethinking
 
@@ -49,12 +48,12 @@ m13_2s = SampleModel("m13_2s", stan13_2);
 # Input data for cmdstan
 
 m13_2_data = Dict(
-  "N" => size(df, 1), 
-  "N_depts" => maximum(df[!, :dept_id]), 
-  "applications" => df[!, :applications],  
-  "admit" => df[!, :admit], 
-  "male" => df[!, :male],
-  "dept_id"=> df[!, :dept_id]
+    "N" => size(df, 1), 
+    "N_depts" => maximum(df[!, :dept_id]), 
+    "applications" => df[!, :applications],  
+    "admit" => df[!, :admit], 
+    "male" => df[!, :male],
+    "dept_id"=> df[!, :dept_id]
 );
 
 # Sample using cmdstan
@@ -64,7 +63,7 @@ rc13_2s = stan_sample(m13_2s, data=m13_2_data);
 # Describe the draws
 
 if success(rc13_2s)
-  part13_2s = read_samples(m13_2s, :particles)
-  part13_2s |> display
+    chns13_2s = read_samples(m13_2s)
+    chns13_2s |> display
 end
 

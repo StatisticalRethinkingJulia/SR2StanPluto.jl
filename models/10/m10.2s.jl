@@ -2,7 +2,7 @@
 
 using Pkg, DrWatson
 
-@quickactivate "StatisticalRethinkingStan"
+using MonteCarloMeasurements
 using StanSample
 using StatisticalRethinking
 
@@ -56,6 +56,6 @@ bp 0.57 0.19  0.30  0.87   183 1.01
 # Describe the draws
 
 if success(rc10_2s)
-  part10_2s = read_samples(m10_2s, :particles)
-  part10_2s |> display
+    part10_2s = read_samples(m10_2s, :particles)
+    part10_2s |> display
 end

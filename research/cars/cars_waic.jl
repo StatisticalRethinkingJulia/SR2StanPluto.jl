@@ -4,7 +4,7 @@
 
 using Pkg, DrWatson
 
-@quickactivate "StatisticalRethinkingStan"
+#@quickactivate "StatisticalRethinkingStan"
 using StatsModelComparisons, StanSample
 using StatsFuns, CSV, Random
 using ParetoSmooth

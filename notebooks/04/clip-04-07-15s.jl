@@ -9,9 +9,11 @@ using Pkg, DrWatson
 
 # ╔═╡ 263e7f5c-f826-11ea-1794-2daccdb57f16
 begin
-	@quickactivate "StatisticalRethinkingStan"
+	using Distributions
 	using StanSample
 	using StatisticalRethinking
+	using StatisticalRethinkingPlots
+	using PlutoUI
 end
 
 # ╔═╡ d5b82444-f824-11ea-015a-9b79e6e41731
@@ -213,7 +215,6 @@ md"##### Read in the samples and show a chain summary."
 # ╔═╡ dc3a5122-f82c-11ea-1eff-c745d65ab11b
 if success(rc4_1s)
 	chns4_1s = read_samples(m4_1s, :mcmcchains)
-	CHNS(chns4_1s)
 end
 
 # ╔═╡ dc3af532-f82c-11ea-3212-f1b3c852513b
@@ -229,7 +230,7 @@ md"##### Plot the density of posterior draws."
 plot(chns4_1s, seriestype = :density)
 
 # ╔═╡ a3269596-3fc4-11eb-2eb3-d7bbaafe365f
-Particles(chns4_1s)
+#Particles(chns4_1s)
 
 # ╔═╡ 2814f2fc-f826-11ea-3fbc-0541fe904b97
 md"## End of clip-04-07-15s.jl"

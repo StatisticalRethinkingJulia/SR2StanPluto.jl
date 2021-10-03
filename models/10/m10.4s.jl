@@ -2,7 +2,7 @@
 
 using Pkg, DrWatson
 
-@quickactivate "StatisticalRethinkingStan"
+using MonteCarloMeasurements, MCMCChains
 using StanSample
 using StatisticalRethinking
 
@@ -47,8 +47,8 @@ m10_4s = SampleModel("m10.4s", stan10_4)
 rc10_4s = stan_sample(m10_4s; data);
 
 if success(rc10_4s)
-  nt10_4s = read_samples(m10_4s)
-  mean(nt10_4s.a, dims=2) |> display
+    nt10_4s = read_samples(m10_4s, :namedtuple)
+    mean(nt10_4s.a, dims=2) |> display
 end
 
 # Result rethinking
@@ -70,18 +70,18 @@ a[7]  1.81 0.39  1.22  2.48  3807    1
 # Update sections 
 
 if success(rc10_4s)
-  chns = read_samples(m10_4s, :mcmcchains, include_internals=true)
-  
-  chn10_4s = set_section(chns, 
+    chns = read_samples(m10_4s, :mcmcchains, include_internals=true)
+
+    chn10_4s = set_section(chns, 
     Dict(
       :parameters => ["bp", "bpC"],
       :pooled => ["a.$i" for i in 1:7],
       :internals => ["lp__", "accept_stat__", "stepsize__", "treedepth__", "n_leapfrog__",
         "divergent__", "energy__"]
     )
-  )
+    )
 
-  chn10_4s |> display
-  Chains(chn10_4s, [:pooled]) |> display
-  Chains(chn10_4s, [:internals]) |> display
+    chn10_4s |> display
+    Chains(chn10_4s, [:pooled]) |> display
+    Chains(chn10_4s, [:internals]) |> display
 end

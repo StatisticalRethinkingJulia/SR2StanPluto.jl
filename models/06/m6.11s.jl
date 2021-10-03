@@ -2,7 +2,7 @@
 
 using Pkg, DrWatson
 
-@quickactivate "StatisticalRethinkingStan"
+using MonteCarloMeasurements
 using StanSample
 using StatisticalRethinking
 
@@ -24,25 +24,25 @@ precis(df)
 
 stan6_11 = "
 data {
-  int <lower=0> N;
-  vector[N] C;
-  vector[N] P;
-  vector[N] G;
+    int <lower=0> N;
+    vector[N] C;
+    vector[N] P;
+    vector[N] G;
 }
 parameters {
-  real <lower=0> sigma;
-  real a;
-  real b_PC;
-  real b_GC;
+    real <lower=0> sigma;
+    real a;
+    real b_PC;
+    real b_GC;
 }
 model {
-  vector[N] mu;
-  sigma ~ exponential(1);
-  a ~ normal(0, 1);
-  b_PC ~ normal(0, 1);
-  b_GC ~ normal(0, 1);
-  mu = a + b_PC * P + b_GC * G;
-  C ~ normal(mu, sigma);
+    vector[N] mu;
+    sigma ~ exponential(1);
+    a ~ normal(0, 1);
+    b_PC ~ normal(0, 1);
+    b_GC ~ normal(0, 1);
+    mu = a + b_PC * P + b_GC * G;
+    C ~ normal(mu, sigma);
 }
 ";
 
@@ -51,8 +51,8 @@ m6_11_data = Dict(:N => nrow(df), :C => df.c, :P => df.p, :G => df.g)
 rc6_11s = stan_sample(m6_11s, data=m6_11_data)
 
 if success(rc6_11s)
-  part6_11s = read_samples(m6_11s, :particles)
-  part6_11s |> display
+    part6_11s = read_samples(m6_11s, :particles)
+    part6_11s |> display
 end
 
 # End of m6.11s.jl

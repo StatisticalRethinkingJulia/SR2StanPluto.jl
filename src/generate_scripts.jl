@@ -1,7 +1,7 @@
 
 using Pkg, DrWatson
 
-@quickactivate "StatisticalRethinkingStan"
+#@quickactivate "StatisticalRethinkingStan"
 
 indir = projectdir("notebooks")
 outdir = projectdir("scripts")

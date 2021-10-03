@@ -4,7 +4,7 @@ using InteractiveUtils
 using Pkg, DrWatson
 
 begin
-    @quickactivate "StatisticalRethinkingStan"
+    #@quickactivate "StatisticalRethinkingStan"
     using StanSample
     using StatisticalRethinking
 end

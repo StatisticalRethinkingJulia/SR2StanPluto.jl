@@ -1,7 +1,8 @@
 # m5.4.AMs.jl
 
 using Pkg, DrWatson
-@quickactivate "StatisticalRethinkingStan"
+
+using MonteCarloMeasurements
 using StanSample
 using StatisticalRethinking
 
@@ -10,9 +11,9 @@ using StatisticalRethinking
 df = CSV.read(sr_datadir("WaffleDivorce.csv"), DataFrame);
 
 df = DataFrame(
-  :A => df[:, :MedianAgeMarriage],
-  :M => df[:, :Marriage],
-  :D => df[:, :Divorce]
+    :A => df[:, :MedianAgeMarriage],
+    :M => df[:, :Marriage],
+    :D => df[:, :Divorce]
  )
 
 scale!(df, [:M, :A, :D])
@@ -21,21 +22,21 @@ scale!(df, [:M, :A, :D])
 
 stan5_4_AM = "
 data {
-  int N;
-  vector[N] A;
-  vector[N] M;
+    int N;
+    vector[N] A;
+    vector[N] M;
 }
 parameters {
-  real a;
-  real bAM;
-  real<lower=0> sigma;
+    real a;
+    real bAM;
+    real<lower=0> sigma;
 }
 model {
-  vector[N] mu = a + bAM * M;
-  a ~ normal( 0 , 0.2 );
-  bAM ~ normal( 0 , 0.5 );
-  sigma ~ exponential( 1 );
-  A ~ normal( mu , sigma );
+    vector[N] mu = a + bAM * M;
+    a ~ normal( 0 , 0.2 );
+    bAM ~ normal( 0 , 0.5 );
+    sigma ~ exponential( 1 );
+    A ~ normal( mu , sigma );
 }
 ";
 
@@ -46,9 +47,9 @@ m5_4_AMs = SampleModel("m5.4.AM", stan5_4_AM);
 # Input data
 
 m5_4_data = Dict(
-  "N" => size(df, 1), 
-  "M" => df[:, :M_s],
-  "A" => df[:, :A_s] 
+    "N" => size(df, 1), 
+    "M" => df[:, :M_s],
+    "A" => df[:, :A_s] 
 );
 
 # Sample using cmdstan
@@ -57,8 +58,8 @@ rc5_4_AMs = stan_sample(m5_4_AMs, data=m5_4_data);
 
 if success(rc5_4_AMs)
 
-  part5_4_AMs = read_samples(m5_4_AMs, :particles)
-  part5_4_AMs |> display
+    part5_4_AMs = read_samples(m5_4_AMs, :particles)
+    part5_4_AMs |> display
 
 end
 

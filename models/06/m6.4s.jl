@@ -1,7 +1,8 @@
 # m6.4s.jl
 
 using Pkg, DrWatson
-@quickactivate "StatisticalRethinkingStan"
+
+using MonteCarloMeasurements
 using StanSample
 using StatisticalRethinking
 
@@ -10,22 +11,22 @@ scale!(df, [:kcal_per_g, :perc_fat, :perc_lactose])
 
 stan6_4 = "
 data{
-  int <lower=1> N;              // Sample size
-  vector[N] K;
-  vector[N] L;
+    int <lower=1> N;              // Sample size
+    vector[N] K;
+    vector[N] L;
 }
 parameters{
-  real a;
-  real bL;
-  real<lower=0> sigma;
+    real a;
+    real bL;
+    real<lower=0> sigma;
 }
 model{
-  vector[N] mu;
-  sigma ~ exponential( 1 );
-  a ~ normal( 0 , 0.2 );
-  bL ~ normal( 0 , 0.5 );
-  mu = a + bL * L;
-  K ~ normal( mu , sigma );
+    vector[N] mu;
+    sigma ~ exponential( 1 );
+    a ~ normal( 0 , 0.2 );
+    bL ~ normal( 0 , 0.5 );
+    mu = a + bL * L;
+    K ~ normal( mu , sigma );
 }
 ";
 
@@ -36,8 +37,8 @@ m6_4_data = Dict("N" => size(df, 1), "L" => df[:, :perc_lactose_s],
     "K" => df[!, :kcal_per_g_s]);
 rc6_4s = stan_sample(m6_4s, data=m6_4_data);
 if success(rc6_4s)
-  part6_4s = read_samples(m6_4s, :particles)
-  part6_4s |> display
+    part6_4s = read_samples(m6_4s, :particles)
+    part6_4s |> display
 end
 
 # End of m6.4s.jl
