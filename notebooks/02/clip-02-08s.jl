@@ -9,8 +9,6 @@ using Pkg, DrWatson
 
 # ╔═╡ 7eeb666e-f2e1-11ea-1237-db0c2818822c
 begin
-	using Distributions
-	using MCMCChains
 	using StanSample
 	using StatisticalRethinking
 	using StatisticalRethinkingPlots

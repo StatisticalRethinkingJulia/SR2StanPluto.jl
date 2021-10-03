@@ -9,7 +9,6 @@ using Pkg, DrWatson
 
 # ╔═╡ f2526f60-f2e3-11ea-2d32-276d0b91d917
 begin
-	using Distributions
 	using StatisticalRethinking
 	using StatisticalRethinkingPlots
 end

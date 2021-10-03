@@ -9,7 +9,6 @@ using Pkg, DrWatson
 
 # ╔═╡ 30bfec6c-fb54-11ea-36f4-2df87c8ca599
 begin
-	using Distributions
 	using MonteCarloMeasurements
 	using StanSample
 	using StatisticalRethinking
@@ -162,7 +161,6 @@ md"## End of Fig4.3s.jl"
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
-Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 DrWatson = "634d3b9d-ee7a-5ddf-bec9-22491ea816e1"
 MonteCarloMeasurements = "0987c9cc-fe09-11e8-30f0-b96dd679fdca"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
@@ -171,12 +169,11 @@ StatisticalRethinking = "2d09df54-9d0f-5258-8220-54c2a3d4fbee"
 StatisticalRethinkingPlots = "e1a513d0-d9d9-49ff-a6dd-9d2e9db473da"
 
 [compat]
-Distributions = "~0.25.17"
 DrWatson = "~2.5.0"
 MonteCarloMeasurements = "~1.0.2"
 StanSample = "~4.1.0"
-StatisticalRethinking = "~4.2.0"
-StatisticalRethinkingPlots = "~0.9.0"
+StatisticalRethinking = "~4.2.1"
+StatisticalRethinkingPlots = "~0.9.1"
 """
 
 # ╔═╡ 00000000-0000-0000-0000-000000000002
@@ -279,9 +276,9 @@ version = "1.16.1+0"
 
 [[deps.ChainRulesCore]]
 deps = ["Compat", "LinearAlgebra", "SparseArrays"]
-git-tree-sha1 = "1417269aa4238b85967827f11f3e0ce5722b7bf0"
+git-tree-sha1 = "a325370b9dd0e6bf5656a6f1a7ae80755f8ccc46"
 uuid = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
-version = "1.7.1"
+version = "1.7.2"
 
 [[deps.CloseOpenIntervals]]
 deps = ["ArrayInterface", "Static"]
@@ -1214,15 +1211,15 @@ version = "1.2.13"
 
 [[deps.StatisticalRethinking]]
 deps = ["AxisKeys", "CSV", "DataFrames", "Distributions", "DocStringExtensions", "Documenter", "Formatting", "KernelDensity", "LinearAlgebra", "MonteCarloMeasurements", "NamedArrays", "NamedTupleTools", "OrderedCollections", "Parameters", "ParetoSmooth", "PrettyTables", "Random", "Reexport", "Requires", "Statistics", "StatsBase", "StatsFuns", "StructuralCausalModels", "Tables", "Test", "Unicode"]
-git-tree-sha1 = "4bf381953674150e2be214cfb68581fcac59de20"
+git-tree-sha1 = "3b9ce43114e42473075663fb15c7349c08b81ead"
 uuid = "2d09df54-9d0f-5258-8220-54c2a3d4fbee"
-version = "4.2.0"
+version = "4.2.1"
 
 [[deps.StatisticalRethinkingPlots]]
-deps = ["DocStringExtensions", "KernelDensity", "LaTeXStrings", "Parameters", "Plots", "Reexport", "Requires", "StatisticalRethinking", "StatsPlots"]
-git-tree-sha1 = "74a398c8a9df8323a2323db54aab177b70655083"
+deps = ["Distributions", "DocStringExtensions", "KernelDensity", "LaTeXStrings", "Parameters", "Plots", "Reexport", "Requires", "StatisticalRethinking", "StatsPlots"]
+git-tree-sha1 = "a6f1a30befdc339e17c63ef9b69dfe2682a8dbd5"
 uuid = "e1a513d0-d9d9-49ff-a6dd-9d2e9db473da"
-version = "0.9.0"
+version = "0.9.1"
 
 [[deps.StatisticalTraits]]
 deps = ["ScientificTypesBase"]

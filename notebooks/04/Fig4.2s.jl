@@ -9,7 +9,6 @@ using Pkg, DrWatson
 
 # ╔═╡ 13b72444-fb53-11ea-0ad1-f33e398484ec
 begin
-	using Distributions
 	using StatisticalRethinking
 	using StatisticalRethinkingPlots
 end
@@ -33,11 +32,11 @@ end;
 md"##### Plot and annotate the random walks."
 
 # ╔═╡ 13d118a4-fb53-11ea-3052-fd14f1273273
-begin
+let
 	f = Plots.font("DejaVu Sans", 6)
 	xtick_pos = [5, 9, 17]
 	xtick_labels = ("step 4","step 8","step 16")
-	fig1 = plot(csum, leg=false, xticks=(xtick_pos,xtick_labels), 
+	global fig1 = plot(csum, leg=false, xticks=(xtick_pos,xtick_labels), 
 		title="No of random walks = $(noofwalks)")
 	plot!(fig1, csum[:, Int(floor(noofwalks/2))], leg=false, color=:black)
 	for (i, tick_pos) in enumerate(xtick_pos)
@@ -50,19 +49,19 @@ end
 md"##### Generate 3 plots of densities at 3 different step numbers (4, 8 and 16)."
 
 # ╔═╡ 13dcc224-fb53-11ea-2baa-2f3bd271bac3
-begin
+let
 	fig2 = Vector{Plots.Plot{Plots.GRBackend}}(undef, 3)
 	plt = 1
 	for step in [4, 8, 16]
 	  indx = step + 1 # We aadded the first line of zeros
-	  global plt
 	  fitl = fit_mle(Normal, csum[indx, :])
 	  lx = (fitl.μ-4*fitl.σ):0.01:(fitl.μ+4*fitl.σ)
 	  fig2[plt] = density(csum[indx, :], legend=false, title="$(step) steps")
-	  plot!( fig2[plt], lx, pdf.(Normal( fitl.μ , fitl.σ ) , lx ), fill=(0, .5,:orange))
+	  plot!( fig2[plt], lx, pdf.(Normal( fitl.μ , fitl.σ ) , lx ),
+			fill=(0, .5,:orange))
 	  plt += 1
 	end
-	fig3 = plot(fig2..., layout=(1, 3))
+	global fig3 = plot(fig2..., layout=(1, 3))
 end
 
 # ╔═╡ 13e45362-fb53-11ea-11f1-7f4d86390826
@@ -74,17 +73,15 @@ md"## End of Fig4.2.s.jl"
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
-Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 DrWatson = "634d3b9d-ee7a-5ddf-bec9-22491ea816e1"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 StatisticalRethinking = "2d09df54-9d0f-5258-8220-54c2a3d4fbee"
 StatisticalRethinkingPlots = "e1a513d0-d9d9-49ff-a6dd-9d2e9db473da"
 
 [compat]
-Distributions = "~0.25.17"
 DrWatson = "~2.5.0"
-StatisticalRethinking = "~4.2.0"
-StatisticalRethinkingPlots = "~0.9.0"
+StatisticalRethinking = "~4.2.1"
+StatisticalRethinkingPlots = "~0.9.1"
 """
 
 # ╔═╡ 00000000-0000-0000-0000-000000000002
@@ -182,9 +179,9 @@ version = "1.16.1+0"
 
 [[deps.ChainRulesCore]]
 deps = ["Compat", "LinearAlgebra", "SparseArrays"]
-git-tree-sha1 = "1417269aa4238b85967827f11f3e0ce5722b7bf0"
+git-tree-sha1 = "a325370b9dd0e6bf5656a6f1a7ae80755f8ccc46"
 uuid = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
-version = "1.7.1"
+version = "1.7.2"
 
 [[deps.CloseOpenIntervals]]
 deps = ["ArrayInterface", "Static"]
@@ -1099,15 +1096,15 @@ version = "1.2.13"
 
 [[deps.StatisticalRethinking]]
 deps = ["AxisKeys", "CSV", "DataFrames", "Distributions", "DocStringExtensions", "Documenter", "Formatting", "KernelDensity", "LinearAlgebra", "MonteCarloMeasurements", "NamedArrays", "NamedTupleTools", "OrderedCollections", "Parameters", "ParetoSmooth", "PrettyTables", "Random", "Reexport", "Requires", "Statistics", "StatsBase", "StatsFuns", "StructuralCausalModels", "Tables", "Test", "Unicode"]
-git-tree-sha1 = "4bf381953674150e2be214cfb68581fcac59de20"
+git-tree-sha1 = "3b9ce43114e42473075663fb15c7349c08b81ead"
 uuid = "2d09df54-9d0f-5258-8220-54c2a3d4fbee"
-version = "4.2.0"
+version = "4.2.1"
 
 [[deps.StatisticalRethinkingPlots]]
-deps = ["DocStringExtensions", "KernelDensity", "LaTeXStrings", "Parameters", "Plots", "Reexport", "Requires", "StatisticalRethinking", "StatsPlots"]
-git-tree-sha1 = "74a398c8a9df8323a2323db54aab177b70655083"
+deps = ["Distributions", "DocStringExtensions", "KernelDensity", "LaTeXStrings", "Parameters", "Plots", "Reexport", "Requires", "StatisticalRethinking", "StatsPlots"]
+git-tree-sha1 = "a6f1a30befdc339e17c63ef9b69dfe2682a8dbd5"
 uuid = "e1a513d0-d9d9-49ff-a6dd-9d2e9db473da"
-version = "0.9.0"
+version = "0.9.1"
 
 [[deps.StatisticalTraits]]
 deps = ["ScientificTypesBase"]

@@ -9,7 +9,7 @@ using Pkg, DrWatson
 
 # ╔═╡ 849e4d66-f786-11ea-1fff-71edc16a1bdb
 begin
-	using Distributions, KernelDensity
+	using KernelDensity
 	using StatisticalRethinking
 	using StatisticalRethinkingPlots
 end

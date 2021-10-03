@@ -9,7 +9,7 @@ using Pkg, DrWatson
 
 # ╔═╡ 9e7c4612-f771-11ea-18ab-53b0327f84f9
 begin
-	using Distributions, Optim
+	using Optim
 	using StanSample,StanQuap
 	using StatisticalRethinking
 	using StatisticalRethinkingPlots
