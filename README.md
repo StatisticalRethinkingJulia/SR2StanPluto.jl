@@ -40,7 +40,7 @@ julia> ]                                        # Actvate Pkg mode
 julia>
 ```
 
-If above procedure fails, if present, try to delete the Manifest.toml file and repeat above steps. As mentioned above, these steps are only needed the first time.
+If the above procedure fails, if present, try to delete the Manifest.toml file and repeat the above steps. As mentioned above, these steps are only needed the first time.
 
 The next step assumes your Julia setup includes `Pkg`, `DrWatson`, `Pluto` and `PlutoUI`.
 
@@ -135,7 +135,7 @@ Using `read_samples(m5_1s, :...)` makes it easy to create MCMCChains.jl Chains o
 ## Status
 
 StatisticalRethinkingStan.jl is compatible with the 2nd edition of the book. 
-StructuralCausalModels.jl is included as en experimental dependency in the StatisticalRethinking.jl v3+ package. Definitely WIP!
+StructuralCausalModels.jl is included as an experimental dependency in the StatisticalRethinking.jl v3+ package. Definitely WIP!
 
 Any feedback is appreciated. Please open an issue.
 
