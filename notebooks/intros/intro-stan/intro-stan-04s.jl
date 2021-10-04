@@ -9,8 +9,8 @@ using Pkg, DrWatson
 
 # ╔═╡ 81020e56-f20f-11ea-362b-27053dc41cdb
 begin
-	using StanSample, StanQuap, Optim
-	using StatsPlots, Distributions
+	using Optim
+	using StanSample, StanQuap
 	using StatisticalRethinking
 end
 

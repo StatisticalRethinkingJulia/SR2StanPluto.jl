@@ -10,8 +10,8 @@ using Pkg, DrWatson
 # ╔═╡ 2decc0c0-0e8c-11eb-0775-913c59e73d99
 begin
 	using StanSample
-	using StatsPlots
 	using StatisticalRethinking
+	using StatisticalRethinkingPlots
 end
 
 # ╔═╡ 04aef49e-0e8c-11eb-3495-3130c54c5cfd

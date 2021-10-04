@@ -9,9 +9,9 @@ using Pkg, DrWatson
 
 # ╔═╡ 5629f3f2-f206-11ea-3549-57a35939b10d
 begin
-	using Distributions, StanSample
-	using StatsPlots, Plots
+	using StanSample
 	using StatisticalRethinking
+	using StatisticalRethinkingPlots
 end
 
 # ╔═╡ b8fd857a-f206-11ea-1271-fbc8487b17dc

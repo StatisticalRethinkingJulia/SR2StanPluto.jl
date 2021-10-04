@@ -9,8 +9,7 @@ using Pkg, DrWatson
 
 # ╔═╡ b878f13a-0e8b-11eb-3a3d-3df3931f026e
 begin
-	using StanSample
-	using StanQuap
+	using StanSample, StanQuap
 	using StatisticalRethinking
 end
 

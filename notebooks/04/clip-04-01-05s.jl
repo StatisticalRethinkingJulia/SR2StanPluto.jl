@@ -103,8 +103,10 @@ begin
 	small = [prod(1 .+ rand(Uniform(0, 0.01), 12)) for i in 1:10000];
 	fitb = fit_mle(Normal, big)
 	fits = fit_mle(Normal, small)
-	p5 = plot(Normal(fitb.μ , fitb.σ ), lab="Big normal distribution", fill=(0, .5,:orange))
-	p4 = plot(Normal(fits.μ , fits.σ ), lab="Small normal distribution", fill=(0, .5,:orange))
+	p5 = plot(Normal(fitb.μ , fitb.σ ), lab="Big Normal", 
+		fill=(0, .5,:orange))
+	p4 = plot(Normal(fits.μ , fits.σ ), lab="Small Normal", 
+		fill=(0, .5,:orange))
 	density!(p5, big, lab="'big' distribution")
 	density!(p4, small, lab="'small' distribution")
 	plot(p5, p4, layout=(1, 2))

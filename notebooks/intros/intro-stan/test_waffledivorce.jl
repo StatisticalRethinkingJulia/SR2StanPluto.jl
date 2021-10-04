@@ -9,12 +9,13 @@ using Pkg, DrWatson
 
 # ╔═╡ aa1d626b-4d59-43c1-a804-f7296f3f2b95
 begin
+    using ParetoSmooth
+    using CategoricalArrays
+    using PrettyTables
 	using StanSample, StanQuap
 	using StatisticalRethinking
-	using ParetoSmooth
-	using CategoricalArrays, CSV
 	using StatisticalRethinkingPlots
-	using PlutoUI, PrettyTables
+	using PlutoUI
 end
 
 # ╔═╡ 4b01173e-9c38-478e-a059-78737a0df530

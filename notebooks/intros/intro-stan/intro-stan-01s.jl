@@ -12,7 +12,7 @@ begin
 	using StanSample, StanQuap
 	using CategoricalArrays
 	using StatisticalRethinking
-	using StatsPlots, StatisticalRethinkingPlots
+	using StatisticalRethinkingPlots
 	using PlutoUI
 end
 
