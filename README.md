@@ -73,11 +73,22 @@ using Pkg, DrWatson
 # scripts use StatisticalRethinking. If mcmc sampling is
 # needed, it must be loaded before StatisticalRethinking:
 
+# Load additional packages first, e.g.:
+using GLM 
+
+# Or 
+#     using ParetoSmoothedImportanceSampling
+#     using StructuralCausalModels
+#     using MonteCarloMeasurements
+#     using BSplines
+#     using Optim
+#     using ParetoSmooth
+
+# Replace StanSample by StanQuap if stan_quap() is used.
 using StanSample
-using StanQuap             # If quap() is used.
-using GLM, Distributions, StatsBase    # ,... Possibly many more.
+
 using StatisticalRethinking
-using StatisticalRethinkingPlots, StatsPlots, Plots
+using StatisticalRethinkingPlots
 
 # To access e.g. the Howell1.csv data file:
 df = CSV.read(sr_datadir("Howell1.csv"), DataFrame)
@@ -114,10 +125,13 @@ Models:
 
 Draws:
 
-3. chns5_1s          : MCMCChains object (4000 samples from 4 chains)
+3. chns5_1s          : A KeyedArray chains object or an
+                     : MCMCChains object (4000 samples from 4 chains)
 4. part5_1s          : Stan samples (Particles notation)
 5. quap5_1s          : Quap samples (Particles notation)
-6. nt5_1s            : NamedTuple with samples values (default for `read_samples(m5_1s)`)
+6. nt5_1s            : NamedTuple with samples values
+
+The default for `read_samples(m1_1s)` is a KeyedArray chains object.
 
 Results as a DataFrame:
 
