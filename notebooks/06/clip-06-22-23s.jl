@@ -9,9 +9,9 @@ using Pkg, DrWatson
 
 # ╔═╡ 0262d116-ff3b-11ea-3529-6385864e656f
 begin
-	#@quickactivate "StatisticalRethinkingStan"
 	using StanSample
 	using StatisticalRethinking
+	using StatisticalRethinkingPlots
 end
 
 # ╔═╡ eceaf076-ff39-11ea-342c-6f995361e350
