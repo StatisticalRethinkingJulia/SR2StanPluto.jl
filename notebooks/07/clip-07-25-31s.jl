@@ -9,8 +9,8 @@ using Pkg
 
 # ╔═╡ 68139624-68bf-11eb-2ade-713114053494
 begin
-	using StanSample
-	using DataFrames, StatsPlots, Plots, Distributions
+	using ParetoSmoothedImportanceSampling
+	using StanQuap
 	using StatisticalRethinking
 	using StatisticalRethinkingPlots
 end

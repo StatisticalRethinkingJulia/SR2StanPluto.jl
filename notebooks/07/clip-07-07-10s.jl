@@ -10,7 +10,6 @@ using Pkg, DrWatson
 # ╔═╡ 5d84f90c-5053-11eb-076b-5f30fc9685e3
 begin
 	using StanQuap
-	using StatsPlots, Plots
 	using StatisticalRethinking
 	using StatisticalRethinkingPlots
 end

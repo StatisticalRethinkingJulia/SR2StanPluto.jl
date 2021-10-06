@@ -9,9 +9,10 @@ using Pkg, DrWatson
 
 # ╔═╡ ac6f2dfc-5bf6-11eb-3dc0-b5368b466ff7
 begin
-	#@quickactivate "StatisticalRethinkingStan"
-	using StanSample, StanOptimize
+	using ParetoSmoothedImportanceSampling
+	using StanQuap
 	using StatisticalRethinking
+	using StatisticalRethinkingPlots
 end
 
 # ╔═╡ a4042486-5bf5-11eb-0183-33fd00d868e4
@@ -179,7 +180,7 @@ end
 # Use `generated quantities`
 
 if success(rc7_9s)
-	nt7_9s = read_samples(m7_9s)
+	nt7_9s = read_samples(m7_9s, :namedtuple)
 	-2sum(lppd(nt7_9s.log_lik'))
 end
 

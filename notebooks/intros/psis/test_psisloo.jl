@@ -4,170 +4,332 @@
 using Markdown
 using InteractiveUtils
 
-# ╔═╡ 98601dc8-fd46-11ea-2560-e762bfd97ed7
+# ╔═╡ 9b4ead05-270b-4409-a55e-682753250b5a
 using Pkg, DrWatson
 
-# ╔═╡ 986050d6-fd46-11ea-26b6-7f618638f1ab
+# ╔═╡ cc2d68ad-79fa-45be-9233-1f8c86b0b482
 begin
-	using StanQuap
+	using ParetoSmooth
+	using PrettyTables
+	using NamedTupleTools
+	using MonteCarloMeasurements
+	using StanSample
 	using StatisticalRethinking
 	using StatisticalRethinkingPlots
+	using Test
 end
 
-# ╔═╡ f7be0558-fd45-11ea-2cb4-c9f411d2e55e
-md"## Clip-05-25-27s.jl"
+# ╔═╡ f813f5b0-e3cd-473e-96ec-2f8163f481dc
+md"###### Unfortunately the current loo_compare in ParetoSmooth does not work well in Pluto and is not convenient for SR. Here I'm experimenten with a more elaborate version."
 
-# ╔═╡ 986d9d7c-fd46-11ea-305a-915f690d446a
+# ╔═╡ e63cfbdb-2e59-4b2f-a615-89383e221db3
 begin
-	df = CSV.read(sr_datadir("WaffleDivorce.csv"), DataFrame)
+	df = CSV.read(sr_datadir("WaffleDivorce.csv"), DataFrame);
 	scale!(df, [:Marriage, :MedianAgeMarriage, :Divorce])
+	data = (N=size(df, 1), D=df.Divorce_s, A=df.MedianAgeMarriage_s,
+		M=df.Marriage_s)
 end;
 
-# ╔═╡ 946d9a5a-833e-11eb-2c8e-452d18e7c2db
-stan5_3_A = "
+# ╔═╡ 3b9f75f8-beca-451b-b878-4ae1003cff92
+stan5_1 = "
+data {
+    int < lower = 1 > N; // Sample size
+    vector[N] D; // Outcome
+    vector[N] A; // Predictor
+}
+parameters {
+    real a; // Intercept
+    real bA; // Slope (regression coefficients)
+    real < lower = 0 > sigma;    // Error SD
+}
+transformed parameters {
+    vector[N] mu;               // mu is a vector
+    for (i in 1:N)
+        mu[i] = a + bA * A[i];
+}
+model {
+    a ~ normal(0, 0.2);         //Priors
+    bA ~ normal(0, 0.5);
+    sigma ~ exponential(1);
+    D ~ normal(mu , sigma);     // Likelihood
+}
+generated quantities {
+    vector[N] log_lik;
+    for (i in 1:N)
+        log_lik[i] = normal_lpdf(D[i] | mu[i], sigma);
+}
+";
+
+# ╔═╡ 6b383054-6e46-4489-85c3-f6f1d3cde6ce
+stan5_2 = "
+data {
+    int N;
+    vector[N] D;
+    vector[N] M;
+}
+parameters {
+    real a;
+    real bM;
+    real<lower=0> sigma;
+}
+transformed parameters {
+    vector[N] mu;
+    for (i in 1:N)
+        mu[i]= a + bM * M[i];
+
+}
+model {
+    a ~ normal( 0 , 0.2 );
+    bM ~ normal( 0 , 0.5 );
+    sigma ~ exponential( 1 );
+    D ~ normal( mu , sigma );
+}
+generated quantities {
+    vector[N] log_lik;
+    for (i in 1:N)
+        log_lik[i] = normal_lpdf(D[i] | mu[i], sigma);
+}
+";
+
+# ╔═╡ a2fcc696-c920-4e53-ba19-b6bbc87fec6a
+stan5_3 = "
 data {
   int N;
-  vector[N] divorce_s;
-  vector[N] marriage_s;
-  vector[N] medianagemarriage_s;
+  vector[N] D;
+  vector[N] M;
+  vector[N] A;
 }
 parameters {
   real a;
   real bA;
   real bM;
-  real aM;
-  real bAM;
   real<lower=0> sigma;
-  real<lower=0> sigma_M;
+}
+transformed parameters {
+    vector[N] mu;
+    for (i in 1:N)
+        mu[i] = a + bA * A[i] + bM * M[i];
 }
 model {
-  // A -> D <- M
-  vector[N] mu = a + bA * medianagemarriage_s + bM * marriage_s;
   a ~ normal( 0 , 0.2 );
   bA ~ normal( 0 , 0.5 );
   bM ~ normal( 0 , 0.5 );
   sigma ~ exponential( 1 );
-  divorce_s ~ normal( mu , sigma );
-  // A -> M
-  vector[N] mu_M = aM + bAM * medianagemarriage_s;
-  aM ~ normal( 0 , 0.2 );
-  bAM ~ normal( 0 , 0.5 );
-  sigma_M ~ exponential( 1 );
-  marriage_s ~ normal( mu_M , sigma_M );
+  D ~ normal( mu , sigma );
+}
+generated quantities{
+    vector[N] log_lik;
+    for (i in 1:N)
+        log_lik[i] = normal_lpdf(D[i] | mu[i], sigma);
 }
 ";
 
-# ╔═╡ 946dcbb0-833e-11eb-25c9-af83df7acab1
+# ╔═╡ 60fc1e23-48ae-4337-9655-af47de5ef952
 begin
-	data = (N = size(df, 1), divorce_s = df.Divorce_s,
-	  marriage_s = df.Marriage_s, medianagemarriage_s = df.MedianAgeMarriage_s)
-	init = (a = 0.0, bM = 0.0, bA = -1.0, sigma = 1.0,
-		aM = 0.0, bAM = -1.0, sigma_m = 1.0)
-	q5_3_As, m5_3_As, o5_3_As = stan_quap("m5.3_A", stan5_3_A; data, init)
-	if !isnothing(q5_3_As)
-		quap5_3_As_df = sample(q5_3_As)
-	end
-	if !isnothing(m5_3_As)
-	  post5_3_As_df = read_samples(m5_3_As, :dataframe)
-	  PRECIS(post5_3_As_df)
-	end
-end
+	m5_1s = SampleModel("m5.1s", stan5_1)
+	rc5_1s = stan_sample(m5_1s; data)
 
-# ╔═╡ 946eb598-833e-11eb-2df5-5f66fa9a18d7
-# Rethinking results
-rethinking_results = "
-           mean   sd  5.5% 94.5%
-  a        0.00 0.10 -0.16  0.16
-  bM      -0.07 0.15 -0.31  0.18
-  bA      -0.61 0.15 -0.85 -0.37
-  sigma    0.79 0.08  0.66  0.91
-  aM       0.00 0.09 -0.14  0.14
-  bAM     -0.69 0.10 -0.85 -0.54
-  sigma_M  0.68 0.07  0.57  0.79
-";
+	m5_2s = SampleModel("m5.2s", stan5_2)
+	rc5_2s = stan_sample(m5_2s; data)
 
-# ╔═╡ 948f1e3c-833e-11eb-391d-6b4ec346d46c
-if !isnothing(q5_3_As)
-		PRECIS(quap5_3_As_df)
-	end
-
-# ╔═╡ 9877c52c-fd46-11ea-293f-3d07c0cd6734
-md"##### Rethinking results"
-
-# ╔═╡ b9af5a04-fd49-11ea-07ba-fb61574aed90
-part5_3_As = read_samples(m5_3_As, :particles)
-
-# ╔═╡ 988ca05a-fd46-11ea-2ae3-910f7baa2b3f
-md"## Snippet 5.25"
-
-# ╔═╡ c79668d4-fd48-11ea-0cea-838eb6be744c
-a_seq = range(-2, stop=2, length=100)
-
-# ╔═╡ 988d33a8-fd46-11ea-27e5-7ba54e7b04fa
-md"## Snippet 5.26"
-
-# ╔═╡ e46cd1dc-fd48-11ea-0802-4d13a4981a23
-begin
-	m_sim = zeros(size(post5_3_As_df, 1), length(a_seq))
+	m5_3s = SampleModel("m5.3s", stan5_3)
+	rc5_3s = stan_sample(m5_3s; data)
 end;
 
-# ╔═╡ 1e031e2a-1f72-4ba6-9773-bded9e5e3c7a
-post5_3s_df = read_samples(m5_3_As, :dataframe);
-
-# ╔═╡ 9899e134-fd46-11ea-0499-b94859cad8d1
-for j in 1:size(post5_3_As_df, 1)
-  for i in 1:length(a_seq)
-    d = Normal(post5_3s_df.aM[j] + post5_3s_df.bAM[j]*a_seq[i], 
-		post5_3s_df.sigma_M[j])
-    m_sim[j, i] = rand(d, 1)[1]
-  end
+# ╔═╡ ad41aacc-56d4-4eb9-8036-ea7bfddaffd4
+struct LooCompare
+    psis::Vector{PsisLoo}
+    table::DataFrame
 end
 
-# ╔═╡ 98a1fc3e-fd46-11ea-12f3-81a21baa6353
-md"## Snippet 5.27"
-
-# ╔═╡ eee2e318-fd48-11ea-2433-e1f6e65a082a
-d_sim = zeros(size(post5_3_As_df, 1), length(a_seq));
-
-# ╔═╡ 98a9de04-fd46-11ea-1a1b-b7512b456dc6
-for j in 1:size(post5_3_As_df, 1)
-  for i in 1:length(a_seq)
-    d = Normal(post5_3s_df.a[j] + post5_3s_df.bA[j]*a_seq[i] + 
-		post5_3s_df.bM[j]*m_sim[j, i], post5_3s_df.sigma[j])
-    d_sim[j, i] = rand(d, 1)[1]
-  end
+# ╔═╡ 9685bfe5-48ec-40cc-8b53-e980e7d90dc0
+function to_paretosmooth(ll, pd = [3,1, 2])
+    permutedims(ll, [3, 1, 2])
 end
 
-# ╔═╡ 98ac248e-fd46-11ea-37ca-fbce7e1a8203
-begin
-	plot(xlab="Manipulated A", ylab="Counterfactual D",
-		title="Total counterfactual effect of A on D")
-	plot!(a_seq, mean(d_sim, dims=1)[1, :], leg=false)
-	hpdi_array = zeros(length(a_seq), 2)
-	for i in 1:length(a_seq)
-		hpdi_array[i, :] =  hpdi(d_sim[i, :])
+# ╔═╡ 8b782153-646d-4157-8991-676b88922775
+function loo_compare(models::Vector{SampleModel}; 
+    loglikelihood_name="log_lik",
+    model_names=nothing,
+    sort_models=true)
+
+    nmodels = length(models)
+    mnames = [models[i].name for i in 1:nmodels]
+
+    chains_vec = read_samples.(models)
+    ll_vec = Array.(matrix.(chains_vec, loglikelihood_name))
+    ll_vecp = map(to_paretosmooth, ll_vec)
+    psis_vec = psis_loo.(ll_vecp)
+
+    psis_values = Vector{Float64}(undef, nmodels)
+    se_values = Vector{Float64}(undef, nmodels)
+    loos = Vector{Vector{Float64}}(undef, nmodels)
+
+    for i in 1:nmodels
+        psis_values[i] = psis_vec[i].estimates(:cv_elpd, :total)
+        se_values[i] = psis_vec[i].estimates(:cv_elpd, :se_total)
+        loos[i] = psis_vec[i].pointwise(:cv_elpd)
+    end
+
+    if sort_models
+        ind = sortperm([psis_values[i][1] for i in 1:nmodels]; rev=true)
+        psis_vec = psis_vec[ind]
+        psis_values = psis_values[ind]
+        se_values = se_values[ind]
+        loos = loos[ind]
+        mnames = mnames[ind]
+    end
+
+    # Setup comparison vectors
+
+    elpd_diff = zeros(nmodels)
+    se_diff = zeros(nmodels)
+    weight = ones(nmodels)
+
+    # Compute comparison values
+
+    for i in 2:nmodels
+        elpd_diff[i] = psis_values[i] - psis_values[1]
+        diff = loos[1] - loos[i]
+        se_diff[i] = √(length(loos[i]) * var(diff; corrected=false))
+    end
+    data = elpd_diff
+    data = hcat(data, se_diff)
+
+    sumval = sum([exp(psis_values[i]) for i in 1:nmodels])
+    @. weight = exp(psis_values) / sumval
+    data = hcat(data, weight)
+    
+    # Create DataFrame object for display
+	
+	df = DataFrame()
+	
+	if length(mnames) > 0
+		df.models = String.(mnames)
 	end
-	plot!(a_seq, mean(d_sim, dims=1)[1, :]; ribbon=(hpdi_array[:, 1],
-		-hpdi_array[:, 2]))
+
+	df.PSIS = round.(-2 .* [psis_values[i] for i in 1:nmodels], digits=1)
+	df.lppd = zeros(nmodels)
+	df.SE = se_diff
+	
+	dloo = zeros(nmodels)
+	for i in 2:nmodels
+		dloo[i] = df[i, :PSIS] - df[1, :PSIS]
+	end
+	df.dPSIS = round.(dloo, digits=1)
+	
+	dse = zeros(nmodels)
+	for i in 2:nmodels
+		diff = 2(loos[1] .- loos[i])
+		dse[i] = √(length(loos[i]) * var(diff; corrected=false))
+	end
+	df.dSE = round.(dse, digits=2)
+	
+	ps = zeros(nmodels)
+	for i in 1:nmodels
+	end
+	df.pPSIS = ps
+	
+	#=
+    table = KeyedArray(
+        data,
+        model = mnames,
+        statistic = [:cv_elpd, :se_diff, :weight],
+    )
+	=#
+	
+    # Return LooCompare object
+    
+    LooCompare(psis_vec, df)
+
 end
 
-# ╔═╡ 98d0d7e8-fd46-11ea-02d8-191f0f81da25
-md"## End of clip-05-25-27s.jl"
+# ╔═╡ 67d6f8b3-664d-45e2-b982-ceb9b995ada3
+function Base.show(io::IO, ::MIME"text/plain", loo_compare::LooCompare)
+    table = loo_compare.table
+    return pretty_table(
+        table;
+        compact_printing=false,
+        header=table.statistic,
+        row_names=table.model,
+        formatters=ft_printf("%5.2f"),
+        alignment=:r,
+    )
+end
+
+# ╔═╡ 01fd67e7-1e3a-4f2c-ada7-cf3cf316f002
+if success(rc5_1s)
+    nt5_1s = read_samples(m5_1s, :particles)
+    NamedTupleTools.select(nt5_1s, (:a, :bA, :sigma))
+end
+
+# ╔═╡ 4d3605d1-dd98-42ed-b0f9-deac208d0e80
+if success(rc5_2s)
+	nt5_2s = read_samples(m5_2s, :particles)
+    NamedTupleTools.select(nt5_2s, (:a, :bM, :sigma))
+end
+
+# ╔═╡ 63aa86ef-8928-4955-9d3d-6331c01ef55a
+if success(rc5_3s)
+    nt5_3s = read_samples(m5_3s, :particles)
+    NamedTupleTools.select(nt5_3s, (:a, :bA, :bM, :sigma))
+end
+
+# ╔═╡ bb55ce3f-8d44-4fd6-9120-6de17a6590e2
+if success(rc5_1s) && success(rc5_2s) && success(rc5_3s)
+
+    models = [m5_1s, m5_2s, m5_3s]
+    loo_comparison = loo_compare(models)
+    
+    for i in 1:length(models)
+        pw = loo_comparison.psis[i].pointwise
+        pk_plot(pw(:pareto_k))
+        savefig(joinpath(@__DIR__, "m5.$(i)s.png"))
+    end
+    
+    loo_comparison
+end;
+
+# ╔═╡ bc9b4838-9d34-4a59-975f-b1a2afcfedb3
+loo_comparison.table
+
+# ╔═╡ 14c9aa7b-a8b7-450f-a47b-aecd3b553335
+#=
+With SR/ulam():
+```
+       PSIS    SE dPSIS  dSE pPSIS weight
+m5.1u 126.0 12.83   0.0   NA   3.7   0.67
+m5.3u 127.4 12.75   1.4 0.75   4.7   0.33
+m5.2u 139.5  9.95  13.6 9.33   3.0   0.00
+```
+=#
+
+# ╔═╡ a73f934f-03e4-4d81-a24d-337188973052
+loo_comparison.psis[1]
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
 DrWatson = "634d3b9d-ee7a-5ddf-bec9-22491ea816e1"
+MonteCarloMeasurements = "0987c9cc-fe09-11e8-30f0-b96dd679fdca"
+NamedTupleTools = "d9ec5142-1e00-5aa0-9d6a-321866360f50"
+ParetoSmooth = "a68b5a21-f429-434e-8bfa-46b447300aac"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
-StanQuap = "e4723793-2808-4fc5-8a98-c57f4c160c53"
+PrettyTables = "08abe8d2-0d0c-5749-adfa-8a2ac140af0d"
+StanSample = "c1514b29-d3a0-5178-b312-660c88baa699"
 StatisticalRethinking = "2d09df54-9d0f-5258-8220-54c2a3d4fbee"
 StatisticalRethinkingPlots = "e1a513d0-d9d9-49ff-a6dd-9d2e9db473da"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [compat]
 DrWatson = "~2.5.0"
-StanQuap = "~1.3.0"
-StatisticalRethinking = "~4.3.0"
-StatisticalRethinkingPlots = "~0.9.3"
+MonteCarloMeasurements = "~1.0.2"
+NamedTupleTools = "~0.13.7"
+ParetoSmooth = "~0.6.6"
+PrettyTables = "~1.2.2"
+StanSample = "~4.2.0"
+StatisticalRethinking = "~4.2.1"
+StatisticalRethinkingPlots = "~0.9.1"
 """
 
 # ╔═╡ 00000000-0000-0000-0000-000000000002
@@ -396,9 +558,9 @@ uuid = "8ba89e20-285c-5b6f-9357-94700520ee1b"
 
 [[deps.Distributions]]
 deps = ["ChainRulesCore", "FillArrays", "LinearAlgebra", "PDMats", "Printf", "QuadGK", "Random", "SparseArrays", "SpecialFunctions", "Statistics", "StatsBase", "StatsFuns"]
-git-tree-sha1 = "ff7890c74e2eaffbc0b3741811e3816e64b6343d"
+git-tree-sha1 = "a9b99024b57d12fb19892d3f2230856f6d9671a4"
 uuid = "31c24e10-a181-5473-b8eb-7969acd0382f"
-version = "0.25.18"
+version = "0.25.17"
 
 [[deps.DocStringExtensions]]
 deps = ["LibGit2"]
@@ -982,12 +1144,6 @@ git-tree-sha1 = "ee4bb422cf79f696da410cb033e774c03c1c3023"
 uuid = "a68b5a21-f429-434e-8bfa-46b447300aac"
 version = "0.6.6"
 
-[[deps.ParetoSmoothedImportanceSampling]]
-deps = ["CSV", "DataFrames", "Distributions", "JSON", "Printf", "Random", "StanSample", "Statistics", "StatsFuns", "StatsPlots", "Test"]
-git-tree-sha1 = "c272a5d52dc5947a84b22b1b6655284d2fb45c8a"
-uuid = "98f080ec-61e2-11eb-1c7b-31ea1097256f"
-version = "1.1.0"
-
 [[deps.Parsers]]
 deps = ["Dates"]
 git-tree-sha1 = "a8709b968a1ea6abc2dc1967cb1db6ac9a00dfb6"
@@ -1012,15 +1168,15 @@ version = "2.0.1"
 
 [[deps.PlotUtils]]
 deps = ["ColorSchemes", "Colors", "Dates", "Printf", "Random", "Reexport", "Statistics"]
-git-tree-sha1 = "b084324b4af5a438cd63619fd006614b3b20b87b"
+git-tree-sha1 = "2537ed3c0ed5e03896927187f5f2ee6a4ab342db"
 uuid = "995b91a9-d308-5afd-9ec6-746e21dbc043"
-version = "1.0.15"
+version = "1.0.14"
 
 [[deps.Plots]]
 deps = ["Base64", "Contour", "Dates", "Downloads", "FFMPEG", "FixedPointNumbers", "GR", "GeometryBasics", "JSON", "Latexify", "LinearAlgebra", "Measures", "NaNMath", "PlotThemes", "PlotUtils", "Printf", "REPL", "Random", "RecipesBase", "RecipesPipeline", "Reexport", "Requires", "Scratch", "Showoff", "SparseArrays", "Statistics", "StatsBase", "UUIDs"]
-git-tree-sha1 = "6841db754bd01a91d281370d9a0f8787e220ae08"
+git-tree-sha1 = "cfbd033def161db9494f86c5d18fbf874e09e514"
 uuid = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
-version = "1.22.4"
+version = "1.22.3"
 
 [[deps.Polyester]]
 deps = ["ArrayInterface", "BitTwiddlingConvenienceFunctions", "CPUSummary", "IfElse", "ManualMemory", "Requires", "Static", "StrideArraysCore", "ThreadingUtilities"]
@@ -1191,18 +1347,6 @@ git-tree-sha1 = "bfaebe19ada44a52a6c797d48473f1bb22fd0853"
 uuid = "9713c8f3-0168-54b5-986e-22c526958f39"
 version = "0.2.0"
 
-[[deps.StanOptimize]]
-deps = ["CSV", "DataFrames", "DelimitedFiles", "Distributed", "DocStringExtensions", "Documenter", "Random", "StanBase", "Statistics", "Test", "Unicode"]
-git-tree-sha1 = "1870196ea82755fe819b53a63a522bc87d731dae"
-uuid = "fbd8da12-e93d-5a64-9231-612a0707ab99"
-version = "2.4.0"
-
-[[deps.StanQuap]]
-deps = ["CSV", "DataFrames", "Distributions", "DocStringExtensions", "LinearAlgebra", "MonteCarloMeasurements", "NamedTupleTools", "OrderedCollections", "Reexport", "StanBase", "StanOptimize", "StanSample", "Statistics", "StatsBase"]
-git-tree-sha1 = "7562ff143a284f9b7fc3548c609b57a6bd8f5c02"
-uuid = "e4723793-2808-4fc5-8a98-c57f4c160c53"
-version = "1.3.0"
-
 [[deps.StanSample]]
 deps = ["AxisKeys", "CSV", "DelimitedFiles", "Distributed", "DocStringExtensions", "MonteCarloMeasurements", "NamedTupleTools", "OrderedCollections", "Random", "Reexport", "Requires", "StanBase", "TableOperations", "Tables", "Unicode"]
 git-tree-sha1 = "c2fb78c815028192d4e3af998c1110cc3417a28e"
@@ -1222,16 +1366,16 @@ uuid = "90137ffa-7385-5640-81b9-e52037218182"
 version = "1.2.13"
 
 [[deps.StatisticalRethinking]]
-deps = ["AxisKeys", "CSV", "DataFrames", "Distributions", "DocStringExtensions", "Documenter", "Formatting", "KernelDensity", "LinearAlgebra", "MonteCarloMeasurements", "NamedArrays", "NamedTupleTools", "OrderedCollections", "Parameters", "ParetoSmooth", "ParetoSmoothedImportanceSampling", "PrettyTables", "Random", "Reexport", "Requires", "Statistics", "StatsBase", "StatsFuns", "StructuralCausalModels", "Tables", "Test", "Unicode"]
-git-tree-sha1 = "da967a4ebdfc8a578cbf0482a7cf933054a8269c"
+deps = ["AxisKeys", "CSV", "DataFrames", "Distributions", "DocStringExtensions", "Documenter", "Formatting", "KernelDensity", "LinearAlgebra", "MonteCarloMeasurements", "NamedArrays", "NamedTupleTools", "OrderedCollections", "Parameters", "ParetoSmooth", "PrettyTables", "Random", "Reexport", "Requires", "Statistics", "StatsBase", "StatsFuns", "StructuralCausalModels", "Tables", "Test", "Unicode"]
+git-tree-sha1 = "3b9ce43114e42473075663fb15c7349c08b81ead"
 uuid = "2d09df54-9d0f-5258-8220-54c2a3d4fbee"
-version = "4.3.0"
+version = "4.2.1"
 
 [[deps.StatisticalRethinkingPlots]]
 deps = ["Distributions", "DocStringExtensions", "KernelDensity", "LaTeXStrings", "Parameters", "Plots", "Reexport", "Requires", "StatisticalRethinking", "StatsPlots"]
-git-tree-sha1 = "6e0a0003e3df1829b0a129d0ff141e1590758f61"
+git-tree-sha1 = "a6f1a30befdc339e17c63ef9b69dfe2682a8dbd5"
 uuid = "e1a513d0-d9d9-49ff-a6dd-9d2e9db473da"
-version = "0.9.3"
+version = "0.9.1"
 
 [[deps.StatisticalTraits]]
 deps = ["ScientificTypesBase"]
@@ -1355,9 +1499,9 @@ uuid = "4ec0a83e-493e-50e2-b9ac-8f72acf5a8f5"
 
 [[deps.VectorizationBase]]
 deps = ["ArrayInterface", "CPUSummary", "HostCPUFeatures", "Hwloc", "IfElse", "LayoutPointers", "Libdl", "LinearAlgebra", "SIMDTypes", "Static"]
-git-tree-sha1 = "a6ca373834ec22aa850c09392399add8f13d476a"
+git-tree-sha1 = "b41a09fb935b6de8243b851727b335eec0a9eb6f"
 uuid = "3d5dd08c-fd9d-11e8-17fa-ed2836048c2f"
-version = "0.21.13"
+version = "0.21.12"
 
 [[deps.Wayland_jll]]
 deps = ["Artifacts", "Expat_jll", "JLLWrappers", "Libdl", "Libffi_jll", "Pkg", "XML2_jll"]
@@ -1599,26 +1743,24 @@ version = "0.9.1+5"
 """
 
 # ╔═╡ Cell order:
-# ╟─f7be0558-fd45-11ea-2cb4-c9f411d2e55e
-# ╠═98601dc8-fd46-11ea-2560-e762bfd97ed7
-# ╠═986050d6-fd46-11ea-26b6-7f618638f1ab
-# ╠═986d9d7c-fd46-11ea-305a-915f690d446a
-# ╠═946d9a5a-833e-11eb-2c8e-452d18e7c2db
-# ╠═946dcbb0-833e-11eb-25c9-af83df7acab1
-# ╠═946eb598-833e-11eb-2df5-5f66fa9a18d7
-# ╠═948f1e3c-833e-11eb-391d-6b4ec346d46c
-# ╟─9877c52c-fd46-11ea-293f-3d07c0cd6734
-# ╠═b9af5a04-fd49-11ea-07ba-fb61574aed90
-# ╟─988ca05a-fd46-11ea-2ae3-910f7baa2b3f
-# ╠═c79668d4-fd48-11ea-0cea-838eb6be744c
-# ╠═988d33a8-fd46-11ea-27e5-7ba54e7b04fa
-# ╠═e46cd1dc-fd48-11ea-0802-4d13a4981a23
-# ╠═1e031e2a-1f72-4ba6-9773-bded9e5e3c7a
-# ╠═9899e134-fd46-11ea-0499-b94859cad8d1
-# ╟─98a1fc3e-fd46-11ea-12f3-81a21baa6353
-# ╠═eee2e318-fd48-11ea-2433-e1f6e65a082a
-# ╠═98a9de04-fd46-11ea-1a1b-b7512b456dc6
-# ╠═98ac248e-fd46-11ea-37ca-fbce7e1a8203
-# ╟─98d0d7e8-fd46-11ea-02d8-191f0f81da25
+# ╟─f813f5b0-e3cd-473e-96ec-2f8163f481dc
+# ╠═9b4ead05-270b-4409-a55e-682753250b5a
+# ╠═cc2d68ad-79fa-45be-9233-1f8c86b0b482
+# ╠═e63cfbdb-2e59-4b2f-a615-89383e221db3
+# ╠═3b9f75f8-beca-451b-b878-4ae1003cff92
+# ╠═6b383054-6e46-4489-85c3-f6f1d3cde6ce
+# ╠═a2fcc696-c920-4e53-ba19-b6bbc87fec6a
+# ╠═60fc1e23-48ae-4337-9655-af47de5ef952
+# ╠═ad41aacc-56d4-4eb9-8036-ea7bfddaffd4
+# ╠═9685bfe5-48ec-40cc-8b53-e980e7d90dc0
+# ╠═8b782153-646d-4157-8991-676b88922775
+# ╠═67d6f8b3-664d-45e2-b982-ceb9b995ada3
+# ╠═01fd67e7-1e3a-4f2c-ada7-cf3cf316f002
+# ╠═4d3605d1-dd98-42ed-b0f9-deac208d0e80
+# ╠═63aa86ef-8928-4955-9d3d-6331c01ef55a
+# ╠═bb55ce3f-8d44-4fd6-9120-6de17a6590e2
+# ╠═bc9b4838-9d34-4a59-975f-b1a2afcfedb3
+# ╠═14c9aa7b-a8b7-450f-a47b-aecd3b553335
+# ╠═a73f934f-03e4-4d81-a24d-337188973052
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002

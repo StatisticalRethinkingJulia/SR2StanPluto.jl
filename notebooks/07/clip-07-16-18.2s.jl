@@ -9,9 +9,10 @@ using Pkg, DrWatson
 
 # ╔═╡ ac6f2dfc-5bf6-11eb-3dc0-b5368b466ff7
 begin
-	#@quickactivate "StatisticalRethinkingStan"
-	using StanSample, StanOptimize
+	using ParetoSmoothedImportanceSampling
+	using StanQuap
 	using StatisticalRethinking
+	using StatisticalRethinkingPlots
 end
 
 # ╔═╡ a4042486-5bf5-11eb-0183-33fd00d868e4
@@ -46,6 +47,11 @@ model {
 	b ~ normal(0, 10);
 	sigma ~ exponential(1);
     y ~ normal(mu, sigma);          // observed model
+}
+generated quantities {
+	vector[N] log_lik;
+	for (i in 1:N)
+		log_lik[i] = normal_lpdf(y[i] | mu[i], sigma);
 }
 ";
 
