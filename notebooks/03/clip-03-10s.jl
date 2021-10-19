@@ -73,7 +73,7 @@ rc3_1s = stan_sample(m3_1s, data=m3_1_data);
 
 # ╔═╡ 4f06f9e0-f36d-11ea-3bcf-51b2ce61f1a5
 if success(rc3_1s)
-	chn = read_samples(m3_1s)
+	chn = read_samples(m3_1s, :mamachains)
 	CHNS(chn)
 end
 

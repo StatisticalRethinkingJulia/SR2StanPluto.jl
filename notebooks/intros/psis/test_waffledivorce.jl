@@ -133,6 +133,12 @@ begin
 	rc5_3s = stan_sample(m5_3s; data)
 end;
 
+# ╔═╡ 92696c32-f6dc-46b6-873b-c5c44b2db87f
+begin
+	using DimensionalData
+	das5_1s = read_samples(m5_1s, :dimarrays)
+end
+
 # ╔═╡ b9eddbb1-72df-43c6-b655-9fb9458cc6d7
 if success(rc5_1s)
     nt5_1s = read_samples(m5_1s, :particles)
@@ -202,10 +208,49 @@ let
 	end
 end
 
+# ╔═╡ 3df253d4-00e0-409c-b11d-f452c268424f
+begin
+	m5_1s_df = read_samples(m5_1s, :dataframe)
+	PRECIS(m5_1s_df)
+end
+
+# ╔═╡ 2653c407-29d3-4b80-b1d6-c571a91c68b9
+m5_1s_df
+
+# ╔═╡ 958903aa-d7d1-4973-b602-8beaa5094428
+begin
+	ka5_1s = read_samples(m5_1s)
+	CHNS(ka5_1s, :keyedarray)
+end
+
+# ╔═╡ 890ceb46-1d98-48b3-bbb3-f36f135a89a9
+size(das5_1s)
+
+# ╔═╡ 84be7aef-9885-43a4-bf25-d404ffc1168b
+begin
+	da5_1s = read_samples(m5_1s, :dimarray)
+end
+
+# ╔═╡ 7369e2e9-fdbd-41d3-b4e7-d91e7bf5c5d7
+axes(da5_1s)
+
+# ╔═╡ 0f004ead-1784-4374-87ee-7fee2c89bec3
+dims(da5_1s)
+
+# ╔═╡ b2eb202b-15f4-4cfd-ab6e-8d349c46ebc9
+dims(da5_1s)[2]
+
+# ╔═╡ 09f039b9-3f6f-49f6-ae9a-66b3fbe2792f
+dims(da5_1s)[2].val
+
+# ╔═╡ 9bc89f0f-6263-4783-8f72-e2ebe064b730
+size(da5_1s)
+
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
 CategoricalArrays = "324d7699-5711-5eae-9e2f-1d82baa6b597"
+DimensionalData = "0703355e-b756-11e9-17c0-8b28908087d0"
 DrWatson = "634d3b9d-ee7a-5ddf-bec9-22491ea816e1"
 NamedTupleTools = "d9ec5142-1e00-5aa0-9d6a-321866360f50"
 ParetoSmooth = "a68b5a21-f429-434e-8bfa-46b447300aac"
@@ -218,6 +263,7 @@ StatisticalRethinkingPlots = "e1a513d0-d9d9-49ff-a6dd-9d2e9db473da"
 
 [compat]
 CategoricalArrays = "~0.10.1"
+DimensionalData = "~0.18.4"
 DrWatson = "~2.5.0"
 NamedTupleTools = "~0.13.7"
 ParetoSmooth = "~0.6.6"
@@ -389,6 +435,12 @@ version = "3.39.0"
 deps = ["Artifacts", "Libdl"]
 uuid = "e66e0078-7015-5450-92f7-15fbd957f2ae"
 
+[[deps.ConstructionBase]]
+deps = ["LinearAlgebra"]
+git-tree-sha1 = "f74e9d5388b8620b4cee35d4c5a618dd4dc547f4"
+uuid = "187b0558-2788-49d3-abe0-74a17ed4e7c9"
+version = "1.3.0"
+
 [[deps.Contour]]
 deps = ["StaticArrays"]
 git-tree-sha1 = "9f02045d934dc030edad45944ea80dbd1f0ebea7"
@@ -447,6 +499,12 @@ deps = ["NaNMath", "Random", "SpecialFunctions"]
 git-tree-sha1 = "7220bc21c33e990c14f4a9a319b1d242ebc5b269"
 uuid = "b552c78f-8df3-52c6-915a-8e097449b14b"
 version = "1.3.1"
+
+[[deps.DimensionalData]]
+deps = ["Adapt", "ArrayInterface", "ConstructionBase", "Dates", "LinearAlgebra", "Random", "RecipesBase", "SparseArrays", "Statistics", "Tables"]
+git-tree-sha1 = "ee9ae3bce0495639a8c803f7e1d6803b87f8633f"
+uuid = "0703355e-b756-11e9-17c0-8b28908087d0"
+version = "0.18.4"
 
 [[deps.Distances]]
 deps = ["LinearAlgebra", "Statistics", "StatsAPI"]
@@ -1686,5 +1744,16 @@ version = "0.9.1+5"
 # ╠═799d1b92-5f0d-4768-b563-b5b9a4ad3b9e
 # ╠═ce4861ab-bf8e-4c0f-8305-40595db59b45
 # ╠═de8cf8c5-2d6a-4784-a989-46b34c8713d6
+# ╠═3df253d4-00e0-409c-b11d-f452c268424f
+# ╠═2653c407-29d3-4b80-b1d6-c571a91c68b9
+# ╠═958903aa-d7d1-4973-b602-8beaa5094428
+# ╠═92696c32-f6dc-46b6-873b-c5c44b2db87f
+# ╠═890ceb46-1d98-48b3-bbb3-f36f135a89a9
+# ╠═7369e2e9-fdbd-41d3-b4e7-d91e7bf5c5d7
+# ╠═0f004ead-1784-4374-87ee-7fee2c89bec3
+# ╠═b2eb202b-15f4-4cfd-ab6e-8d349c46ebc9
+# ╠═09f039b9-3f6f-49f6-ae9a-66b3fbe2792f
+# ╠═84be7aef-9885-43a4-bf25-d404ffc1168b
+# ╠═9bc89f0f-6263-4783-8f72-e2ebe064b730
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002

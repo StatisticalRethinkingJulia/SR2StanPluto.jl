@@ -60,8 +60,8 @@ rc = stan_sample(sm, data=heightsdata);
 
 # ╔═╡ 3fefbbe4-f792-11ea-3602-612bbf22dc17
 if success(rc)
- 	chns = read_samples(sm)
-	CHNS(chns)
+ 	chns = read_samples(sm, :dataframe)
+	chns
 end
 
 # ╔═╡ 1288ad5f-1a74-4ed4-9065-420c9bb28139

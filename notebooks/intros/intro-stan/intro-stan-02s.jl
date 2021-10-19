@@ -9,6 +9,7 @@ using Pkg, DrWatson
 
 # ╔═╡ 5629f3f2-f206-11ea-3549-57a35939b10d
 begin
+	using AxisKeys
 	using StanSample
 	using StatisticalRethinking
 	using StatisticalRethinkingPlots
@@ -67,7 +68,7 @@ if success(rc1_1s)
 
 	# Fit a normal distribution to each chain.
 
-	chns1_1s = read_samples(m1_1s)
+	chns1_1s = read_samples(m1_1s, :keyedarray)
 	chns1_1s_theta = chns1_1s(param=:theta)
 
 	for i in 1:4
@@ -116,6 +117,7 @@ md"## End of intro-stan/intro-stan-02s.jl"
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
+AxisKeys = "94b1ba4f-4ee9-5380-92f1-94cde586c3c5"
 DrWatson = "634d3b9d-ee7a-5ddf-bec9-22491ea816e1"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 StanSample = "c1514b29-d3a0-5178-b312-660c88baa699"
@@ -123,6 +125,7 @@ StatisticalRethinking = "2d09df54-9d0f-5258-8220-54c2a3d4fbee"
 StatisticalRethinkingPlots = "e1a513d0-d9d9-49ff-a6dd-9d2e9db473da"
 
 [compat]
+AxisKeys = "~0.1.21"
 DrWatson = "~2.5.0"
 StanSample = "~4.2.0"
 StatisticalRethinking = "~4.2.1"
@@ -190,9 +193,9 @@ version = "1.0.0"
 
 [[deps.AxisKeys]]
 deps = ["AbstractFFTs", "CovarianceEstimation", "IntervalSets", "InvertedIndices", "LazyStack", "LinearAlgebra", "NamedDims", "OffsetArrays", "Statistics", "StatsBase", "Tables"]
-git-tree-sha1 = "708af61b1782c0e8eeb7171f5ee87e09c6771bbd"
+git-tree-sha1 = "071ad30146c225d25a659c8d59c1966020f719ab"
 uuid = "94b1ba4f-4ee9-5380-92f1-94cde586c3c5"
-version = "0.1.20"
+version = "0.1.21"
 
 [[deps.Base64]]
 uuid = "2a0f44e3-6c83-55bd-87e4-b1978d98bd5f"

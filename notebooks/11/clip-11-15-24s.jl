@@ -95,7 +95,7 @@ b[4]  0.35 0.29 -0.10  0.82   651  1.00
 
 # ╔═╡ 41ccd42e-8db0-11eb-1ed5-9f897b54a7cc
 begin
-	nt11_4s = read_samples(m11_4s)
+	nt11_4s = read_samples(m11_4s, :namedtuple)
 	p_left = [logistic.(nt11_4s.a[i]) for i in 1:7]
 	mean.([p_left[i] for i in 1:7])
 end

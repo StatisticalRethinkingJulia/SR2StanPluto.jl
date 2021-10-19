@@ -131,7 +131,7 @@ Draws:
 5. quap5_1s          : Quap samples (Particles notation)
 6. nt5_1s            : NamedTuple with samples values
 
-The default for `read_samples(m1_1s)` is a KeyedArray chains object.
+The default for `read_samples(m1_1s)` is a StanTable chains object.
 
 Results as a DataFrame:
 
@@ -142,9 +142,11 @@ Results as a DataFrame:
 
 As before, the `s` at the end indicates Stan.
 
-By default `read_samples(m5_1s)` returns a NamedTuple with the results.
+By default `read_samples(m5_1s)` returns a StanTable with the results. In general it is safer to
+specify the desired format, i.e. `read_samples(m5_1s, :table)` as the Julia eco-sytem is still
+evolving rapidly with new options.
 
-Using `read_samples(m5_1s, :...)` makes it easy to create MCMCChains.jl Chains objects, a DataFrame with draws or a MonteCarloMeasurements.jl Particles object (item 4 in above list).
+Using `read_samples(m5_1s, :...)` makes it easy to convert samples to other formats.
 
 ## Status
 

@@ -2,6 +2,7 @@
 
 using Pkg, DrWatson
 
+using DataFrames
 using StanSample
 using StatisticalRethinking
 
@@ -68,6 +69,6 @@ m14_1_data = Dict(
 rc14_1s = stan_sample(m14_1s, data=m14_1_data)
 
 if success(rc14_1s)
-    chns14_1s = read_samples(m14_1s)
+    chns14_1s = read_samples(m14_1s, :dataframe)
     chns14_1s |> display
 end

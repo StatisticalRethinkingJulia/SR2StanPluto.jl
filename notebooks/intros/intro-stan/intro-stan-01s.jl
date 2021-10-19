@@ -9,6 +9,7 @@ using Pkg, DrWatson
 
 # ╔═╡ 5d9316ec-f1dd-11ea-1c0d-0d8566ab3a90
 begin
+	using AxisKeys
 	using MonteCarloMeasurements
 	using CategoricalArrays
 	using StanQuap
@@ -227,17 +228,20 @@ end
 # ╔═╡ d0006f7c-f1ec-11ea-3361-9baae166396a
 md"##### Show the structure and contents of a KeyedArray chains object."
 
+# ╔═╡ d800aa0c-3f13-43de-84ea-30c6f39eddc4
+CHNS(chns::KeyedArray) = Text(sprint(show, "text/plain", chns))
+
 # ╔═╡ 2759963f-7cbd-4c8e-9cb3-85e175b1e0e6
 md"###### Note the draws are in the first dimension, the chains in the second dimension, while the parameters (in this case just theta) are the third dimension."
 
 # ╔═╡ 1ce58ec6-f1ed-11ea-1c05-99a463481fd8
 begin
-	chns1_1s = read_samples(m1_1s)
-	
-	# Display the chns
-	
+	chns1_1s = read_samples(m1_1s, :keyedarray)
 	CHNS(chns1_1s)
 end
+
+# ╔═╡ 09106ceb-1f13-466e-b398-a6e61702f7de
+DataFrame(chns1_1s)
 
 # ╔═╡ 5b0670c0-b38a-45a1-9fe0-27dfd39584a6
 md"###### Append all chains and select theta."
@@ -245,19 +249,19 @@ md"###### Append all chains and select theta."
 # ╔═╡ db2850a5-2334-4758-8a50-30ffe907920b
 size(vcat(chns1_1s(:theta)...))
 
-# ╔═╡ 2c465b0a-f1ed-11ea-35e3-017075244cd8
-md"##### Plot the chains."
-
 # ╔═╡ d00c24de-f1ec-11ea-1c83-cb2584421f6f
 md"##### Display the stansummary result as a DataFrame."
 
 # ╔═╡ 0e3309b2-f1ed-11ea-0d57-2f0e5b83c8dd
 success(rc1_1s) && read_summary(m1_1s)
 
+# ╔═╡ 2c465b0a-f1ed-11ea-35e3-017075244cd8
+md"##### Plot the chains."
+
 # ╔═╡ bc8dccca-96a0-4b6a-bdd0-c19e0be4bcfc
 begin
 	res = trankplot(m1_1s, :theta)
-	plot(res[1]; dpi=460)
+	plot(res[1])
 end
 
 # ╔═╡ 5de8c1c8-f1dd-11ea-1b97-5bbb6c6316ae
@@ -266,6 +270,7 @@ md"## End of intros/intro-stan-01s.jl"
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
+AxisKeys = "94b1ba4f-4ee9-5380-92f1-94cde586c3c5"
 CategoricalArrays = "324d7699-5711-5eae-9e2f-1d82baa6b597"
 DrWatson = "634d3b9d-ee7a-5ddf-bec9-22491ea816e1"
 MonteCarloMeasurements = "0987c9cc-fe09-11e8-30f0-b96dd679fdca"
@@ -276,6 +281,7 @@ StatisticalRethinking = "2d09df54-9d0f-5258-8220-54c2a3d4fbee"
 StatisticalRethinkingPlots = "e1a513d0-d9d9-49ff-a6dd-9d2e9db473da"
 
 [compat]
+AxisKeys = "~0.1.21"
 CategoricalArrays = "~0.10.1"
 DrWatson = "~2.5.0"
 MonteCarloMeasurements = "~1.0.2"
@@ -346,9 +352,9 @@ version = "1.0.0"
 
 [[deps.AxisKeys]]
 deps = ["AbstractFFTs", "CovarianceEstimation", "IntervalSets", "InvertedIndices", "LazyStack", "LinearAlgebra", "NamedDims", "OffsetArrays", "Statistics", "StatsBase", "Tables"]
-git-tree-sha1 = "708af61b1782c0e8eeb7171f5ee87e09c6771bbd"
+git-tree-sha1 = "071ad30146c225d25a659c8d59c1966020f719ab"
 uuid = "94b1ba4f-4ee9-5380-92f1-94cde586c3c5"
-version = "0.1.20"
+version = "0.1.21"
 
 [[deps.Base64]]
 uuid = "2a0f44e3-6c83-55bd-87e4-b1978d98bd5f"
@@ -1770,13 +1776,15 @@ version = "0.9.1+5"
 # ╠═a0a04fa8-2b5e-11eb-0a44-4b31c17d9a57
 # ╠═c2ef6864-802c-11eb-1a86-858e8db6e45f
 # ╟─d0006f7c-f1ec-11ea-3361-9baae166396a
+# ╠═d800aa0c-3f13-43de-84ea-30c6f39eddc4
 # ╟─2759963f-7cbd-4c8e-9cb3-85e175b1e0e6
 # ╠═1ce58ec6-f1ed-11ea-1c05-99a463481fd8
+# ╠═09106ceb-1f13-466e-b398-a6e61702f7de
 # ╟─5b0670c0-b38a-45a1-9fe0-27dfd39584a6
 # ╠═db2850a5-2334-4758-8a50-30ffe907920b
-# ╟─2c465b0a-f1ed-11ea-35e3-017075244cd8
 # ╟─d00c24de-f1ec-11ea-1c83-cb2584421f6f
 # ╠═0e3309b2-f1ed-11ea-0d57-2f0e5b83c8dd
+# ╟─2c465b0a-f1ed-11ea-35e3-017075244cd8
 # ╠═bc8dccca-96a0-4b6a-bdd0-c19e0be4bcfc
 # ╟─5de8c1c8-f1dd-11ea-1b97-5bbb6c6316ae
 # ╟─00000000-0000-0000-0000-000000000001

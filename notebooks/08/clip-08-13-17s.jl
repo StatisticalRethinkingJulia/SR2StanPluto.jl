@@ -9,6 +9,7 @@ using Pkg, DrWatson
 
 # ╔═╡ 6db218c6-59a8-11eb-2a8b-7107354cf590
 begin
+	using AxisKeys
 	using ParetoSmoothedImportanceSampling
 	using StanSample
 	using StatisticalRethinking
@@ -174,8 +175,29 @@ plot_models([m8_1s, m8_2s, m8_3s], :waic)
 # ╔═╡ c1a6492a-6b2b-11eb-0f91-796cd055a303
 compare([m8_1s, m8_2s, m8_3s], :psis)
 
-# ╔═╡ 0721effc-6af7-11eb-1149-5f8050095c92
-loo8_3s, loos8_3s, pk8_3s = psisloo(m8_3s)
+# ╔═╡ 166943ff-30dc-4950-8465-10b4c5d46db2
+begin
+	loo8_1s, loos8_1s, pk8_1s = psisloo(m8_1s)
+	pk_qualify(pk8_1s)
+end
+
+# ╔═╡ fb8ca96b-fe7f-45b3-a436-6dd62351d388
+pk_plot(pk8_1s)
+
+# ╔═╡ 3c1ebbd9-031b-4334-a5ef-b9bdfd064d36
+begin
+	loo8_2s, loos8_2s, pk8_2s = psisloo(m8_2s)
+	pk_qualify(pk8_2s)
+end
+
+# ╔═╡ 6d917077-b435-4a4f-bc8d-ab03a5ce57e9
+pk_plot(pk8_2s)
+
+# ╔═╡ c7bac0a0-00af-4235-89f0-f11b2212142c
+begin
+	loo8_3s, loos8_3s, pk8_3s = psisloo(m8_3s)
+	pk_qualify(pk8_3s)
+end
 
 # ╔═╡ 246d50ae-6af7-11eb-188e-5dd9a1382b32
 pk_plot(pk8_3s)
@@ -1685,7 +1707,11 @@ version = "0.9.1+5"
 # ╠═ba035d2a-6b2b-11eb-382d-313cc52aeb1a
 # ╠═a27a15de-7069-11eb-277c-2f2d7b4dfa8b
 # ╠═c1a6492a-6b2b-11eb-0f91-796cd055a303
-# ╠═0721effc-6af7-11eb-1149-5f8050095c92
+# ╠═166943ff-30dc-4950-8465-10b4c5d46db2
+# ╠═fb8ca96b-fe7f-45b3-a436-6dd62351d388
+# ╠═3c1ebbd9-031b-4334-a5ef-b9bdfd064d36
+# ╠═6d917077-b435-4a4f-bc8d-ab03a5ce57e9
+# ╠═c7bac0a0-00af-4235-89f0-f11b2212142c
 # ╠═246d50ae-6af7-11eb-188e-5dd9a1382b32
 # ╠═9331b922-6b14-11eb-0fa2-b7ac480b546c
 # ╠═d60aaa22-6b2c-11eb-1e68-f1609c237a37

@@ -22,6 +22,15 @@ end
 # ╔═╡ f813f5b0-e3cd-473e-96ec-2f8163f481dc
 md"###### Unfortunately the current loo_compare in ParetoSmooth does not work well in Pluto and is not convenient for SR. Here I'm experimenten with a more elaborate version."
 
+# ╔═╡ 35a0eb8f-41ba-413c-9750-91a89db73c17
+begin
+    # Use '#@quickactivate ...' to enable Pluto Pkg management.
+    # Remove '#' to disable Pluto Pkg management.
+    # Careful: It will _no longer_ be a reproducible environment!
+    @quickactivate "StatisticalRethinkingStan"
+end
+
+
 # ╔═╡ e63cfbdb-2e59-4b2f-a615-89383e221db3
 begin
 	df = CSV.read(sr_datadir("WaffleDivorce.csv"), DataFrame);
@@ -156,7 +165,7 @@ function loo_compare(models::Vector{SampleModel};
     nmodels = length(models)
     mnames = [models[i].name for i in 1:nmodels]
 
-    chains_vec = read_samples.(models)
+    chains_vec = read_samples.(models, :keyedarray)
     ll_vec = Array.(matrix.(chains_vec, loglikelihood_name))
     ll_vecp = map(to_paretosmooth, ll_vec)
     psis_vec = psis_loo.(ll_vecp)
@@ -1745,6 +1754,7 @@ version = "0.9.1+5"
 # ╔═╡ Cell order:
 # ╟─f813f5b0-e3cd-473e-96ec-2f8163f481dc
 # ╠═9b4ead05-270b-4409-a55e-682753250b5a
+# ╠═35a0eb8f-41ba-413c-9750-91a89db73c17
 # ╠═cc2d68ad-79fa-45be-9233-1f8c86b0b482
 # ╠═e63cfbdb-2e59-4b2f-a615-89383e221db3
 # ╠═3b9f75f8-beca-451b-b878-4ae1003cff92

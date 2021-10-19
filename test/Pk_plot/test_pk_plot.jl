@@ -128,7 +128,7 @@ function loo_compare1(models::Vector{SampleModel};
     nmodels = length(models)
     mnames = [models[i].name for i in 1:nmodels]
 
-    chains_vec = read_samples.(models)
+    chains_vec = read_samples.(models, :keyedarray)
     ll_vec = Array.(matrix.(chains_vec, loglikelihood_name))
     ll_vecp = map(to_paretosmooth, ll_vec)
     psis_vec = psis_loo.(ll_vecp)

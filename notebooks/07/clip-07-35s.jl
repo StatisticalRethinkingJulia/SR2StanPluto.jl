@@ -71,7 +71,7 @@ end
 
 # ╔═╡ 806d4352-69b7-11eb-00a5-791917fa9d45
 if success(rc5_1s_t)
-	nt5_1s_t = read_samples(m5_1s_t)
+	nt5_1s_t = read_samples(m5_1s_t, :namedtuple)
 	log_lik_1_t = nt5_1s_t.log_lik'
 	waic_m5_1s_t = waic(log_lik_1_t)
 end
@@ -128,7 +128,7 @@ end
 
 # ╔═╡ 5d216004-69b7-11eb-34d4-8be76d4ae47c
 if success(rc5_2s_t)
-	nt5_2s_t = read_samples(m5_2s_t)
+	nt5_2s_t = read_samples(m5_2s_t, :namedtuple)
 	log_lik_2_t = nt5_2s_t.log_lik'
 	waic_m5_2s_t = waic(log_lik_2_t)
 end
@@ -186,7 +186,7 @@ end
 
 # ╔═╡ 4e7a00e8-69b4-11eb-15ef-df1a53282396
 if success(rc5_3s_t)
-	nt5_3s_t = read_samples(m5_3s_t)
+	nt5_3s_t = read_samples(m5_3s_t, :namedtuple)
 	log_lik_3_t = nt5_3s_t.log_lik'
 	waic_m5_3s_t = waic(log_lik_3_t)
 end

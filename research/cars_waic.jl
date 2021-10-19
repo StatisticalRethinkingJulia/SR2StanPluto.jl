@@ -50,7 +50,7 @@ println()
 
 if success(rc)
     #stan_summary(cars_stan_model, true)
-    nt_cars = read_samples(cars_stan_model);
+    nt_cars = read_samples(cars_stan_model, :namedtuple);
 end
 
 log_lik = nt_cars.log_lik';

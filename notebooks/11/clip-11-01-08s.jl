@@ -122,7 +122,7 @@ end
 
 # ╔═╡ dcd4dc46-8e30-11eb-33e4-67633257f5df
 begin
-	nt11_2s = read_samples(m11_2s)
+	nt11_2s = read_samples(m11_2s, :namedtuple)
 	p3 = [logistic.(nt11_2s.a .+ nt11_2s.b[i]) for i in 1:4]
 	mean.([p3[i] for i in 1:4])
 end
