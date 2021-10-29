@@ -302,7 +302,7 @@ MonteCarloMeasurements = "~1.0.3"
 PlutoUI = "~0.7.16"
 StanQuap = "~1.3.0"
 StanSample = "~4.4.1"
-StatisticalRethinking = "~4.4.1"
+StatisticalRethinking = "~4.4.0"
 StatisticalRethinkingPlots = "~0.9.3"
 """
 
@@ -1143,9 +1143,9 @@ version = "1.1.0"
 
 [[deps.Parsers]]
 deps = ["Dates"]
-git-tree-sha1 = "f19e978f81eca5fd7620650d7dbea58f825802ee"
+git-tree-sha1 = "98f59ff3639b3d9485a03a72f3ab35bab9465720"
 uuid = "69de0a69-1ddd-5017-9359-2bf0b02dc9f0"
-version = "2.1.0"
+version = "2.0.6"
 
 [[deps.Pixman_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -1370,9 +1370,9 @@ version = "1.2.13"
 
 [[deps.StatisticalRethinking]]
 deps = ["AxisKeys", "CSV", "DataFrames", "Distributions", "DocStringExtensions", "Documenter", "Formatting", "KernelDensity", "LinearAlgebra", "MonteCarloMeasurements", "NamedArrays", "NamedTupleTools", "OrderedCollections", "Parameters", "ParetoSmooth", "ParetoSmoothedImportanceSampling", "PrettyTables", "Random", "Reexport", "Requires", "Statistics", "StatsBase", "StatsFuns", "StructuralCausalModels", "Tables", "Test", "Unicode"]
-git-tree-sha1 = "124da62bd2bbb15ec2b60a9307f157b33b5bf081"
+git-tree-sha1 = "2b0e41e98245c01b6e6b84bd1b4699dd00bc68d6"
 uuid = "2d09df54-9d0f-5258-8220-54c2a3d4fbee"
-version = "4.4.1"
+version = "4.4.0"
 
 [[deps.StatisticalRethinkingPlots]]
 deps = ["Distributions", "DocStringExtensions", "KernelDensity", "LaTeXStrings", "Parameters", "Plots", "Reexport", "Requires", "StatisticalRethinking", "StatsPlots"]

@@ -4,292 +4,261 @@
 using Markdown
 using InteractiveUtils
 
-# ╔═╡ 38677642-f1dd-11ea-2537-59511c140dab
+# ╔═╡ 7184cb0a-f266-4ed1-bb68-766a982c6ebb
 using Pkg, DrWatson
 
-# ╔═╡ 5d9316ec-f1dd-11ea-1c0d-0d8566ab3a90
+# ╔═╡ aa1d626b-4d59-43c1-a804-f7296f3f2b95
 begin
-	using AxisKeys
-	using MonteCarloMeasurements
-	using CategoricalArrays
-	using StanSample, StanQuap
+    using ParetoSmooth
+    using AxisKeys
+    using NamedTupleTools
+    using CategoricalArrays
+    using PrettyTables
+	using StanSample
 	using StatisticalRethinking
 	using StatisticalRethinkingPlots
 	using PlutoUI
 end
 
-# ╔═╡ 45929f5a-f759-11ea-1955-67ba740778e6
-md"## Rethinking vs. StatisticalRethinking.jl"
+# ╔═╡ 2ff66636-0441-4790-815f-c864c879500f
+begin
+	df = CSV.read(sr_datadir("WaffleDivorce.csv"), DataFrame);
+	scale!(df, [:Marriage, :MedianAgeMarriage, :Divorce])
+	data = (N=size(df, 1), D=df.Divorce_s, A=df.MedianAgeMarriage_s,
+		M=df.Marriage_s)
+end
 
-# ╔═╡ e27ece36-f756-11ea-250c-99d909d390f9
-md"In the book and associated R package `rethinking`, statistical models are defined as illustrated below:
-
-```
-flist <- alist(
-  height ~ dnorm( mu , sigma ) ,
-  mu <- a + b*weight ,
-  a ~ dnorm( 156 , 100 ) ,
-  b ~ dnorm( 0 , 10 ) ,
-  sigma ~ dunif( 0 , 50 )
-)
-```
-"
-
-# ╔═╡ 8819279a-f757-11ea-37ee-f7b0a267d351
-md"The author of the book states: *If that (the statistical model) doesn't make much sense, good. ... you're holding the right textbook, since this book teaches you how to read and write these mathematical descriptions* (page 77).
-
-The Pluto notebooks in [StatisticalRethinkingStan](https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingStan.jl) are intended to allow experimenting with this learning process using [Stan](https://github.com/StanJulia) and [Julia](https://julialang.org).
-
-In the R package `rethinking`, posterior values can be approximated by
- 
-```
-# Simulate quadratic approximation (for simpler models)
-m4.31 <- quap(flist, data=d2)
-```
-"
-
-# ╔═╡ 46c64c28-803e-11eb-1b95-83fab3e00932
-md"
-or, in the second half of the book, generated using Stan by:
-
-```
-# Generate a Stan model and run a simulation
-m4.32 <- ulam(flist, data=d2)
-```
-
-In StatisticalRethinkingStan, R's ulam() has been replaced by StanSample.jl and occasionally used much earlier on than in the book."
-
-# ╔═╡ 55ed2bde-f756-11ea-1f1d-7fbdf76c1b76
-md"To help out with this, in this notebook and a few additional notebooks in the subdirectory `notebooks/intros/intro-stan` the Stan language is introduced and the execution of Stan language programs illustrated.
-
-Chapter 9 of the book contains a nice introduction to translating the `alist` R models to the Stan language (just before section 9.5).
-"
-
-# ╔═╡ 04330a22-8020-11eb-38f3-15f03a13f217
-md"
-!!! note
-	In general StatisticalRethinkingStan relies on and shows more details (and capabilities!) of the full Stan Language than the above mentioned `alist`s in the book. In the Julia setting, if your preference is to use something closer to the `alist`s, Turing.jl is a better alternative, e.g. see the early version of [StatisticalRethinkingTuring](https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingTuring.jl).
-"
-
-# ╔═╡ 2e4c633e-f75a-11ea-2bcb-fb9800e518af
-md"A few ways to provide similar fuctionality to the R function `quap()` are illustrated in StatisticalRethinkingStan, i.e. using Optim.jl, using StanOptimize.jl and using StanQuap.jl.
-
-The use of Optim.jl is shown in `./notebooks/intros/intro-logpdf`. This is probably the best way of obtaining MAP estimates but requires rewriting the models in a logpdf format.
-
-The use of StanOptimize.jl is shown in `./notebooks/intros/intro-stan/intro-stan-03.jl` and `./notebooks/intros/intro-stan/intro-stan-04.jl`.
-"
-
-# ╔═╡ f2cd269c-801e-11eb-1e56-bfbb77a13ac9
-md"
-In the clips I have opted for a less efficient way of computing the quadratic approximation to the posterior distribution by using StanQuap.jl which uses both StanOptimize.jl and StanSample.jl. The advantage is that this way, as in the StanOptimize.jl approach, the same Stan Language model can be used and it returns both the quapdratic approximation and a full SampleModel which makes comparing the two results easier.
-"
-
-# ╔═╡ c7dd5b98-f1dd-11ea-168c-07c643e283a7
-md"## Introduction to a Stan Language program"
-
-# ╔═╡ 57f0ec9a-f913-11ea-2e7e-ad16a359b82d
-md"## Intro-stan-01s.jl"
-
-# ╔═╡ e1794cb4-f758-11ea-0888-9d7ce10db48f
-md"Additional context can be found in the cells at the end of this notebook."
-
-# ╔═╡ d12eb360-f1ea-11ea-1a2f-fd69805cb4b4
-md"##### This model represents N experiments each tossing a globe n times and recording the number of times the globe lands on water (`W`) in an array `k`."
-
-# ╔═╡ c265df40-f1de-11ea-3eaf-795a1560b5af
-md"##### R's `rethinking` model is defined as:
-```
-flist <- alist(
-  theta ~ Uniform(0, 1)
-  k ~ Binomial(n, theta)
-)
-```"
-
-# ╔═╡ 0bf971c6-f1df-11ea-1f57-41937efd2e21
-md"##### This model in Stan language could be written as:"
-
-# ╔═╡ 5da2632c-f1dd-11ea-2d50-9d80cda7b1ed
-stan1_1 = "
-// Inferring a rate
+# ╔═╡ 910aa3fd-af82-44ea-99cb-60154ac99d78
+stan5_1 = "
 data {
-  int N;
-  int<lower=1> n;
-  int<lower=0> k[N];
+    int < lower = 1 > N; // Sample size
+    vector[N] D; // Outcome
+    vector[N] A; // Predictor
 }
 parameters {
-  real<lower=0,upper=1> theta;
+    real a; // Intercept
+    real bA; // Slope (regression coefficients)
+    real < lower = 0 > sigma;    // Error SD
+}
+transformed parameters {
+    vector[N] mu;               // mu is a vector
+    for (i in 1:N)
+        mu[i] = a + bA * A[i];
 }
 model {
-  // Prior distribution for θ
-  theta ~ uniform(0, 1);
+    a ~ normal(0, 0.2);         //Priors
+    bA ~ normal(0, 0.5);
+    sigma ~ exponential(1);
+    D ~ normal(mu , sigma);     // Likelihood
+}
+generated quantities {
+    vector[N] log_lik;
+    for (i in 1:N)
+        log_lik[i] = normal_lpdf(D[i] | mu[i], sigma);
+}
+";
 
-  // Observed Counts
-  k ~ binomial(n, theta);
-}";
+# ╔═╡ cdadcb73-9b51-4f30-8cb8-acf180fe3b72
+stan5_2 = "
+data {
+    int N;
+    vector[N] D;
+    vector[N] M;
+}
+parameters {
+    real a;
+    real bM;
+    real<lower=0> sigma;
+}
+transformed parameters {
+    vector[N] mu;
+    for (i in 1:N)
+        mu[i]= a + bM * M[i];
 
-# ╔═╡ 5da326d6-f1dd-11ea-17f5-e9341ab2118c
-md"###### For this model three Stan language blocks are used: data, parameters and the model block."
+}
+model {
+    a ~ normal( 0 , 0.2 );
+    bM ~ normal( 0 , 0.5 );
+    sigma ~ exponential( 1 );
+    D ~ normal( mu , sigma );
+}
+generated quantities {
+    vector[N] log_lik;
+    for (i in 1:N)
+        log_lik[i] = normal_lpdf(D[i] | mu[i], sigma);
+}
+";
 
-# ╔═╡ 1a1a5292-f1e0-11ea-14db-4989e6acb15a
-md"###### The first two blocks define the data and the parameter definitions for the model and at the same time can be used to define constraints. As explained in section 2.3 of the book (*'Components of the model'*), variables can be observable or unobservable. Variables known (chosen or observed) are defined in the data block, parameters are not observed but need to be inferred and are defined in the parameter block."
+# ╔═╡ 703b698c-acc3-4359-b6a8-ce78d47471c4
+stan5_3 = "
+data {
+  int N;
+  vector[N] D;
+  vector[N] M;
+  vector[N] A;
+}
+parameters {
+  real a;
+  real bA;
+  real bM;
+  real<lower=0> sigma;
+}
+transformed parameters {
+    vector[N] mu;
+    for (i in 1:N)
+        mu[i] = a + bA * A[i] + bM * M[i];
+}
+model {
+  a ~ normal( 0 , 0.2 );
+  bA ~ normal( 0 , 0.5 );
+  bM ~ normal( 0 , 0.5 );
+  sigma ~ exponential( 1 );
+  D ~ normal( mu , sigma );
+}
+generated quantities{
+    vector[N] log_lik;
+    for (i in 1:N)
+        log_lik[i] = normal_lpdf(D[i] | mu[i], sigma);
+}
+";
 
-# ╔═╡ d12f1c4c-f1ea-11ea-1c5f-ab52ceca9c68
-md"###### We know that k can't be negative (k[i] == 0 indicates the globe never landed on `W` in the n tosses). We also assume at least 1 toss is performed, hence n >= 1. In this example we use N=10 experiments of 9 tosses, thus n = 9 in all trials. k[i] is the number of times the globe lands on water in each experiment."
-
-# ╔═╡ d13a6034-f1ea-11ea-101e-c13a5918086f
-md"###### N, n and the vector k[N] and are all integers."
-
-# ╔═╡ d1441b68-f1ea-11ea-38f4-6bddd7e002b1
-md"###### In this golem, theta, the fraction of water on the globe surface, is assumed to generate the probability a toss lands on `W`. Theta cannot be observed and is the parameter of interest. We know this probability is between 0 an 1. Thus theta is also constrained in the parameters block. Theta is a real number."
-
-# ╔═╡ d156ce40-f1ea-11ea-09ee-65173a8eaa15
-md"###### The third block is the actual model and is pretty much identical to R's alist."
-
-# ╔═╡ d1639a94-f1ea-11ea-1df0-e11a07650af5
-md"###### Note that unfortunately the names of distributions such as Normal and Binomial are not identical between Stan, R and Julia. The Stan language uses the Stan convention (starts with lower case). Also, each Stan language statement ends with a `;`"
-
-# ╔═╡ 1a30c9b4-f1ea-11ea-0fef-cfcb7bc6a6af
-md"##### Running a Stan language program in Julia."
-
-# ╔═╡ 459f3540-f1ea-11ea-21da-9bf2ec949773
-md"###### Once the Stan language model is defined, in this case stored in the Julia variable stan1_1, below steps execute the program:"
-
-# ╔═╡ 4b81f25e-f1ea-11ea-0f34-99192ddea9ad
-md"##### 1. Create a Stanmodel object:"
-
-# ╔═╡ a9af402c-f1de-11ea-2ad7-39922b622327
-m1_1s = SampleModel("m1.1s", stan1_1);
-
-# ╔═╡ ffdf3090-f1ea-11ea-084a-dda8c4d1a68c
-md"##### 2. Simulate the results of N repetitions of 9 tosses."
-
-# ╔═╡ 5daf1ed2-f1dd-11ea-1f3d-1909cc196f7a
+# ╔═╡ 3d17df8d-8c98-4f3d-b938-3a8f4ff27dfa
 begin
-	N = 10                        # Number of globe toss experiment
-	d = Binomial(9, 0.66)         # 9 tosses (simulate 2/3 is water)
-	k = rand(d, N)                # Simulate 15 trial results
-	n = 9                         # Each experiment has 9 tosses
+	m5_1s = SampleModel("m5.1s", stan5_1)
+	rc5_1s = stan_sample(m5_1s; data)
+
+	m5_2s = SampleModel("m5.2s", stan5_2)
+	rc5_2s = stan_sample(m5_2s; data)
+
+	m5_3s = SampleModel("m5.3s", stan5_3)
+	rc5_3s = stan_sample(m5_3s; data)
 end;
 
-# ╔═╡ 5dcb2868-f1dd-11ea-389c-ff32a30fddc2
-md"##### 3. Input data in the form of a Dict"
-
-# ╔═╡ 49b87dde-f1eb-11ea-0ee1-67edf7b90b1c
-data = (N = N, n = n, k = k);
-
-# ╔═╡ 5dd4b36a-f1dd-11ea-11af-a946fb4ac07a
-md"##### 4. Sample using stan_sample (the equivalent of `rethinking`'s ulam()."
-
-# ╔═╡ 6f463898-f1eb-11ea-16f1-0b6de4bd69c4
-rc1_1s = stan_sample(m1_1s; data);
-
-# ╔═╡ 5ddf4cf6-f1dd-11ea-388f-77f48ba93c39
-md"##### 5. Describe and check the results"
-
-# ╔═╡ 73d0dd98-f1ec-11ea-2499-477a8024ecc6
-if success(rc1_1s)
-	post1_1s_df = read_samples(m1_1s, :dataframe)
-	PRECIS(post1_1s_df)
-end
-
-# ╔═╡ 34a8496e-4c4d-4960-8324-68436778e258
-md"##### The default output format for `read_samples()` is a StanTable (which supports the Tables API). Converting to a DataFrame produces the same result as above."
-
-# ╔═╡ 60842475-1ac4-40d4-a3a2-fdaa967e2b91
-PRECIS(DataFrame(read_samples(m1_1s)))
-
-# ╔═╡ 208e7a70-f1ec-11ea-3ba9-d5e8c8c00553
-md"###### Sample `Particles` summary:"
-
-# ╔═╡ cfe9027e-f1ec-11ea-33df-65cd05965437
-part1_1s = read_samples(m1_1s, :particles)
-
-# ╔═╡ b82e2e82-f757-11ea-2696-6f294e3070f5
-md"The use of Particles to represent quap-like approximations is possible thanks to the package [MonteCarloMeasurements.jl](https://github.com/baggepinnen/MonteCarloMeasurements.jl).
-
-[Soss.jl](https://github.com/cscherrer/Soss.jl) and [related write-ups](https://cscherrer.github.io) introduced me to that option."
-
-# ╔═╡ cfe95fee-f1ec-11ea-32a1-bbf3633ab8e7
-md"###### Generate a quadratic approximation of the posterior distribution and show the NamedTuple representation of such a quap estimate. Click on the little triangle to show the full NamedTuple:"
-
-# ╔═╡ a804833c-3a44-11eb-2cbd-997854743a0f
+# ╔═╡ 92696c32-f6dc-46b6-873b-c5c44b2db87f
 begin
-	init = Dict(:theta => 0.5)
-	q1_1s, sm, om = stan_quap("m1.1s", stan1_1; data, init)
-	q1_1s
+	using DimensionalData
+	das5_1s = read_samples(m5_1s, :dimarrays)
 end
 
-# ╔═╡ 094310f4-8046-11eb-0073-950f55104695
-md" ##### Sample from the quadratic approximation:"
+# ╔═╡ b9eddbb1-72df-43c6-b655-9fb9458cc6d7
+if success(rc5_1s)
+    nt5_1s = read_samples(m5_1s, :particles)
+    NamedTupleTools.select(nt5_1s, (:a, :bA, :sigma))
+end
 
-# ╔═╡ a0a04fa8-2b5e-11eb-0a44-4b31c17d9a57
+# ╔═╡ f08ff6a1-ed68-4441-984a-55baa3eef109
+if success(rc5_2s)
+    nt5_2s = read_samples(m5_2s, :particles)
+    NamedTupleTools.select(nt5_2s, (:a, :bM, :sigma))
+end
+
+# ╔═╡ 724af235-a95d-4951-a1a1-a9f61af83964
+if success(rc5_3s)
+    nt5_3s = read_samples(m5_3s, :particles)
+    NamedTupleTools.select(nt5_3s, (:a, :bA, :bM, :sigma))
+end
+
+# ╔═╡ e50b5498-f941-49c7-b479-7a1a4028c841
+if success(rc5_1s) && success(rc5_2s) && success(rc5_3s)
+
+    models = [m5_1s, m5_2s, m5_3s]
+    loo_comparison = loo_compare(models)
+end
+
+# ╔═╡ 78b77c75-5156-4a0f-8535-973c98e79792
+HTML(pretty_table(String, loo_comparison.estimates, backend=:html))
+
+# ╔═╡ 0aa2fe11-815f-4ead-9602-b4de29c70085
+loo_comparison.estimates
+
+# ╔═╡ 4cfa8eef-b691-4659-a12a-6603b973e761
+typeof(loo_comparison.estimates)
+
+# ╔═╡ 7fb48173-fdf1-482a-8dce-c1479460b35a
+#=
+With SR/ulam():
+```
+       PSIS    SE dPSIS  dSE pPSIS weight
+m5.1u 126.0 12.83   0.0   NA   3.7   0.67
+m5.3u 127.4 12.75   1.4 0.75   4.7   0.33
+m5.2u 139.5  9.95  13.6 9.33   3.0   0.00
+```
+=#
+
+# ╔═╡ 799d1b92-5f0d-4768-b563-b5b9a4ad3b9e
+let
+	if success(rc5_2s)
+		pw = loo_comparison.pointwise[:, :, 2]
+		pk_plot(pw(:pareto_k))
+	end
+end
+
+# ╔═╡ ce4861ab-bf8e-4c0f-8305-40595db59b45
+let
+	if success(rc5_1s)
+		pw = loo_comparison.pointwise[:, :, 1]
+    	pk_plot(pw(:pareto_k))
+	end
+end
+
+# ╔═╡ de8cf8c5-2d6a-4784-a989-46b34c8713d6
+let
+	if success(rc5_3s)
+		pw = loo_comparison.pointwise[:, :, 3]
+		pk_plot(pw(:pareto_k))
+	end
+end
+
+# ╔═╡ 3df253d4-00e0-409c-b11d-f452c268424f
 begin
-	quap1_1s_df = sample(q1_1s)
-	PRECIS(quap1_1s_df)
+	m5_1s_df = read_samples(m5_1s, :dataframe)
+	PRECIS(m5_1s_df)
 end
 
-# ╔═╡ c2ef6864-802c-11eb-1a86-858e8db6e45f
-√q1_1s.vcov
+# ╔═╡ 2653c407-29d3-4b80-b1d6-c571a91c68b9
+m5_1s_df
 
-# ╔═╡ d0006f7c-f1ec-11ea-3361-9baae166396a
-md"##### Show the structure and contents of a KeyedArray chains object."
-
-# ╔═╡ 2759963f-7cbd-4c8e-9cb3-85e175b1e0e6
-md"###### Note the draws are in the first dimension, the chains in the second dimension, while the parameters (in this case just theta) are the third dimension."
-
-# ╔═╡ 1ce58ec6-f1ed-11ea-1c05-99a463481fd8
+# ╔═╡ 958903aa-d7d1-4973-b602-8beaa5094428
 begin
-	chns1_1s = read_samples(m1_1s, :keyedarray)
-	CHNS(chns1_1s)
+	ka5_1s = read_samples(m5_1s)
+	CHNS(ka5_1s, :keyedarray)
 end
 
-# ╔═╡ b6373259-0835-4d9e-8319-af6687508e92
-axiskeys(chns1_1s)
+# ╔═╡ 890ceb46-1d98-48b3-bbb3-f36f135a89a9
+size(das5_1s)
 
-# ╔═╡ 40bf056f-ae75-4261-b814-9914b2c062be
-md"
-!!! note
-
-A DataFrame created from a KeysArray chains object is different!
-"
-
-# ╔═╡ 09106ceb-1f13-466e-b398-a6e61702f7de
-DataFrame(chns1_1s)
-
-# ╔═╡ 5b0670c0-b38a-45a1-9fe0-27dfd39584a6
-md"###### Append all chains and select theta."
-
-# ╔═╡ db2850a5-2334-4758-8a50-30ffe907920b
-size(vcat(chns1_1s(:theta)...))
-
-# ╔═╡ d00c24de-f1ec-11ea-1c83-cb2584421f6f
-md"##### Display the stansummary result as a DataFrame."
-
-# ╔═╡ 0e3309b2-f1ed-11ea-0d57-2f0e5b83c8dd
-success(rc1_1s) && read_summary(m1_1s)
-
-# ╔═╡ 2c465b0a-f1ed-11ea-35e3-017075244cd8
-md"##### Plot the chains."
-
-# ╔═╡ bc8dccca-96a0-4b6a-bdd0-c19e0be4bcfc
+# ╔═╡ 84be7aef-9885-43a4-bf25-d404ffc1168b
 begin
-	res = trankplot(m1_1s, :theta)
-	plot(res[1])
+	da5_1s = read_samples(m5_1s, :dimarray)
 end
 
-# ╔═╡ 5de8c1c8-f1dd-11ea-1b97-5bbb6c6316ae
-md"## End of intros/intro-stan-01s.jl"
+# ╔═╡ 7369e2e9-fdbd-41d3-b4e7-d91e7bf5c5d7
+axes(da5_1s)
+
+# ╔═╡ 0f004ead-1784-4374-87ee-7fee2c89bec3
+dims(da5_1s)
+
+# ╔═╡ b2eb202b-15f4-4cfd-ab6e-8d349c46ebc9
+dims(da5_1s)[2]
+
+# ╔═╡ 09f039b9-3f6f-49f6-ae9a-66b3fbe2792f
+dims(da5_1s)[2].val
+
+# ╔═╡ 9bc89f0f-6263-4783-8f72-e2ebe064b730
+size(da5_1s)
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
 AxisKeys = "94b1ba4f-4ee9-5380-92f1-94cde586c3c5"
 CategoricalArrays = "324d7699-5711-5eae-9e2f-1d82baa6b597"
+DimensionalData = "0703355e-b756-11e9-17c0-8b28908087d0"
 DrWatson = "634d3b9d-ee7a-5ddf-bec9-22491ea816e1"
-MonteCarloMeasurements = "0987c9cc-fe09-11e8-30f0-b96dd679fdca"
+NamedTupleTools = "d9ec5142-1e00-5aa0-9d6a-321866360f50"
+ParetoSmooth = "a68b5a21-f429-434e-8bfa-46b447300aac"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 PlutoUI = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
-StanQuap = "e4723793-2808-4fc5-8a98-c57f4c160c53"
+PrettyTables = "08abe8d2-0d0c-5749-adfa-8a2ac140af0d"
 StanSample = "c1514b29-d3a0-5178-b312-660c88baa699"
 StatisticalRethinking = "2d09df54-9d0f-5258-8220-54c2a3d4fbee"
 StatisticalRethinkingPlots = "e1a513d0-d9d9-49ff-a6dd-9d2e9db473da"
@@ -297,10 +266,12 @@ StatisticalRethinkingPlots = "e1a513d0-d9d9-49ff-a6dd-9d2e9db473da"
 [compat]
 AxisKeys = "~0.1.22"
 CategoricalArrays = "~0.10.1"
+DimensionalData = "~0.18.5"
 DrWatson = "~2.6.2"
-MonteCarloMeasurements = "~1.0.3"
+NamedTupleTools = "~0.13.7"
+ParetoSmooth = "~0.7.0"
 PlutoUI = "~0.7.16"
-StanQuap = "~1.3.0"
+PrettyTables = "~1.2.3"
 StanSample = "~4.4.1"
 StatisticalRethinking = "~4.4.1"
 StatisticalRethinkingPlots = "~0.9.3"
@@ -461,6 +432,12 @@ version = "3.39.0"
 deps = ["Artifacts", "Libdl"]
 uuid = "e66e0078-7015-5450-92f7-15fbd957f2ae"
 
+[[deps.ConstructionBase]]
+deps = ["LinearAlgebra"]
+git-tree-sha1 = "f74e9d5388b8620b4cee35d4c5a618dd4dc547f4"
+uuid = "187b0558-2788-49d3-abe0-74a17ed4e7c9"
+version = "1.3.0"
+
 [[deps.Contour]]
 deps = ["StaticArrays"]
 git-tree-sha1 = "9f02045d934dc030edad45944ea80dbd1f0ebea7"
@@ -519,6 +496,12 @@ deps = ["NaNMath", "Random", "SpecialFunctions"]
 git-tree-sha1 = "7220bc21c33e990c14f4a9a319b1d242ebc5b269"
 uuid = "b552c78f-8df3-52c6-915a-8e097449b14b"
 version = "1.3.1"
+
+[[deps.DimensionalData]]
+deps = ["Adapt", "ArrayInterface", "ConstructionBase", "Dates", "LinearAlgebra", "Random", "RecipesBase", "SparseArrays", "Statistics", "Tables"]
+git-tree-sha1 = "2c5e266ab87213207048ece6f438c96e5bf4bd78"
+uuid = "0703355e-b756-11e9-17c0-8b28908087d0"
+version = "0.18.5"
 
 [[deps.Distances]]
 deps = ["LinearAlgebra", "Statistics", "StatsAPI"]
@@ -1338,18 +1321,6 @@ git-tree-sha1 = "bfaebe19ada44a52a6c797d48473f1bb22fd0853"
 uuid = "9713c8f3-0168-54b5-986e-22c526958f39"
 version = "0.2.0"
 
-[[deps.StanOptimize]]
-deps = ["CSV", "DataFrames", "DelimitedFiles", "Distributed", "DocStringExtensions", "Documenter", "Random", "StanBase", "Statistics", "Test", "Unicode"]
-git-tree-sha1 = "1870196ea82755fe819b53a63a522bc87d731dae"
-uuid = "fbd8da12-e93d-5a64-9231-612a0707ab99"
-version = "2.4.0"
-
-[[deps.StanQuap]]
-deps = ["CSV", "DataFrames", "Distributions", "DocStringExtensions", "LinearAlgebra", "MonteCarloMeasurements", "NamedTupleTools", "OrderedCollections", "Reexport", "StanBase", "StanOptimize", "StanSample", "Statistics", "StatsBase"]
-git-tree-sha1 = "7562ff143a284f9b7fc3548c609b57a6bd8f5c02"
-uuid = "e4723793-2808-4fc5-8a98-c57f4c160c53"
-version = "1.3.0"
-
 [[deps.StanSample]]
 deps = ["CSV", "DelimitedFiles", "Distributed", "DocStringExtensions", "MonteCarloMeasurements", "NamedTupleTools", "OrderedCollections", "Random", "Requires", "StanBase", "TableOperations", "Tables", "Unicode"]
 git-tree-sha1 = "737094d47efd6c3f4f6ac606367dda490d4c0a9c"
@@ -1734,64 +1705,34 @@ version = "0.9.1+5"
 """
 
 # ╔═╡ Cell order:
-# ╟─45929f5a-f759-11ea-1955-67ba740778e6
-# ╟─e27ece36-f756-11ea-250c-99d909d390f9
-# ╟─8819279a-f757-11ea-37ee-f7b0a267d351
-# ╟─46c64c28-803e-11eb-1b95-83fab3e00932
-# ╟─55ed2bde-f756-11ea-1f1d-7fbdf76c1b76
-# ╟─04330a22-8020-11eb-38f3-15f03a13f217
-# ╟─2e4c633e-f75a-11ea-2bcb-fb9800e518af
-# ╟─f2cd269c-801e-11eb-1e56-bfbb77a13ac9
-# ╟─c7dd5b98-f1dd-11ea-168c-07c643e283a7
-# ╟─57f0ec9a-f913-11ea-2e7e-ad16a359b82d
-# ╟─e1794cb4-f758-11ea-0888-9d7ce10db48f
-# ╠═38677642-f1dd-11ea-2537-59511c140dab
-# ╠═5d9316ec-f1dd-11ea-1c0d-0d8566ab3a90
-# ╟─d12eb360-f1ea-11ea-1a2f-fd69805cb4b4
-# ╟─c265df40-f1de-11ea-3eaf-795a1560b5af
-# ╟─0bf971c6-f1df-11ea-1f57-41937efd2e21
-# ╠═5da2632c-f1dd-11ea-2d50-9d80cda7b1ed
-# ╟─5da326d6-f1dd-11ea-17f5-e9341ab2118c
-# ╟─1a1a5292-f1e0-11ea-14db-4989e6acb15a
-# ╟─d12f1c4c-f1ea-11ea-1c5f-ab52ceca9c68
-# ╟─d13a6034-f1ea-11ea-101e-c13a5918086f
-# ╟─d1441b68-f1ea-11ea-38f4-6bddd7e002b1
-# ╟─d156ce40-f1ea-11ea-09ee-65173a8eaa15
-# ╟─d1639a94-f1ea-11ea-1df0-e11a07650af5
-# ╟─1a30c9b4-f1ea-11ea-0fef-cfcb7bc6a6af
-# ╟─459f3540-f1ea-11ea-21da-9bf2ec949773
-# ╟─4b81f25e-f1ea-11ea-0f34-99192ddea9ad
-# ╠═a9af402c-f1de-11ea-2ad7-39922b622327
-# ╟─ffdf3090-f1ea-11ea-084a-dda8c4d1a68c
-# ╠═5daf1ed2-f1dd-11ea-1f3d-1909cc196f7a
-# ╟─5dcb2868-f1dd-11ea-389c-ff32a30fddc2
-# ╠═49b87dde-f1eb-11ea-0ee1-67edf7b90b1c
-# ╟─5dd4b36a-f1dd-11ea-11af-a946fb4ac07a
-# ╠═6f463898-f1eb-11ea-16f1-0b6de4bd69c4
-# ╟─5ddf4cf6-f1dd-11ea-388f-77f48ba93c39
-# ╠═73d0dd98-f1ec-11ea-2499-477a8024ecc6
-# ╟─34a8496e-4c4d-4960-8324-68436778e258
-# ╠═60842475-1ac4-40d4-a3a2-fdaa967e2b91
-# ╟─208e7a70-f1ec-11ea-3ba9-d5e8c8c00553
-# ╠═cfe9027e-f1ec-11ea-33df-65cd05965437
-# ╟─b82e2e82-f757-11ea-2696-6f294e3070f5
-# ╟─cfe95fee-f1ec-11ea-32a1-bbf3633ab8e7
-# ╠═a804833c-3a44-11eb-2cbd-997854743a0f
-# ╟─094310f4-8046-11eb-0073-950f55104695
-# ╠═a0a04fa8-2b5e-11eb-0a44-4b31c17d9a57
-# ╠═c2ef6864-802c-11eb-1a86-858e8db6e45f
-# ╟─d0006f7c-f1ec-11ea-3361-9baae166396a
-# ╟─2759963f-7cbd-4c8e-9cb3-85e175b1e0e6
-# ╠═1ce58ec6-f1ed-11ea-1c05-99a463481fd8
-# ╠═b6373259-0835-4d9e-8319-af6687508e92
-# ╟─40bf056f-ae75-4261-b814-9914b2c062be
-# ╠═09106ceb-1f13-466e-b398-a6e61702f7de
-# ╟─5b0670c0-b38a-45a1-9fe0-27dfd39584a6
-# ╠═db2850a5-2334-4758-8a50-30ffe907920b
-# ╟─d00c24de-f1ec-11ea-1c83-cb2584421f6f
-# ╠═0e3309b2-f1ed-11ea-0d57-2f0e5b83c8dd
-# ╟─2c465b0a-f1ed-11ea-35e3-017075244cd8
-# ╠═bc8dccca-96a0-4b6a-bdd0-c19e0be4bcfc
-# ╟─5de8c1c8-f1dd-11ea-1b97-5bbb6c6316ae
+# ╠═7184cb0a-f266-4ed1-bb68-766a982c6ebb
+# ╠═aa1d626b-4d59-43c1-a804-f7296f3f2b95
+# ╠═2ff66636-0441-4790-815f-c864c879500f
+# ╠═910aa3fd-af82-44ea-99cb-60154ac99d78
+# ╠═cdadcb73-9b51-4f30-8cb8-acf180fe3b72
+# ╠═703b698c-acc3-4359-b6a8-ce78d47471c4
+# ╠═3d17df8d-8c98-4f3d-b938-3a8f4ff27dfa
+# ╠═b9eddbb1-72df-43c6-b655-9fb9458cc6d7
+# ╠═f08ff6a1-ed68-4441-984a-55baa3eef109
+# ╠═724af235-a95d-4951-a1a1-a9f61af83964
+# ╠═e50b5498-f941-49c7-b479-7a1a4028c841
+# ╠═78b77c75-5156-4a0f-8535-973c98e79792
+# ╠═0aa2fe11-815f-4ead-9602-b4de29c70085
+# ╠═4cfa8eef-b691-4659-a12a-6603b973e761
+# ╠═7fb48173-fdf1-482a-8dce-c1479460b35a
+# ╠═799d1b92-5f0d-4768-b563-b5b9a4ad3b9e
+# ╠═ce4861ab-bf8e-4c0f-8305-40595db59b45
+# ╠═de8cf8c5-2d6a-4784-a989-46b34c8713d6
+# ╠═3df253d4-00e0-409c-b11d-f452c268424f
+# ╠═2653c407-29d3-4b80-b1d6-c571a91c68b9
+# ╠═958903aa-d7d1-4973-b602-8beaa5094428
+# ╠═92696c32-f6dc-46b6-873b-c5c44b2db87f
+# ╠═890ceb46-1d98-48b3-bbb3-f36f135a89a9
+# ╠═7369e2e9-fdbd-41d3-b4e7-d91e7bf5c5d7
+# ╠═0f004ead-1784-4374-87ee-7fee2c89bec3
+# ╠═b2eb202b-15f4-4cfd-ab6e-8d349c46ebc9
+# ╠═09f039b9-3f6f-49f6-ae9a-66b3fbe2792f
+# ╠═84be7aef-9885-43a4-bf25-d404ffc1168b
+# ╠═9bc89f0f-6263-4783-8f72-e2ebe064b730
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
