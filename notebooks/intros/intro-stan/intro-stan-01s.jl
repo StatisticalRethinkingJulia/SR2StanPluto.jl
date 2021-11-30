@@ -38,7 +38,7 @@ flist <- alist(
 # ╔═╡ 8819279a-f757-11ea-37ee-f7b0a267d351
 md"The author of the book states: *If that (the statistical model) doesn't make much sense, good. ... you're holding the right textbook, since this book teaches you how to read and write these mathematical descriptions* (page 77).
 
-The Pluto notebooks in [StatisticalRethinkingStan](https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingStan.jl) are intended to allow experimenting with this learning process using [Stan](https://github.com/StanJulia) and [Julia](https://julialang.org).
+The Pluto notebooks in [SR2StanPluto](https://github.com/StatisticalRethinkingJulia/SR2StanPluto.jl) are intended to allow experimenting with this learning process using [Stan](https://github.com/StanJulia) and [Julia](https://julialang.org).
 
 In the R package `rethinking`, posterior values can be approximated by
  
@@ -57,7 +57,7 @@ or, in the second half of the book, generated using Stan by:
 m4.32 <- ulam(flist, data=d2)
 ```
 
-In StatisticalRethinkingStan, R's ulam() has been replaced by StanSample.jl and occasionally used much earlier on than in the book."
+In SR2StanPluto, R's ulam() has been replaced by StanSample.jl and occasionally used much earlier on than in the book."
 
 # ╔═╡ 55ed2bde-f756-11ea-1f1d-7fbdf76c1b76
 md"To help out with this, in this notebook and a few additional notebooks in the subdirectory `notebooks/intros/intro-stan` the Stan language is introduced and the execution of Stan language programs illustrated.
@@ -68,11 +68,11 @@ Chapter 9 of the book contains a nice introduction to translating the `alist` R 
 # ╔═╡ 04330a22-8020-11eb-38f3-15f03a13f217
 md"
 !!! note
-	In general StatisticalRethinkingStan relies on and shows more details (and capabilities!) of the full Stan Language than the above mentioned `alist`s in the book. In the Julia setting, if your preference is to use something closer to the `alist`s, Turing.jl is a better alternative, e.g. see the early version of [SR2TuringPluto](https://github.com/StatisticalRethinkingJulia/SR2TuringPluto.jl).
+	In general SR2StanPluto relies on and shows more details (and capabilities!) of the full Stan Language than the above mentioned `alist`s in the book. In the Julia setting, if your preference is to use something closer to the `alist`s, Turing.jl is a better alternative, e.g. see the early version of [SR2TuringPluto](https://github.com/StatisticalRethinkingJulia/SR2TuringPluto.jl).
 "
 
 # ╔═╡ 2e4c633e-f75a-11ea-2bcb-fb9800e518af
-md"A few ways to provide similar fuctionality to the R function `quap()` are illustrated in StatisticalRethinkingStan, i.e. using Optim.jl, using StanOptimize.jl and using StanQuap.jl.
+md"A few ways to provide similar fuctionality to the R function `quap()` are illustrated in SR2StanPluto, i.e. using Optim.jl, using StanOptimize.jl and using StanQuap.jl.
 
 The use of Optim.jl is shown in `./notebooks/intros/intro-logpdf`. This is probably the best way of obtaining MAP estimates but requires rewriting the models in a logpdf format.
 

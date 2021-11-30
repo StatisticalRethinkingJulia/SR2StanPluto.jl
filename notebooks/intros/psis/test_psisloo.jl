@@ -27,7 +27,7 @@ begin
     # Use '#@quickactivate ...' to enable Pluto Pkg management.
     # Remove '#' to disable Pluto Pkg management.
     # Careful: It will _no longer_ be a reproducible environment!
-    @quickactivate "StatisticalRethinkingStan"
+    @quickactivate "SR2StanPluto"
 end
 
 

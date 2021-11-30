@@ -2,7 +2,7 @@
 
 using Pkg, DrWatson
 
-#@quickactivate "StatisticalRethinkingStan"
+#@quickactivate "SR2StanPluto"
 using StanSample
 using StatisticalRethinking
 

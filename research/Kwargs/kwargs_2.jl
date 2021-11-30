@@ -1,5 +1,5 @@
 using Pkg, DrWatson
-#@quickactivate "StatisticalRethinkingStan"
+#@quickactivate "SR2StanPluto"
 
 function tf1(f::Number; l=12, kwargs...)
     kwargs

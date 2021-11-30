@@ -18,7 +18,7 @@ using Pkg, DrWatson
 
 # ╔═╡ 7fcdc6c2-3101-11eb-306d-b32a138fa475
 begin
-	#@quickactivate "StatisticalRethinkingStan"
+	#@quickactivate "SR2StanPluto"
 	using StatisticalRethinking
 	using PlutoUI
 end

@@ -1,25 +1,25 @@
 ## Note: v4 is under development and uses the setup described in StatisticalRethinking.jl v4 README.
 
-## Purpose of StatisticalRethinkingStan.jl
+## Purpose of SR2StanPluto.jl
 
 As stated many times by the author in his [online lectures](https://www.youtube.com/watch?v=ENxTrFf9a7c&list=PLDcUM9US4XdNM4Edgs7weiyIguLSToZRI), StatisticalRethinking is a hands-on course. This project is intended to assist with the hands-on aspect of learning the key ideas in StatisticalRethinking. 
 
-StatisticalRethinkingStan is a Julia project that uses Pluto notebooks for this purpose. Each notebook demonstrates Julia versions of `code snippets` and `mcmc models` contained in the R package "rethinking" associated with the book [Statistical Rethinking](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath.
+SR2StanPluto is a Julia project that uses Pluto notebooks for this purpose. Each notebook demonstrates Julia versions of `code snippets` and `mcmc models` contained in the R package "rethinking" associated with the book [Statistical Rethinking](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath.
 
 If you prefer to work with scripts instead of notebooks, a utility in the `src` directory is provided (`generate_scripts.jl`) to create scripts from all notebooks and store those in a newly created `scripts` directory. Note that this is a simple tool and will override all files in the `scripts` directory. For exploration purposes I suggest to move some of those scripts to e.g. the `research` directory.
 
-This Julia project uses Stan (the `cmdstan` executable) as the underlying mcmc implementation. A companion project ( [StatisticalRethinkingTuring.jl](https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingTuring.jl) ) uses Turing.jl.
+This Julia project uses Stan (the `cmdstan` executable) as the underlying mcmc implementation. A companion project ( [SR2TuringPluto.jl](https://github.com/StatisticalRethinkingJulia/SR2TuringPluto.jl) ) uses Turing.jl.
 
 ## Installation
 
 To (locally) reproduce and use this project, do the following (just once):
 
-1. Download this [project](https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingStan.jl) from Github and move to the downloaded directory, e.g.:
+1. Download this [project](https://github.com/StatisticalRethinkingJulia/SR2StanPluto.jl) from Github and move to the downloaded directory, e.g.:
 
 ```
 $ git clone https://github.com/StatisticalRethinkingJulia/
-      StatisticalRethinkingStan.jl
-$ cd StatisticalRethinkingStan.jl
+      SR2StanPluto.jl
+$ cd SR2StanPluto.jl
 ```
 
 If you want a specific tagged version, use:
@@ -35,8 +35,8 @@ and in the Julia REPL:
 ```
 julia> ]                                        # Actvate Pkg mode
 (@v1.6) pkg> activate .                         # Activate pkg in .
-(StatisticalRethinkingStan) pkg> instantiate    # Install in pkg environment
-(StatisticalRethinkingStan) pkg> <delete>       # Exit package mode
+(SR2StanPluto) pkg> instantiate    # Install in pkg environment
+(SR2StanPluto) pkg> <delete>       # Exit package mode
 julia>
 ```
 
@@ -150,7 +150,7 @@ Using `read_samples(m5_1s, :...)` makes it easy to convert samples to other form
 
 ## Status
 
-StatisticalRethinkingStan.jl is compatible with the 2nd edition of the book. 
+SR2StanPluto.jl is compatible with the 2nd edition of the book. 
 StructuralCausalModels.jl is included as an experimental dependency in the StatisticalRethinking.jl v3+ package. Definitely WIP!
 
 Any feedback is appreciated. Please open an issue.
@@ -165,7 +165,7 @@ This repository and format is derived from previous versions of StatisticalRethi
 
 ### Version 4.0.0 (Under development)
 
-1. StatisticalRethinkingStan v4+ requires StatisticalRethinking v4+.
+1. SR2StanPluto v4+ requires StatisticalRethinking v4+.
 
 ### versions 2 & 3
 
