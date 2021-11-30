@@ -68,7 +68,7 @@ Chapter 9 of the book contains a nice introduction to translating the `alist` R 
 # ╔═╡ 04330a22-8020-11eb-38f3-15f03a13f217
 md"
 !!! note
-	In general StatisticalRethinkingStan relies on and shows more details (and capabilities!) of the full Stan Language than the above mentioned `alist`s in the book. In the Julia setting, if your preference is to use something closer to the `alist`s, Turing.jl is a better alternative, e.g. see the early version of [StatisticalRethinkingTuring](https://github.com/StatisticalRethinkingJulia/StatisticalRethinkingTuring.jl).
+	In general StatisticalRethinkingStan relies on and shows more details (and capabilities!) of the full Stan Language than the above mentioned `alist`s in the book. In the Julia setting, if your preference is to use something closer to the `alist`s, Turing.jl is a better alternative, e.g. see the early version of [SR2TuringPluto](https://github.com/StatisticalRethinkingJulia/SR2TuringPluto.jl).
 "
 
 # ╔═╡ 2e4c633e-f75a-11ea-2bcb-fb9800e518af

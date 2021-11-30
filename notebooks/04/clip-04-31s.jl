@@ -69,10 +69,9 @@ end
 PRECIS(post4_2s_df)
 
 # ╔═╡ 89ffb2af-ad2f-4ab3-867c-d43315d3e7d0
-read_samples(m4_2s).data
+read_samples(m4_2s, :keyedarray)
 
 # ╔═╡ 22dcef24-bc28-4ed9-bf52-0a7479c0353b
-CHNS(read_samples(m4_2s))
 
 # ╔═╡ 058373e2-fb70-11ea-2fbe-634f17946677
 md"## End of clip-04-31s.jl"
