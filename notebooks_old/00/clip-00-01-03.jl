@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.16.1
+# v0.17.3
 
 using Markdown
 using InteractiveUtils
@@ -8,7 +8,7 @@ using InteractiveUtils
 using Pkg, DrWatson
 
 # ╔═╡ 0b2c7f06-f2dc-11ea-0434-cdc3e04decae
-md"## Clip-00-01-03s.jl"
+md"## 00-Preface.jl"
 
 # ╔═╡ 9948d1f4-f2dc-11ea-225d-992c7e2f825f
 md"### snippet 0.1"
@@ -86,7 +86,7 @@ DrWatson = "~2.5.0"
 PLUTO_MANIFEST_TOML_CONTENTS = """
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.7.0-rc1"
+julia_version = "1.7.0"
 manifest_format = "2.0"
 
 [[deps.ArgTools]]
@@ -177,7 +177,7 @@ deps = ["InteractiveUtils", "Markdown", "Sockets", "Unicode"]
 uuid = "3fa0cd96-eef1-5676-8a61-b3b8758bbffb"
 
 [[deps.Random]]
-deps = ["Serialization"]
+deps = ["SHA", "Serialization"]
 uuid = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 
 [[deps.Requires]]
@@ -229,7 +229,7 @@ uuid = "3f19e933-33d8-53b3-aaab-bd5110c3b7a0"
 """
 
 # ╔═╡ Cell order:
-# ╟─0b2c7f06-f2dc-11ea-0434-cdc3e04decae
+# ╠═0b2c7f06-f2dc-11ea-0434-cdc3e04decae
 # ╠═9941173e-f2dc-11ea-0f91-4ff7401d7d2c
 # ╟─9948d1f4-f2dc-11ea-225d-992c7e2f825f
 # ╟─99496f10-f2dc-11ea-21f9-7fd3bcbdf477
