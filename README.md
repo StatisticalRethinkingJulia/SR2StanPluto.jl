@@ -1,5 +1,3 @@
-## Note: v4 is under development and uses the setup described in StatisticalRethinking.jl v4 README.
-
 ## Purpose of SR2StanPluto.jl
 
 As stated many times by the author in his [online lectures](https://www.youtube.com/watch?v=ENxTrFf9a7c&list=PLDcUM9US4XdNM4Edgs7weiyIguLSToZRI), StatisticalRethinking is a hands-on course. This project is intended to assist with the hands-on aspect of learning the key ideas in StatisticalRethinking. 
@@ -17,8 +15,7 @@ To (locally) reproduce and use this project, do the following (just once):
 1. Download this [project](https://github.com/StatisticalRethinkingJulia/SR2StanPluto.jl) from Github and move to the downloaded directory, e.g.:
 
 ```
-$ git clone https://github.com/StatisticalRethinkingJulia/
-      SR2StanPluto.jl
+$ git clone https://github.com/StatisticalRethinkingJulia/SR2StanPluto.jl
 $ cd SR2StanPluto.jl
 ```
 
@@ -33,10 +30,10 @@ $ git checkout v1.1.1
 and in the Julia REPL:
 
 ```
-julia> ]                                        # Actvate Pkg mode
-(@v1.6) pkg> activate .                         # Activate pkg in .
-(SR2StanPluto) pkg> instantiate    # Install in pkg environment
-(SR2StanPluto) pkg> <delete>       # Exit package mode
+julia> ]                                  # Actvate Pkg mode
+(@v1.6) pkg> activate .                   # Activate pkg in .
+(SR2StanPluto) pkg> instantiate           # Install in pkg environment
+(SR2StanPluto) pkg> <delete>              # Exit package mode
 julia>
 ```
 
@@ -108,7 +105,7 @@ Clips are named as `clip-cc-fs-ls[s|t|d].jl` where
 
 Note: `d` is reserved for a combination Soss/DynamicHMC, `sl` is reserved for Stan models using the `logpdf` formulation and `m` for Mamba.
 
-The notebooks containing the clips are stored by chapter. In addition to clips, in the early notebook chapters (0-3) it is also shown how to create some of the figures in the book, e.g. `Fig2.5s.jl` in `notebooks/chapter/02`.
+The notebooks containing the clips are stored by chapter. In addition to clips, in the early notebook chapters it is also shown how to create some of the figures in the book, e.g. `Fig2.5s.jl` in `notebooks/chapter/02`.
 
 Special introductory notebooks have been included in `notebooks/intros`, e.g.
 `intro-stan/intro-stan-01s.jl` and `intro-R-users/distributions.jl`. It is suggested to at least glance over the `intro-stan` notebooks.
@@ -125,33 +122,36 @@ Models:
 
 Draws:
 
-3. chns5_1s          : A KeyedArray chains object or an
-                     : MCMCChains object (4000 samples from 4 chains)
+3. chns5_1s          : MCMCChains object (4000 samples from 4 chains)
 4. part5_1s          : Stan samples (Particles notation)
 5. quap5_1s          : Quap samples (Particles notation)
 6. nt5_1s            : NamedTuple with samples values
+7. ka5_1s            : KeyedArray object (see AxisArrays.jl)
+8. da5_1s            : DimArray object (see DimensionalData.jl)
+9. st5_1s            : StanTable 0bject
 
 The default for `read_samples(m1_1s)` is a StanTable chains object.
 
 Results as a DataFrame:
 
-7. prior5_1s_df      : Prior samples (DataFrame)
-8. post5_1s_df       : Posterior samples (DataFrame)
-9. quap5_1s_df       : Quap approximation to posterior samples (DataFrame)
-10.pred5_1s_df       : Posterior predictions (DataFrame)
+10. prior5_1s_df      : Prior samples (DataFrame)
+11. post5_1s_df       : Posterior samples (DataFrame)
+12. quap5_1s_df       : Quap approximation to posterior samples (DataFrame)
+13.pred5_1s_df       : Posterior predictions (DataFrame)
 
 As before, the `s` at the end indicates Stan.
 
-By default `read_samples(m5_1s)` returns a StanTable with the results. In general it is safer to
-specify the desired format, i.e. `read_samples(m5_1s, :table)` as the Julia eco-sytem is still
-evolving rapidly with new options.
+By default `read_samples(m5_1s)` returns a StanTable with the results. In general
+it is safer to specify the desired format, i.e. `read_samples(m5_1s, :table)` as
+the Julia eco-sytem is still evolving rapidly with new options.
 
 Using `read_samples(m5_1s, :...)` makes it easy to convert samples to other formats.
 
 ## Status
 
-SR2StanPluto.jl is compatible with the 2nd edition of the book. 
-StructuralCausalModels.jl is included as an experimental dependency in the StatisticalRethinking.jl v3+ package. Definitely WIP!
+SR2StanPluto.jl is compatible with the 2nd edition of the book.
+
+StructuralCausalModels.jl ans ParetoSmoothedImportanceSampling.jl are included as experimental dependencies in the StatisticalRethinking.jl v3+ package. Both definitely WIP!
 
 Any feedback is appreciated. Please open an issue.
 
