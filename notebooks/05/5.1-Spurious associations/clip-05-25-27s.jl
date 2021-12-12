@@ -9,14 +9,14 @@ using Pkg, DrWatson
 
 # ╔═╡ 986050d6-fd46-11ea-26b6-7f618638f1ab
 begin
-  using Distributions
-  using StatsPlots
-  using StatsBase
-  using LaTeXStrings
-  using CSV
-  using DataFrames
-  using LinearAlgebra
-  using Random
+	using Distributions
+	using StatsPlots
+	using StatsBase
+	using LaTeXStrings
+	using CSV
+	using DataFrames
+	using LinearAlgebra
+	using Random
 	using StanQuap
 	using StatisticalRethinking
 	using StatisticalRethinkingPlots
@@ -98,9 +98,6 @@ rethinking_results = "
 if !isnothing(q5_3_As)
 		PRECIS(quap5_3_As_df)
 	end
-
-# ╔═╡ 9877c52c-fd46-11ea-293f-3d07c0cd6734
-md"##### Rethinking results"
 
 # ╔═╡ b9af5a04-fd49-11ea-07ba-fb61574aed90
 part5_3_As = read_samples(m5_3_As, :particles)
@@ -1641,7 +1638,6 @@ version = "0.9.1+5"
 # ╠═946dcbb0-833e-11eb-25c9-af83df7acab1
 # ╠═946eb598-833e-11eb-2df5-5f66fa9a18d7
 # ╠═948f1e3c-833e-11eb-391d-6b4ec346d46c
-# ╟─9877c52c-fd46-11ea-293f-3d07c0cd6734
 # ╠═b9af5a04-fd49-11ea-07ba-fb61574aed90
 # ╟─988ca05a-fd46-11ea-2ae3-910f7baa2b3f
 # ╠═c79668d4-fd48-11ea-0cea-838eb6be744c

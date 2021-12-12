@@ -9,10 +9,18 @@ using Pkg, DrWatson
 
 # ╔═╡ 5d84f90c-5053-11eb-076b-5f30fc9685e3
 begin
-	using ParetoSmoothedImportanceSampling
-	using StanQuap
-	using StatisticalRethinking
-	using StatisticalRethinkingPlots
+    using Distributions
+    using StatsPlots
+    using StatsBase
+    using LaTeXStrings
+    using CSV
+    using DataFrames
+    using LinearAlgebra
+    using Random
+    using ParetoSmoothedImportanceSampling
+    using StanQuap
+    using StatisticalRethinking
+    using StatisticalRethinkingPlots
 end
 
 # ╔═╡ 235c5298-5053-11eb-0608-435d1aa4716c

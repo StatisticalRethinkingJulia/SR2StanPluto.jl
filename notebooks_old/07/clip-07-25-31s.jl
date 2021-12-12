@@ -9,6 +9,14 @@ using Pkg
 
 # ╔═╡ 68139624-68bf-11eb-2ade-713114053494
 begin
+  using Distributions
+  using StatsPlots
+  using StatsBase
+  using LaTeXStrings
+  using CSV
+  using DataFrames
+  using LinearAlgebra
+  using Random
 	using ParetoSmoothedImportanceSampling
 	using StanQuap
 	using StatisticalRethinking

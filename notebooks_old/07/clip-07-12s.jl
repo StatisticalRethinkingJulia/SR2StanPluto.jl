@@ -9,6 +9,14 @@ using Pkg, DrWatson
 
 # ╔═╡ 7fb874b8-58f0-11eb-3e17-91468135856f
 begin
+	using Distributions
+	using StatsPlots
+	using StatsBase
+	using LaTeXStrings
+	using CSV
+	using DataFrames
+	using LinearAlgebra
+	using Random
 	using StanQuap
 	using StatisticalRethinking
 	using StatisticalRethinkingPlots

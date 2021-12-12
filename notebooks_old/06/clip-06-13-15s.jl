@@ -9,10 +9,18 @@ using Pkg, DrWatson
 
 # ╔═╡ 2ec03170-feac-11ea-3cd8-e9c1d16cd34c
 begin
-	using MonteCarloMeasurements
-	using StanSample
-	using StatisticalRethinking
-	using StatisticalRethinkingPlots
+  using Distributions
+  using StatsPlots
+  using StatsBase
+  using LaTeXStrings
+  using CSV
+  using DataFrames
+  using LinearAlgebra
+  using Random
+  using MonteCarloMeasurements
+  using StanSample
+  using StatisticalRethinking
+  using StatisticalRethinkingPlots
 end
 
 # ╔═╡ 37e0328a-feab-11ea-031f-df82e9c87154

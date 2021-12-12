@@ -9,11 +9,19 @@ using Pkg, DrWatson
 
 # ╔═╡ 8f0b317a-d644-4286-a75e-f962b728d1c4
 begin
-	using GLM
-	using MonteCarloMeasurements
-	using StanQuap
-	using StatisticalRethinking
-	using StatisticalRethinkingPlots
+    using Distributions
+    using StatsPlots
+    using StatsBase
+    using LaTeXStrings
+    using CSV
+    using DataFrames
+    using LinearAlgebra
+    using Random
+    using GLM
+    using MonteCarloMeasurements
+    using StanQuap
+    using StatisticalRethinking
+    using StatisticalRethinkingPlots
 end
 
 # ╔═╡ a4ed40d9-eba5-4e21-be89-63923101d36f

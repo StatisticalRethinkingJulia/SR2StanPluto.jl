@@ -9,10 +9,18 @@ using Pkg, DrWatson
 
 # ╔═╡ b494da42-ff30-11ea-25d2-37857c757c9f
 begin
-	using StanSample
-	using StatisticalRethinking
-	using StatisticalRethinkingPlots
-	using PlutoUI
+  using Distributions
+  using StatsPlots
+  using StatsBase
+  using LaTeXStrings
+  using CSV
+  using DataFrames
+  using LinearAlgebra
+  using Random
+  using StanSample
+  using StatisticalRethinking
+  using StatisticalRethinkingPlots
+  using PlutoUI
 end
 
 # ╔═╡ b0e1bc4a-ff2f-11ea-1dca-f78fefb58b8f

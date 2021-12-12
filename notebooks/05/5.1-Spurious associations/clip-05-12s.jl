@@ -9,18 +9,18 @@ using Pkg, DrWatson
 
 # ╔═╡ ce85a7b2-fc77-11ea-2bec-0d7f0af3c59b
 begin
-  using Distributions
-  using StatsPlots
-  using StatsBase
-  using LaTeXStrings
-  using CSV
-  using DataFrames
-  using LinearAlgebra
-  using Random
-  using StructuralCausalModels
-  using StanSample
-  using StatisticalRethinking
-  using StatisticalRethinkingPlots
+    using Distributions
+    using StatsPlots
+    using StatsBase
+    using LaTeXStrings
+    using CSV
+    using DataFrames
+    using LinearAlgebra
+    using Random
+    using StructuralCausalModels
+    using StanSample
+    using StatisticalRethinking
+    using StatisticalRethinkingPlots
 end
 
 # ╔═╡ 9741f266-fc76-11ea-0689-cd04b7b16135

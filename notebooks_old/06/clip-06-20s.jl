@@ -9,9 +9,17 @@ using Pkg, DrWatson
 
 # ╔═╡ 54fc9980-ff38-11ea-134f-cffec3a049e6
 begin
-	using StanSample
-	using StatisticalRethinking
-	using StatisticalRethinkingPlots
+  using Distributions
+  using StatsPlots
+  using StatsBase
+  using LaTeXStrings
+  using CSV
+  using DataFrames
+  using LinearAlgebra
+  using Random
+  using StanSample
+  using StatisticalRethinking
+  using StatisticalRethinkingPlots
 end
 
 # ╔═╡ 8377e266-ff34-11ea-2963-b7dce70656f5

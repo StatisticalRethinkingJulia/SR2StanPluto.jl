@@ -9,7 +9,14 @@ using Pkg, DrWatson
 
 # ╔═╡ 71d2cdaa-28fb-11eb-3826-cf35b99cde1f
 begin
-	#@quickactivate "SR2StanPluto"
+	using Distributions
+	using StatsPlots
+	using StatsBase
+	using LaTeXStrings
+	using CSV
+	using DataFrames
+	using LinearAlgebra
+	using Random
 	using Distributions
 	using StatisticalRethinking
 end
