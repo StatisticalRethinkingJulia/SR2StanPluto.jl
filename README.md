@@ -114,7 +114,7 @@ Great introductory notebooks showing Julia and statistics ( based on the [Statis
 
 One goal for the changes in StatisticalRethinking v3 was to make it easier to compare and mix and match results from different mcmc implementations. Hence consistent naming of models and results is important. The models and the results of simulations are stored as follows:
 
-Models:
+Models and results:
 
 0. stan5_1           : Stan language program
 1. m5_1s             : The sampled StanSample model
