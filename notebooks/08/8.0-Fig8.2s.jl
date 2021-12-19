@@ -4,129 +4,147 @@
 using Markdown
 using InteractiveUtils
 
-# ╔═╡ 54fc6142-ff38-11ea-2884-ed7abed903ca
+# ╔═╡ 63ba08cc-59a8-11eb-0a0f-27efac60d779
 using Pkg, DrWatson
 
-# ╔═╡ 54fc9980-ff38-11ea-134f-cffec3a049e6
+# ╔═╡ 6db218c6-59a8-11eb-2a8b-7107354cf590
 begin
-  using Distributions
-  using StatsPlots
-  using StatsBase
-  using LaTeXStrings
-  using CSV
-  using DataFrames
-  using LinearAlgebra
-  using Random
-  using StanSample
-  using StatisticalRethinking
-  using StatisticalRethinkingPlots
+	using Distributions
+	using StatsPlots
+	using StatsBase
+	using LaTeXStrings
+	using CSV
+	using DataFrames
+	using LinearAlgebra
+	using Random
+	using StanSample
+	using StatisticalRethinking
+	using StatisticalRethinkingPlots
 end
 
-# ╔═╡ 8377e266-ff34-11ea-2963-b7dce70656f5
-md"## Clip-06-20s.jl"
+# ╔═╡ 51fc19b8-59a8-11eb-2214-15aca59b807b
+md" ## Figure 8.2s"
 
-# ╔═╡ 8101fac1-b8ed-441b-9820-c6d25b4d4983
+# ╔═╡ 8aaa4bcc-59a8-11eb-2003-f1213b116565
 begin
-	N = 100
-	df = DataFrame(
-	  :h0 => rand(Normal(10,2 ), N),
-	  :treatment => vcat(zeros(Int, Int(N/2)), ones(Int, Int(N/2)))
-	)
-	
-	df.fungus = [rand(Binomial(1, 0.5 - 0.4 * df[i, :treatment]), 1)[1] 
-		for i in 1:N]
-	df.h1 = [df[i, :h0] + rand(Normal(5 - 3 * df[i, :fungus]), 1)[1] 
-		for i in 1:N]
-	
-	data = Dict(
-		:N => nrow(df),
-		:h0 => df[:, :h0],
-		:h1 => df[:, :h1],
-		:fungus => df[:, :fungus],
-		:treatment => df[:, :treatment]
-	)
+	df = CSV.read(sr_datadir("rugged.csv"), DataFrame)
+	df_africa = df[df.cont_africa .== 1, [:rgdppc_2000, :rugged]]
+	dropmissing!(df_africa, :rgdppc_2000)
+	dropmissing!(df_africa, :rugged)
+	df_africa.log_gdp = log.(df_africa[:, :rgdppc_2000])
+	scale!(df_africa, [:log_gdp, :rugged])
+	PRECIS(df_africa)
+end
+
+# ╔═╡ 25ee6cd8-6a54-11eb-0a72-3fb09ee63b0e
+begin
+	df_non_africa = df[df.cont_africa .== 0, [:rgdppc_2000, :rugged]]
+	dropmissing!(df_non_africa, :rgdppc_2000)
+	dropmissing!(df_non_africa, :rugged)
+	df_non_africa.log_gdp = log.(df_non_africa[:, :rgdppc_2000])
+	scale!(df_non_africa, [:log_gdp, :rugged])
 end;
 
-# ╔═╡ c0249a5b-fc46-458e-9981-262b33a0a0f6
-stan6_7 = "
+# ╔═╡ d7d3e626-6a45-11eb-1820-a3ec98e556b1
+stan8_0 = "
 data {
-    int <lower=1> N;
-    vector[N] h0;
-    vector[N] h1;
-    vector[N] treatment;
-    vector[N] fungus;
+	int N;
+	vector[N] G;
+	vector[N] R;
 }
-parameters{
-    real a;
-    real bt;
-    real bf;
-    real<lower=0> sigma;
+
+parameters {
+	real a;
+	real b;
+	real<lower=0> sigma;
 }
+
+transformed parameters {
+	vector[N] mu;
+	mu = a + b * (R - 0.125);
+}
+
 model {
-    vector[N] mu;
-    vector[N] p;
-    a ~ lognormal(0, 0.2);
-    bt ~ normal(0, 0.5);
-    bf ~ normal(0, 0.5);
-    sigma ~ exponential(1);
-    for ( i in 1:N ) {
-    p[i] = a + bt*treatment[i] + bf*fungus[i];
-    mu[i] = h0[i] * p[i];
-    }
-    h1 ~ normal(mu, sigma);
+	a ~ normal(1, 1);
+	b ~ normal(0, 1);
+	sigma ~ exponential(1);
+	G ~ normal(mu, sigma);
 }
 ";
 
-# ╔═╡ 85de2297-d75e-438c-921d-1f11fede7b80
+# ╔═╡ a3e7c070-6a46-11eb-072b-3943db854020
 begin
-	m6_7s = SampleModel("m6.7", stan6_7)
-	rc6_7s = stan_sample(m6_7s; data)
-end;
-
-# ╔═╡ 152f948d-7839-443e-a90a-536eb91fd359
-m6_8 = "
-data {
-  int <lower=1> N;
-  vector[N] h0;
-  vector[N] h1;
-  vector[N] treatment;
-}
-parameters{
-  real a;
-  real bt;
-  real<lower=0> sigma;
-}
-model {
-  vector[N] mu;
-  vector[N] p;
-  a ~ lognormal(0, 0.2);
-  bt ~ normal(0, 0.5);
-  sigma ~ exponential(1);
-  for ( i in 1:N ) {
-    p[i] = a + bt*treatment[i];
-    mu[i] = h0[i] * p[i];
-  }
-  h1 ~ normal(mu, sigma);
-}
-";
-
-# ╔═╡ ae73f006-f5c3-4500-a978-48c6467c8a0e
-begin
-	m6_8s = SampleModel("m6.8s", m6_8)
-	rc6_8s = stan_sample(m6_8s; data)
-end;
-
-# ╔═╡ 55103e56-ff38-11ea-0825-8b25859b9e32
-begin
-	(s, p) = plot_model_coef([m6_7s, m6_8s], [:a, :bt, :bf])
-	p
+	data1 = (N = size(df_africa, 1), G = df_africa.log_gdp_s,
+		R = df_africa.rugged_s)
+	m8_1s = SampleModel("m8.1s", stan8_0)
+	rc8_1_1s = stan_sample(m8_1s; data=data1)
+	if success(rc8_1_1s)
+		post8_1_1s_df = read_samples(m8_1s, :dataframe)
+		PRECIS(post8_1_1s_df[:, [:a, :b, :sigma]])
+	end
 end
 
-# ╔═╡ 551932c2-ff38-11ea-28cd-5bfa4ad04d57
-s
+# ╔═╡ cc11715a-6a54-11eb-1955-d38a021a3bb3
+begin
+	data2 = (N = size(df_non_africa, 1), G = df_non_africa.log_gdp_s,
+		R = df_non_africa.rugged_s)
+	rc8_1_2s = stan_sample(m8_1s; data=data2)
+	if success(rc8_1_2s)
+		post8_1_2s_df = read_samples(m8_1s, :dataframe)
+		PRECIS(post8_1_2s_df[:, [:a, :b, :sigma]])
+	end
+end
 
-# ╔═╡ 5519a194-ff38-11ea-26c3-0140d22578e4
-md"## End of clip-06-20s.jl"
+# ╔═╡ 1968b688-6a49-11eb-2dec-9986830b4a7e
+begin
+	p1 = plotbounds(
+		df_africa, :rugged, :log_gdp,
+		post8_1_1s_df, [:a, :b, :sigma];
+		bounds=[:none, :hpdi],
+		colors=[:orange, :lightblue],
+		title="African nations",
+		xlab="ruggedness",
+		ylab="log GDP"
+	)
+	
+	df_afr = df[df.cont_africa .== 1, [:country, :rgdppc_2000, :rugged]]
+	df_afr = df_afr[df_afr.rugged .> 4, :]
+	for (ind, country) in enumerate(df_afr.country)
+		annotate!([([df_afr.rugged[ind]+0.3], [log(df_afr.rgdppc_2000[ind])+0.15],
+			Plots.text(df_afr.country[ind], 6, :red, :right))])
+	end
+end
+
+# ╔═╡ 0f36fb46-6a5d-11eb-2d34-91266e770493
+begin
+	p2 = plotbounds(
+		df_non_africa, :rugged, :log_gdp,
+		post8_1_2s_df, [:a, :b, :sigma];
+		bounds=[:none, :hpdi],
+		colors=[:orange, :lightblue],
+		title="Non-African nations",
+		xlab="ruggedness",
+		ylab="log GDP"
+	)
+
+
+	df_na = df[:, [:country, :rgdppc_2000, :rugged]]
+	dropmissing!(df_na, :rgdppc_2000)
+	dropmissing!(df_na, :rugged)
+	df_na = df_na[df_na.rugged .> 4, :]
+	for (ind, country) in enumerate(df_na.country)
+		println(country)
+		if !(country in df_afr.country)
+			annotate!([([df_na.rugged[ind]+0.3],
+						[log(df_na.rgdppc_2000[ind])+0.15],
+				Plots.text(df_na.country[ind], 6, :red, :right))])
+		end
+	end
+	plot(p1, p2, layout=(1,2))
+end
+
+# ╔═╡ 45767e2e-6a63-11eb-3e12-354a7e32a374
+md" ## End of figure 8.2s"
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -219,9 +237,9 @@ version = "1.0.0"
 
 [[deps.AxisKeys]]
 deps = ["AbstractFFTs", "CovarianceEstimation", "IntervalSets", "InvertedIndices", "LazyStack", "LinearAlgebra", "NamedDims", "OffsetArrays", "Statistics", "StatsBase", "Tables"]
-git-tree-sha1 = "071ad30146c225d25a659c8d59c1966020f719ab"
+git-tree-sha1 = "708af61b1782c0e8eeb7171f5ee87e09c6771bbd"
 uuid = "94b1ba4f-4ee9-5380-92f1-94cde586c3c5"
-version = "0.1.21"
+version = "0.1.20"
 
 [[deps.Base64]]
 uuid = "2a0f44e3-6c83-55bd-87e4-b1978d98bd5f"
@@ -303,12 +321,6 @@ git-tree-sha1 = "08c8b6831dc00bfea825826be0bc8336fc369860"
 uuid = "861a8166-3701-5b0c-9a16-15d98fcdc6aa"
 version = "1.0.2"
 
-[[deps.CommonSubexpressions]]
-deps = ["MacroTools", "Test"]
-git-tree-sha1 = "7b8a93dba8af7e3b42fecabf646260105ac373f7"
-uuid = "bbf7d656-a473-5ed7-a52c-81e309532950"
-version = "0.3.0"
-
 [[deps.Compat]]
 deps = ["Base64", "Dates", "DelimitedFiles", "Distributed", "InteractiveUtils", "LibGit2", "Libdl", "LinearAlgebra", "Markdown", "Mmap", "Pkg", "Printf", "REPL", "Random", "SHA", "Serialization", "SharedArrays", "Sockets", "SparseArrays", "Statistics", "Test", "UUIDs", "Unicode"]
 git-tree-sha1 = "31d0151f5716b655421d9d75b7fa74cc4e744df2"
@@ -377,12 +389,6 @@ deps = ["InverseFunctions", "Test"]
 git-tree-sha1 = "80c3e8639e3353e5d2912fb3a1916b8455e2494b"
 uuid = "b429d917-457f-4dbc-8f4c-0cc954292b1d"
 version = "0.4.0"
-
-[[deps.DiffResults]]
-deps = ["StaticArrays"]
-git-tree-sha1 = "c18e98cba888c6c25d1c3b048e4b3380ca956805"
-uuid = "163ba53b-c6d8-5494-b064-1a9d43ac40c5"
-version = "1.0.3"
 
 [[deps.DiffRules]]
 deps = ["NaNMath", "Random", "SpecialFunctions"]
@@ -505,12 +511,6 @@ deps = ["Printf"]
 git-tree-sha1 = "8339d61043228fdd3eb658d86c926cb282ae72a8"
 uuid = "59287772-0a20-5a39-b81b-1366585eb4c0"
 version = "0.4.2"
-
-[[deps.ForwardDiff]]
-deps = ["CommonSubexpressions", "DiffResults", "DiffRules", "LinearAlgebra", "NaNMath", "Printf", "Random", "SpecialFunctions", "StaticArrays"]
-git-tree-sha1 = "c4203b60d37059462af370c4f3108fb5d155ff13"
-uuid = "f6369f11-7733-5829-9624-2563aa707210"
-version = "0.10.20"
 
 [[deps.FreeType2_jll]]
 deps = ["Artifacts", "Bzip2_jll", "JLLWrappers", "Libdl", "Pkg", "Zlib_jll"]
@@ -820,10 +820,10 @@ version = "0.3.3"
 uuid = "56ddb016-857b-54e1-b83d-db4d58db5568"
 
 [[deps.LoopVectorization]]
-deps = ["ArrayInterface", "CPUSummary", "CloseOpenIntervals", "DocStringExtensions", "HostCPUFeatures", "IfElse", "LayoutPointers", "LinearAlgebra", "OffsetArrays", "PolyesterWeave", "Requires", "SIMDDualNumbers", "SLEEFPirates", "Static", "ThreadingUtilities", "UnPack", "VectorizationBase"]
-git-tree-sha1 = "5ffe9240d653a6ff8696f13a37d9b5bd361b3394"
+deps = ["ArrayInterface", "CPUSummary", "CloseOpenIntervals", "DocStringExtensions", "HostCPUFeatures", "IfElse", "LayoutPointers", "LinearAlgebra", "OffsetArrays", "PolyesterWeave", "Requires", "SLEEFPirates", "Static", "ThreadingUtilities", "UnPack", "VectorizationBase"]
+git-tree-sha1 = "c2c1a765d943267ffc01fd6a127fcb482e80f63a"
 uuid = "bdcacae8-1622-11e9-2a5c-532679323890"
-version = "0.12.83"
+version = "0.12.82"
 
 [[deps.MCMCDiagnosticTools]]
 deps = ["AbstractFFTs", "DataAPI", "Distributions", "LinearAlgebra", "MLJModelInterface", "Random", "SpecialFunctions", "Statistics", "StatsBase", "Tables"]
@@ -884,9 +884,9 @@ uuid = "a63ad114-7e13-5084-954f-fe012c677804"
 
 [[deps.MonteCarloMeasurements]]
 deps = ["Distributed", "Distributions", "LinearAlgebra", "MacroTools", "Random", "RecipesBase", "Requires", "SLEEFPirates", "StaticArrays", "Statistics", "StatsBase", "Test"]
-git-tree-sha1 = "d9dc441d5a0393ee80aea49d0fb13281d7cc7c91"
+git-tree-sha1 = "fcefbe707597ce0628f19cb355757f281f37f15e"
 uuid = "0987c9cc-fe09-11e8-30f0-b96dd679fdca"
-version = "1.0.3"
+version = "1.0.2"
 
 [[deps.MozillaCACerts_jll]]
 uuid = "14a3606d-f60d-562e-9121-12d972cd8159"
@@ -1136,12 +1136,6 @@ version = "0.3.0+0"
 
 [[deps.SHA]]
 uuid = "ea8e919c-243c-51af-8825-aaa63cd721ce"
-
-[[deps.SIMDDualNumbers]]
-deps = ["ForwardDiff", "IfElse", "SLEEFPirates", "VectorizationBase"]
-git-tree-sha1 = "62c2da6eb66de8bb88081d20528647140d4daa0e"
-uuid = "3cdde19b-5bb0-4aaf-8931-af3e248e098b"
-version = "0.1.0"
 
 [[deps.SIMDTypes]]
 git-tree-sha1 = "330289636fb8107c5f32088d2741e9fd7a061a5c"
@@ -1611,16 +1605,16 @@ version = "0.9.1+5"
 """
 
 # ╔═╡ Cell order:
-# ╟─8377e266-ff34-11ea-2963-b7dce70656f5
-# ╠═54fc6142-ff38-11ea-2884-ed7abed903ca
-# ╠═54fc9980-ff38-11ea-134f-cffec3a049e6
-# ╠═8101fac1-b8ed-441b-9820-c6d25b4d4983
-# ╠═c0249a5b-fc46-458e-9981-262b33a0a0f6
-# ╠═85de2297-d75e-438c-921d-1f11fede7b80
-# ╠═152f948d-7839-443e-a90a-536eb91fd359
-# ╠═ae73f006-f5c3-4500-a978-48c6467c8a0e
-# ╠═55103e56-ff38-11ea-0825-8b25859b9e32
-# ╠═551932c2-ff38-11ea-28cd-5bfa4ad04d57
-# ╟─5519a194-ff38-11ea-26c3-0140d22578e4
+# ╟─51fc19b8-59a8-11eb-2214-15aca59b807b
+# ╠═63ba08cc-59a8-11eb-0a0f-27efac60d779
+# ╠═6db218c6-59a8-11eb-2a8b-7107354cf590
+# ╠═8aaa4bcc-59a8-11eb-2003-f1213b116565
+# ╠═25ee6cd8-6a54-11eb-0a72-3fb09ee63b0e
+# ╠═d7d3e626-6a45-11eb-1820-a3ec98e556b1
+# ╠═a3e7c070-6a46-11eb-072b-3943db854020
+# ╠═cc11715a-6a54-11eb-1955-d38a021a3bb3
+# ╠═1968b688-6a49-11eb-2dec-9986830b4a7e
+# ╠═0f36fb46-6a5d-11eb-2d34-91266e770493
+# ╟─45767e2e-6a63-11eb-3e12-354a7e32a374
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
