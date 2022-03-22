@@ -63,9 +63,9 @@ begin
 end
 
 # ╔═╡ 6f3bfaea-b86a-4458-9eaf-18538e06723e
-begin
+let
 	x = 0:0.01:1
-	p1 = plot(;ylim=(0.6, 1.4), leg=false)
+	global p1 = plot(;ylim=(0.6, 1.4), leg=false)
 	for i in 1:20:4000
 		y = post8_1_1s_df.a[i] .+ post8_1_1s_df.b[i] .* x
 		plot!(x, y, color=:lightgrey)
@@ -506,7 +506,7 @@ StatsPlots = "~0.14.29"
 PLUTO_MANIFEST_TOML_CONTENTS = """
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.7.0"
+julia_version = "1.7.1"
 manifest_format = "2.0"
 
 [[deps.ANSIColoredPrinters]]
