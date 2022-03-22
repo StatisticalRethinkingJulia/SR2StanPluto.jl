@@ -15,8 +15,8 @@ To (locally) reproduce and use this project, do the following (just once):
 1. Download this [project](https://github.com/StatisticalRethinkingJulia/SR2StanPluto.jl) from Github and move to the downloaded directory, e.g.:
 
 ```
-$ git clone https://github.com/StatisticalRethinkingJulia/SR2StanPluto.jl
-$ cd SR2StanPluto.jl
+$ git clone https://github.com/StatisticalRethinkingJulia/SR2StanPluto.jl SR2StanPluto
+$ cd SR2StanPluto
 ```
 
 If you want a specific tagged version, use:
