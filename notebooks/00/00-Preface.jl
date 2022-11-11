@@ -18,6 +18,17 @@ begin
 	using StatisticalRethinking
 end
 
+html"""
+<style>
+	main {
+		margin: 0 auto;
+		max-width: 2000px;
+    	padding-left: max(160px, 10%);
+    	padding-right: max(160px, 10%);
+	}
+</style>
+"""
+
 # ╔═╡ 475d7028-47e9-4784-be47-23ca89d7821f
 md"### Snippet 0.1"
 

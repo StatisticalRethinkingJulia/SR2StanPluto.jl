@@ -19,27 +19,7 @@ $ git clone https://github.com/StatisticalRethinkingJulia/SR2StanPluto.jl SR2Sta
 $ cd SR2StanPluto
 ```
 
-If you want a specific tagged version, use:
-
-```
-$ git tag -l # To see available tags, followed by:
-$ git checkout tags/<tag_name> # or simply:
-$ git checkout v1.1.1
-```
-
-and in the Julia REPL:
-
-```
-julia> ]                                  # Actvate Pkg mode
-(@v1.6) pkg> activate .                   # Activate pkg in .
-(SR2StanPluto) pkg> instantiate           # Install in pkg environment
-(SR2StanPluto) pkg> <delete>              # Exit package mode
-julia>
-```
-
-If the above procedure fails, if present, try to delete the Manifest.toml file and repeat the above steps. As mentioned above, these steps are only needed the first time.
-
-The next step assumes your Julia setup includes `Pkg`, `DrWatson`, `Pluto` and `PlutoUI`.
+The next step assumes your `basic`Julia environment includes `Pkg` and `Pluto`.
 
 2. Start a Pluto notebook server.
 ```
@@ -48,6 +28,10 @@ $ julia
 julia> using Pluto
 julia> Pluto.run()
 ```
+
+Or you can start a new project and install Pluto:
+$ julia 
+
 
 3. A Pluto page should open in a browser.
 
