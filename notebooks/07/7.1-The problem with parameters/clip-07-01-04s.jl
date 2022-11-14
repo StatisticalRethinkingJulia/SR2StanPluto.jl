@@ -5,7 +5,7 @@ using Markdown
 using InteractiveUtils
 
 # ╔═╡ 7c7f0aa2-c8ba-4319-a580-b2bd65a8f069
-using Pkg, DrWatson
+using Pkg
 
 # ╔═╡ 8f0b317a-d644-4286-a75e-f962b728d1c4
 begin
@@ -28,7 +28,7 @@ end
 md" ## Clip-07-01-04s.jl"
 
 # ╔═╡ 35e702f7-2160-41b4-ac67-b146086cebc4
-md" ### Snippet 7.1"
+md" ### Julia code snippet 7.1"
 
 # ╔═╡ fc516a28-73ab-4dc0-945e-b1c4a6dc29c1
 begin
@@ -38,7 +38,7 @@ begin
 	masskg = [37, 35.5, 34.5, 41.5, 55.5, 61, 53.5]
 	df = DataFrame(species = sppnames, brain = brainvol, mass = masskg)
 	
-	# Snippet 7.2
+	# Julia code snippet 7.2
 	
 	df[!, :brain_s] = df.brain / maximum(df.brain) 
 	scale!(df, :mass)
@@ -59,7 +59,7 @@ begin
 end
 
 # ╔═╡ df6567bf-8b23-4bd9-9a35-e0a553711480
-md" ### Snippet 7.3"
+md" ### Julia code snippet 7.3"
 
 # ╔═╡ 19f0e426-d732-43a4-a5f4-04be6cfd13e9
 stan7_1 = "
@@ -198,7 +198,7 @@ begin
 end
 
 # ╔═╡ f54cd0e3-63ef-4afa-8e80-107b57b758c1
-md" ### Snippet 7.4"
+md" ### Julia code snippet 7.4"
 
 # ╔═╡ bb76ce6f-5c14-4842-9d45-c46a6c8522a6
 m1 = lm(@formula(brain_s ~ mass_s), df)

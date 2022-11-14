@@ -5,7 +5,7 @@ using Markdown
 using InteractiveUtils
 
 # ╔═╡ 3d34e5be-fb5a-11ea-078e-e5f5257c36aa
-using Pkg, DrWatson
+using Pkg
 
 # ╔═╡ 3d35172a-fb5a-11ea-2f8c-e5415c94ddbd
 begin
@@ -25,7 +25,7 @@ begin
 end;
 
 # ╔═╡ 3d4e8354-fb5a-11ea-1017-67b29f9e14d5
-md"### Snippet 4.16"
+md"### Julia code snippet 4.16"
 
 # ╔═╡ 3d517b36-fb5a-11ea-2594-49d7675ee3df
 md"##### Generate approximate probabilities."
@@ -93,7 +93,7 @@ fig2 = heatmap(mu_list, sigma_list, transpose(reshape(post_df[:, :prob], 100,100
   title="Heatmap")
 
 # ╔═╡ 95611342-fb5a-11ea-27e2-2d04f8d7ba80
-md"### Snippet 4.19"
+md"### Julia code snippet 4.19"
 
 # ╔═╡ 95615080-fb5a-11ea-2611-e5a331dc489d
 md"##### Sample post_df."
@@ -103,7 +103,7 @@ samples = post_df[sample(1:size(post_df, 1), Weights(post_df[:, :prob]), 10000,
 		replace=true), :];
 
 # ╔═╡ 9574982a-fb5a-11ea-2b18-3ddcf8f9d439
-md"### Snippet 4.22"
+md"### Julia code snippet 4.22"
 
 # ╔═╡ 9575608e-fb5a-11ea-0872-451639a07f80
 md"##### Convert to an MCMCChains.Chains object."
@@ -128,7 +128,7 @@ end
 HPD(chn)
 
 # ╔═╡ a9138058-fb5a-11ea-107f-49a1e879a358
-md"### Snippet 4.21"
+md"### Julia code snippet 4.21"
 
 # ╔═╡ a91449dc-fb5a-11ea-0b55-0bad6aa880a5
 md"##### Density of mu."

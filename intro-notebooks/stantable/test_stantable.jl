@@ -1,4 +1,4 @@
-using Pkg, DrWatson
+using Pkg
 
 begin
     using DimensionalData

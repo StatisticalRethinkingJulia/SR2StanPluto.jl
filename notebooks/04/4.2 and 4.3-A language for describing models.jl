@@ -5,7 +5,7 @@ using Markdown
 using InteractiveUtils
 
 # ╔═╡ 6a0e1509-a003-4b92-a244-f96a9dd7dd3e
-using Pkg, DrWatson
+using Pkg
 
 # ╔═╡ ba53534c-c088-4b75-a220-36c09b375978
 begin
@@ -31,7 +31,7 @@ default(label=false)
 md"#### 4.2 A language for describing models."
 
 # ╔═╡ 34f7e5ab-164c-4c73-a1f3-f5771eac7ca1
-md"### Snippet 4.6"
+md"### Julia code snippet 4.6"
 
 # ╔═╡ 6bcb5ef8-c053-4ed4-8cff-35acb29c0e90
 let
@@ -49,49 +49,49 @@ end
 md"#### 4.3 Gaussian model of height."
 
 # ╔═╡ 0f2f43f6-d3f6-43aa-9624-d2be810a261b
-md"### Snippet 4.7"
+md"### Julia code snippet 4.7"
 
 # ╔═╡ 3f3a2f1b-6f62-4bab-848b-51ec38ad3917
 howell1 = CSV.read(sr_datadir("Howell1.csv"), DataFrame);
 
 # ╔═╡ 48f8793b-6e62-49c2-8a18-83d9de4126f7
-md"### Snippet 4.8"
+md"### Julia code snippet 4.8"
 
 # ╔═╡ 68cbc3d5-2f4f-4ffc-b111-c1e519719632
 describe(howell1)
 
 # ╔═╡ b7eac1d2-68b1-4b09-9b83-c005960d0ca4
-md"### Snippet 4.9"
+md"### Julia code snippet 4.9"
 
 # ╔═╡ 09b05af8-1bb9-4dff-afc1-26ba5776aa89
 PRECIS(howell1)
 
 # ╔═╡ e2a02bb2-046a-490f-bc1c-66e6a849d581
-md"### Snippet 4.10"
+md"### Julia code snippet 4.10"
 
 # ╔═╡ a10abf80-e56c-43d2-b1a7-28e4ef703ffc
 howell1.height
 
 # ╔═╡ cdd81993-c538-4df2-a75d-1c86b9a22a70
-md"### Snippet 4.11"
+md"### Julia code snippet 4.11"
 
 # ╔═╡ 591eeff9-52fd-4f9f-8a8a-10d94e49d89c
 d2 = howell1[howell1.age .>= 18,:];
 
 # ╔═╡ 4bef221e-4b21-4d21-9f63-75238a0afa0b
-md"### Snippet 4.12"
+md"### Julia code snippet 4.12"
 
 # ╔═╡ 298cb966-7a89-495f-9665-606612523a6f
 plot(Normal(178, 20); xlim=(100, 250))
 
 # ╔═╡ a95a8a87-a003-4053-b800-16e880cac661
-md"### Snippet 4.13"
+md"### Julia code snippet 4.13"
 
 # ╔═╡ 2d816327-a0c3-46b4-8cbb-fd1cba7187b3
 plot(Uniform(0, 50), xlim=(-10, 60), ylim=(0, 0.03))
 
 # ╔═╡ ad0f5641-2f28-4de3-a9d4-f22c6b9b9e4d
-md"### Snippet 4.14"
+md"### Julia code snippet 4.14"
 
 # ╔═╡ 77ae1357-ccee-4eb3-88c8-573582aa451b
 let
@@ -108,7 +108,7 @@ let
 end
 
 # ╔═╡ 9ab25a70-8e23-498b-84c0-cc3fad317188
-md"### Snippet 4.15"
+md"### Julia code snippet 4.15"
 
 # ╔═╡ 82daf9eb-5374-44c9-8162-46b350c72ef8
 begin
@@ -147,7 +147,7 @@ let
 end
 
 # ╔═╡ 5a89d9dd-1332-457b-ad1e-408aa1ec5b1f
-md"### Snippet 4.17"
+md"### Julia code snippet 4.17"
 
 # ╔═╡ 28dac3e5-30ca-400d-8c25-296a8581509c
 md"##### Note the transposition, that's due to Julia matrix order."
@@ -158,7 +158,7 @@ let
 end
 
 # ╔═╡ a62777e2-bf00-47de-b397-a3df0dff93d5
-md"### Snippet 4.18"
+md"### Julia code snippet 4.18"
 
 # ╔═╡ de78a53f-76b4-41ad-b543-56c14f09171e
 let
@@ -166,7 +166,7 @@ let
 end
 
 # ╔═╡ 5b4c59f3-87b5-48ff-a48d-4e61a891d88f
-md"### Snippet 4.19 & 4.20"
+md"### Julia code snippet 4.19 & 4.20"
 
 # ╔═╡ 590f7b71-cbf2-4d6e-bddb-a8cc3afd8366
 let
@@ -178,7 +178,7 @@ let
 end
 
 # ╔═╡ 72ce105b-48a7-4eb7-a846-accae77d7e3b
-md"### Snippet 4.21"
+md"### Julia code snippet 4.21"
 
 # ╔═╡ 2db4ec20-7321-483f-a61e-133420c4e20d
 begin
@@ -188,7 +188,7 @@ begin
 end
 
 # ╔═╡ f55e104d-6674-48f7-b4a4-62b2f426a9eb
-md"### Snippet 4.22"
+md"### Julia code snippet 4.22"
 
 # ╔═╡ 33d33e81-c4a2-47d0-a2cf-1a7e2ee72543
 hpdi(sample_μs, alpha=0.11)
@@ -197,13 +197,13 @@ hpdi(sample_μs, alpha=0.11)
 hpdi(sample_σs, alpha=0.11)
 
 # ╔═╡ 061773f3-f360-43fb-ac65-012a674be330
-md"### Snippet 4.23"
+md"### Julia code snippet 4.23"
 
 # ╔═╡ 5562abd5-c303-4651-b08a-cdc4eda424f3
 d3 = sample(d2.height, 20);
 
 # ╔═╡ a742d704-82f2-41e0-a124-5d7ac32ca75e
-md"### Snippet 4.24"
+md"### Julia code snippet 4.24"
 
 # ╔═╡ 740b6299-5a58-4f61-a80b-606ab273129f
 begin
@@ -228,7 +228,7 @@ begin
 end
 
 # ╔═╡ 2c393bee-cb19-43e6-9d7a-0530e701215e
-md"### Snippet 4.25"
+md"### Julia code snippet 4.25"
 
 # ╔═╡ 82c707a2-0340-430b-ab4f-624116610dec
 begin
@@ -239,13 +239,13 @@ begin
 end
 
 # ╔═╡ bb88b854-f4ee-482b-987f-9d67ff5ed446
-md"### Snippet 4.26"
+md"### Julia code snippet 4.26"
 
 # ╔═╡ a259b208-b7ec-4e62-8aec-cb64b46fb9f6
 md"##### Reuse `d2` from earlier."
 
 # ╔═╡ 32d25dc8-9c78-4625-960a-e76969198083
-md"### Snippet 4.27"
+md"### Julia code snippet 4.27"
 
 # ╔═╡ 75f4a379-f0f9-4e87-83a8-b3e10dc179e0
 m4_1_1 = "
@@ -271,7 +271,7 @@ let
 end;
 
 # ╔═╡ 3a08dde3-221c-428b-b532-ba21b4e00c7b
-md"### Snippet 4.28"
+md"### Julia code snippet 4.28"
 
 # ╔═╡ 5e6b8c7b-b032-46a5-b26e-190dda659ea8
 if success(rc4_1_1s)
@@ -279,13 +279,13 @@ if success(rc4_1_1s)
 end
 
 # ╔═╡ 39d63830-404b-4b38-a5d0-22028260a064
-md"### Snippet 4.29"
+md"### Julia code snippet 4.29"
 
 # ╔═╡ b6fffbc4-5a39-4d94-8115-5f23aa14828d
 describe(chns4_1_1s; q=[0.055, 0.945])
 
 # ╔═╡ afbd389f-4887-45ac-b6e8-8914f5fce6d9
-md"### Snippet 4.30"
+md"### Julia code snippet 4.30"
 
 # ╔═╡ f2215854-2cf0-4d03-b3cf-48c4a0234c19
 let
@@ -298,7 +298,7 @@ let
 end
 
 # ╔═╡ fa1037ef-d681-4cf3-9a78-2fd630d5e4c2
-md"### Snippet 4.31"
+md"### Julia code snippet 4.31"
 
 # ╔═╡ fc1d53c0-dc27-4559-be5c-6787f88700a8
 stan4_2 = "
@@ -344,13 +344,13 @@ begin
 end
 
 # ╔═╡ b4a5cab9-88af-4b9b-b28f-5c42b09f26a3
-md"### Snippet 4.32"
+md"### Julia code snippet 4.32"
 
 # ╔═╡ 7165d2f1-25f8-4d8b-a48e-3d2a3b607d52
 cov(hcat(chns4_2s[:mu], chns4_2s[:sigma]))
 
 # ╔═╡ c8d3d6ce-dee1-4874-a657-a1ed65d436ab
-md"### Snippet 4.33"
+md"### Julia code snippet 4.33"
 
 # ╔═╡ 5daaed2b-1a6c-4947-8f73-7ca99c11c5c6
 let
@@ -359,7 +359,7 @@ let
 end
 
 # ╔═╡ a8c25ced-ff75-455e-bb99-b46e19f74157
-md"### Snippet 4.34"
+md"### Julia code snippet 4.34"
 
 # ╔═╡ 4588a47b-98e4-4ee4-abc9-4402337a1acf
 begin
@@ -368,13 +368,13 @@ begin
 end
 
 # ╔═╡ ee59d741-e702-4dbc-8207-b403731f6392
-md"### Snippet 4.35"
+md"### Julia code snippet 4.35"
 
 # ╔═╡ cbd63f89-db04-4fee-a2b7-a892a5635c93
 PRECIS(samp_df)
 
 # ╔═╡ a6b2b528-5743-4f3e-8964-79a08593c092
-md"### Snippet 4.36"
+md"### Julia code snippet 4.36"
 
 # ╔═╡ efe78641-ae87-46dd-be6f-e18cbfa0b5ca
 let

@@ -5,7 +5,7 @@ using Markdown
 using InteractiveUtils
 
 # ╔═╡ 4ade4692-fc0b-11ea-0b14-6b6cb2435655
-using Pkg, DrWatson
+using Pkg
 
 # ╔═╡ 4ade84b6-fc0b-11ea-06ff-9517579c812c
 begin
@@ -101,7 +101,7 @@ if !isnothing(m4_5s)
 end
 
 # ╔═╡ 4b2109c8-fc0b-11ea-0aed-2b80f6b14188
-md"### Snippet 4.64 - 4.67"
+md"### Julia code snippet 4.64 - 4.67"
 
 # ╔═╡ 4b30dc0e-fc0b-11ea-30c4-05c83cf73fda
 if !isnothing(q4_5s)

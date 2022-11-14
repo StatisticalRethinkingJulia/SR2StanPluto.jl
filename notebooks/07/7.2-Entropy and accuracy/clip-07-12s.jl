@@ -5,7 +5,7 @@ using Markdown
 using InteractiveUtils
 
 # ╔═╡ e7c05ce8-58ef-11eb-2da6-bfffd4491883
-using Pkg, DrWatson
+using Pkg
 
 # ╔═╡ 7fb874b8-58f0-11eb-3e17-91468135856f
 begin
@@ -44,7 +44,7 @@ md" ##### Kullback-Leibler divergence."
 D(p, q) = sum(p .* log.(p ./ q))
 
 # ╔═╡ 5e898a3a-58f4-11eb-1c3d-ef781cf3e9f0
-md" ### Snippet 7.12"
+md" ### Julia code snippet 7.12"
 
 # ╔═╡ 48b01fc0-58f0-11eb-10e1-8969cfc5022f
 begin

@@ -5,7 +5,7 @@ using Markdown
 using InteractiveUtils
 
 # ╔═╡ 6a0e1509-a003-4b92-a244-f96a9dd7dd3e
-using Pkg, DrWatson
+using Pkg
 
 # ╔═╡ ba53534c-c088-4b75-a220-36c09b375978
 begin
@@ -31,7 +31,7 @@ default(label=false)
 md"#### 4.1 Why normal distributions are normal."
 
 # ╔═╡ ca213187-aedf-49b7-9393-607bf6a4f08e
-md"### Snippet 4.1"
+md"### Julia code snippet 4.1"
 
 # ╔═╡ 497d10d9-2553-4d04-b79a-f5281c500bb6
 md"#### Fig4.2."
@@ -88,13 +88,13 @@ plot(fig1, fig3, layout=(2,1))
 md"#### End of Fig4.2."
 
 # ╔═╡ 6edc4101-78b3-434b-a03b-2c5915742661
-md"### Snippet 4.2"
+md"### Julia code snippet 4.2"
 
 # ╔═╡ c5806d51-9be6-49e1-9b95-bca5be15a33b
 prod(1 .+ rand(Uniform(0, .1), 12))
 
 # ╔═╡ bc7b4b29-3fb5-4b05-9701-45c0631c92ae
-md"### Snippet 4.3"
+md"### Julia code snippet 4.3"
 
 # ╔═╡ 56163c82-7652-4449-9204-b062c3853167
 let
@@ -109,7 +109,7 @@ let
 end
 
 # ╔═╡ 713faf3d-2a06-4683-b6fd-b161b920a21e
-md"### Snippet 4.4"
+md"### Julia code snippet 4.4"
 
 # ╔═╡ 025c8b62-eaff-41ad-8bb6-6b575b8a2445
 let
@@ -119,7 +119,7 @@ let
 end
 
 # ╔═╡ 9c4af273-38d1-4142-b463-45dd927f0e10
-md"### Snippet 4.5"
+md"### Julia code snippet 4.5"
 
 # ╔═╡ 5a77576d-3370-4e81-81c9-64e9ebfcbbb9
 density(log.(big))

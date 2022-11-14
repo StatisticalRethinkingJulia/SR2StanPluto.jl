@@ -5,7 +5,7 @@ using Markdown
 using InteractiveUtils
 
 # ╔═╡ 538f05be-5053-11eb-19a0-959e34e1c2a1
-using Pkg, DrWatson
+using Pkg
 
 # ╔═╡ 5d84f90c-5053-11eb-076b-5f30fc9685e3
 begin
@@ -37,7 +37,7 @@ begin
 end;
 
 # ╔═╡ abcc19ec-5076-11eb-1fd1-5bbc8fab188c
-md" ### Snippet 7.3 (updated to get mu values)"
+md" ### Julia code snippet 7.3 (updated to get mu values)"
 
 # ╔═╡ ee275e7a-5067-11eb-325b-7760b758e85e
 stan7_1a = "
@@ -92,7 +92,7 @@ post7_1as_df = read_samples(m7_1as, :dataframe);
 PRECIS(post7_1as_df)
 
 # ╔═╡ 93d1db36-5118-11eb-3183-212c07cdf0eb
-md" ### Snippet 7.5"
+md" ### Julia code snippet 7.5"
 
 # ╔═╡ 7d5c3db8-5110-11eb-130e-072858e16d80
 begin
@@ -123,7 +123,7 @@ function r2_is_bad_2(model::NamedTuple, df::DataFrame)
 end
 
 # ╔═╡ a4319250-5118-11eb-0b52-0d7c576d061c
-md" ### Snippet 7.6"
+md" ### Julia code snippet 7.6"
 
 # ╔═╡ 34e0d218-5117-11eb-2b05-afbbee902f2d
 r2_is_bad_1(nt7_1as, df)

@@ -5,7 +5,7 @@ using Markdown
 using InteractiveUtils
 
 # ╔═╡ 538f05be-5053-11eb-19a0-959e34e1c2a1
-using Pkg, DrWatson
+using Pkg
 
 # ╔═╡ 5d84f90c-5053-11eb-076b-5f30fc9685e3
 begin
@@ -47,7 +47,7 @@ begin
 end
 
 # ╔═╡ abcc19ec-5076-11eb-1fd1-5bbc8fab188c
-md" ### Snippet 7.3"
+md" ### Julia code snippet 7.3"
 
 # ╔═╡ ee275e7a-5067-11eb-325b-7760b758e85e
 stan7_2 = "
@@ -111,7 +111,7 @@ for K in 1:6
 end;
 
 # ╔═╡ 2389915c-51c7-11eb-15c6-4fe1fa67fbfe
-md" ### Snippet 7.6"
+md" ### Julia code snippet 7.6"
 
 # ╔═╡ eae3bf44-51c6-11eb-19b7-a79473f2bf36
 plot(fig7_3[1])

@@ -5,7 +5,7 @@ using Markdown
 using InteractiveUtils
 
 # ╔═╡ ea04bbf8-fdbd-11ea-3770-799225f55cf1
-using Pkg, DrWatson
+using Pkg
 
 # ╔═╡ ea0507fc-fdbd-11ea-2d44-c73b1568b904
 begin
@@ -87,19 +87,19 @@ begin
 end;
 
 # ╔═╡ ea213eae-fdbd-11ea-17f4-1309b4bd31da
-md"### Snippet 5.22"
+md"### Julia code snippet 5.22"
 
 # ╔═╡ ea21d698-fdbd-11ea-2ed9-cf100ceb1ef1
 a_seq = range(-2, stop=2, length=100);
 
 # ╔═╡ ea2cc4fe-fdbd-11ea-159f-3bad3c16d624
-md"### Snippet 5.23"
+md"### Julia code snippet 5.23"
 
 # ╔═╡ ea33f1ac-fdbd-11ea-06e1-e98d93f9fa4b
 m_sim, d_sim = simulate(post5_7_As_df, [:aNC, :bMNC, :sigma_NC], a_seq, [:bM, :sigma]);
 
 # ╔═╡ ea3ddca0-fdbd-11ea-1c96-2dc2f71a1fd5
-md"### Snippet 5.24"
+md"### Julia code snippet 5.24"
 
 # ╔═╡ ea42399c-fdbd-11ea-3d76-435c05a5b479
 begin

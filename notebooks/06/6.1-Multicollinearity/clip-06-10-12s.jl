@@ -5,7 +5,7 @@ using Markdown
 using InteractiveUtils
 
 # ╔═╡ 0f1a134c-fea8-11ea-012a-dd9ffc2c4404
-using Pkg, DrWatson
+using Pkg
 
 # ╔═╡ 0f1a4e18-fea8-11ea-272e-9f7fb0ad303e
 begin
@@ -147,13 +147,13 @@ end
 success(rc6_5s) && s6_5s
 
 # ╔═╡ 0f561d94-fea8-11ea-24c0-39334d22238e
-md"### Snippet 6.11"
+md"### Julia code snippet 6.11"
 
 # ╔═╡ 0f5da062-fea8-11ea-218b-b90a9e3f07ca
 pairsplot(df, [:kcal_per_g, :perc_fat, :perc_lactose])
 
 # ╔═╡ 0f64d190-fea8-11ea-057c-83a01a41598d
-md"### Snippet 6.12"
+md"### Julia code snippet 6.12"
 
 # ╔═╡ 0f66a1fa-fea8-11ea-0a72-afdfd848c896
 cor(df.perc_fat, df.perc_lactose)

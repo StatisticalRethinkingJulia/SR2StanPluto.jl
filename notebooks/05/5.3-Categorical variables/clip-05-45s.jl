@@ -5,7 +5,7 @@ using Markdown
 using InteractiveUtils
 
 # ╔═╡ d2ce3d8a-fdc0-11ea-0920-6fd0ca7c09be
-using Pkg, DrWatson
+using Pkg
 
 # ╔═╡ d2ce824a-fdc0-11ea-1504-a7f6289a0308
 begin

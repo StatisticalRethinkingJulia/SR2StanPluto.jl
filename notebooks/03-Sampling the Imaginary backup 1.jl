@@ -4,21 +4,27 @@
 using Markdown
 using InteractiveUtils
 
-using Pkg, DrWatson
+html"""
+<style>
+    main {
+        margin: 0 auto;
+        max-width: 2000px;
+        padding-left: max(160px, 10%);
+        padding-right: max(160px, 10%);
+    }
+</style>
+"""
+
+using Pkg
 
 begin
     using Distributions
-    using StatsPlots
     using StatsBase
     using KernelDensity
     using StatisticalRethinking
 end
 
-md"##### Setting default attributes for plots."
-default(labels=false)
-
-
-md"### Snippet 3.1"
+md"### Julia code snippet 3.1"
 
 begin
     Pr_Positive_Vampire = 0.95
@@ -30,7 +36,7 @@ begin
     Pr_Vampire_Positive
 end
 
-md"### Snippet 3.2"
+md"### Julia code snippet 3.2"
 
 begin
     size = 1000
@@ -41,7 +47,7 @@ begin
     posterior /= sum(posterior);
 end
 
-md"### Snippet 3.3"
+md"### Julia code snippet 3.3"
 
 begin
     samples_count = 10_000
@@ -50,35 +56,35 @@ begin
     samples = p_grid[indices];
 end
 
-md"### Snippet 3.4"
+md"### Julia code snippet 3.4"
 
 scatter(samples; alpha=0.2)
 
-md"### Snippet 3.5"
+md"### Julia code snippet 3.5"
 
 density(samples)
 
-md"### Snippet 3.6"
+md"### Julia code snippet 3.6"
 
 sum(posterior[p_grid .< 0.5])
 
-md"### Snippet 3.7"
+md"### Julia code snippet 3.7"
 
 sum(samples .< 0.5) / samples_count
 
-md"### Snippet 3.8"
+md"### Julia code snippet 3.8"
 
 sum(@. (samples > 0.5) & (samples < 0.75)) / samples_count
 
-md"### Snippet 3.9"
+md"### Julia code snippet 3.9"
 
 quantile(samples, 0.8)
 
-md"### Snippet 3.10"
+md"### Julia code snippet 3.10"
 
 quantile(samples, [0.1, 0.9])
 
-md"### Snippet 3.11"
+md"### Julia code snippet 3.11"
 
 let
     size = 1000
@@ -93,71 +99,71 @@ let
     samples = p_grid[rand(cat, samples_count)];
 end;
 
-md"### Snippet 3.12"
+md"### Julia code snippet 3.12"
 
 percentile(samples, [25, 75])
 
-md"### Snippet 3.13"
+md"### Julia code snippet 3.13"
 
 hpdi(samples, alpha=0.5)
 
-md"### Snippet 3.14"
+md"### Julia code snippet 3.14"
 
 p_grid[argmax(posterior)]
 
-md"### Snippet 3.15"
+md"### Julia code snippet 3.15"
 
 k = kde(samples, bandwidth=0.01)
 k.x[argmax(k.density)]
 
-md"### Snippet 3.16"
+md"### Julia code snippet 3.16"
 
 mean(samples), median(samples)
 
-md"### Snippet 3.17"
+md"### Julia code snippet 3.17"
 
 sum(@. posterior * abs(0.5 - p_grid))
 
-md"### Snippet 3.18"
+md"### Julia code snippet 3.18"
 
 loss = map(d -> sum(@. posterior * abs(d - p_grid)), p_grid);
 
-md"### Snippet 3.19"
+md"### Julia code snippet 3.19"
 
 p_grid[argmin(loss)]
 
-md"### Snippet 3.20"
+md"### Julia code snippet 3.20"
 
 [pdf(Binomial(2, 0.7), n) for n ∈ 0:2]
 
-md"### Snippet 3.21"
+md"### Julia code snippet 3.21"
 
 rand(Binomial(2, 0.7))
 
-md"### Snippet 3.22"
+md"### Julia code snippet 3.22"
 
 s = rand(Binomial(2, 0.7), 10)
 println(s)
 
-md"### Snippet 3.23"
+md"### Julia code snippet 3.23"
 
 let
     dummy_w = rand(Binomial(2, 0.7), 100_000);
     proportions(dummy_w)  # or counts(dummy_w)/100000
 end
 
-md"### Snippet 3.24"
+md"### Julia code snippet 3.24"
 
 let
     dummy_w = rand(Binomial(9, 0.7), 100_000);
     histogram(dummy_w; xlabel="dummy water count", ylabel="Frequency")
 end
 
-md"### Snippet 3.25"
+md"### Julia code snippet 3.25"
 
 w = rand(Binomial(9, 0.6), 10_000);
 
-md"### Snippet 3.26"
+md"### Julia code snippet 3.26"
 
 w = [rand(Binomial(9, p)) for p in samples];
 

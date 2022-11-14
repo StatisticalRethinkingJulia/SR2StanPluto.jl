@@ -5,7 +5,7 @@ using Markdown
 using InteractiveUtils
 
 # ╔═╡ b0723702-fe6d-11ea-3809-35a9826b419b
-using Pkg, DrWatson
+using Pkg
 
 # ╔═╡ b0727334-fe6d-11ea-0e69-f563a75647df
 begin
@@ -27,7 +27,7 @@ end
 md"## Clip-06-07s.jl"
 
 # ╔═╡ b072ebc0-fe6d-11ea-337b-a57fbb329ea5
-# Snippet 6.1
+# Julia code snippet 6.1
 
 begin
 	N = 100
@@ -43,7 +43,7 @@ end;
 PRECIS(df)
 
 # ╔═╡ b0813202-fe6d-11ea-2b1a-a37c2943d8dc
-md"### Snippet 6.2"
+md"### Julia code snippet 6.2"
 
 # ╔═╡ b081d1a8-fe6d-11ea-0e63-cbc35b0bbdfb
 m6_2 = "

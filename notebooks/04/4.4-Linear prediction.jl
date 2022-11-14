@@ -5,7 +5,7 @@ using Markdown
 using InteractiveUtils
 
 # ╔═╡ 6a0e1509-a003-4b92-a244-f96a9dd7dd3e
-using Pkg, DrWatson
+using Pkg
 
 # ╔═╡ ba53534c-c088-4b75-a220-36c09b375978
 begin
@@ -31,7 +31,7 @@ default(label=false)
 md"## 4.4 Linear predictions"
 
 # ╔═╡ 6e93c98d-55d7-4a30-b9cf-1b411ad7ef3c
-md"### Snippet 4.37"
+md"### Julia code snippet 4.37"
 
 # ╔═╡ 274e4aa4-6b25-44bc-8d65-5d8716ffdfd0
 begin
@@ -43,7 +43,7 @@ begin
 end
 
 # ╔═╡ b17401c9-c278-4525-8ffd-36b2274115dc
-md"### Snippet 4.38"
+md"### Julia code snippet 4.38"
 
 # ╔═╡ a23d3abd-3376-4122-b210-a71f1dbbf444
 begin
@@ -54,7 +54,7 @@ begin
 end
 
 # ╔═╡ 3233d3f9-768a-4197-8b67-ef59e298d133
-md"### Snippet 4.39"
+md"### Julia code snippet 4.39"
 
 # ╔═╡ 1d3d908f-f5ab-477f-bb83-0ca4b04fcc1c
 begin

@@ -5,7 +5,7 @@ using Markdown
 using InteractiveUtils
 
 # ╔═╡ 9820cc3a-fe50-11ea-3fb6-991358edb7ff
-using Pkg, DrWatson
+using Pkg
 
 # ╔═╡ 98210cc2-fe50-11ea-0fec-cfe81a89d0cb
 begin
@@ -27,7 +27,7 @@ end
 md"## Clip-06-02-06s.jl"
 
 # ╔═╡ 9831d8b8-fe50-11ea-38fd-c99a2b5fd0bc
-md"### Snippet 6.1"
+md"### Julia code snippet 6.1"
 
 # ╔═╡ 98328740-fe50-11ea-3008-27d3dda98cd2
 begin
@@ -41,7 +41,7 @@ begin
 end;
 
 # ╔═╡ 9842396a-fe50-11ea-217d-2bba5fa44fb5
-md"### Snippet 6.2"
+md"### Julia code snippet 6.2"
 
 # ╔═╡ 9842dbb8-fe50-11ea-158e-cbc2873c64bd
 stan6_1 = "

@@ -5,7 +5,7 @@ using Markdown
 using InteractiveUtils
 
 # ╔═╡ 55da2efe-fd40-11ea-1fb2-237b206602b5
-using Pkg, DrWatson
+using Pkg
 
 # ╔═╡ 55da724c-fd40-11ea-3868-3baa56009723
 begin
@@ -104,13 +104,13 @@ rethinking_results = "
 	end
 
 # ╔═╡ 55fefeaa-fd40-11ea-2c88-a910f049dcf0
-md"## Snippet 5.22"
+md"## Julia code snippet 5.22"
 
 # ╔═╡ 55fff1b6-fd40-11ea-38e0-3b694162f66e
 a_seq = range(-2, stop=2, length=100);
 
 # ╔═╡ 560a4aa6-fd40-11ea-1103-7191fff677fb
-md"## Snippet 5.23"
+md"## Julia code snippet 5.23"
 
 # ╔═╡ 560dcb42-fd40-11ea-0b2e-f14e70a7425a
 begin
@@ -119,7 +119,7 @@ begin
 end;
 
 # ╔═╡ 5618ec0c-fd40-11ea-3a0f-85fb3e33f1b1
-md"## Snippet 5.24"
+md"## Julia code snippet 5.24"
 
 # ╔═╡ 5621e8fc-fd40-11ea-2f52-095b7196c40c
 begin

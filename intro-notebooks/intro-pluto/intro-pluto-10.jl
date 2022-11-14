@@ -14,7 +14,7 @@ macro bind(def, element)
 end
 
 # ╔═╡ 78e82534-3101-11eb-2eda-43b2de63543b
-using Pkg, DrWatson
+using Pkg
 
 # ╔═╡ 7fcdc6c2-3101-11eb-306d-b32a138fa475
 begin

@@ -5,7 +5,7 @@ using Markdown
 using InteractiveUtils
 
 # ╔═╡ 98601dc8-fd46-11ea-2560-e762bfd97ed7
-using Pkg, DrWatson
+using Pkg
 
 # ╔═╡ 986050d6-fd46-11ea-26b6-7f618638f1ab
 begin
@@ -103,13 +103,13 @@ if !isnothing(q5_3_As)
 part5_3_As = read_samples(m5_3_As, :particles)
 
 # ╔═╡ 988ca05a-fd46-11ea-2ae3-910f7baa2b3f
-md"## Snippet 5.25"
+md"## Julia code snippet 5.25"
 
 # ╔═╡ c79668d4-fd48-11ea-0cea-838eb6be744c
 a_seq = range(-2, stop=2, length=100)
 
 # ╔═╡ 988d33a8-fd46-11ea-27e5-7ba54e7b04fa
-md"## Snippet 5.26"
+md"## Julia code snippet 5.26"
 
 # ╔═╡ e46cd1dc-fd48-11ea-0802-4d13a4981a23
 begin
@@ -129,7 +129,7 @@ for j in 1:size(post5_3_As_df, 1)
 end
 
 # ╔═╡ 98a1fc3e-fd46-11ea-12f3-81a21baa6353
-md"## Snippet 5.27"
+md"## Julia code snippet 5.27"
 
 # ╔═╡ eee2e318-fd48-11ea-2433-e1f6e65a082a
 d_sim = zeros(size(post5_3_As_df, 1), length(a_seq));
