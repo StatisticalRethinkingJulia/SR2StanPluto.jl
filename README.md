@@ -12,6 +12,8 @@ From v5 onwards the basis will no longer be StatisticalRethinking.jl but Regress
 
 Tagged version 4.2.0 is the last more or less complete set of scripts covering chapters 1 to 11.
 
+Only converted/updated notebooks are in the `notebooks` directory.
+
 While working on v5, older notebooks will remain available in `notebooks_old` and `notebooks_very_old`.
 
 ## Installation
