@@ -8,7 +8,7 @@ This Julia project uses Stan (the `cmdstan` executable) as the underlying mcmc i
 
 ## Important note
 
-From v5 onwards the basis will no longer be StatisticalRethinking.jl but RegressionAndOtherStories.jl. Both packages have very similar content, but StatisticalRethinking.jl uses Plots.jl while RegressionAndOtherStories.jl v5 is using Makie.jl.
+From v5 onwards the basis will no longer be StatisticalRethinking.jl but RegressionAndOtherStories.jl. Both packages have very similar content, but StatisticalRethinking.jl uses Plots.jl while RegressionAndOtherStories.jl is using Makie.jl.
 
 Tagged version 4.2.0 is the last more or less complete set of scripts covering chapters 1 to 11.
 
@@ -43,9 +43,11 @@ Select a notebook in the `open a file` entry box, e.g. type `./` and step a note
 
 All "rethinking" data files are stored and maintained in StatisticalRethinking.jl and can be accessed via `sr_datadir(...)`.
 
+## Some details
+
 The `data` directory can be used for locally generated data, exercises, etc.
 
-The models and the results of simulations are stored as follows:
+For models and the results of simulations I tend to use:
 
 Models and results:
 
@@ -81,11 +83,15 @@ the Julia eco-sytem is still evolving rapidly with new options.
 
 Using `read_samples(m5_1s, :...)` makes it easy to convert samples to other formats.
 
+In version 5 I expect to mainly use the output_formats :dataframe, :namedtuple.
+
+For InferenceObjects.jl there is a separate function `inferencedata(m1_1s)`. See the Notebook_Examples in Stan.jl for an example Pluto notebook.
+
 ## Status
 
 SR2StanPluto.jl is compatible with the 2nd edition of the book.
 
-StructuralCausalModels.jl ans ParetoSmoothedImportanceSampling.jl are included as experimental dependencies in the StatisticalRethinking.jl v3+ package. Both definitely WIP!
+StructuralCausalModels.jl ans ParetoSmoothedImportanceSampling.jl are included as experimental dependencies in the StatisticalRethinking.jl v3+ package. Both definitely WIP! See also below version 5 info.
 
 Any feedback is appreciated. Please open an issue.
 
@@ -97,11 +103,11 @@ This repository and format is derived from previous versions of StatisticalRethi
 
 ## Versions
 
-### Version 5 (under development)
+### Version 5 (under development, 2023)
 
 1. Switch to (GL)Makie.jl, CausalInference.jl, InferenceObjects.jl (and more probably).
 
-### Version 
+### Version 4
 
 1. SR2StanPluto v4+ requires StatisticalRethinking v4+.
 
