@@ -21,6 +21,7 @@ To (locally) reproduce and use this project, do the following (just once):
 1. Download this [project](https://github.com/StatisticalRethinkingJulia/SR2StanPluto.jl) from Github and move to the downloaded directory, e.g.:
 
 ```
+$ cd .julia/dev
 $ git clone https://github.com/StatisticalRethinkingJulia/SR2StanPluto.jl SR2StanPluto
 $ cd SR2StanPluto
 ```
@@ -29,6 +30,7 @@ The next step assumes your `basic`Julia environment includes `Pkg` and `Pluto`.
 
 2. Start a Pluto notebook server.
 ```
+$ cd SR2StanPluto/notebooks
 $ julia
 
 julia> using Pluto
@@ -39,15 +41,14 @@ julia> Pluto.run()
 
 ## Usage
 
-Select a notebook in the `open a file` entry box, e.g. type `./` and step a notebook. 
-
-All "rethinking" data files are stored and maintained in StatisticalRethinking.jl and can be accessed via `sr_datadir(...)`.
+Select a notebook in the `open a file` entry box, e.g. type `./` and step to a notebook. 
 
 ## Some details
 
-The `data` directory can be used for locally generated data, exercises, etc.
+All "rethinking" data files are stored and maintained in StatisticalRethinking.jl and can be accessed via `sr_datadir(...)`.
+See `notebooks/00-Preface.jl` for an example.
 
-For models and the results of simulations I tend to use:
+In scripts, for for naming models and the results of simulations I tend to use:
 
 Models and results:
 
@@ -85,7 +86,8 @@ Using `read_samples(m5_1s, :...)` makes it easy to convert samples to other form
 
 In version 5 I expect to mainly use the output_formats :dataframe, :namedtuple.
 
-For InferenceObjects.jl there is a separate function `inferencedata(m1_1s)`. See the Notebook_Examples in Stan.jl for an example Pluto notebook.
+For InferenceObjects.jl there is a separate function `inferencedata(m1_1s)`.
+See the Notebook_Examples in Stan.jl for an example Pluto notebook.
 
 ## Status
 
@@ -105,7 +107,7 @@ This repository and format is derived from previous versions of StatisticalRethi
 
 ### Version 5 (under development, 2023)
 
-1. Switch to (GL)Makie.jl, CausalInference.jl, InferenceObjects.jl (and more probably).
+1. Switch to (GL)Makie.jl, Graphs.jl, CausalInference.jl, InferenceObjects.jl (and more probably).
 
 ### Version 4
 
