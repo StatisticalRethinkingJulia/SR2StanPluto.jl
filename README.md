@@ -12,13 +12,11 @@ From v5 onwards the basis will no longer be StatisticalRethinking.jl but Regress
 
 Tagged version 4.2.0 is the last more or less complete set of scripts covering `the old` chapters 1 to 11.
 
-Only converted/updated notebooks are in the `notebooks` directory.
-
-While working on v5, older notebooks will remain available in `notebooks_old` and `notebooks_very_old`.
+All converted/updated v5 notebooks are in the `notebooks` directory While working on v5, older notebooks snippets will remain available in `notebooks_old` and `notebooks_very_old`.
 
 ## Installation
 
-To (locally) reproduce and use this project, do the following (just once):
+To (locally) reproduce and use this project, do the following:
 
 1. Download this [project](https://github.com/StatisticalRethinkingJulia/SR2StanPluto.jl) from Github and move to the downloaded directory, e.g.:
 
@@ -41,16 +39,14 @@ julia> Pluto.run()
 
 3. A Pluto page should open in a browser.
 
-## Usage
+4. Select a notebook in the `open a file` entry box, e.g. type `./` and select a notebook. 
 
-Select a notebook in the `open a file` entry box, e.g. type `./` and select a notebook. 
-
-## Some details
+## Usage details
 
 All "rethinking" data files are stored and maintained in StatisticalRethinking.jl and can be accessed via `sr_datadir(...)`.
 See `notebooks/00-Preface.jl` for an example.
 
-In scripts, for for naming models and the results of simulations I tend to use:
+In scripts, for naming models and results of simulations I tend to use:
 
 Models and results:
 
@@ -88,7 +84,7 @@ Using `read_samples(m5_1s, :...)` makes it easy to convert samples to other form
 
 In version 5 I expect to mainly use the output_formats :dataframe, :namedtuple.
 
-For InferenceObjects.jl there is a separate function `inferencedata(m1_1s)`.
+For InferenceObjects.jl there is a separate function `inferencedata(m1_1s)`. 
 See the Notebook_Examples in Stan.jl for an example Pluto notebook.
 
 ## Status
@@ -103,7 +99,7 @@ Any feedback is appreciated. Please open an issue.
 
 Of course, without the excellent textbook by Richard McElreath, this project would not have been possible. The author has also been supportive of this work and gave permission to use the datasets.
 
-This repository and format is derived from previous versions of StatisticalRethinking.jl, work by Karajan, and many other contributors.
+This repository and format is derived from previous versions of StatisticalRethinking.jl, work by Karajan, Max Lapan and many other contributors.
 
 ## Versions
 

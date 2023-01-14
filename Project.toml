@@ -1,5 +1,5 @@
 name = "SR2StanPluto"
-authors = "Rob J Goedman (@goedman), Max Lapan (@shmuma)"
+authors = "Rob J Goedman (@goedman)"
 
 [deps]
 BSplines = "488c2830-172b-11e9-1591-253b8a7df96d"
