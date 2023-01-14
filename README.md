@@ -28,11 +28,11 @@ $ git clone https://github.com/StatisticalRethinkingJulia/SR2StanPluto.jl SR2Sta
 $ cd SR2StanPluto
 ```
 
-The next step assumes your `basic`Julia environment includes `Pkg` and `Pluto`.
+The next step assumes your `basic` Julia environment includes `Pkg` and `Pluto`.
 
 2. Start a Pluto notebook server.
 ```
-$ cd SR2StanPluto/notebooks
+$ cd notebooks
 $ julia
 
 julia> using Pluto
@@ -43,7 +43,7 @@ julia> Pluto.run()
 
 ## Usage
 
-Select a notebook in the `open a file` entry box, e.g. type `./` and step to a notebook. 
+Select a notebook in the `open a file` entry box, e.g. type `./` and select a notebook. 
 
 ## Some details
 
