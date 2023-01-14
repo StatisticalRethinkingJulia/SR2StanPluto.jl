@@ -36,7 +36,6 @@ $ julia
 julia> using Pluto
 julia> Pluto.run()
 ```
-
 3. A Pluto page should open in a browser.
 
 4. Select a notebook in the `open a file` entry box, e.g. type `./` and select a notebook. 
