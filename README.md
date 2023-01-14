@@ -10,7 +10,7 @@ This Julia project uses Stan (the `cmdstan` executable) as the underlying mcmc i
 
 From v5 onwards the basis will no longer be StatisticalRethinking.jl but RegressionAndOtherStories.jl. Both packages have very similar content, but StatisticalRethinking.jl uses Plots.jl while RegressionAndOtherStories.jl is using Makie.jl.
 
-Tagged version 4.2.0 is the last more or less complete set of scripts covering chapters 1 to 11.
+Tagged version 4.2.0 is the last more or less complete set of scripts covering `the old` chapters 1 to 11.
 
 Only converted/updated notebooks are in the `notebooks` directory.
 
