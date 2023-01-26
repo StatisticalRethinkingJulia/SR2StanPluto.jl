@@ -34,6 +34,8 @@ notebook_files = [
     "~/.julia/dev/SR2StanPluto/notebooks/04.2 and 04.3-A language for describing models.jl",
     "~/.julia/dev/SR2StanPluto/notebooks/04.4-Linear prediction.jl",
     "~/.julia/dev/SR2StanPluto/notebooks/04.5-Curves from lines.jl",
+    "~/.julia/dev/SR2StanPluto/notebooks/05.2-Causal Inference.jl",
+    "~/.julia/dev/SR2StanPluto/notebooks/05.3-SCM.jl",
 	"~/.julia/dev/SR2StanPluto/notebooks/Maintenance/Notebook-to-reset-SR2StanPluto-jl-notebooks.jl"
 ];
 
