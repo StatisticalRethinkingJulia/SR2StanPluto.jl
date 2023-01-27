@@ -20,7 +20,7 @@ begin
 	using StanSample
 	
 	# Project support libraries
-	using StatisticalRethinking: sr_datadir, PRECIS, scale!, hpdi
+	using StatisticalRethinking: sr_datadir, scale!
 	using RegressionAndOtherStories
 end
 
@@ -116,7 +116,7 @@ begin
 end;
 
 # ╔═╡ a4a9351a-01c6-11eb-28d0-71f8fb243719
-PRECIS(post5_1s_df)
+model_summary(post5_1s_df, [:a, :bA, :sigma])
 
 # ╔═╡ 12fedbca-fc5a-11ea-2d4d-1d5ac93ac4fa
 md"### Julia code snippet 5.5"
@@ -1983,7 +1983,7 @@ version = "3.5.0+0"
 # ╔═╡ Cell order:
 # ╟─645d4df3-af64-489b-b2b0-e710d8917680
 # ╟─e875dcfc-fc57-11ea-27e5-c56f1f9d5370
-# ╠═234d835c-b651-4b16-9f2e-986eda90a1a8
+# ╟─234d835c-b651-4b16-9f2e-986eda90a1a8
 # ╠═fbc882d4-18b0-4f08-a1b1-ec4c4f78635d
 # ╠═16ddb41a-fc59-11ea-1631-153e3466c75c
 # ╠═d65dd2b2-fc58-11ea-2300-4db47ec9a789

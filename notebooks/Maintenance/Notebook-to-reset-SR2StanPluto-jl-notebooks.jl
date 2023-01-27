@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.19
+# v0.19.20
 
 using Markdown
 using InteractiveUtils
@@ -31,7 +31,8 @@ notebook_files = [
     "~/.julia/dev/SR2StanPluto/notebooks/02-Small Worlds and Large World.jl",
     "~/.julia/dev/SR2StanPluto/notebooks/03-Sampling the imaginary.jl",
     "~/.julia/dev/SR2StanPluto/notebooks/04.1-Why normal distributions are normal.jl",
-    "~/.julia/dev/SR2StanPluto/notebooks/04.2 and 04.3-A language for describing models.jl",
+    "~/.julia/dev/SR2StanPluto/notebooks/04.2-A language for describing models.jl",
+    "~/.julia/dev/SR2StanPluto/notebooks/04.3-Gaussian model of height.jl",
     "~/.julia/dev/SR2StanPluto/notebooks/04.4-Linear prediction.jl",
     "~/.julia/dev/SR2StanPluto/notebooks/04.5-Curves from lines.jl",
     "~/.julia/dev/SR2StanPluto/notebooks/05.2-Causal Inference.jl",
