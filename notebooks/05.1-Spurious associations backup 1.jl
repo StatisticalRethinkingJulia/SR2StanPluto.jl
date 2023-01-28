@@ -4,252 +4,264 @@
 using Markdown
 using InteractiveUtils
 
-# ╔═╡ 62c80a26-975a-11ed-2e09-2dce0e33bb70
+# ╔═╡ 16ddb41a-fc59-11ea-1631-153e3466c75c
 using Pkg
 
-# ╔═╡ 58ece6dd-a20f-4624-898a-40cae4b471e4
+# ╔═╡ d65dd2b2-fc58-11ea-2300-4db47ec9a789
 begin
-	# General packages for this script
-	using Test
+	# Notebook specific
 	
-	# Graphics related packages
+	# Graphics related
 	using GLMakie
-	using GraphMakie
-	using Graphs
-
-	# DAG support
-	using CausalInference
-	using StructuralCausalModels
+	using LaTeXStrings
 
 	# Stan specific
+	using StanQuap
 	using StanSample
-
-	# Project support functions
-	using StatisticalRethinking: sr_datadir
+	
+	# Project support libraries
+	using StatisticalRethinking: sr_datadir, scale!
 	using RegressionAndOtherStories
 end
 
-# ╔═╡ 14b9e2fc-b61c-4e4a-bed0-766fa4916194
-using GraphMakie.NetworkLayout
+# ╔═╡ 645d4df3-af64-489b-b2b0-e710d8917680
+md" ## 5.1 - Spurious associations."
 
-# ╔═╡ e4552c81-d0db-4434-b81a-c86f1af515e5
+# ╔═╡ e875dcfc-fc57-11ea-27e5-c56f1f9d5370
+md"### Julia code snippet 5.1"
+
+# ╔═╡ 234d835c-b651-4b16-9f2e-986eda90a1a8
+md"##### Set page layout for notebook."
+
+# ╔═╡ fbc882d4-18b0-4f08-a1b1-ec4c4f78635d
 html"""
 <style>
 	main {
 		margin: 0 auto;
-		max-width: 3000px;
-    	padding-left: max(160px, 10%);
-    	padding-right: max(160px, 30%);
+		max-width: 3500px;
+    	padding-left: max(80px, 0%);
+    	padding-right: max(200px, 38%);
 	}
 </style>
 """
 
-# ╔═╡ 3f7d7f07-1e9a-4721-b3b0-a066409bd5b5
-letters = ('A':'Z')
-
-# ╔═╡ d872845c-0c3e-451d-b706-9ff4cec439d9
-numbers = (1:26)
-
-# ╔═╡ b5bfe191-d62c-4fb4-9b13-c81b0d2cd14e
-let
-	global f = Figure(resolution=default_figure_resolution)
-	ax = Axis(f[1, 1]; title="DiGraph(7)")
-	
-	global g1 = DiGraph(7)
-	
-	colors = [:black for i in 1:nv(g1)]
-	colors[2] = :red
-	
-	for (i, j) in [(1, 2), (2, 3), (2, 4), (4, 5), (3, 5), (5, 6), (7, 5)]
-		add_edge!(g1, i, j)
-	end
-	
-	arrow_size = [20+i for i in 1:ne(g1)]
-	arrow_shift = range(0.1, 0.8, length=ne(g1))
-
-	p = graphplot!(g1;
-		#layout=Shell(),
-		node_color=:blue,
-		edge_color=:grey,
-		nlabels=repr.(numbers[1:nv(g1)]),
-		nlabels_colors=colors,
-		arrow_size=arrow_size)
-	offsets = [Point2f(0.2, -0.125) for i in 1:nv(g1)]
-	p.nlabels_offset[] = offsets
-	autolimits!(ax)
-
-	hidedecorations!(ax)
-	hidespines!(ax)
-	ax.aspect = DataAspect()
-	f
+# ╔═╡ d65e98dc-fc58-11ea-25e1-9fab97b6125a
+begin
+	df = CSV.read(sr_datadir("WaffleDivorce.csv"), DataFrame; delim=';');
+	scale!(df, [:Marriage, :MedianAgeMarriage, :Divorce])
+	df.Whpm = df.WaffleHouses./df.Population
+	df
 end
 
-# ╔═╡ c4730f9a-3a94-4031-a264-fe5c847f5986
+# ╔═╡ a7698084-37d1-4677-89ff-183908a33fbe
+describe(df)
 
+# ╔═╡ 39f32370-ef8f-4918-9412-e4d8b6e8db38
+stan5_0 = "
+	data {
+		int < lower = 1 > N; // Sample size
+		vector[N] W; // Predictor WaffleHouse per million
+		vector[N] D; // Outcome Divirce rate
+	}
 
-# ╔═╡ e32ab50e-c126-4446-b3cf-a69f2f332693
-f
+	parameters {
+		real a; // Intercept
+		real bW; // Slope (regression coefficients)
+		real < lower = 0 > sigma; 
+	}
 
-# ╔═╡ a0cc8175-4f83-45f8-8bba-3e0679ff4ccb
-dsep(g1, 1, 2, [], verbose=true)
+	model {
+		vector[N] mu;               // mu is a vector
+		mu = a + bW * W;
+		a ~ normal(0, 5);         // Priors
+		bW ~ normal(0, 5);
+		sigma ~ exponential(1);
+		D ~ normal(mu, sigma);
+	}
+";
 
-# ╔═╡ 00ad74d9-62d8-4ced-8bf1-eace47470272
-dsep(g1, 1, 5, [3], verbose=true)
-
-# ╔═╡ 5533711c-6cbb-4407-8081-1ab44a09a8b9
-dsep(g1, 1, 5, [4], verbose=true)
-
-# ╔═╡ 6d999053-3612-4e8d-b2f2-2ddf3eae5630
-dsep(g1, 1, 5, [3, 4], verbose=true)
-
-# ╔═╡ 261cca70-a6dd-4bed-b2f2-8667534d0ceb
+# ╔═╡ cb260a55-1eea-4d4a-930e-547820e2bac6
 let
-	Random.seed!(123)
-	N = 1000
-	global p = 0.01
-	x = rand(N)
-	v = x + rand(N) * 0.25
-	w = x + rand(N) * 0.25
-	z = v + w + rand(N) * 0.25
-	s = z + rand(N) * 0.25
-
-	global X = [x v w z s]
-	global df = DataFrame(x=x, v=v, w=w, z=z, s=s)
+	global m5_0s = SampleModel("m5.0s", stan5_0)
+	data = Dict("N" => size(df, 1), "D" => df.Divorce, "W" => df.Whpm)
+	rc5_0s = stan_sample(m5_0s; data)
+	success(rc5_0s) && describe(m5_0s, [:a, :bW, :sigma])
 end
 
-# ╔═╡ 6d78ef06-037f-450a-ac96-26dc22e73af2
-cov(X)
+# ╔═╡ 63fbfe5a-5c5e-4dc8-aeca-742f017f105b
+begin
+	post5_0s_df = read_samples(m5_0s, :dataframe)
+	ms5_0s = model_summary(post5_0s_df, [:a, :bW, :sigma])
+end
 
-# ╔═╡ d94d4717-7ca8-4db9-ae54-fc481aa63c3c
-@time est_g = pcalg(df, p, gausscitest)
 
-# ╔═╡ 6996310f-921d-4158-b9d0-addf9472e268
-est_g
+# ╔═╡ b26424bf-d206-4fb1-a2ab-222a8ffb80c7
+md"### Julia code snippet 5.2"
 
-# ╔═╡ bd4dde3e-797d-43e5-9853-7606828f6b58
+# ╔═╡ cb454809-0dd7-4e79-adc6-7a2793090964
 let
 	f = Figure(resolution=default_figure_resolution)
-	ax = Axis(f[1, 1]; title="DiGraph(7)")
-	
-	colors = [:black for i in 1:nv(est_g)]
-	colors[2] = :red
-		
-	arrow_size = [20+i for i in 1:ne(est_g)]
-	arrow_shift = range(0.1, 0.8, length=ne(est_g))
-
-	p = graphplot!(est_g;
-		#layout=Shell(),
-		node_color=:blue,
-		edge_color=:grey,
-		nlabels=repr.(numbers[1:nv(est_g)]),
-		nlabels_colors=colors,
-		arrow_size=arrow_size)
-	offsets = [Point2f(0.2, -0.125) for i in 1:nv(est_g)]
-	p.nlabels_offset[] = offsets
-	autolimits!(ax)
-
-	hidedecorations!(ax)
-	hidespines!(ax)
-	ax.aspect = DataAspect()
+	ax = Axis(f[1, 1]; xlabel="WaffleHouses per million", ylabel="Divorce rate", title="Figure 5.1")
+	x = 0:0.1:40
+	lines!(x, ms5_0s[:a, :mean] .+ ms5_0s[:bW, :mean] .* x)
+	m, l, u = meanlowerupper(post5_0s_df)
+	scatter!(df.Whpm, df.Divorce)
+	for state in ["AR", "AL", "GA", "SC", "ME", "NJ"]
+		for row in eachrow(df[df.Loc .== state, : ])
+			xpos = row.WaffleHouses/row.Population
+			annotations!(row.Loc; position=(row.Whpm + 0.4, row.Divorce))
+		end
+	end
 	f
 end
 
-# ╔═╡ a7ef9b7a-b825-41ee-836b-7a09456abf54
+# ╔═╡ 238a10f2-3b78-44f5-a727-5839320ce443
+df[df.Loc .== ["GA"], :]
+
+# ╔═╡ d66f515e-fc58-11ea-3fae-cbb82f1a1a6a
+stan5_1_1 = "
+	data {
+	 int < lower = 1 > N; // Sample size
+	 vector[N] A; // Predictor
+	}
+
+	parameters {
+	 real a; // Intercept
+	 real bA; // Slope (regression coefficients)
+	 real < lower = 0 > sigma;    // Error SD
+	}
+
+	model {
+	  vector[N] mu;               // mu is a vector
+	  mu = a + bA * A;
+	  a ~ normal(0, 0.2);         // Priors
+	  bA ~ normal(0, 0.5);
+	  sigma ~ exponential(1);
+	}
+";
+
+# ╔═╡ f4602d4a-fc59-11ea-0d9d-9f58c73c119f
+md"### Julia code snippet 5.3-4"
+
+# ╔═╡ d670aefa-fc58-11ea-1c56-4bfb66e1cab2
+md"## Define the SampleModel, etc."
+
+# ╔═╡ d67e0602-fc58-11ea-3a27-31d03e1c2318
 let
-	g = DiGraph(5)
-	d = nv(g)
-	for (i, j) in [(1, 2), (1, 3), (2, 4), (3, 4), (4, 5)]
-		add_edge!(g, i, j)
-	end
+	global m5_1_1s = SampleModel("m5.1.1s", stan5_1_1)
+	data = Dict("N" => size(df, 1), "A" => df.MedianAgeMarriage_s)
+	rc5_1_1s = stan_sample(m5_1_1s; data)
+	success(rc5_1_1s) && describe(m5_1_1s, [:a, :bA, :sigma])
+end
+
+# ╔═╡ a4a9351a-01c6-11eb-28d0-71f8fb243719
+let
+	global priors5_1s_df = read_samples(m5_1_1s, :dataframe)
+	model_summary(priors5_1s_df, [:a, :bA, :sigma])
+end
+
+# ╔═╡ 12fedbca-fc5a-11ea-2d4d-1d5ac93ac4fa
+md"### Julia code snippet 5.5"
+
+# ╔═╡ 45b2b002-01c6-11eb-3f86-3f9586afcc8b
+md"##### Plot priors of the intercept (`:a`) and the slope (`:bA`)."
+
+# ╔═╡ 7f433052-5f29-491d-960d-480bcb836571
+let
+	xi = -3.0:0.1:3.0
 
 	f = Figure(resolution=default_figure_resolution)
-	ax = Axis(f[1, 1]; title="DiGraph(7)")
-	
-	colors = [:black for i in 1:nv(g)]
-	colors[2] = :red
-		
-	arrow_size = [20+i for i in 1:ne(g)]
-	arrow_shift = range(0.1, 0.8, length=ne(g))
+	ax = Axis(f[1, 1]; xlabel="Medium age marriage (scaled)", ylabel="Divorce rate (scaled)",
+		title="Showing 50 regression lines")
 
-	p = graphplot!(g;
-		#layout=Shell(),
-		node_color=:blue,
-		edge_color=:grey,
-		nlabels=repr.(numbers[1:nv(g)]),
-		nlabels_colors=colors,
-		arrow_size=arrow_size)
-	offsets = [Point2f(0.2, -0.125) for i in 1:nv(g)]
-	p.nlabels_offset[] = offsets
-	autolimits!(ax)
-
-	hidedecorations!(ax)
-	hidespines!(ax)
-	ax.aspect = DataAspect()
-	f
-end
-
-# ╔═╡ 64dca3ba-0ebc-42d6-924e-2375620a3917
-let
-	g = DiGraph(5)
-	d = nv(g)
-	for (i, j) in [(1, 2), (1, 3), (2, 4), (3, 4), (4, 5)]
-		add_edge!(g, i, j)
+	for i in 1:50
+		local yi = mean(priors5_1s_df[i, :a]) .+ priors5_1s_df[i, :bA] .* xi
+		Makie.lines!(xi, yi, color=:lightgrey)
 	end
-	
-	global dg = pcalg(d, dseporacle, g)
-	
-	f = Figure(resolution=default_figure_resolution)
-	ax = Axis(f[1, 1]; title="DiGraph(7)")
-	
-	colors = [:black for i in 1:nv(dg)]
-	colors[2] = :red
-		
-	arrow_size = [20+i for i in 1:ne(dg)]
-	arrow_shift = range(0.1, 0.8, length=ne(dg))
+	Makie.scatter!(df[:, :MedianAgeMarriage_s], df[!, :Divorce_s], color=:darkblue)
 
-	p = graphplot!(dg;
-		#layout=Shell(),
-		node_color=:blue,
-		edge_color=:grey,
-		nlabels=repr.(numbers[1:nv(dg)]),
-		nlabels_colors=colors,
-		arrow_size=arrow_size)
-	offsets = [Point2f(0.2, -0.125) for i in 1:nv(dg)]
-	p.nlabels_offset[] = offsets
-	autolimits!(ax)
-
-	hidedecorations!(ax)
-	hidespines!(ax)
-	ax.aspect = DataAspect()
 	f
 end
 
-# ╔═╡ d3272957-6548-4a90-bfdc-1df302f07ddb
-@test collect(Graphs.edges(est_g)) == collect(Graphs.edges(dg))
+# ╔═╡ d69533ba-fc58-11ea-3378-e512a1d55d27
+md"### Julia code snippet 5.6"
+
+# ╔═╡ 6fc7763b-3d96-44cb-ab90-303e3ba828e8
+stan5_1_2 = "
+	data {
+	 int < lower = 1 > N; // Sample size
+	 vector[N] D; // Outcome
+	 vector[N] A; // Predictor
+	}
+
+	parameters {
+	 real a; // Intercept
+	 real bA; // Slope (regression coefficients)
+	 real < lower = 0 > sigma;    // Error SD
+	}
+
+	model {
+	  vector[N] mu;               // mu is a vector
+	  a ~ normal(0, 0.2);         // Priors
+	  bA ~ normal(0, 0.5);
+	  sigma ~ exponential(1);
+	  mu = a + bA * A;
+	  D ~ normal(mu , sigma);   // Likelihood
+	}
+";
+
+# ╔═╡ 81d7ce22-15af-4c3e-a361-49b191f8d63d
+let
+	global m5_1_2s = SampleModel("m5.1.2s", stan5_1_2)
+	data = Dict("N" => size(df, 1), "D" => df.Divorce_s, "A" => df.MedianAgeMarriage_s)
+	rc5_1_2s = stan_sample(m5_1_2s; data)
+	success(rc5_1_2s) && describe(m5_1_2s, [:a, :bA, :sigma])
+end
+
+# ╔═╡ 59a4d93b-90e3-4bc3-8e75-4a7b04b85b67
+let
+	global post5_1s_df = read_samples(m5_1_2s, :dataframe)
+	model_summary(post5_1s_df, [:a, :bA, :sigma])
+end
+
+# ╔═╡ 5567d466-e4da-4e9a-b4b2-b77b2700e51b
+let
+	xi = -3.0:0.1:3.0
+
+	f = Figure(resolution=default_figure_resolution)
+	ax = Axis(f[1, 1]; xlabel="Medium age marriage (scaled)", ylabel="Divorce rate (scaled)",
+		title="Showing 50 regression lines")
+
+	for i in 1:50
+		local yi = mean(post5_1s_df[i, :a]) .+ post5_1s_df[i, :bA] .* xi
+		Makie.lines!(xi, yi, color=:lightgrey)
+	end
+	Makie.scatter!(df[:, :MedianAgeMarriage_s], df[!, :Divorce_s], color=:darkblue)
+
+	f
+end
+
+# ╔═╡ d6c14359-d723-4dd9-b9a5-fc7b68157be3
+md"### Julia code snippet 5.7"
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
-CausalInference = "8e462317-f959-576b-b3c1-403f26cec956"
 GLMakie = "e9467ef8-e4e7-5192-8a1a-b1aee30e663a"
-GraphMakie = "1ecd5474-83a3-4783-bb4f-06765db800d2"
-Graphs = "86223c79-3864-5bf0-83f7-82e725a168b6"
+LaTeXStrings = "b964fa9f-0449-5b57-a5c2-d3ea65f4040f"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 RegressionAndOtherStories = "21324389-b050-441a-ba7b-9a837781bda0"
+StanQuap = "e4723793-2808-4fc5-8a98-c57f4c160c53"
 StanSample = "c1514b29-d3a0-5178-b312-660c88baa699"
 StatisticalRethinking = "2d09df54-9d0f-5258-8220-54c2a3d4fbee"
-StructuralCausalModels = "a41e6734-49ce-4065-8b83-aff084c01dfd"
-Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [compat]
-CausalInference = "~0.9.0"
 GLMakie = "~0.8.1"
-GraphMakie = "~0.5.2"
-Graphs = "~1.7.4"
-RegressionAndOtherStories = "~0.8.2"
+LaTeXStrings = "~1.3.0"
+RegressionAndOtherStories = "~0.8.1"
+StanQuap = "~4.2.4"
 StanSample = "~7.1.0"
 StatisticalRethinking = "~4.7.0"
-StructuralCausalModels = "~1.4.1"
 """
 
 # ╔═╡ 00000000-0000-0000-0000-000000000002
@@ -258,7 +270,7 @@ PLUTO_MANIFEST_TOML_CONTENTS = """
 
 julia_version = "1.10.0-DEV"
 manifest_format = "2.0"
-project_hash = "22e44d8adaa208fcc4afceae0304c3c7a7534bca"
+project_hash = "33f44e63604b86862b765fcfe42983ba43628f60"
 
 [[deps.ANSIColoredPrinters]]
 git-tree-sha1 = "574baf8110975760d391c710b6341da1afa48d8c"
@@ -303,23 +315,17 @@ version = "2.3.0"
 uuid = "0dad84c5-d112-42e6-8d28-ef12dabb789f"
 version = "1.1.1"
 
-[[deps.ArnoldiMethod]]
-deps = ["LinearAlgebra", "Random", "StaticArrays"]
-git-tree-sha1 = "62e51b39331de8911e4a7ff6f5aaf38a5f4cc0ae"
-uuid = "ec485272-7323-5ecc-a04f-4719b315124d"
-version = "0.2.0"
-
 [[deps.ArrayInterface]]
-deps = ["ArrayInterfaceCore", "Compat", "IfElse", "LinearAlgebra", "SnoopPrecompile", "Static"]
-git-tree-sha1 = "dedc16cbdd1d32bead4617d27572f582216ccf23"
+deps = ["ArrayInterfaceCore", "Compat", "IfElse", "LinearAlgebra", "Static"]
+git-tree-sha1 = "6d0918cb9c0d3db7fe56bea2bc8638fc4014ac35"
 uuid = "4fba245c-0d91-5ea0-9b3e-6abc04ee57a9"
-version = "6.0.25"
+version = "6.0.24"
 
 [[deps.ArrayInterfaceCore]]
-deps = ["LinearAlgebra", "SnoopPrecompile", "SparseArrays", "SuiteSparse"]
-git-tree-sha1 = "e5f08b5689b1aad068e01751889f2f615c7db36d"
+deps = ["LinearAlgebra", "SparseArrays", "SuiteSparse"]
+git-tree-sha1 = "14c3f84a763848906ac681f94cf469a851601d92"
 uuid = "30b0a656-2188-435a-8636-2ec0e6a096e2"
-version = "0.1.29"
+version = "0.1.28"
 
 [[deps.ArrayInterfaceOffsetArrays]]
 deps = ["ArrayInterface", "OffsetArrays", "Static"]
@@ -393,9 +399,9 @@ version = "0.4.2"
 
 [[deps.CPUSummary]]
 deps = ["CpuId", "IfElse", "Static"]
-git-tree-sha1 = "2c144ddb46b552f72d7eafe7cc2f50746e41ea21"
+git-tree-sha1 = "5b735f654bdfd7b6c18c49f1d3ebff34b4b8af43"
 uuid = "2a0fbf3d-bb9c-48f3-b0a9-814d99fd7ab9"
-version = "0.2.2"
+version = "0.2.1"
 
 [[deps.CRC32c]]
 uuid = "8bf52ea8-c179-5cab-976a-9e18b702a9bc"
@@ -424,32 +430,23 @@ git-tree-sha1 = "5084cc1a28976dd1642c9f337b28a3cb03e0f7d2"
 uuid = "324d7699-5711-5eae-9e2f-1d82baa6b597"
 version = "0.10.7"
 
-[[deps.CausalInference]]
-deps = ["Combinatorics", "Distances", "Distributions", "Graphs", "LinearAlgebra", "MetaGraphs", "NearestNeighbors", "Random", "Requires", "SpecialFunctions", "Statistics", "Tables", "TabularDisplay"]
-git-tree-sha1 = "bdd2363091e299ac48b076db13936e72527f5a5d"
-uuid = "8e462317-f959-576b-b3c1-403f26cec956"
-version = "0.9.0"
-
-    [deps.CausalInference.extensions]
-    GraphRecipesExt = ["GraphRecipes", "Plots"]
-    TikzGraphsExt = "TikzGraphs"
-
-    [deps.CausalInference.weakdeps]
-    GraphRecipes = "bd48cda9-67a9-57be-86fa-5b3c104eda73"
-    Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
-    TikzGraphs = "b4f28e30-c73f-5eaf-a395-8a9db949a742"
-
 [[deps.ChainRulesCore]]
 deps = ["Compat", "LinearAlgebra", "SparseArrays"]
 git-tree-sha1 = "c6d890a52d2c4d55d326439580c3b8d0875a77d9"
 uuid = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
 version = "1.15.7"
 
+[[deps.ChangesOfVariables]]
+deps = ["ChainRulesCore", "LinearAlgebra", "Test"]
+git-tree-sha1 = "38f7a08f19d8810338d4f5085211c7dfa5d5bdd8"
+uuid = "9e997f8a-9a97-42d5-a9f1-ce6bfc15e2c0"
+version = "0.1.4"
+
 [[deps.CodecZlib]]
 deps = ["TranscodingStreams", "Zlib_jll"]
-git-tree-sha1 = "9c209fb7536406834aa938fb149964b985de6c83"
+git-tree-sha1 = "ded953804d019afa9a3f98981d99b33e3db7b6da"
 uuid = "944b1d66-785c-5afd-91f1-9de20f533193"
-version = "0.7.1"
+version = "0.7.0"
 
 [[deps.ColorBrewer]]
 deps = ["Colors", "JSON", "Test"]
@@ -597,12 +594,6 @@ git-tree-sha1 = "c5b6685d53f933c11404a3ae9822afe30d522494"
 uuid = "b552c78f-8df3-52c6-915a-8e097449b14b"
 version = "1.12.2"
 
-[[deps.Distances]]
-deps = ["LinearAlgebra", "SparseArrays", "Statistics", "StatsAPI"]
-git-tree-sha1 = "3258d0659f812acde79e8a74b11f17ac06d0ca04"
-uuid = "b4f34e82-e78d-54a5-968a-f98e89d6e8f7"
-version = "0.10.7"
-
 [[deps.Distributed]]
 deps = ["Random", "Serialization", "Sockets"]
 uuid = "8ba89e20-285c-5b6f-9357-94700520ee1b"
@@ -621,9 +612,9 @@ version = "0.9.3"
 
 [[deps.Documenter]]
 deps = ["ANSIColoredPrinters", "Base64", "Dates", "DocStringExtensions", "IOCapture", "InteractiveUtils", "JSON", "LibGit2", "Logging", "Markdown", "REPL", "Test", "Unicode"]
-git-tree-sha1 = "58fea7c536acd71f3eef6be3b21c0df5f3df88fd"
+git-tree-sha1 = "6030186b00a38e9d0434518627426570aac2ef95"
 uuid = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
-version = "0.27.24"
+version = "0.27.23"
 
 [[deps.Downloads]]
 deps = ["ArgTools", "FileWatching", "LibCURL", "NetworkOptions"]
@@ -694,9 +685,9 @@ uuid = "7b1f6079-737a-58dc-b8bc-7a2ca5c1b5ee"
 
 [[deps.FillArrays]]
 deps = ["LinearAlgebra", "Random", "SparseArrays", "Statistics"]
-git-tree-sha1 = "d3ba08ab64bdfd27234d3f61956c966266757fe6"
+git-tree-sha1 = "9a0472ec2f5409db243160a8b030f94c380167a3"
 uuid = "1a297f60-69ca-5386-bcde-b61e274b549b"
-version = "0.13.7"
+version = "0.13.6"
 
 [[deps.FiniteDiff]]
 deps = ["ArrayInterfaceCore", "LinearAlgebra", "Requires", "Setfield", "SparseArrays", "StaticArrays"]
@@ -788,9 +779,9 @@ version = "0.1.3"
 
 [[deps.GeoInterface]]
 deps = ["Extents"]
-git-tree-sha1 = "e07a1b98ed72e3cdd02c6ceaab94b8a606faca40"
+git-tree-sha1 = "e315c4f9d43575cf6b4e511259433803c15ebaa2"
 uuid = "cf35fbd7-0cd7-5166-be24-54bfbe79505f"
-version = "1.2.1"
+version = "1.1.0"
 
 [[deps.GeometryBasics]]
 deps = ["EarCut_jll", "GeoInterface", "IterTools", "LinearAlgebra", "StaticArrays", "StructArrays", "Tables"]
@@ -810,12 +801,6 @@ git-tree-sha1 = "d3b3624125c1474292d0d8ed0f65554ac37ddb23"
 uuid = "7746bdde-850d-59dc-9ae8-88ece973131d"
 version = "2.74.0+2"
 
-[[deps.GraphMakie]]
-deps = ["GeometryBasics", "Graphs", "LinearAlgebra", "Makie", "NetworkLayout", "StaticArrays"]
-git-tree-sha1 = "e43489eaa1512c8b1165a10b522bf20ebcb5f04c"
-uuid = "1ecd5474-83a3-4783-bb4f-06765db800d2"
-version = "0.5.2"
-
 [[deps.Graphics]]
 deps = ["Colors", "LinearAlgebra", "NaNMath"]
 git-tree-sha1 = "d61890399bc535850c4bf08e4e0d3a7ad0f21cbd"
@@ -827,12 +812,6 @@ deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
 git-tree-sha1 = "344bf40dcab1073aca04aa0df4fb092f920e4011"
 uuid = "3b182d85-2403-5c21-9c21-1e1f0cc25472"
 version = "1.3.14+0"
-
-[[deps.Graphs]]
-deps = ["ArnoldiMethod", "Compat", "DataStructures", "Distributed", "Inflate", "LinearAlgebra", "Random", "SharedArrays", "SimpleTraits", "SparseArrays", "Statistics"]
-git-tree-sha1 = "ba2d094a88b6b287bd25cfa86f301e7693ffae2f"
-uuid = "86223c79-3864-5bf0-83f7-82e725a168b6"
-version = "1.7.4"
 
 [[deps.GridLayoutBase]]
 deps = ["GeometryBasics", "InteractiveUtils", "Observables"]
@@ -853,9 +832,9 @@ version = "2.8.1+1"
 
 [[deps.HostCPUFeatures]]
 deps = ["BitTwiddlingConvenienceFunctions", "IfElse", "Libdl", "Static"]
-git-tree-sha1 = "734fd90dd2f920a2f1921d5388dcebe805b262dc"
+git-tree-sha1 = "f64b890b2efa4de81520d2b0fbdc9aadb65bdf53"
 uuid = "3e5b6fbb-0976-4d2c-9146-d79de83f2fb0"
-version = "0.1.14"
+version = "0.1.13"
 
 [[deps.HypergeometricFunctions]]
 deps = ["DualNumbers", "LinearAlgebra", "OpenLibm_jll", "SpecialFunctions", "Test"]
@@ -927,9 +906,9 @@ version = "0.3.1"
 
 [[deps.InlineStrings]]
 deps = ["Parsers"]
-git-tree-sha1 = "9cc2baf75c6d09f9da536ddf58eb2f29dedaf461"
+git-tree-sha1 = "0cf92ec945125946352f3d46c96976ab972bde6f"
 uuid = "842dd82b-1e85-43dc-bf29-5d0ee9dffc48"
-version = "1.4.0"
+version = "1.3.2"
 
 [[deps.IntelOpenMP_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -985,12 +964,6 @@ git-tree-sha1 = "a3f24677c21f5bbe9d2a714f95dcd58337fb2856"
 uuid = "82899510-4779-5014-852e-03e436cf321d"
 version = "1.0.0"
 
-[[deps.JLD2]]
-deps = ["FileIO", "MacroTools", "Mmap", "OrderedCollections", "Pkg", "Printf", "Reexport", "TranscodingStreams", "UUIDs"]
-git-tree-sha1 = "c3244ef42b7d4508c638339df1bdbf4353e144db"
-uuid = "033835bb-8acc-5ee8-8aae-3f567f8a3819"
-version = "0.4.30"
-
 [[deps.JLLWrappers]]
 deps = ["Preferences"]
 git-tree-sha1 = "abc9885a7ca2052a736a600f7fa66209f96506e1"
@@ -1040,9 +1013,9 @@ version = "1.3.0"
 
 [[deps.LayoutPointers]]
 deps = ["ArrayInterface", "ArrayInterfaceOffsetArrays", "ArrayInterfaceStaticArrays", "LinearAlgebra", "ManualMemory", "SIMDTypes", "Static"]
-git-tree-sha1 = "0ad6f0c51ce004dadc24a28a0dfecfb568e52242"
+git-tree-sha1 = "7e34177793212f6d64d045ee47d2883f09fffacc"
 uuid = "10f19ff3-798f-405d-979b-55457f8fc047"
-version = "0.1.13"
+version = "0.1.12"
 
 [[deps.LazyArtifacts]]
 deps = ["Artifacts", "Pkg"]
@@ -1140,20 +1113,10 @@ uuid = "6fdf6af0-433a-55f7-b3ed-c6c6e0b8df7c"
 version = "2.1.0"
 
 [[deps.LogExpFunctions]]
-deps = ["DocStringExtensions", "IrrationalConstants", "LinearAlgebra"]
-git-tree-sha1 = "45b288af6956e67e621c5cbb2d75a261ab58300b"
+deps = ["ChainRulesCore", "ChangesOfVariables", "DocStringExtensions", "InverseFunctions", "IrrationalConstants", "LinearAlgebra"]
+git-tree-sha1 = "946607f84feb96220f480e0422d3484c49c00239"
 uuid = "2ab3a3ac-af41-5b50-aa03-7779005ae688"
-version = "0.3.20"
-
-    [deps.LogExpFunctions.extensions]
-    ChainRulesCoreExt = "ChainRulesCore"
-    ChangesOfVariablesExt = "ChangesOfVariables"
-    InverseFunctionsExt = "InverseFunctions"
-
-    [deps.LogExpFunctions.weakdeps]
-    ChainRulesCore = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
-    ChangesOfVariables = "9e997f8a-9a97-42d5-a9f1-ce6bfc15e2c0"
-    InverseFunctions = "3587e190-3f89-42d0-90ee-14403ec27112"
+version = "0.3.19"
 
 [[deps.Logging]]
 uuid = "56ddb016-857b-54e1-b83d-db4d58db5568"
@@ -1242,12 +1205,6 @@ git-tree-sha1 = "8be09d84a2d597c7c0c34d7d604c039c9763e48c"
 uuid = "7269a6da-0436-5bbc-96c2-40638cbb6118"
 version = "0.4.10"
 
-[[deps.MetaGraphs]]
-deps = ["Graphs", "JLD2", "Random"]
-git-tree-sha1 = "1130dbe1d5276cb656f6e1094ce97466ed700e5a"
-uuid = "626554b9-1ddb-594c-aa3c-2596fe9399a5"
-version = "0.7.2"
-
 [[deps.MicroCollections]]
 deps = ["BangBang", "InitialValues", "Setfield"]
 git-tree-sha1 = "4d5917a26ca33c66c8e5ca3247bd163624d35493"
@@ -1319,23 +1276,11 @@ git-tree-sha1 = "eda490d06b9f7c00752ee81cfa451efe55521e21"
 uuid = "c020b1a1-e9b0-503a-9c33-f039bfc54a85"
 version = "1.0.0"
 
-[[deps.NearestNeighbors]]
-deps = ["Distances", "StaticArrays"]
-git-tree-sha1 = "2c3726ceb3388917602169bed973dbc97f1b51a8"
-uuid = "b8a86587-4115-5ab1-83bc-aa920d37bbce"
-version = "0.4.13"
-
 [[deps.Netpbm]]
 deps = ["FileIO", "ImageCore", "ImageMetadata"]
 git-tree-sha1 = "5ae7ca23e13855b3aba94550f26146c01d259267"
 uuid = "f09324ee-3d7c-5217-9330-fc30815ba969"
 version = "1.1.0"
-
-[[deps.NetworkLayout]]
-deps = ["GeometryBasics", "LinearAlgebra", "Random", "Requires", "SparseArrays"]
-git-tree-sha1 = "cac8fc7ba64b699c678094fa630f49b80618f625"
-uuid = "46757867-2c16-5918-afeb-47bfcb05e46a"
-version = "0.4.4"
 
 [[deps.NetworkOptions]]
 uuid = "ca575930-c2e3-43a9-ace4-1e988b2c1908"
@@ -1475,9 +1420,9 @@ version = "0.3.2"
 
 [[deps.PlotUtils]]
 deps = ["ColorSchemes", "Colors", "Dates", "Printf", "Random", "Reexport", "SnoopPrecompile", "Statistics"]
-git-tree-sha1 = "c95373e73290cf50a8a22c3375e4625ded5c5280"
+git-tree-sha1 = "5b7690dd212e026bbab1860016a6601cb077ab66"
 uuid = "995b91a9-d308-5afd-9ec6-746e21dbc043"
-version = "1.3.4"
+version = "1.3.2"
 
 [[deps.PolygonOps]]
 git-tree-sha1 = "77b3d3605fc1cd0b42d95eba87dfcd2bf67d5ff6"
@@ -1580,9 +1525,9 @@ version = "1.2.2"
 
 [[deps.RegressionAndOtherStories]]
 deps = ["CSV", "CategoricalArrays", "DataFrames", "DataStructures", "Dates", "DelimitedFiles", "Distributions", "DocStringExtensions", "GLM", "KernelDensity", "LaTeXStrings", "LinearAlgebra", "NamedArrays", "NamedTupleTools", "Parameters", "Random", "Reexport", "Requires", "Statistics", "StatsBase", "StatsFuns", "Unicode"]
-git-tree-sha1 = "dc446c1e86292e554d2769950d46ef00cb659e53"
+git-tree-sha1 = "0c0f6cbd00c3ce94912b1341f38061acfd9e45b5"
 uuid = "21324389-b050-441a-ba7b-9a837781bda0"
-version = "0.8.2"
+version = "0.8.1"
 
 [[deps.RelocatableFolders]]
 deps = ["SHA", "Scratch"]
@@ -1598,15 +1543,15 @@ version = "1.3.0"
 
 [[deps.Rmath]]
 deps = ["Random", "Rmath_jll"]
-git-tree-sha1 = "f65dcb5fa46aee0cf9ed6274ccbd597adc49aa7b"
+git-tree-sha1 = "bf3188feca147ce108c76ad82c2792c57abe7b1f"
 uuid = "79098fc4-a85e-5d69-aa6a-4863f24498fa"
-version = "0.7.1"
+version = "0.7.0"
 
 [[deps.Rmath_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
-git-tree-sha1 = "6ed52fdd3382cf21947b15e8870ac0ddbff736da"
+git-tree-sha1 = "68db32dff12bb6127bac73c209881191bf0efbb7"
 uuid = "f50d1b31-88e8-58de-be2c-1cc44531875f"
-version = "0.4.0+0"
+version = "0.3.0+0"
 
 [[deps.SHA]]
 uuid = "ea8e919c-243c-51af-8825-aaa63cd721ce"
@@ -1625,9 +1570,9 @@ version = "0.1.0"
 
 [[deps.SLEEFPirates]]
 deps = ["IfElse", "Static", "VectorizationBase"]
-git-tree-sha1 = "cda0aece8080e992f6370491b08ef3909d1c04e7"
+git-tree-sha1 = "c8679919df2d3c71f74451321f1efea6433536cc"
 uuid = "476501e8-09a2-5ece-8869-fb82de89a1fa"
-version = "0.6.38"
+version = "0.6.37"
 
 [[deps.ScanByte]]
 deps = ["Libdl", "SIMD"]
@@ -1749,6 +1694,18 @@ git-tree-sha1 = "70258a57edc0eff2a1e11185b49c7d66e3de075b"
 uuid = "d0ee94f6-a23d-54aa-bbe9-7f572d6da7f5"
 version = "4.7.5"
 
+[[deps.StanOptimize]]
+deps = ["CSV", "DataFrames", "DelimitedFiles", "Distributed", "DocStringExtensions", "Documenter", "NamedTupleTools", "Parameters", "Random", "Reexport", "StanBase", "Statistics", "Test", "Unicode"]
+git-tree-sha1 = "e13df69e7314e11417a0725c44a5f1b3a361e1b1"
+uuid = "fbd8da12-e93d-5a64-9231-612a0707ab99"
+version = "4.2.5"
+
+[[deps.StanQuap]]
+deps = ["CSV", "DataFrames", "Distributions", "DocStringExtensions", "LinearAlgebra", "MonteCarloMeasurements", "NamedTupleTools", "OrderedCollections", "Reexport", "StanBase", "StanOptimize", "StanSample", "Statistics", "StatsBase"]
+git-tree-sha1 = "b8be315d626173bca8ace5312416daddd8ae6aee"
+uuid = "e4723793-2808-4fc5-8a98-c57f4c160c53"
+version = "4.2.4"
+
 [[deps.StanSample]]
 deps = ["CSV", "CompatHelperLocal", "DataFrames", "DelimitedFiles", "Distributed", "DocStringExtensions", "JSON", "NamedTupleTools", "OrderedCollections", "Parameters", "Random", "Reexport", "Requires", "Serialization", "StanBase", "TableOperations", "Tables", "Unicode"]
 git-tree-sha1 = "81e2de0d8adcfdf8477e31faf56a9ffc4fc3e85d"
@@ -1862,12 +1819,6 @@ git-tree-sha1 = "c79322d36826aa2f4fd8ecfa96ddb47b174ac78d"
 uuid = "bd369af6-aec1-5ad0-b16a-f7cc5008161c"
 version = "1.10.0"
 
-[[deps.TabularDisplay]]
-deps = ["Formatting"]
-git-tree-sha1 = "ab1c4fe069f16cbb62bf4b39a0b9dab9c1699752"
-uuid = "3eeacb1d-13c2-54cc-9b18-30c86af3cadb"
-version = "1.2.0"
-
 [[deps.Tar]]
 deps = ["ArgTools", "SHA"]
 uuid = "a4e569a6-e804-4fa4-b0f3-eef7a1d5b13e"
@@ -1937,9 +1888,9 @@ version = "0.4.1"
 
 [[deps.VectorizationBase]]
 deps = ["ArrayInterface", "CPUSummary", "HostCPUFeatures", "IfElse", "LayoutPointers", "Libdl", "LinearAlgebra", "SIMDTypes", "Static"]
-git-tree-sha1 = "4c59c2df8d2676c4691a39fa70495a6db0c5d290"
+git-tree-sha1 = "6b1dc4fc039d273abc247eba675ac1299380e5d9"
 uuid = "3d5dd08c-fd9d-11e8-17fa-ed2836048c2f"
-version = "0.21.58"
+version = "0.21.57"
 
 [[deps.WeakRefStrings]]
 deps = ["DataAPI", "InlineStrings", "Parsers"]
@@ -2130,26 +2081,33 @@ version = "3.5.0+0"
 """
 
 # ╔═╡ Cell order:
-# ╠═e4552c81-d0db-4434-b81a-c86f1af515e5
-# ╠═62c80a26-975a-11ed-2e09-2dce0e33bb70
-# ╠═58ece6dd-a20f-4624-898a-40cae4b471e4
-# ╠═14b9e2fc-b61c-4e4a-bed0-766fa4916194
-# ╠═3f7d7f07-1e9a-4721-b3b0-a066409bd5b5
-# ╠═d872845c-0c3e-451d-b706-9ff4cec439d9
-# ╠═b5bfe191-d62c-4fb4-9b13-c81b0d2cd14e
-# ╠═c4730f9a-3a94-4031-a264-fe5c847f5986
-# ╠═e32ab50e-c126-4446-b3cf-a69f2f332693
-# ╠═a0cc8175-4f83-45f8-8bba-3e0679ff4ccb
-# ╠═00ad74d9-62d8-4ced-8bf1-eace47470272
-# ╠═5533711c-6cbb-4407-8081-1ab44a09a8b9
-# ╠═6d999053-3612-4e8d-b2f2-2ddf3eae5630
-# ╠═261cca70-a6dd-4bed-b2f2-8667534d0ceb
-# ╠═6d78ef06-037f-450a-ac96-26dc22e73af2
-# ╠═d94d4717-7ca8-4db9-ae54-fc481aa63c3c
-# ╠═6996310f-921d-4158-b9d0-addf9472e268
-# ╠═bd4dde3e-797d-43e5-9853-7606828f6b58
-# ╠═a7ef9b7a-b825-41ee-836b-7a09456abf54
-# ╠═64dca3ba-0ebc-42d6-924e-2375620a3917
-# ╠═d3272957-6548-4a90-bfdc-1df302f07ddb
+# ╟─645d4df3-af64-489b-b2b0-e710d8917680
+# ╟─e875dcfc-fc57-11ea-27e5-c56f1f9d5370
+# ╟─234d835c-b651-4b16-9f2e-986eda90a1a8
+# ╠═fbc882d4-18b0-4f08-a1b1-ec4c4f78635d
+# ╠═16ddb41a-fc59-11ea-1631-153e3466c75c
+# ╠═d65dd2b2-fc58-11ea-2300-4db47ec9a789
+# ╠═d65e98dc-fc58-11ea-25e1-9fab97b6125a
+# ╠═a7698084-37d1-4677-89ff-183908a33fbe
+# ╠═39f32370-ef8f-4918-9412-e4d8b6e8db38
+# ╠═cb260a55-1eea-4d4a-930e-547820e2bac6
+# ╠═63fbfe5a-5c5e-4dc8-aeca-742f017f105b
+# ╟─b26424bf-d206-4fb1-a2ab-222a8ffb80c7
+# ╠═cb454809-0dd7-4e79-adc6-7a2793090964
+# ╠═238a10f2-3b78-44f5-a727-5839320ce443
+# ╠═d66f515e-fc58-11ea-3fae-cbb82f1a1a6a
+# ╟─f4602d4a-fc59-11ea-0d9d-9f58c73c119f
+# ╟─d670aefa-fc58-11ea-1c56-4bfb66e1cab2
+# ╠═d67e0602-fc58-11ea-3a27-31d03e1c2318
+# ╠═a4a9351a-01c6-11eb-28d0-71f8fb243719
+# ╟─12fedbca-fc5a-11ea-2d4d-1d5ac93ac4fa
+# ╟─45b2b002-01c6-11eb-3f86-3f9586afcc8b
+# ╠═7f433052-5f29-491d-960d-480bcb836571
+# ╟─d69533ba-fc58-11ea-3378-e512a1d55d27
+# ╠═6fc7763b-3d96-44cb-ab90-303e3ba828e8
+# ╠═81d7ce22-15af-4c3e-a361-49b191f8d63d
+# ╠═59a4d93b-90e3-4bc3-8e75-4a7b04b85b67
+# ╠═5567d466-e4da-4e9a-b4b2-b77b2700e51b
+# ╟─d6c14359-d723-4dd9-b9a5-fc7b68157be3
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002

@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.20
+# v0.19.22
 
 using Markdown
 using InteractiveUtils
@@ -49,8 +49,54 @@ html"""
 begin
 	df = CSV.read(sr_datadir("WaffleDivorce.csv"), DataFrame; delim=';');
 	scale!(df, [:Marriage, :MedianAgeMarriage, :Divorce])
+	df.Whpm = df.WaffleHouses./df.Population
 	df
 end
+
+# ╔═╡ a7698084-37d1-4677-89ff-183908a33fbe
+describe(df)
+
+# ╔═╡ 39f32370-ef8f-4918-9412-e4d8b6e8db38
+stan5_0 = "
+	data {
+		int < lower = 1 > N; // Sample size
+		vector[N] W; // Predictor WaffleHouse per million
+		vector[N] D; // Outcome Divirce rate
+	}
+
+	parameters {
+		real a; // Intercept
+		real bW; // Slope (regression coefficients)
+		real < lower = 0 > sigma; 
+	}
+
+	model {
+		vector[N] mu;               // mu is a vector
+		mu = a + bW * W;
+		a ~ normal(0, 5);         // Priors
+		bW ~ normal(0, 5);
+		sigma ~ exponential(1);
+		D ~ normal(mu, sigma);
+	}
+";
+
+# ╔═╡ cb260a55-1eea-4d4a-930e-547820e2bac6
+let
+	global m5_0s = SampleModel("m5.0s", stan5_0)
+	data = Dict("N" => size(df, 1), "D" => df.Divorce, "W" => df.Whpm)
+	rc5_0s = stan_sample(m5_0s; data)
+	success(rc5_0s) && describe(m5_0s, [:a, :bW, :sigma])
+end
+
+# ╔═╡ 63fbfe5a-5c5e-4dc8-aeca-742f017f105b
+begin
+	post5_0s_df = read_samples(m5_0s, :dataframe)
+	ms5_0s = model_summary(post5_0s_df, [:a, :bW, :sigma])
+end
+
+
+# ╔═╡ 8cdea9c8-7793-4bac-b77b-04b08898fc71
+post5_0s_df
 
 # ╔═╡ b26424bf-d206-4fb1-a2ab-222a8ffb80c7
 md"### Julia code snippet 5.2"
@@ -59,12 +105,17 @@ md"### Julia code snippet 5.2"
 let
 	f = Figure(resolution=default_figure_resolution)
 	ax = Axis(f[1, 1]; xlabel="WaffleHouses per million", ylabel="Divorce rate", title="Figure 5.1")
-	whpm = df.WaffleHouses./df.Population
-	GLMakie.scatter!(whpm, df.Divorce)
-	for state in ["GA", "SC", "ME", "NJ"]
+	x_range = 0:0.1:50
+	lines!(x_range, ms5_0s[:a, :mean] .+ ms5_0s[:bW, :mean] .* x_range)
+	res = link(post5_0s_df, (r, x) -> r.a + r.bW * x, x_range)
+	res = hcat(res...)
+	m, l, u = estimparam(res)
+	band!(x_range, l, u; color=(:grey, 0.3))
+	scatter!(df.Whpm, df.Divorce)
+	for state in ["AR", "AL", "GA", "SC", "ME", "NJ"]
 		for row in eachrow(df[df.Loc .== state, : ])
 			xpos = row.WaffleHouses/row.Population
-			annotations!(row.Loc; position=(xpos + 0.4, row.Divorce))
+			annotations!(row.Loc; position=(row.Whpm + 0.4, row.Divorce))
 		end
 	end
 	f
@@ -73,11 +124,76 @@ end
 # ╔═╡ 238a10f2-3b78-44f5-a727-5839320ce443
 df[df.Loc .== ["GA"], :]
 
-# ╔═╡ cfa44fec-01c5-11eb-14bf-338eed7e2c9d
-md"###### Notice that in below Stan language model we ignore the observed data (the likelihood is commented out). The draws show sampled regression lines implied by the priors. This is an alternative to the formulation chosen in the previous chapter."
-
 # ╔═╡ d66f515e-fc58-11ea-3fae-cbb82f1a1a6a
-stan5_1_alt_priors = "
+stan5_1_1 = "
+	data {
+	 int < lower = 1 > N; // Sample size
+	 vector[N] A; // Predictor
+	}
+
+	parameters {
+	 real a; // Intercept
+	 real bA; // Slope (regression coefficients)
+	 real < lower = 0 > sigma;    // Error SD
+	}
+
+	model {
+	  vector[N] mu;               // mu is a vector
+	  mu = a + bA * A;
+	  a ~ normal(0, 0.2);         // Priors
+	  bA ~ normal(0, 0.5);
+	  sigma ~ exponential(1);
+	}
+";
+
+# ╔═╡ f4602d4a-fc59-11ea-0d9d-9f58c73c119f
+md"### Julia code snippet 5.3-4"
+
+# ╔═╡ d670aefa-fc58-11ea-1c56-4bfb66e1cab2
+md"## Define the SampleModel, etc."
+
+# ╔═╡ d67e0602-fc58-11ea-3a27-31d03e1c2318
+let
+	global m5_1_1s = SampleModel("m5.1.1s", stan5_1_1)
+	data = Dict("N" => size(df, 1), "A" => df.MedianAgeMarriage_s)
+	rc5_1_1s = stan_sample(m5_1_1s; data)
+	success(rc5_1_1s) && describe(m5_1_1s, [:a, :bA, :sigma])
+end
+
+# ╔═╡ a4a9351a-01c6-11eb-28d0-71f8fb243719
+let
+	global priors5_1s_df = read_samples(m5_1_1s, :dataframe)
+	model_summary(priors5_1s_df, [:a, :bA, :sigma])
+end
+
+# ╔═╡ 12fedbca-fc5a-11ea-2d4d-1d5ac93ac4fa
+md"### Julia code snippet 5.5"
+
+# ╔═╡ 45b2b002-01c6-11eb-3f86-3f9586afcc8b
+md"##### Plot priors of the intercept (`:a`) and the slope (`:bA`)."
+
+# ╔═╡ 7f433052-5f29-491d-960d-480bcb836571
+let
+	xi = -3.0:0.1:3.0
+
+	f = Figure(resolution=default_figure_resolution)
+	ax = Axis(f[1, 1]; xlabel="Medium age marriage (scaled)", ylabel="Divorce rate (scaled)",
+		title="Showing 50 regression lines")
+
+	for i in 1:50
+		local yi = mean(priors5_1s_df[i, :a]) .+ priors5_1s_df[i, :bA] .* xi
+		Makie.lines!(xi, yi, color=:lightgrey)
+	end
+	Makie.scatter!(df[:, :MedianAgeMarriage_s], df[!, :Divorce_s], color=:darkblue)
+
+	f
+end
+
+# ╔═╡ d69533ba-fc58-11ea-3378-e512a1d55d27
+md"### Julia code snippet 5.6"
+
+# ╔═╡ 6fc7763b-3d96-44cb-ab90-303e3ba828e8
+stan5_1_2 = "
 	data {
 	 int < lower = 1 > N; // Sample size
 	 vector[N] D; // Outcome
@@ -96,35 +212,25 @@ stan5_1_alt_priors = "
 	  bA ~ normal(0, 0.5);
 	  sigma ~ exponential(1);
 	  mu = a + bA * A;
-	  //D ~ normal(mu , sigma);   // Likelihood
+	  D ~ normal(mu , sigma);   // Likelihood
 	}
 ";
 
-# ╔═╡ f4602d4a-fc59-11ea-0d9d-9f58c73c119f
-md"### Julia code snippet 5.3-4"
+# ╔═╡ 81d7ce22-15af-4c3e-a361-49b191f8d63d
+let
+	global m5_1_2s = SampleModel("m5.1.2s", stan5_1_2)
+	data = Dict("N" => size(df, 1), "D" => df.Divorce_s, "A" => df.MedianAgeMarriage_s)
+	rc5_1_2s = stan_sample(m5_1_2s; data)
+	success(rc5_1_2s) && describe(m5_1_2s, [:a, :bA, :sigma])
+end
 
-# ╔═╡ d670aefa-fc58-11ea-1c56-4bfb66e1cab2
-md"## Define the SampleModel, etc."
+# ╔═╡ 59a4d93b-90e3-4bc3-8e75-4a7b04b85b67
+let
+	global post5_1s_df = read_samples(m5_1_2s, :dataframe)
+	model_summary(post5_1s_df, [:a, :bA, :sigma])
+end
 
-# ╔═╡ d67e0602-fc58-11ea-3a27-31d03e1c2318
-begin
-	m5_1s = SampleModel("MedianAgeMarriage", stan5_1_alt_priors)
-	m5_1_data = Dict("N" => size(df, 1), "D" => df.Divorce_s, 
-		"A" => df.MedianAgeMarriage_s)
-	rc5_1s = stan_sample(m5_1s, data=m5_1_data)
-	success(rc5_1s) && (post5_1s_df = read_samples(m5_1s, :dataframe))
-end;
-
-# ╔═╡ a4a9351a-01c6-11eb-28d0-71f8fb243719
-model_summary(post5_1s_df, [:a, :bA, :sigma])
-
-# ╔═╡ 12fedbca-fc5a-11ea-2d4d-1d5ac93ac4fa
-md"### Julia code snippet 5.5"
-
-# ╔═╡ 45b2b002-01c6-11eb-3f86-3f9586afcc8b
-md"##### Plot priors of the intercept (`:a`) and the slope (`:bA`)."
-
-# ╔═╡ 7f433052-5f29-491d-960d-480bcb836571
+# ╔═╡ 5567d466-e4da-4e9a-b4b2-b77b2700e51b
 let
 	xi = -3.0:0.1:3.0
 
@@ -141,8 +247,91 @@ let
 	f
 end
 
-# ╔═╡ d69533ba-fc58-11ea-3378-e512a1d55d27
-md"### Julia code snippet 5.6"
+# ╔═╡ d6c14359-d723-4dd9-b9a5-fc7b68157be3
+md"### Julia code snippet 5.7"
+
+# ╔═╡ ee264ad3-947d-4cd7-975e-e0fea7d6b1d4
+stan5_1_3 = "
+	data {
+	 int < lower = 1 > N; // Sample size
+	 vector[N] D; // Outcome (Divorce rate standardized)
+	 vector[N] M; // Predictor (Marriage rate standardized)
+	}
+
+	parameters {
+	 real a; // Intercept
+	 real bM; // Slope (regression coefficients)
+	 real < lower = 0 > sigma;    // Error SD
+	}
+
+	model {
+	  vector[N] mu;               // mu is a vector
+	  a ~ normal(0, 0.2);         // Priors
+	  bM ~ normal(0, 0.5);
+	  sigma ~ exponential(1);
+	  mu = a + bM * M;
+	  D ~ normal(mu , sigma);   // Likelihood
+	}
+";
+
+# ╔═╡ cecfbf01-7997-49cc-bb67-75eb611f2cf9
+let
+	global m5_1_3s = SampleModel("m5.1.3s", stan5_1_3)
+	data = Dict("N" => size(df, 1), "D" => df.Divorce_s, "M" => df.Marriage_s)
+	rc5_1_3s = stan_sample(m5_1_3s; data)
+	success(rc5_1_3s) && describe(m5_1_3s, [:a, :bM, :sigma])
+end
+
+# ╔═╡ 7eb5f4bb-345a-42da-b2d6-e5407af2a663
+let
+	global post5_3s_df = read_samples(m5_1_3s, :dataframe)
+	model_summary(post5_3s_df, [:a, :bM, :sigma])
+end
+
+# ╔═╡ 62254c66-5a5a-44de-a635-a5044262aeeb
+let
+	xi = -2.0:0.1:3.0
+
+	f = Figure(resolution=default_figure_resolution)
+
+	scale_factor_x = [mu * std(df.Marriage) + mean(df.Marriage) for mu in -2:2:2]
+	xtick_labels = string.(round.(scale_factor_x, digits=2))
+	scale_factor_y = [mu * std(df.Divorce) + mean(df.Divorce) for mu in -2:1:2]
+	ytick_labels = string.(round.(scale_factor_y, digits=2))
+
+	ax = Axis(f[1, 1]; xlabel="Marriage rate (scaled)", ylabel="Divorce rate (scaled)",
+		title="Showing 50 regression lines",
+		xticks=(-2:2:2, xtick_labels), 
+		yticks=(-2:1:2, ytick_labels))
+	
+	for i in 1:50
+		local yi = post5_3s_df[i, :a] .+ post5_3s_df[i, :bM] .* xi
+		Makie.lines!(xi, yi, color=:lightgrey)
+	end
+	#lines!
+	Makie.scatter!(df[:, :Marriage_s], df[!, :Divorce_s], color=:darkblue)
+
+	xi = -2.5:0.1:3.0
+
+	scale_factor_x = [mu * std(df.MedianAgeMarriage) + mean(df.MedianAgeMarriage) for mu in -2:2:2]
+	xtick_labels = string.(round.(scale_factor_x, digits=2))
+	scale_factor_y = [mu * std(df.Divorce) + mean(df.Divorce) for mu in -2:1:2]
+	ytick_labels = string.(round.(scale_factor_y, digits=2))
+	ax = Axis(f[1, 2]; xlabel="Medium age marriage (scaled)", ylabel="Divorce rate (scaled)",
+		title="Showing 50 regression lines",
+		xticks=(-2:2:2, xtick_labels), 
+		yticks=(-2:1:2, ytick_labels))
+
+
+	for i in 1:50
+		local yi = mean(post5_1s_df[i, :a]) .+ post5_1s_df[i, :bA] .* xi
+		Makie.lines!(xi, yi, color=:lightgrey)
+	end
+	Makie.scatter!(df[:, :MedianAgeMarriage_s], df[!, :Divorce_s], color=:darkblue)
+
+
+	f
+end
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -158,7 +347,7 @@ StatisticalRethinking = "2d09df54-9d0f-5258-8220-54c2a3d4fbee"
 [compat]
 GLMakie = "~0.8.1"
 LaTeXStrings = "~1.3.0"
-RegressionAndOtherStories = "~0.8.1"
+RegressionAndOtherStories = "~0.8.2"
 StanQuap = "~4.2.4"
 StanSample = "~7.1.0"
 StatisticalRethinking = "~4.7.0"
@@ -170,7 +359,7 @@ PLUTO_MANIFEST_TOML_CONTENTS = """
 
 julia_version = "1.10.0-DEV"
 manifest_format = "2.0"
-project_hash = "33f44e63604b86862b765fcfe42983ba43628f60"
+project_hash = "5bcc6aecef91ca964a618a314231c4782b1200f8"
 
 [[deps.ANSIColoredPrinters]]
 git-tree-sha1 = "574baf8110975760d391c710b6341da1afa48d8c"
@@ -216,16 +405,16 @@ uuid = "0dad84c5-d112-42e6-8d28-ef12dabb789f"
 version = "1.1.1"
 
 [[deps.ArrayInterface]]
-deps = ["ArrayInterfaceCore", "Compat", "IfElse", "LinearAlgebra", "Static"]
-git-tree-sha1 = "6d0918cb9c0d3db7fe56bea2bc8638fc4014ac35"
+deps = ["ArrayInterfaceCore", "Compat", "IfElse", "LinearAlgebra", "SnoopPrecompile", "Static"]
+git-tree-sha1 = "dedc16cbdd1d32bead4617d27572f582216ccf23"
 uuid = "4fba245c-0d91-5ea0-9b3e-6abc04ee57a9"
-version = "6.0.24"
+version = "6.0.25"
 
 [[deps.ArrayInterfaceCore]]
-deps = ["LinearAlgebra", "SparseArrays", "SuiteSparse"]
-git-tree-sha1 = "14c3f84a763848906ac681f94cf469a851601d92"
+deps = ["LinearAlgebra", "SnoopPrecompile", "SparseArrays", "SuiteSparse"]
+git-tree-sha1 = "e5f08b5689b1aad068e01751889f2f615c7db36d"
 uuid = "30b0a656-2188-435a-8636-2ec0e6a096e2"
-version = "0.1.28"
+version = "0.1.29"
 
 [[deps.ArrayInterfaceOffsetArrays]]
 deps = ["ArrayInterface", "OffsetArrays", "Static"]
@@ -299,9 +488,9 @@ version = "0.4.2"
 
 [[deps.CPUSummary]]
 deps = ["CpuId", "IfElse", "Static"]
-git-tree-sha1 = "5b735f654bdfd7b6c18c49f1d3ebff34b4b8af43"
+git-tree-sha1 = "2c144ddb46b552f72d7eafe7cc2f50746e41ea21"
 uuid = "2a0fbf3d-bb9c-48f3-b0a9-814d99fd7ab9"
-version = "0.2.1"
+version = "0.2.2"
 
 [[deps.CRC32c]]
 uuid = "8bf52ea8-c179-5cab-976a-9e18b702a9bc"
@@ -336,17 +525,11 @@ git-tree-sha1 = "c6d890a52d2c4d55d326439580c3b8d0875a77d9"
 uuid = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
 version = "1.15.7"
 
-[[deps.ChangesOfVariables]]
-deps = ["ChainRulesCore", "LinearAlgebra", "Test"]
-git-tree-sha1 = "38f7a08f19d8810338d4f5085211c7dfa5d5bdd8"
-uuid = "9e997f8a-9a97-42d5-a9f1-ce6bfc15e2c0"
-version = "0.1.4"
-
 [[deps.CodecZlib]]
 deps = ["TranscodingStreams", "Zlib_jll"]
-git-tree-sha1 = "ded953804d019afa9a3f98981d99b33e3db7b6da"
+git-tree-sha1 = "9c209fb7536406834aa938fb149964b985de6c83"
 uuid = "944b1d66-785c-5afd-91f1-9de20f533193"
-version = "0.7.0"
+version = "0.7.1"
 
 [[deps.ColorBrewer]]
 deps = ["Colors", "JSON", "Test"]
@@ -512,9 +695,9 @@ version = "0.9.3"
 
 [[deps.Documenter]]
 deps = ["ANSIColoredPrinters", "Base64", "Dates", "DocStringExtensions", "IOCapture", "InteractiveUtils", "JSON", "LibGit2", "Logging", "Markdown", "REPL", "Test", "Unicode"]
-git-tree-sha1 = "6030186b00a38e9d0434518627426570aac2ef95"
+git-tree-sha1 = "58fea7c536acd71f3eef6be3b21c0df5f3df88fd"
 uuid = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
-version = "0.27.23"
+version = "0.27.24"
 
 [[deps.Downloads]]
 deps = ["ArgTools", "FileWatching", "LibCURL", "NetworkOptions"]
@@ -585,9 +768,9 @@ uuid = "7b1f6079-737a-58dc-b8bc-7a2ca5c1b5ee"
 
 [[deps.FillArrays]]
 deps = ["LinearAlgebra", "Random", "SparseArrays", "Statistics"]
-git-tree-sha1 = "9a0472ec2f5409db243160a8b030f94c380167a3"
+git-tree-sha1 = "d3ba08ab64bdfd27234d3f61956c966266757fe6"
 uuid = "1a297f60-69ca-5386-bcde-b61e274b549b"
-version = "0.13.6"
+version = "0.13.7"
 
 [[deps.FiniteDiff]]
 deps = ["ArrayInterfaceCore", "LinearAlgebra", "Requires", "Setfield", "SparseArrays", "StaticArrays"]
@@ -679,9 +862,9 @@ version = "0.1.3"
 
 [[deps.GeoInterface]]
 deps = ["Extents"]
-git-tree-sha1 = "e315c4f9d43575cf6b4e511259433803c15ebaa2"
+git-tree-sha1 = "e07a1b98ed72e3cdd02c6ceaab94b8a606faca40"
 uuid = "cf35fbd7-0cd7-5166-be24-54bfbe79505f"
-version = "1.1.0"
+version = "1.2.1"
 
 [[deps.GeometryBasics]]
 deps = ["EarCut_jll", "GeoInterface", "IterTools", "LinearAlgebra", "StaticArrays", "StructArrays", "Tables"]
@@ -732,9 +915,9 @@ version = "2.8.1+1"
 
 [[deps.HostCPUFeatures]]
 deps = ["BitTwiddlingConvenienceFunctions", "IfElse", "Libdl", "Static"]
-git-tree-sha1 = "f64b890b2efa4de81520d2b0fbdc9aadb65bdf53"
+git-tree-sha1 = "734fd90dd2f920a2f1921d5388dcebe805b262dc"
 uuid = "3e5b6fbb-0976-4d2c-9146-d79de83f2fb0"
-version = "0.1.13"
+version = "0.1.14"
 
 [[deps.HypergeometricFunctions]]
 deps = ["DualNumbers", "LinearAlgebra", "OpenLibm_jll", "SpecialFunctions", "Test"]
@@ -806,9 +989,9 @@ version = "0.3.1"
 
 [[deps.InlineStrings]]
 deps = ["Parsers"]
-git-tree-sha1 = "0cf92ec945125946352f3d46c96976ab972bde6f"
+git-tree-sha1 = "9cc2baf75c6d09f9da536ddf58eb2f29dedaf461"
 uuid = "842dd82b-1e85-43dc-bf29-5d0ee9dffc48"
-version = "1.3.2"
+version = "1.4.0"
 
 [[deps.IntelOpenMP_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -913,9 +1096,9 @@ version = "1.3.0"
 
 [[deps.LayoutPointers]]
 deps = ["ArrayInterface", "ArrayInterfaceOffsetArrays", "ArrayInterfaceStaticArrays", "LinearAlgebra", "ManualMemory", "SIMDTypes", "Static"]
-git-tree-sha1 = "7e34177793212f6d64d045ee47d2883f09fffacc"
+git-tree-sha1 = "0ad6f0c51ce004dadc24a28a0dfecfb568e52242"
 uuid = "10f19ff3-798f-405d-979b-55457f8fc047"
-version = "0.1.12"
+version = "0.1.13"
 
 [[deps.LazyArtifacts]]
 deps = ["Artifacts", "Pkg"]
@@ -1013,10 +1196,20 @@ uuid = "6fdf6af0-433a-55f7-b3ed-c6c6e0b8df7c"
 version = "2.1.0"
 
 [[deps.LogExpFunctions]]
-deps = ["ChainRulesCore", "ChangesOfVariables", "DocStringExtensions", "InverseFunctions", "IrrationalConstants", "LinearAlgebra"]
-git-tree-sha1 = "946607f84feb96220f480e0422d3484c49c00239"
+deps = ["DocStringExtensions", "IrrationalConstants", "LinearAlgebra"]
+git-tree-sha1 = "45b288af6956e67e621c5cbb2d75a261ab58300b"
 uuid = "2ab3a3ac-af41-5b50-aa03-7779005ae688"
-version = "0.3.19"
+version = "0.3.20"
+
+    [deps.LogExpFunctions.extensions]
+    ChainRulesCoreExt = "ChainRulesCore"
+    ChangesOfVariablesExt = "ChangesOfVariables"
+    InverseFunctionsExt = "InverseFunctions"
+
+    [deps.LogExpFunctions.weakdeps]
+    ChainRulesCore = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
+    ChangesOfVariables = "9e997f8a-9a97-42d5-a9f1-ce6bfc15e2c0"
+    InverseFunctions = "3587e190-3f89-42d0-90ee-14403ec27112"
 
 [[deps.Logging]]
 uuid = "56ddb016-857b-54e1-b83d-db4d58db5568"
@@ -1320,9 +1513,9 @@ version = "0.3.2"
 
 [[deps.PlotUtils]]
 deps = ["ColorSchemes", "Colors", "Dates", "Printf", "Random", "Reexport", "SnoopPrecompile", "Statistics"]
-git-tree-sha1 = "5b7690dd212e026bbab1860016a6601cb077ab66"
+git-tree-sha1 = "daff8d21e3f4c596387867329be49b8c45f4f0f3"
 uuid = "995b91a9-d308-5afd-9ec6-746e21dbc043"
-version = "1.3.2"
+version = "1.3.3"
 
 [[deps.PolygonOps]]
 git-tree-sha1 = "77b3d3605fc1cd0b42d95eba87dfcd2bf67d5ff6"
@@ -1425,9 +1618,9 @@ version = "1.2.2"
 
 [[deps.RegressionAndOtherStories]]
 deps = ["CSV", "CategoricalArrays", "DataFrames", "DataStructures", "Dates", "DelimitedFiles", "Distributions", "DocStringExtensions", "GLM", "KernelDensity", "LaTeXStrings", "LinearAlgebra", "NamedArrays", "NamedTupleTools", "Parameters", "Random", "Reexport", "Requires", "Statistics", "StatsBase", "StatsFuns", "Unicode"]
-git-tree-sha1 = "0c0f6cbd00c3ce94912b1341f38061acfd9e45b5"
+git-tree-sha1 = "dc446c1e86292e554d2769950d46ef00cb659e53"
 uuid = "21324389-b050-441a-ba7b-9a837781bda0"
-version = "0.8.1"
+version = "0.8.2"
 
 [[deps.RelocatableFolders]]
 deps = ["SHA", "Scratch"]
@@ -1470,9 +1663,9 @@ version = "0.1.0"
 
 [[deps.SLEEFPirates]]
 deps = ["IfElse", "Static", "VectorizationBase"]
-git-tree-sha1 = "c8679919df2d3c71f74451321f1efea6433536cc"
+git-tree-sha1 = "cda0aece8080e992f6370491b08ef3909d1c04e7"
 uuid = "476501e8-09a2-5ece-8869-fb82de89a1fa"
-version = "0.6.37"
+version = "0.6.38"
 
 [[deps.ScanByte]]
 deps = ["Libdl", "SIMD"]
@@ -1694,7 +1887,7 @@ uuid = "4607b0f0-06f3-5cda-b6b1-a6196a1729e9"
 [[deps.SuiteSparse_jll]]
 deps = ["Artifacts", "Libdl", "Pkg", "libblastrampoline_jll"]
 uuid = "bea87d4a-7f5b-5778-9afe-8cc45184846c"
-version = "5.10.1+0"
+version = "5.10.1+6"
 
 [[deps.TOML]]
 deps = ["Dates"]
@@ -1788,9 +1981,9 @@ version = "0.4.1"
 
 [[deps.VectorizationBase]]
 deps = ["ArrayInterface", "CPUSummary", "HostCPUFeatures", "IfElse", "LayoutPointers", "Libdl", "LinearAlgebra", "SIMDTypes", "Static"]
-git-tree-sha1 = "6b1dc4fc039d273abc247eba675ac1299380e5d9"
+git-tree-sha1 = "4c59c2df8d2676c4691a39fa70495a6db0c5d290"
 uuid = "3d5dd08c-fd9d-11e8-17fa-ed2836048c2f"
-version = "0.21.57"
+version = "0.21.58"
 
 [[deps.WeakRefStrings]]
 deps = ["DataAPI", "InlineStrings", "Parsers"]
@@ -1931,7 +2124,7 @@ version = "0.15.1+0"
 [[deps.libblastrampoline_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "8e850b90-86db-534c-a0d3-1478176c7d93"
-version = "5.2.0+0"
+version = "5.4.0+0"
 
 [[deps.libfdk_aac_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -1988,10 +2181,14 @@ version = "3.5.0+0"
 # ╠═16ddb41a-fc59-11ea-1631-153e3466c75c
 # ╠═d65dd2b2-fc58-11ea-2300-4db47ec9a789
 # ╠═d65e98dc-fc58-11ea-25e1-9fab97b6125a
+# ╠═a7698084-37d1-4677-89ff-183908a33fbe
+# ╠═39f32370-ef8f-4918-9412-e4d8b6e8db38
+# ╠═cb260a55-1eea-4d4a-930e-547820e2bac6
+# ╠═63fbfe5a-5c5e-4dc8-aeca-742f017f105b
+# ╠═8cdea9c8-7793-4bac-b77b-04b08898fc71
 # ╟─b26424bf-d206-4fb1-a2ab-222a8ffb80c7
 # ╠═cb454809-0dd7-4e79-adc6-7a2793090964
 # ╠═238a10f2-3b78-44f5-a727-5839320ce443
-# ╟─cfa44fec-01c5-11eb-14bf-338eed7e2c9d
 # ╠═d66f515e-fc58-11ea-3fae-cbb82f1a1a6a
 # ╟─f4602d4a-fc59-11ea-0d9d-9f58c73c119f
 # ╟─d670aefa-fc58-11ea-1c56-4bfb66e1cab2
@@ -2001,5 +2198,14 @@ version = "3.5.0+0"
 # ╟─45b2b002-01c6-11eb-3f86-3f9586afcc8b
 # ╠═7f433052-5f29-491d-960d-480bcb836571
 # ╟─d69533ba-fc58-11ea-3378-e512a1d55d27
+# ╠═6fc7763b-3d96-44cb-ab90-303e3ba828e8
+# ╠═81d7ce22-15af-4c3e-a361-49b191f8d63d
+# ╠═59a4d93b-90e3-4bc3-8e75-4a7b04b85b67
+# ╠═5567d466-e4da-4e9a-b4b2-b77b2700e51b
+# ╟─d6c14359-d723-4dd9-b9a5-fc7b68157be3
+# ╠═ee264ad3-947d-4cd7-975e-e0fea7d6b1d4
+# ╠═cecfbf01-7997-49cc-bb67-75eb611f2cf9
+# ╠═7eb5f4bb-345a-42da-b2d6-e5407af2a663
+# ╠═62254c66-5a5a-44de-a635-a5044262aeeb
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
