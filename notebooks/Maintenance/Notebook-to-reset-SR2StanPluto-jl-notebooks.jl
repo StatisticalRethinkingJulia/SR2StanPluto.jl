@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.20
+# v0.19.22
 
 using Markdown
 using InteractiveUtils
@@ -35,17 +35,23 @@ notebook_files = [
     "~/.julia/dev/SR2StanPluto/notebooks/04.3-Gaussian model of height.jl",
     "~/.julia/dev/SR2StanPluto/notebooks/04.4-Linear prediction.jl",
     "~/.julia/dev/SR2StanPluto/notebooks/04.5-Curves from lines.jl",
-    "~/.julia/dev/SR2StanPluto/notebooks/05.2-Causal Inference.jl",
-    "~/.julia/dev/SR2StanPluto/notebooks/05.3-SCM.jl",
+    "~/.julia/dev/SR2StanPluto/notebooks/05.1-Spurious associations.jl",
 	"~/.julia/dev/SR2StanPluto/notebooks/Maintenance/Notebook-to-reset-SR2StanPluto-jl-notebooks.jl"
 ];
 
 # ╔═╡ 0f10a758-e442-4cd8-88bc-d82d8de97ede
-notebooks_df = DataFrame(
-    file = notebook_files,
-    reset = repeat([false], length(notebook_files)),
-	done = repeat([false], length(notebook_files))
-)
+begin
+    files = AbstractString[]
+    for i in 1:length(notebook_files)
+        append!(files, [split(notebook_files[i], "/")[end]])
+    end
+    notebooks_df = DataFrame(
+        name = files,
+        reset = repeat([false], length(notebook_files)),
+        done = repeat([false], length(notebook_files)),
+        file = notebook_files,
+    )
+end
 
 # ╔═╡ a4207232-61eb-4da7-8629-1bcc670ab524
 notebooks_df.reset .= true;

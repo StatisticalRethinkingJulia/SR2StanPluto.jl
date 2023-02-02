@@ -1,0 +1,8 @@
+digraph test_desc {
+  U -> Z;
+  X -> K;
+  X -> L;
+  K -> Z;
+  Y -> L;
+  L -> Z;
+}
