@@ -47,7 +47,7 @@ md" ### Julia code snippet 4.64"
 # ╔═╡ 4af00a44-fc0b-11ea-080c-e9f7bc30a1b1
 begin
     howell1 = CSV.read(sr_datadir("Howell1.csv"), DataFrame)
-    scale!(howell1, [:height, :weight])
+    scale_df_cols!(howell1, [:height, :weight])
     howell1.weight_s2 = howell1.weight_s.^2
     howell1.weight_s3 = howell1.weight_s.^3
 	howell1

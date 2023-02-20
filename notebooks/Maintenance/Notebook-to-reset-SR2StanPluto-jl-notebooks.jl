@@ -36,6 +36,8 @@ notebook_files = [
     "~/.julia/dev/SR2StanPluto/notebooks/04.4-Linear prediction.jl",
     "~/.julia/dev/SR2StanPluto/notebooks/04.5-Curves from lines.jl",
     "~/.julia/dev/SR2StanPluto/notebooks/05.1-Spurious associations.jl",
+    "~/.julia/dev/SR2StanPluto/notebooks/05.2-Masked relationships.jl",
+    "~/.julia/dev/SR2StanPluto/notebooks/05.3-Categorical variables.jl",
 	"~/.julia/dev/SR2StanPluto/notebooks/Maintenance/Notebook-to-reset-SR2StanPluto-jl-notebooks.jl"
 ];
 

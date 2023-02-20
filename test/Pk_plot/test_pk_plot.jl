@@ -2,11 +2,13 @@ using AxisKeys, NamedTupleTools
 using PrettyTables, ParetoSmooth
 using StanSample
 using StatisticalRethinking
+using RegressionAndOtherStories
+
 using StatisticalRethinkingPlots
 using Test
 
 df = CSV.read(sr_datadir("WaffleDivorce.csv"), DataFrame);
-scale!(df, [:Marriage, :MedianAgeMarriage, :Divorce])
+scale_df_cols!(df, [:Marriage, :MedianAgeMarriage, :Divorce])
 data = (N=size(df, 1), D=df.Divorce_s, A=df.MedianAgeMarriage_s,
     M=df.Marriage_s)
 

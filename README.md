@@ -12,9 +12,7 @@ From v5 onwards the basis will no longer be StatisticalRethinking.jl but Regress
 
 Tagged version 4.2.0 is the last more or less complete set of scripts covering `the old` chapters 1 to 11.
 
-All converted/updated v5 notebooks are in the `notebooks` directory While working on v5, older notebooks snippets will remain available in `notebooks_old` and `notebooks_very_old`.
-
-## Installation
+## Usage
 
 To (locally) reproduce and use this project, do the following:
 
@@ -42,8 +40,7 @@ julia> Pluto.run()
 
 ## Usage details
 
-All "rethinking" data files are stored and maintained in StatisticalRethinking.jl and can be accessed via `sr_datadir(...)`.
-See `notebooks/00-Preface.jl` for an example.
+All "rethinking" data files are stored and maintained in StatisticalRethinking.jl and can be accessed via `sr_datadir(...)`. See `notebooks/00-Preface.jl` for an example.
 
 In scripts, for naming models and results of simulations I tend to use:
 
