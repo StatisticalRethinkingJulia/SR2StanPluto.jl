@@ -7,6 +7,9 @@ using InteractiveUtils
 # ╔═╡ 16ddb41a-fc59-11ea-1631-153e3466c75c
 using Pkg
 
+# ╔═╡ 2e717b02-0290-49e3-9f67-70f73d760b10
+Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
+
 # ╔═╡ d65dd2b2-fc58-11ea-2300-4db47ec9a789
 begin
 	# Notebook specific
@@ -50,14 +53,11 @@ html"""
 	main {
 		margin: 0 auto;
 		max-width: 3500px;
-    	padding-left: max(80px, 0%);
-    	padding-right: max(200px, 38%);
+    	padding-left: max(5px, 3%);
+    	padding-right: max(5px, 36%);
 	}
 </style>
 """
-
-# ╔═╡ 2e717b02-0290-49e3-9f67-70f73d760b10
-#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ d65e98dc-fc58-11ea-25e1-9fab97b6125a
 begin
@@ -351,10 +351,7 @@ end
 md"### Julia code snippet 5.7"
 
 # ╔═╡ 694ca34c-ebf8-4e5e-bd11-8821a9116e33
-md" ### CausalInference.jl"
-
-# ╔═╡ 795f997a-e55f-47b4-bce5-3d803b9da953
-
+md" ### Using CausalInference.jl and Graphiz.jl"
 
 # ╔═╡ 65dab224-d3d7-4c46-95b2-f23f4971a1bc
 let
@@ -426,7 +423,7 @@ md" #### Use WaffleHouses data"
 dag_1.covm
 
 # ╔═╡ 2f77ef28-44fd-4ca2-9fbb-c7009131b0e9
-@time est_g = pcalg(dfAMD, p, gausscitest)
+@time est_g = pcalg(dfAMD, 0.01, gausscitest)
 
 # ╔═╡ 46f7f849-f8f4-4465-821d-35f26c0e41b7
 est_g
@@ -436,9 +433,6 @@ est_g.fadjlist
 
 # ╔═╡ a2a742d8-a46c-43e0-9cd3-1ce5a49a0ad9
 est_g_edges = [(:A, :M), (:A, :D), (:M, :A), (:D, :A)];
-
-# ╔═╡ ccc0b087-80ab-455e-bc78-f5b5e464a0b0
-md" ##### Disable Chickering ordening as this is not a DAG"
 
 # ╔═╡ 124bed7d-38ee-4515-9134-f4ed4c287c35
 begin
@@ -983,7 +977,6 @@ end
 # ╠═62254c66-5a5a-44de-a635-a5044262aeeb
 # ╟─d6c14359-d723-4dd9-b9a5-fc7b68157be3
 # ╟─694ca34c-ebf8-4e5e-bd11-8821a9116e33
-# ╠═795f997a-e55f-47b4-bce5-3d803b9da953
 # ╠═65dab224-d3d7-4c46-95b2-f23f4971a1bc
 # ╠═f7c5c5c7-85d4-4e09-b025-31109e451577
 # ╠═2c0d5989-ff6c-4972-967a-414a91ce398a
@@ -1006,7 +999,6 @@ end
 # ╠═46f7f849-f8f4-4465-821d-35f26c0e41b7
 # ╠═29bb4c65-f91b-44e2-9ad9-10b087083285
 # ╠═a2a742d8-a46c-43e0-9cd3-1ce5a49a0ad9
-# ╟─ccc0b087-80ab-455e-bc78-f5b5e464a0b0
 # ╠═124bed7d-38ee-4515-9134-f4ed4c287c35
 # ╠═18bccd1d-877d-4022-a506-251685179cee
 # ╟─753f5b10-17ea-4e32-9f52-ff174321bcd6
