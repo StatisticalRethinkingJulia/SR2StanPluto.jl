@@ -16,7 +16,7 @@ begin
 	using GLM
 	
 	# Graphics related
-	using GLMakie
+	using CairoMakie
 	using LaTeXStrings
 
 	# Causal inference support
@@ -24,10 +24,6 @@ begin
 
 	# DAG graphics support
 	using GraphViz
-
-	# Graphs related
-	using Makie
-	using Graphs
 
 	# Stan specific
 	using StanQuap
@@ -365,26 +361,13 @@ end;
 
 # ╔═╡ f7c5c5c7-85d4-4e09-b025-31109e451577
 begin
-	dag_1_edges = [(:A, :D), (:A, :M), (:M, :D)]
-	dag_1 = dag("DAG_1", dag_1_edges; df=dfAMD)
+	dag_1_edges = "DiGraph DAG_1 {A -> M; M -> D; A -> D;}"
+	dag_1 = create_dag("DAG_1", dfAMD; g_dot_repr=dag_1_edges)
 	gvplot(dag_1)
-end
-
-# ╔═╡ 2c0d5989-ff6c-4972-967a-414a91ce398a
-dag_1.d
-
-# ╔═╡ 66104ae9-eae1-4f42-b38f-6b562e1c152f
-begin
-	dag_2_edges = [(:A, :D), (:A, :M)]
-	dag_2 = dag("DAG_2", dag_2_edges)
-	gvplot(dag_2)
 end
 
 # ╔═╡ 5c87da91-ee1f-4d74-827b-efe107f25862
 md" ##### Check d-separation between A, M and D"
-
-# ╔═╡ 6af80388-3d37-42de-bcf0-6fb1489e4c9c
-dag_1.v
 
 # ╔═╡ ab5933f6-43d1-4fb0-9860-3a352bbb251e
 dseparation(dag_1, :A, :M; verbose=true)
@@ -398,23 +381,27 @@ dseparation(dag_1, :A, :D, [:M])
 # ╔═╡ 0c0ba8f0-efc5-4f22-b2d5-41ba4125d221
 dseparation(dag_1, :M, :D, [:A]; verbose=true)
 
-# ╔═╡ ad9edb34-64de-4ae7-aba6-6333421ac1bc
-md" ##### Check d-separation between M and D"
+# ╔═╡ 66104ae9-eae1-4f42-b38f-6b562e1c152f
+begin
+	dag_2_edges = "DiGraph DAG_2 {A -> M; A -> D;}"
+	dag_2 = create_dag("DAG_2", dfAMD; g_dot_repr=dag_2_edges)
+	gvplot(dag_2)
+end
 
-# ╔═╡ 5534f3eb-c6c0-4746-a607-d0a7da924c6f
-dag_2.v
+# ╔═╡ ad9edb34-64de-4ae7-aba6-6333421ac1bc
+md" ##### Check d-separation between M and D in DAG_2."
 
 # ╔═╡ 61dcc961-398f-4f95-bffb-4d51f9ea8fc6
 dseparation(dag_2, :D, :M, Symbol[], verbose=true)
 
+# ╔═╡ 11e64b3b-1bb4-48dc-b0de-6a66f8e59ae5
+dseparation(dag_2, :A, :M, [:D]; verbose=true)
+
 # ╔═╡ 24aa10d0-c938-4834-8cbd-689ed1ca2cbe
-md" ##### Check d-separation between M and D conditioned on A"
+md" ###### Check d-separation between M and D conditioned on A"
 
 # ╔═╡ 2eb20607-232f-4a28-a21d-80e5c348ee1c
 dseparation(dag_2, :M, :D, [:A]; verbose=true)
-
-# ╔═╡ 11e64b3b-1bb4-48dc-b0de-6a66f8e59ae5
-dseparation(dag_2, :A, :M, [:D]; verbose=true)
 
 # ╔═╡ 1a100134-2c6d-46f0-8ae3-2064393da8ab
 md" #### Use WaffleHouses data"
@@ -433,15 +420,6 @@ est_g.fadjlist
 
 # ╔═╡ a2a742d8-a46c-43e0-9cd3-1ce5a49a0ad9
 est_g_edges = [(:A, :M), (:A, :D), (:M, :A), (:D, :A)];
-
-# ╔═╡ 124bed7d-38ee-4515-9134-f4ed4c287c35
-begin
-	est_g_dag = dag("Est_g_dag", est_g, dag_1)
-	gvplot(est_g_dag)
-end
-
-# ╔═╡ 18bccd1d-877d-4022-a506-251685179cee
-est_g_dag.d
 
 # ╔═╡ 753f5b10-17ea-4e32-9f52-ff174321bcd6
 md" ### Julia code snippet 5.10"
@@ -979,28 +957,23 @@ end
 # ╟─694ca34c-ebf8-4e5e-bd11-8821a9116e33
 # ╠═65dab224-d3d7-4c46-95b2-f23f4971a1bc
 # ╠═f7c5c5c7-85d4-4e09-b025-31109e451577
-# ╠═2c0d5989-ff6c-4972-967a-414a91ce398a
-# ╠═66104ae9-eae1-4f42-b38f-6b562e1c152f
 # ╟─5c87da91-ee1f-4d74-827b-efe107f25862
-# ╠═6af80388-3d37-42de-bcf0-6fb1489e4c9c
 # ╠═ab5933f6-43d1-4fb0-9860-3a352bbb251e
 # ╠═6c44b0cb-14ed-4c12-b173-f96212f10683
 # ╠═1ce3080e-c5c8-472b-a29d-eda3fc0dce99
 # ╠═0c0ba8f0-efc5-4f22-b2d5-41ba4125d221
+# ╠═66104ae9-eae1-4f42-b38f-6b562e1c152f
 # ╟─ad9edb34-64de-4ae7-aba6-6333421ac1bc
-# ╠═5534f3eb-c6c0-4746-a607-d0a7da924c6f
 # ╠═61dcc961-398f-4f95-bffb-4d51f9ea8fc6
+# ╠═11e64b3b-1bb4-48dc-b0de-6a66f8e59ae5
 # ╟─24aa10d0-c938-4834-8cbd-689ed1ca2cbe
 # ╠═2eb20607-232f-4a28-a21d-80e5c348ee1c
-# ╠═11e64b3b-1bb4-48dc-b0de-6a66f8e59ae5
 # ╟─1a100134-2c6d-46f0-8ae3-2064393da8ab
 # ╠═e17691c6-655e-4275-ad64-9f9f95cd0d00
 # ╠═2f77ef28-44fd-4ca2-9fbb-c7009131b0e9
 # ╠═46f7f849-f8f4-4465-821d-35f26c0e41b7
 # ╠═29bb4c65-f91b-44e2-9ad9-10b087083285
 # ╠═a2a742d8-a46c-43e0-9cd3-1ce5a49a0ad9
-# ╠═124bed7d-38ee-4515-9134-f4ed4c287c35
-# ╠═18bccd1d-877d-4022-a506-251685179cee
 # ╟─753f5b10-17ea-4e32-9f52-ff174321bcd6
 # ╠═95849e5c-aa0f-4d6f-b618-51e8959496a8
 # ╠═7fb18290-fde1-418b-8908-a8dbcc1a695b
@@ -1027,7 +1000,7 @@ end
 # ╠═c8c72e7e-aa05-40be-a0f0-f0f8928a7197
 # ╠═33c7351d-a175-4f8b-8ab5-c6b4535a538a
 # ╠═611061ef-10f7-43cb-8af9-3227abf43c45
-# ╠═7cc2addc-77d4-4405-9867-3380f3c36d79
+# ╟─7cc2addc-77d4-4405-9867-3380f3c36d79
 # ╠═0a68e7e4-bf56-454c-9489-f704d56d374c
 # ╠═e9530376-06ac-4e85-8cd1-b8f9f9f6ec1b
 # ╟─da451143-cb64-4bc0-b8f9-8ff4614c521d
