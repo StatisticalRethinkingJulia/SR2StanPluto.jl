@@ -1,11 +1,14 @@
 ### A Pluto.jl notebook ###
-# v0.19.20
+# v0.19.22
 
 using Markdown
 using InteractiveUtils
 
-# ╔═╡ 6a0e1509-a003-4b92-a244-f96a9dd7dd3e
+# ╔═╡ e2fbf73e-aa3d-4482-917b-dfbecdd6c4b9
 using Pkg
+
+# ╔═╡ 1af0319c-c956-40d8-a6bb-6bfef0e9959e
+#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ ba53534c-c088-4b75-a220-36c09b375978
 begin
@@ -13,7 +16,7 @@ begin
     using LaTeXStrings
 
 	# Graphics related packages
-	using GLMakie
+	using CairoMakie
 	
 	# Stan related packages
 	using StanSample
@@ -36,8 +39,8 @@ html"""
 	main {
 		margin: 0 auto;
 		max-width: 3500px;
-    	padding-left: max(80px, 0%);
-    	padding-right: max(200px, 38%);
+    	padding-left: max(5px, 5%);
+    	padding-right: max(10px, 37%);
 	}
 </style>
 """
@@ -224,10 +227,11 @@ let
 end
 
 # ╔═╡ Cell order:
-# ╠═6d8c3db8-1705-45d9-9368-02420ded1371
-# ╠═462a5453-a918-4649-afb3-6e31c81193cb
+# ╟─6d8c3db8-1705-45d9-9368-02420ded1371
+# ╟─462a5453-a918-4649-afb3-6e31c81193cb
 # ╠═0eff3bcb-e3a8-4419-b472-a2e256e04ed3
-# ╠═6a0e1509-a003-4b92-a244-f96a9dd7dd3e
+# ╠═e2fbf73e-aa3d-4482-917b-dfbecdd6c4b9
+# ╠═1af0319c-c956-40d8-a6bb-6bfef0e9959e
 # ╠═ba53534c-c088-4b75-a220-36c09b375978
 # ╟─a6297992-a96d-4c7a-a335-3ac959cdca05
 # ╟─5209d2fc-9732-4e76-8669-773e353e545c

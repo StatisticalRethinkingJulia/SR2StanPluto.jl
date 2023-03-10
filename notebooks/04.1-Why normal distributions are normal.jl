@@ -1,11 +1,14 @@
 ### A Pluto.jl notebook ###
-# v0.19.20
+# v0.19.22
 
 using Markdown
 using InteractiveUtils
 
 # ╔═╡ 6a0e1509-a003-4b92-a244-f96a9dd7dd3e
 using Pkg
+
+# ╔═╡ d48cf630-ca08-4f24-9aab-abeefae8e527
+#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ ba53534c-c088-4b75-a220-36c09b375978
 begin
@@ -15,7 +18,7 @@ begin
     using DataFrames
 
 	# Graphics
-	using GLMakie
+	using CairoMakie
     
 	# Project support functions
 	using RegressionAndOtherStories
@@ -133,6 +136,7 @@ end
 # ╟─81f005ef-d776-4fba-9a03-1d129ae9938f
 # ╠═20496ba3-cc57-4ea2-9862-47858cbada17
 # ╠═6a0e1509-a003-4b92-a244-f96a9dd7dd3e
+# ╠═d48cf630-ca08-4f24-9aab-abeefae8e527
 # ╠═ba53534c-c088-4b75-a220-36c09b375978
 # ╟─ca213187-aedf-49b7-9393-607bf6a4f08e
 # ╠═7e540553-aa29-477b-a42f-12a4f93ea4cd

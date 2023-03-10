@@ -1,11 +1,14 @@
 ### A Pluto.jl notebook ###
-# v0.19.20
+# v0.19.22
 
 using Markdown
 using InteractiveUtils
 
-# ╔═╡ cb745deb-2d58-4a73-a954-7fc885654e15
+# ╔═╡ 9017fe5b-537c-434a-8a9a-6f55515e0f43
 using Pkg
+
+# ╔═╡ 2ca8f4be-10d4-44bb-81e8-98c57775acc3
+#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ 10249d26-e2b5-4ce5-a87d-4a703e9f3b45
 begin
@@ -15,7 +18,7 @@ begin
     using KernelDensity
 
 	# Graphics related
-	using GLMakie
+	using CairoMakie
 
 	# Project support  packages
 	using StatisticalRethinking: sr_datadir
@@ -331,7 +334,8 @@ w = [rand(Binomial(9, p)) for p in samples2]
 # ╟─5faf3ad5-cadf-44ec-813e-49a7a0ece7ef
 # ╟─66f0dc91-e720-4110-8f92-44dfb69738ed
 # ╠═c604d45b-fe0d-4d5b-94d8-4e2ccd5ed3c6
-# ╠═cb745deb-2d58-4a73-a954-7fc885654e15
+# ╠═9017fe5b-537c-434a-8a9a-6f55515e0f43
+# ╠═2ca8f4be-10d4-44bb-81e8-98c57775acc3
 # ╠═10249d26-e2b5-4ce5-a87d-4a703e9f3b45
 # ╟─3080b453-0a4f-45ef-8e3d-731c44e14b6d
 # ╠═7148ccef-6649-4208-8107-bc886315c42f

@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.20
+# v0.19.22
 
 using Markdown
 using InteractiveUtils
@@ -14,8 +14,11 @@ macro bind(def, element)
     end
 end
 
-# ╔═╡ ef416733-2e9a-4a20-ad54-ad2fb1a50eb5
+# ╔═╡ 718fb06b-e579-4a7d-8328-c366715dce10
 using Pkg
+
+# ╔═╡ 899a24c4-1316-471f-b3ba-5ae685f903f3
+#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ 8be42366-9118-426b-9407-f5eb17ff80f0
 begin
@@ -25,7 +28,7 @@ begin
 
 	# Grphics related
 	using PlutoUI
-	using GLMakie
+	using CairoMakie
 	
 	# Specific for SR2StanPluto
 	using StanSample
@@ -280,7 +283,8 @@ end
 # ╟─f700b150-8382-44af-893e-1cbd7d97610d
 # ╠═18b85845-f1ca-4a19-afb0-6e4282e9228f
 # ╠═bda8c10f-eef0-4f0a-a8ee-219792ac4b34
-# ╠═ef416733-2e9a-4a20-ad54-ad2fb1a50eb5
+# ╠═718fb06b-e579-4a7d-8328-c366715dce10
+# ╠═899a24c4-1316-471f-b3ba-5ae685f903f3
 # ╠═8be42366-9118-426b-9407-f5eb17ff80f0
 # ╟─4fdc6ba2-f1fb-4525-87c8-0aa5800fa4b5
 # ╠═4ef0e151-9fc4-4ab3-81a2-efb29c7a3bb3

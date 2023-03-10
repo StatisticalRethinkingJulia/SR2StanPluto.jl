@@ -1,11 +1,14 @@
 ### A Pluto.jl notebook ###
-# v0.19.20
+# v0.19.22
 
 using Markdown
 using InteractiveUtils
 
-# ╔═╡ 6a0e1509-a003-4b92-a244-f96a9dd7dd3e
+# ╔═╡ 859783d0-73c9-4d1a-aab7-1d1bc474389e
 using Pkg
+
+# ╔═╡ c80881ad-605b-40fc-a492-d253fef966c8
+#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ ba53534c-c088-4b75-a220-36c09b375978
 begin
@@ -13,7 +16,7 @@ begin
     using LaTeXStrings
 
 	# Graphics related packages
-	using GLMakie
+	using CairoMakie
 	
 	# Stan related packages
 	using StanSample
@@ -482,7 +485,8 @@ end
 # ╟─00d5774b-5ef0-4d01-b21d-1749beec466a
 # ╟─bd8e4305-bb79-409b-9930-e11e579b8cd0
 # ╠═da00c7fe-43ff-4e3a-ab43-0dfd9444f779
-# ╠═6a0e1509-a003-4b92-a244-f96a9dd7dd3e
+# ╠═859783d0-73c9-4d1a-aab7-1d1bc474389e
+# ╠═c80881ad-605b-40fc-a492-d253fef966c8
 # ╠═ba53534c-c088-4b75-a220-36c09b375978
 # ╟─0f2f43f6-d3f6-43aa-9624-d2be810a261b
 # ╠═3f3a2f1b-6f62-4bab-848b-51ec38ad3917

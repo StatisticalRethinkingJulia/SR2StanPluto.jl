@@ -1,11 +1,14 @@
 ### A Pluto.jl notebook ###
-# v0.19.20
+# v0.19.22
 
 using Markdown
 using InteractiveUtils
 
 # ╔═╡ 5325ee1d-d8ae-4e9b-a885-b9ce88d22573
 using Pkg
+
+# ╔═╡ c111bf72-e608-4724-ba62-849fec752987
+#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ af7e9280-a940-45e8-a2b7-37c7eba21302
 begin
@@ -16,7 +19,7 @@ begin
 	using StanSample
 	
     # Graphics related
-    using GLMakie
+    using CairoMakie
 	
     # Include "project" support packages
 	using StatisticalRethinking: sr_datadir
@@ -35,8 +38,8 @@ html"""
 	main {
 		margin: 0 auto;
 		max-width: 3500px;
-    	padding-left: max(80px, 0%);
-    	padding-right: max(200px, 38%);
+    	padding-left: max(10px, 3%);
+    	padding-right: max(10px, 38%);
 	}
 </style>
 """
@@ -183,9 +186,6 @@ mean_a, mean_b, mean_sigma = ms0_0s[:, :mean]
 # ╔═╡ bf595f34-f2f5-4852-81a5-d77cf76644cf
 md" ##### Plot residuals."
 
-# ╔═╡ d610d012-1e7d-4a67-998b-2ef617ec613e
-
-
 # ╔═╡ d26b5c9a-5912-40fc-9ee4-12c75dd97150
 let
 	f = Figure(resolution = default_figure_resolution)
@@ -246,6 +246,7 @@ md"### Julia code snippet 0.5 - See top of notebook"
 # ╠═11c5ae87-0890-4099-afc1-51c035196727
 # ╟─d00abc27-537d-4e8d-8fc5-c7f6c7fb3710
 # ╠═5325ee1d-d8ae-4e9b-a885-b9ce88d22573
+# ╠═c111bf72-e608-4724-ba62-849fec752987
 # ╠═af7e9280-a940-45e8-a2b7-37c7eba21302
 # ╟─475d7028-47e9-4784-be47-23ca89d7821f
 # ╠═892ca0ca-ad34-4d20-85a5-01b1f8c7a277
@@ -274,7 +275,6 @@ md"### Julia code snippet 0.5 - See top of notebook"
 # ╟─62a9b89b-1f61-44f5-9387-8b882214209a
 # ╠═31653011-fdec-473c-b2bc-c897540f4e3a
 # ╟─bf595f34-f2f5-4852-81a5-d77cf76644cf
-# ╠═d610d012-1e7d-4a67-998b-2ef617ec613e
 # ╠═d26b5c9a-5912-40fc-9ee4-12c75dd97150
 # ╟─4362e509-66a3-476f-a69f-10f312315c14
 # ╠═517ddb5a-51c9-4c6a-aeb0-721c1b5b1280

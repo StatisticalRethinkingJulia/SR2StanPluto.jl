@@ -4,8 +4,11 @@
 using Markdown
 using InteractiveUtils
 
-# ╔═╡ 4ade4692-fc0b-11ea-0b14-6b6cb2435655
+# ╔═╡ a6c3f6dc-bd11-4316-a9ec-8d72c94e6a4c
 using Pkg
+
+# ╔═╡ 47eb0509-fd58-45c9-9d39-ada8d37bb76a
+#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ 4ade84b6-fc0b-11ea-06ff-9517579c812c
 begin
@@ -13,7 +16,7 @@ begin
     using BSplines
 
 	# Graphics related
-	using GLMakie
+	using CairoMakie
 	
 	# Stan related
 	using StanSample, StanQuap
@@ -383,7 +386,8 @@ md"## End of clip-04-72-79s.jl"
 # ╟─38a1cbef-a70e-4bd4-ab96-6b86f93113e3
 # ╠═5f30641d-2c85-4712-a853-2992071ddbbc
 # ╟─5433c67d-6294-4984-9490-04e4a0edeb7a
-# ╠═4ade4692-fc0b-11ea-0b14-6b6cb2435655
+# ╠═a6c3f6dc-bd11-4316-a9ec-8d72c94e6a4c
+# ╠═47eb0509-fd58-45c9-9d39-ada8d37bb76a
 # ╠═4ade84b6-fc0b-11ea-06ff-9517579c812c
 # ╠═4af00a44-fc0b-11ea-080c-e9f7bc30a1b1
 # ╟─4af06c94-fc0b-11ea-128c-89bea7c3af63

@@ -6,8 +6,6 @@ using InteractiveUtils
 
 # ╔═╡ a20974be-c658-11ec-3a53-a185aa9085cb
 using Pkg
-
-# ╔═╡ 5fecfda0-af41-430a-8693-b0a408680792
 #Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ 3626cf55-ee2b-4363-95ee-75f2444a1542
@@ -38,6 +36,9 @@ html"""
     }
 </style>
 """
+
+# ╔═╡ 5fecfda0-af41-430a-8693-b0a408680792
+#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ 036457b2-4046-4379-bfbc-2e56b562bd54
 begin
