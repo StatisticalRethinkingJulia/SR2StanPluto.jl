@@ -85,7 +85,7 @@ md"
 "
 
 # ╔═╡ d9e5234a-e586-402e-891f-05c88ff6d3c0
-md"A few ways to provide similar fuctionality to the R function `quap()` are illustrated in Stan.jl (see Notebook-Examples), i.e. using Optim.jl, using StanOptimize.jl and using StanQuap.jl.
+md"A few ways to provide similar functionality to the R function `quap()` are illustrated in Stan.jl (see Notebook-Examples), i.e. using Optim.jl, using StanOptimize.jl and using StanQuap.jl.
 
 The use of Optim.jl is shown in `Intro-stan-logpdf`. This is probably the best way of obtaining MAP estimates but requires rewriting the models in `logpdf` format.
 
@@ -94,7 +94,7 @@ The use of StanOptimize.jl is shown in `Intro-stan-optimize.jl`.
 
 # ╔═╡ ec0fcce1-26e1-432c-a968-ccc5ff3a6095
 md"
-In the code clips I have opted for a less efficient way of computing the quadratic approximation to the posterior distribution by using StanQuap.jl which uses both StanOptimize.jl and StanSample.jl. The advantage is that this way, as in the StanOptimize.jl approach, the same Stan Language model can be used and it returns both the quapdratic approximation and a full SampleModel which makes comparing the two results easier.
+In the code clips I have opted for a less efficient way of computing the quadratic approximation to the posterior distribution by using StanQuap.jl which uses both StanOptimize.jl and StanSample.jl. The advantage is that this way, as in the StanOptimize.jl approach, the same Stan Language model can be used and it returns both the quadratic approximation and a full SampleModel which makes comparing the two results easier.
 "
 
 # ╔═╡ c301a6a8-aaa2-4cf8-a680-8c0d9ac7ea33
