@@ -135,7 +135,7 @@ function hmc(x, y, u, ugrad, eps, L, current_q)
 
   ptraj[L+1, :] = p
 
-  # Negate momentum to make proposal symmatric
+  # Negate momentum to make proposal symmetric
   p = -p
 
   # Evaluate potential and kinetic energies at beginning and end
