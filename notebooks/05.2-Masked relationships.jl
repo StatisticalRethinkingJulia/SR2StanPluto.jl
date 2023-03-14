@@ -6,6 +6,7 @@ using InteractiveUtils
 
 # ╔═╡ 16ddb41a-fc59-11ea-1631-153e3466c75c
 using Pkg
+#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ 9c410a0d-30dd-4b46-b7cb-8892df94fb14
 Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
