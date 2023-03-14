@@ -4,13 +4,17 @@ As stated many times by the author in his [online lectures](https://www.youtube.
 
 SR2StanPluto is a Julia project that uses Pluto notebooks for this purpose. Each notebook demonstrates Julia versions of `code snippets` and `mcmc models` contained in the R package "rethinking" associated with the book [Statistical Rethinking](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath.
 
-This Julia project uses Stan (the `cmdstan` executable) as the underlying mcmc implementation.
+This Julia project uses Stan (the `cmdstan` executable) as the underlying mcmc implementation. Please see Stan.jl and/or StanSample.jl for details.
 
 ## Important note
 
 From v5 onwards the basis will no longer be StatisticalRethinking.jl but RegressionAndOtherStories.jl. Both packages have very similar content, but StatisticalRethinking.jl uses Plots.jl while RegressionAndOtherStories.jl is using Makie.jl.
 
 Tagged version 4.2.0 is the last more or less complete set of scripts covering `the old` chapters 1 to 11.
+
+## Using Pluto's package management (or not!)
+
+For development purposes most notebooks include a line like `#Pkg.activate("~/.julie/dev/SR2StanPluto"))`. On the repo it is commented out. While developing code I typically run notebooks inside a project environment (by uncommenting that line).
 
 ## Usage
 
@@ -19,7 +23,7 @@ To (locally) reproduce and use this project, do the following:
 1. Download this [project](https://github.com/StatisticalRethinkingJulia/SR2StanPluto.jl) from Github and move to the downloaded directory, e.g.:
 
 ```
-$ cd .julia/dev
+$ cd ./julia/dev
 $ git clone https://github.com/StatisticalRethinkingJulia/SR2StanPluto.jl SR2StanPluto
 $ cd SR2StanPluto
 ```
@@ -87,7 +91,11 @@ See the Notebook_Examples in Stan.jl for an example Pluto notebook.
 
 SR2StanPluto.jl is compatible with the 2nd edition of the book.
 
-StructuralCausalModels.jl ans ParetoSmoothedImportanceSampling.jl are included as experimental dependencies in the StatisticalRethinking.jl v3+ package. Both definitely WIP! See also below version 5 info.
+In v5.3.0 StructuralCausalModels.jl is repaced by CausalInference.jl as an extension. To display DAGs, GraphViz.jl and CairoMakie.jl are used.
+
+ParetoSmoothedImportanceSampling.jl are included as experimental dependencies in the StatisticalRethinking.jl v3+ package.
+
+Definitely WIP! See also below version 5 info.
 
 Any feedback is appreciated. Please open an issue.
 
@@ -95,13 +103,18 @@ Any feedback is appreciated. Please open an issue.
 
 Of course, without the excellent textbook by Richard McElreath, this project would not have been possible. The author has also been supportive of this work and gave permission to use the datasets.
 
-This repository and format is derived from previous versions of StatisticalRethinking.jl, work by Karajan, Max Lapan and many other contributors.
+This repository and format is influenced by previous versions of StatisticalRethinking.jl, work by Karajan, Max Lapan and many other contributors.
 
 ## Versions
 
-### Version 5 (under development, 2023)
+### Version 5.3 (under development)
 
-1. Switch to (GL)Makie.jl, Graphs.jl, CausalInference.jl, InferenceObjects.jl (and more probably).
+1. Switch to (Cairo)Makie.jl, Graphs.jl, CausalInference.jl, GraphViz.jl (and more probably).
+
+### Version 5
+
+1. Version 5 is a breaking change!
+2. A new look is taken at packages available in the Julia ecosystem.
 
 ### Version 4
 

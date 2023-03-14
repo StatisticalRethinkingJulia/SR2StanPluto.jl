@@ -8,7 +8,7 @@ using InteractiveUtils
 using Pkg
 
 # ╔═╡ 2e717b02-0290-49e3-9f67-70f73d760b10
-#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
+Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ d65dd2b2-fc58-11ea-2300-4db47ec9a789
 begin
@@ -365,6 +365,12 @@ begin
 	dag_1 = create_dag("DAG_1", dfAMD; g_dot_repr=dag_1_edges)
 	gvplot(dag_1)
 end
+
+# ╔═╡ bfdab5a8-37a6-4af2-9645-99f8e0d8edd5
+dag_1.g.fadjlist
+
+# ╔═╡ aa2238cd-3d62-467e-a19b-84ab6f1561ea
+dag_1.est_g.fadjlist
 
 # ╔═╡ 5c87da91-ee1f-4d74-827b-efe107f25862
 md" ##### Check d-separation between A, M and D"
@@ -957,6 +963,8 @@ end
 # ╟─694ca34c-ebf8-4e5e-bd11-8821a9116e33
 # ╠═65dab224-d3d7-4c46-95b2-f23f4971a1bc
 # ╠═f7c5c5c7-85d4-4e09-b025-31109e451577
+# ╠═bfdab5a8-37a6-4af2-9645-99f8e0d8edd5
+# ╠═aa2238cd-3d62-467e-a19b-84ab6f1561ea
 # ╟─5c87da91-ee1f-4d74-827b-efe107f25862
 # ╠═ab5933f6-43d1-4fb0-9860-3a352bbb251e
 # ╠═6c44b0cb-14ed-4c12-b173-f96212f10683
