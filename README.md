@@ -8,7 +8,7 @@ This Julia project uses Stan (the `cmdstan` executable) as the underlying mcmc i
 
 ## Important note
 
-From v5 onwards the basis will no longer be StatisticalRethinking.jl but RegressionAndOtherStories.jl. Both packages have very similar content, but StatisticalRethinking.jl uses Plots.jl while RegressionAndOtherStories.jl is using Makie.jl.
+From v5 onwards the basis will no longer be StatisticalRethinking.jl but RegressionAndOtherStories.jl. Both packages have very similar content, but StatisticalRethinking.jl uses Plots.jl while RegressionAndOtherStories.jl is using (Cairo)Makie.jl.
 
 Tagged version 4.2.0 is the last more or less complete set of scripts covering `the old` chapters 1 to 11.
 
@@ -27,6 +27,7 @@ $ cd ./julia/dev
 $ git clone https://github.com/StatisticalRethinkingJulia/SR2StanPluto.jl SR2StanPluto
 $ cd SR2StanPluto
 ```
+Or select a particular tagged version, i.e. `...//SR2StanPluto.jl@4.2.0 ...`.
 
 The next step assumes your `basic` Julia environment includes `Pkg` and `Pluto`.
 
@@ -82,10 +83,12 @@ the Julia eco-sytem is still evolving rapidly with new options.
 
 Using `read_samples(m5_1s, :...)` makes it easy to convert samples to other formats.
 
-In version 5 I expect to mainly use the output_formats :dataframe, :namedtuple.
+In version 5 I expect to mainly use the output_formats :dataframe and :namedtuple.
 
 For InferenceObjects.jl there is a separate function `inferencedata(m1_1s)`. 
 See the Notebook_Examples in Stan.jl for an example Pluto notebook.
+
+See the project maintenance section in the Readme of RegressionAndOtherStories.jl for a note on using projects environments instead of Pluto's package management features.
 
 ## Status
 
