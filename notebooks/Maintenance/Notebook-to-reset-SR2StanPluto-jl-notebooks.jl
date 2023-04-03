@@ -7,14 +7,14 @@ using InteractiveUtils
 # ╔═╡ 28f7bd2f-3208-4c61-ad19-63b11dd56d30
 using Pkg
 
-# ╔═╡ 70d5fba2-aec1-444e-a913-39947747a355
-#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
-
 # ╔═╡ 2846bc48-7972-49bc-8233-80c7ea3326e6
 begin
 	using DataFrames
     using RegressionAndOtherStories: reset_selected_notebooks_in_notebooks_df!
 end
+
+# ╔═╡ 70d5fba2-aec1-444e-a913-39947747a355
+#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ 970efecf-9ae7-4771-bff0-089202b1ff1e
 html"""
@@ -22,8 +22,8 @@ html"""
 	main {
 		margin: 0 auto;
 		max-width: 3500px;
-    	padding-left: max(10px, 5%);
-    	padding-right: max(10px, 37%);
+    	padding-left: max(5px, 5%);
+    	padding-right: max(5px, 20%);
 	}
 </style>
 """
@@ -46,6 +46,13 @@ notebook_files = [
     "~/.julia/dev/SR2StanPluto/notebooks/09.3-Hamiltonian Monte Carlo.jl",
     "~/.julia/dev/SR2StanPluto/notebooks/09.4-Easy HMC.jl",
     "~/.julia/dev/SR2StanPluto/notebooks/09.5-Care of Markov chains.jl",
+	
+    "~/.julia/dev/SR2StanPluto/notebooks/CausalInference/PC Algorithm: Basic example.jl",
+    "~/.julia/dev/SR2StanPluto/notebooks/CausalInference/PC Algorithm: Example with real data.jl",
+    "~/.julia/dev/SR2StanPluto/notebooks/CausalInference/PC Algorithm: Further example.jl",
+    "~/.julia/dev/SR2StanPluto/notebooks/CausalInference/PC Algorithm: How it works.jl",
+    "~/.julia/dev/SR2StanPluto/notebooks/CausalInference/PC Algorithm: Reasoning about experiments.jl",
+	
 	"~/.julia/dev/SR2StanPluto/notebooks/Maintenance/Notebook-to-reset-SR2StanPluto-jl-notebooks.jl"
 ];
 

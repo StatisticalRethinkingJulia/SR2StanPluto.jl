@@ -6,10 +6,9 @@ using InteractiveUtils
 
 # ╔═╡ 16ddb41a-fc59-11ea-1631-153e3466c75c
 using Pkg
-#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ 9c410a0d-30dd-4b46-b7cb-8892df94fb14
-Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
+#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ d65dd2b2-fc58-11ea-2300-4db47ec9a789
 begin
@@ -344,88 +343,180 @@ end
 # ╔═╡ b1b11f5e-27c3-4f53-bc86-260c7e26874b
 s1
 
+# ╔═╡ bfb8f476-7242-4512-a8fb-66b7c5911883
+begin
+	data_df = DataFrame(M=df[!, :lmass_s])
+	data_df.N = df[!, :neocortex_perc_s]
+	data_df.K = df[:, :kcal_per_g_s]
+	data_df
+end
+
+# ╔═╡ a7b77fb2-d83e-470a-b28b-c7cc8278c3c2
+dag5_7_1 = create_dag("dag5_7_1", data_df;
+	g_dot_repr="DiGraph dag5_7 {M -> K; M -> N; N -> K;}")
+
+# ╔═╡ a2fac060-6c7d-41e6-bfef-fd4a1fd296e7
+gvplot(dag5_7_1)
+
+# ╔═╡ 30ceb7f3-dbf9-4c84-877c-eb96e343e1dc
+begin
+	dag5_7_2 = create_dag("dag5_7_2", data_df;
+		g_dot_repr="DiGraph dag5_7 {M -> K; N -> M; N -> K;}")
+	gvplot(dag5_7_2)
+end
+
 # ╔═╡ 7d6b1a5d-d3a3-49c2-8553-1e0b9fcade85
 md"### Julia code snippet 5.40"
 
-# ╔═╡ 7de83549-a914-4091-8e64-86633356dc42
-if success(rc5_5s)
-	post5_5s_df = read_samples(m5_5s, :dataframe)
-	title5 = "Kcal_per_g vs. neocortex_perc" * "\n89% predicted and mean range"
-	fig1 = plotbounds(
-		df, :neocortex_perc, :kcal_per_g,
-		post5_5s_df, [:a, :bN, :sigma];
-		title=title5
-	)
-end
-
-# ╔═╡ a3622d8e-269d-4483-9a2e-c7b081d1109d
-if success(rc5_6s)
-	post5_6s_df = read_samples(m5_6s, :dataframe)
-	title6 = "Kcal_per_g vs. log mass" * "\n89% predicted and mean range"
-	fig2 = plotbounds(
-		df, :lmass, :kcal_per_g,
-		post5_6s_df, [:a, :bM, :sigma];
-		title=title6
-	)
-end
-
-# ╔═╡ 75d942ba-3998-4699-ade8-d9118665734a
-if success(rc5_7s)
-	post5_7s_df = read_samples(m5_7s, :dataframe)
-	title7 = "Counterfactual,\nholding M=0.0"
-	fig3 = plotbounds(
-		df, :neocortex_perc, :kcal_per_g,
-		post5_7s_df, [:a, :bN, :sigma];
-		title=title7
-	)
-end
-
-# ╔═╡ 959b9a15-c9d1-47a6-afdb-25a3a50b6736
-if success(rc5_7s)
-	title8 = "Counterfactual,\nholding N=0.0"
-	fig4 = plotbounds(
-		df, :lmass, :kcal_per_g,
-		post5_7s_df, [:a, :bM, :sigma];
-		title=title8,
-		xlab="log(mass)"
-	)
-end
-
-# ╔═╡ 1c2d9624-59d0-46e8-a004-a38f152262e3
-#plot(fig1, fig2, fig3, fig4, layout=(2, 2))
-
-# ╔═╡ 1c3c3e1d-552c-4185-9133-16443c5fa736
-md"### Julia code snippet 5.41-42"
-
-# ╔═╡ 7e60433c-47a8-4754-a24b-f5f83c6cf6d6
+# ╔═╡ a4b88589-5b0d-442c-8658-55f2331ad242
 let
-	fig1 = plot(xlab="Manipulated M", ylab="Counterfactual K",
+	x_range = -3:0.1:3
+	title = "Partial model: Kcal_per_g_s vs. neocortex_perc_s" * "\n89% predicted and mean range"
+	global post5_5s_df = read_samples(m5_5s, :dataframe)
+
+	f = Figure(resolution=default_figure_resolution)
+	ax = Axis(f[1, 1]; title, xlabel="neocortex_perc", ylabel="kcal_per_g")
+	scatter!(df.neocortex_perc_s, df.kcal_per_g_s)
+	res = link(post5_5s_df, (r, x) -> r.a + r.bN * x, x_range)
+	res = hcat(res...)
+	m, l, u = estimparam(res)
+	lines!(x_range, m; color=:darkred)
+	band!(x_range, l, u; color=(:grey, 0.3))
+
+	x_range = -2:0.1:2
+	title = "Partial model: Kcal_per_g_s vs. lmass_s" * "\n89% predicted and mean range"
+	global post5_6s_df = read_samples(m5_6s, :dataframe)
+
+	ax = Axis(f[1, 2]; title, xlabel="lmass_s", ylabel="kcal_per_g_s")
+	scatter!(df.lmass_s, df.kcal_per_g_s)
+	res = link(post5_6s_df, (r, x) -> r.a + r.bM * x, x_range)
+	res = hcat(res...)
+	m, l, u = estimparam(res)
+	lines!(x_range, m; color=:darkred)
+	band!(x_range, l, u; color=(:grey, 0.3))
+
+	x_range = -2:0.1:2
+	title = "Full model: Kcal_per_g_s vs. neocortex_perc_s" * "\n89% predicted and mean range"
+	global post5_7s_df = read_samples(m5_7s, :dataframe)
+
+	ax = Axis(f[2, 1]; title, xlabel="neocortex_perc_s", ylabel="kcal_per_g_s")
+	scatter!(df.neocortex_perc_s, df.kcal_per_g_s)
+	res = link(post5_7s_df, (r, x) -> r.a + r.bN * x, x_range)
+	res = hcat(res...)
+	m, l, u = estimparam(res)
+	lines!(x_range, m; color=:darkred)
+	band!(x_range, l, u; color=(:grey, 0.3))
+
+	x_range = -2:0.1:2
+	title = "Full model: Kcal_per_g_s vs. lmass_s" * "\n89% predicted and mean range"
+
+	ax = Axis(f[2, 2]; title, xlabel="lmass_s", ylabel="kcal_per_g_s")
+	scatter!(df.lmass_s, df.kcal_per_g_s)
+	res = link(post5_7s_df, (r, x) -> r.a + r.bM * x, x_range)
+	res = hcat(res...)
+	m, l, u = estimparam(res)
+	lines!(x_range, m; color=:darkred)
+	band!(x_range, l, u; color=(:grey, 0.3))
+
+	f
+end
+
+# ╔═╡ 4b3fbf10-cd24-426b-9759-97146d184a0a
+begin
+	n = 100
+	sim_data_df = DataFrame(:M => rand(Normal(), n),)
+	sim_data_df.NC = [rand(Normal(sim_data_df[i, :M]), 1)[1] for i in 1:n]
+	sim_data_df.K = [rand(Normal(sim_data_df[i, :NC] - sim_data_df[i, :M]), 1)[1] for i in 1:n]
+	scale_df_cols!(sim_data_df, [:K, :M, :NC])
+end;
+
+# ╔═╡ 58d7af44-13d1-4d45-9755-27bf530d4935
+stan5_7_A = "
+data {
+  int N;
+  vector[N] K;
+  vector[N] M;
+  vector[N] NC;
+}
+parameters {
+  real a;
+  real bN;
+  real bM;
+  real aNC;
+  real bMNC;
+  real<lower=0> sigma;
+  real<lower=0> sigma_NC;
+}
+model {
+  // M -> K <- NC
+  vector[N] mu = a + bN * NC + bM * M;
+  a ~ normal( 0 , 0.2 );
+  bN ~ normal( 0 , 0.5 );
+  bM ~ normal( 0 , 0.5 );
+  sigma ~ exponential( 1 );
+  K ~ normal( mu , sigma );
+  // M -> NC
+  vector[N] mu_NC = aNC + bMNC * M;
+  aNC ~ normal( 0 , 0.2 );
+  bMNC ~ normal( 0 , 0.5 );
+  sigma_NC ~ exponential( 1 );
+  NC ~ normal( mu_NC , sigma_NC );
+}
+";
+
+# ╔═╡ b411649a-3242-42ec-9ee0-1ea7f140c603
+let
+	m5_7_A_data = Dict(
+	  "N" => size(sim_data_df, 1), 
+	  "K" => sim_data_df[:, :K_s],
+	  "M" => sim_data_df[:, :M_s],
+	  "NC" => sim_data_df[:, :NC_s] 
+	);
+	global m5_7_As = SampleModel("m5.7_A", stan5_7_A);
+	global rc5_7_As = stan_sample(m5_7_As, data=m5_7_A_data);
+end;
+
+# ╔═╡ c9463bd4-2b53-46ca-a3b4-e9d0c3b67bee
+md"### Julia code snippet 5.40"
+
+# ╔═╡ 890c3735-429b-4209-abbd-5784d006d652
+a_seq = range(-2, stop=2, length=100);
+
+# ╔═╡ 228a0aa9-93b7-4b69-86e2-94664ef80584
+md"### Julia code snippet 5.41"
+
+# ╔═╡ 19273241-8c10-445b-8b2d-a534000660ac
+md"### Julia code snippet 5.42"
+
+# ╔═╡ c704513f-2d7f-4d9d-ae02-470d582891a4
+post5_7_As_df = read_samples(m5_7_As, :dataframe)
+
+# ╔═╡ 1a7d8513-84c8-4b17-ace7-8efd5a6422a5
+m_sim, d_sim = simulate(post5_7_As_df, [:aNC, :bMNC, :sigma_NC], a_seq, [:bM, :sigma]);
+
+# ╔═╡ c2e86fef-56e9-4831-823e-e26ffcaf7e2d
+let
+	f = Figure(resolution=default_figure_resolution)
+	ax = Axis(f[1, 1]; xlabel="Manipulated M", ylabel="Counterfactual K",
 	  title="Total counterfactual effect of M on K")
-	plot!(a_seq, mean(d_sim, dims=1)[1, :], leg=false)
-	hpdi_array1 = zeros(length(a_seq), 2)
-	for i in 1:length(a_seq)
-	  hpdi_array1[i, :] =  hpdi(d_sim[i, :])
-	end
-	plot!(a_seq, mean(d_sim, dims=1)[1, :]; ribbon=(hpdi_array1[:, 1], -hpdi_array1[:, 2]))
+	m, l, u = estimparam(d_sim)
+	lines!(a_seq, m)
+	band!(a_seq, l, u; color=(:grey, 0.3))
+
+	ax = Axis(f[1, 2]; xlabel="Manipulated N", ylabel="Counterfactual M",
+		title="Counterfactual effect of N on M")
+	m, l, u = estimparam(m_sim)
+	lines!(a_seq, m)
+	band!(a_seq, l, u; color=(:grey, 0.3))
+
+	f
 end
 
-# ╔═╡ 917c5008-a803-43e4-bb35-6db46e3a425e
-let
-	fig2 = plot(xlab="Manipulated M", ylab="Counterfactual NC",
-	  title="Counterfactual effect of M on NC")
-	plot!(a_seq, mean(m_sim, dims=1)[1, :], leg=false)
-	hpdi_array2 = zeros(length(a_seq), 2)
-	for i in 1:length(a_seq)
-	  hpdi_array2[i, :] =  hpdi(m_sim[i, :])
-	end
-	plot!(a_seq, mean(m_sim, dims=1)[1, :]; ribbon=(hpdi_array2[:, 1], -hpdi_array2[:, 2]))
-end
-
-# ╔═╡ d01dbd28-0943-4ac8-a397-68a0afdc2f46
+# ╔═╡ 58ea484f-639a-4a5f-9f5d-71f1b72467a4
 md"##### NC -> K"
 
-# ╔═╡ 7133b0e9-cb3f-470a-adf4-b7b66a66dc85
-let
+# ╔═╡ b02af973-17c2-4feb-a9ae-f0d713bdd584
+begin
 	nc_seq = range(-2, stop=2, length=100)
 	nc_k_sim = zeros(size(post5_7_As_df, 1), length(nc_seq))
 	for j in 1:size(post5_7_As_df, 1)
@@ -434,15 +525,42 @@ let
 		nc_k_sim[j, i] = rand(d, 1)[1]
 	  end
 	end
-	fig3 = plot(xlab="Manipulated NC", ylab="Counterfactual K",
-	  title="Counterfactual effect of NC on K")
-	plot!(nc_seq, mean(nc_k_sim, dims=1)[1, :], leg=false)
-	hpdi_array3 = zeros(length(nc_seq), 2)
-	for i in 1:length(nc_seq)
-	  hpdi_array3[i, :] =  hpdi(nc_k_sim[i, :])
-	end
-	plot!(nc_seq, mean(nc_k_sim, dims=1)[1, :]; ribbon=(hpdi_array3[:, 1], -hpdi_array3[:, 2]))
 end
+
+# ╔═╡ 903c01fc-6995-4c4d-acbf-527bfa353530
+nc_k_sim
+
+# ╔═╡ 26a449f0-73c5-4d17-8b7c-27bd938a7f66
+begin
+	f = Figure(resolution=default_figure_resolution)
+
+	ax = Axis(f[1, 1]; xlabel="Manipulated M", ylabel="Counterfactual K",
+	  title="Total counterfactual effect of M on K")
+	m, l, u = estimparam(d_sim)
+	lines!(a_seq, m)
+	band!(a_seq, l, u; color=(:grey, 0.3))
+
+	ax = Axis(f[1, 2]; xlabel="Manipulated N", ylabel="Counterfactual M",
+		title="Counterfactual effect of N on M")
+	m, l, u = estimparam(m_sim)
+	lines!(a_seq, m)
+	band!(a_seq, l, u; color=(:grey, 0.3))
+	
+	ax = Axis(f[2, 1:2]; xlabel="Manipulated N", ylabel="Counterfactual K",
+	  title="Counterfactual effect of N on K")
+	lines!(nc_seq, mean(nc_k_sim, dims=1)[1, :])
+	m, l, u = estimparam(nc_k_sim)
+	lines!(nc_seq, m)
+	band!(a_seq, l, u; color=(:grey, 0.3))
+	
+	f
+end
+
+# ╔═╡ 1c3c3e1d-552c-4185-9133-16443c5fa736
+md"### Julia code snippet 5.41-42"
+
+# ╔═╡ d01dbd28-0943-4ac8-a397-68a0afdc2f46
+md"##### NC -> K"
 
 # ╔═╡ d9d3924a-cb8a-4d2d-849d-c72ad9f0e597
 #plot(fig1, fig2, fig3, layout=(3, 1))
@@ -482,15 +600,26 @@ end
 # ╟─55db7c46-81fa-4eb2-8dbb-37f7ab789e96
 # ╠═73fc9756-9b86-4983-8a42-a2c34e6e5358
 # ╠═b1b11f5e-27c3-4f53-bc86-260c7e26874b
+# ╠═bfb8f476-7242-4512-a8fb-66b7c5911883
+# ╠═a7b77fb2-d83e-470a-b28b-c7cc8278c3c2
+# ╠═a2fac060-6c7d-41e6-bfef-fd4a1fd296e7
+# ╠═30ceb7f3-dbf9-4c84-877c-eb96e343e1dc
 # ╟─7d6b1a5d-d3a3-49c2-8553-1e0b9fcade85
-# ╠═7de83549-a914-4091-8e64-86633356dc42
-# ╠═a3622d8e-269d-4483-9a2e-c7b081d1109d
-# ╠═75d942ba-3998-4699-ade8-d9118665734a
-# ╠═959b9a15-c9d1-47a6-afdb-25a3a50b6736
-# ╠═1c2d9624-59d0-46e8-a004-a38f152262e3
+# ╠═a4b88589-5b0d-442c-8658-55f2331ad242
+# ╠═4b3fbf10-cd24-426b-9759-97146d184a0a
+# ╠═58d7af44-13d1-4d45-9755-27bf530d4935
+# ╠═b411649a-3242-42ec-9ee0-1ea7f140c603
+# ╟─c9463bd4-2b53-46ca-a3b4-e9d0c3b67bee
+# ╠═890c3735-429b-4209-abbd-5784d006d652
+# ╟─228a0aa9-93b7-4b69-86e2-94664ef80584
+# ╠═1a7d8513-84c8-4b17-ace7-8efd5a6422a5
+# ╟─19273241-8c10-445b-8b2d-a534000660ac
+# ╠═c704513f-2d7f-4d9d-ae02-470d582891a4
+# ╠═c2e86fef-56e9-4831-823e-e26ffcaf7e2d
+# ╟─58ea484f-639a-4a5f-9f5d-71f1b72467a4
+# ╠═b02af973-17c2-4feb-a9ae-f0d713bdd584
+# ╠═903c01fc-6995-4c4d-acbf-527bfa353530
+# ╠═26a449f0-73c5-4d17-8b7c-27bd938a7f66
 # ╟─1c3c3e1d-552c-4185-9133-16443c5fa736
-# ╠═7e60433c-47a8-4754-a24b-f5f83c6cf6d6
-# ╠═917c5008-a803-43e4-bb35-6db46e3a425e
 # ╠═d01dbd28-0943-4ac8-a397-68a0afdc2f46
-# ╠═7133b0e9-cb3f-470a-adf4-b7b66a66dc85
 # ╠═d9d3924a-cb8a-4d2d-849d-c72ad9f0e597
