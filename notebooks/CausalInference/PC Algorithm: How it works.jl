@@ -1,14 +1,11 @@
 ### A Pluto.jl notebook ###
-# v0.19.22
+# v0.19.25
 
 using Markdown
 using InteractiveUtils
 
 # ╔═╡ 62c80a26-975a-11ed-2e09-2dce0e33bb70
 using Pkg
-
-# ╔═╡ aaea31c8-37ed-4f0f-8e3e-8e89d30ed918
-#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ 58ece6dd-a20f-4624-898a-40cae4b471e4
 begin
@@ -47,6 +44,9 @@ html"""
 </style>
 """
 
+# ╔═╡ aaea31c8-37ed-4f0f-8e3e-8e89d30ed918
+#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
+
 # ╔═╡ 261cca70-a6dd-4bed-b2f2-8667534d0ceb
 let
 	Random.seed!(13)
@@ -67,10 +67,10 @@ end
 covm
 
 # ╔═╡ 09f4825a-34ed-4e39-9fd9-c6ddc0610e6c
-g_dot_repr="DiGraph d1 {x->z; y->z; z->w;}";
+g_dot_str="DiGraph d1 {x->z; y->z; z->w;}";
 
 # ╔═╡ eff73cbb-a04c-46de-b3bf-1e164ebe411f
-d1 = create_dag("d1", df, p; g_dot_repr, est_func=cmitest);
+d1 = create_dag("d1", df, p; g_dot_str, est_func=cmitest);
 
 # ╔═╡ f1302070-b876-4355-b434-9eb025dc1db2
 gvplot(d1)
@@ -85,7 +85,7 @@ md" ##### DAG `d2` is used (abused) to illustrate the PC algorithm."
 d2 = create_dag("d2");
 
 # ╔═╡ e1eb18bc-4a8f-41c8-a1cf-6cd229195d6b
-update_dag!(d2, nothing; g_dot_repr)
+update_dag!(d2, nothing; g_dot_str)
 
 # ╔═╡ 38443eb2-7a82-4f07-9a7b-7222233154db
 md"""
@@ -100,7 +100,7 @@ This material may be protected by copyright.
 """
 
 # ╔═╡ bef6b5da-149d-4df6-9f0e-a5a5014d06cd
-set_dag_est_g!(d2; g_dot_repr="DiGraph dag_1 {x->z [color=blue, arrowhead=none]; x->w [color=blue, arrowhead=none]; y->z [color=blue, arrowhead=none]; y->w [color=blue, arrowhead=none]; x->y [color=blue, arrowhead=none]; z->w [color=blue, arrowhead=none];}")
+set_dag_est_g!(d2; g_dot_str="DiGraph dag_1 {x->z [color=blue, arrowhead=none]; x->w [color=blue, arrowhead=none]; y->z [color=blue, arrowhead=none]; y->w [color=blue, arrowhead=none]; x->y [color=blue, arrowhead=none]; z->w [color=blue, arrowhead=none];}")
 
 # ╔═╡ 9f44ad38-b85f-4aeb-975c-610b0f30c133
 gvplot(d2; 
@@ -113,10 +113,10 @@ md"
 "
 
 # ╔═╡ a0cc8175-4f83-45f8-8bba-3e0679ff4ccb
-dseparation(d1, :x, :y)
+dsep(d1, :x, :y)
 
 # ╔═╡ 181f069d-7820-4867-afb7-4dd7cc0b70a5
-set_dag_est_g!(d2, g_dot_repr="DiGraph dag_1 {x->z [color=blue, arrowhead=none]; x->w [color=blue, arrowhead=none]; y->z [color=blue, arrowhead=none]; y->w [color=blue, arrowhead=none]; z->w [color=blue, arrowhead=none];}")
+set_dag_est_g!(d2, g_dot_str="DiGraph dag_1 {x->z [color=blue, arrowhead=none]; x->w [color=blue, arrowhead=none]; y->z [color=blue, arrowhead=none]; y->w [color=blue, arrowhead=none]; z->w [color=blue, arrowhead=none];}")
 
 # ╔═╡ 7c037a74-11d4-4366-b6e2-c8185ca73464
 gvplot(d2; 
@@ -130,16 +130,16 @@ md"""
 """
 
 # ╔═╡ 00ad74d9-62d8-4ced-8bf1-eace47470272
-dseparation(d1, :x, :w, verbose=true)
+dsep(d1, :x, :w, verbose=true)
 
 # ╔═╡ 5533711c-6cbb-4407-8081-1ab44a09a8b9
-dseparation(d1, :x, :w, [:z], verbose=true)
+dsep(d1, :x, :w, [:z], verbose=true)
 
 # ╔═╡ 6d999053-3612-4e8d-b2f2-2ddf3eae5630
-dseparation(d1, :y, :w, [:z], verbose=true)
+dsep(d1, :y, :w, [:z], verbose=true)
 
 # ╔═╡ 486def96-57dc-4ad7-ae26-b8ba99f02037
-set_dag_est_g!(d2, g_dot_repr="DiGraph dag_1 {x->z [color=red, arrowhead=none]; y->z [color=red, arrowhead=none]; z->w [color=red, arrowhead=none];}")
+set_dag_est_g!(d2, g_dot_str="DiGraph dag_1 {x->z [color=red, arrowhead=none]; y->z [color=red, arrowhead=none]; z->w [color=red, arrowhead=none];}")
 
 # ╔═╡ abf035da-9544-4c67-8475-0d1bd8d2989d
 gvplot(d2; 
@@ -152,7 +152,7 @@ md"""
 """
 
 # ╔═╡ 728c0de8-c99b-411e-a419-271f5404a252
-set_dag_est_g!(d2, g_dot_repr="DiGraph dag_1 {x->z ; y->z; z->w [color=red, arrowhead=none];}")
+set_dag_est_g!(d2, g_dot_str="DiGraph dag_1 {x->z ; y->z; z->w [color=red, arrowhead=none];}")
 
 # ╔═╡ 8a631946-6e92-4a60-a896-c8d41b77f59a
 gvplot(d2; 
@@ -165,7 +165,7 @@ md"""
 """
 
 # ╔═╡ 8cfe323f-e48f-4705-be8a-cbb3669498d9
-set_dag_est_g!(d2, g_dot_repr="DiGraph dag_1 {x->z; y->z; z->w;}")
+set_dag_est_g!(d2, g_dot_str="DiGraph dag_1 {x->z; y->z; z->w;}")
 
 # ╔═╡ 5f5f504d-0209-439b-b076-616924ce93d7
 gvplot(d2; 
@@ -178,6 +178,40 @@ md"""
 
 See also the references and examples in [CausalInference.jl](https://mschauer.github.io/CausalInference.jl/latest/).
 """
+
+# ╔═╡ 53022a21-f9de-4ae4-8e87-1a2e88c0ebef
+g_oracle = fcialg(4, dseporacle, d1.g)
+
+# ╔═╡ 490f0730-c8b7-49f9-a48c-fd3929f4ae78
+g_gauss = fcialg(df, 0.05, gausscitest)
+
+# ╔═╡ 9b5fabdd-f36c-49b1-8409-88643f273647
+let
+    fci_oracle_dot_str = to_gv(g_oracle, d1.vars)
+    fci_gauss_dot_str = to_gv(g_gauss, d1.vars)
+    g1 = GraphViz.Graph(d1.g_dot_str)
+    g2 = GraphViz.Graph(d1.est_g_dot_str)
+    g3 = GraphViz.Graph(fci_oracle_dot_str)
+    g4 = GraphViz.Graph(fci_gauss_dot_str)
+    f = Figure(resolution=default_figure_resolution)
+    ax = Axis(f[1, 1]; aspect=DataAspect(), title="True (generational) DAG")
+    CairoMakie.image!(rotr90(create_png_image(g1)))
+    hidedecorations!(ax)
+    hidespines!(ax)
+    ax = Axis(f[1, 2]; aspect=DataAspect(), title="PC estimated DAG")
+    CairoMakie.image!(rotr90(create_png_image(g2)))
+    hidedecorations!(ax)
+    hidespines!(ax)
+    ax = Axis(f[2, 1]; aspect=DataAspect(), title="FCI oracle estimated DAG")
+    CairoMakie.image!(rotr90(create_png_image(g3)))
+    hidedecorations!(ax)
+    hidespines!(ax)
+    ax = Axis(f[2, 2]; aspect=DataAspect(), title="FCI gauss estimated DAG")
+    CairoMakie.image!(rotr90(create_png_image(g4)))
+    hidedecorations!(ax)
+    hidespines!(ax)
+    f
+end
 
 # ╔═╡ Cell order:
 # ╟─ad08dd09-222a-4071-92d4-38deebaf2e82
@@ -214,3 +248,6 @@ See also the references and examples in [CausalInference.jl](https://mschauer.gi
 # ╠═8cfe323f-e48f-4705-be8a-cbb3669498d9
 # ╠═5f5f504d-0209-439b-b076-616924ce93d7
 # ╟─8b8404ca-4bc7-4006-a456-aade8e12c0b4
+# ╠═53022a21-f9de-4ae4-8e87-1a2e88c0ebef
+# ╠═490f0730-c8b7-49f9-a48c-fd3929f4ae78
+# ╠═9b5fabdd-f36c-49b1-8409-88643f273647

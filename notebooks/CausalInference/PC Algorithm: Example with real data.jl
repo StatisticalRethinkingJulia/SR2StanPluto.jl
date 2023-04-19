@@ -1,14 +1,11 @@
 ### A Pluto.jl notebook ###
-# v0.19.22
+# v0.19.25
 
 using Markdown
 using InteractiveUtils
 
 # ╔═╡ 7d47667f-b0ea-43a1-8a20-6b2d512119eb
 using Pkg
-
-# ╔═╡ 8f5be6ca-2178-4b18-9ad5-eb254a32d189
-#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ 374cd6e5-1179-4edd-bf4d-917bb288582a
 begin
@@ -35,6 +32,9 @@ html"""
 </style>
 """
 
+
+# ╔═╡ 8f5be6ca-2178-4b18-9ad5-eb254a32d189
+#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ e67600f8-9038-4ae0-b5e6-a9bc3733d1c0
 url = "https://www.ccd.pitt.edu/wp-content/uploads/files/Retention.txt";
@@ -65,13 +65,50 @@ begin
 end 
 
 # ╔═╡ f39b4739-7b63-43dc-bc2b-b65a173be1d5
-d1 = create_dag("d1", df; g_dot_repr=d1_str);
+d1 = create_dag("d1", df; g_dot_str=d1_str);
 
 # ╔═╡ bb626a9b-4d1c-44d1-8c6a-6581bca4e28e
 names(df)
 
 # ╔═╡ 6f457c4f-dbc5-4ac3-89d0-2a9c4c912fe4
 gvplot(d1)
+
+# ╔═╡ 778b51fd-7b62-4111-98e6-c71793e7258d
+g = pcalg(df, 0.25, gausscitest)
+
+# ╔═╡ 9911fe47-b61c-4ffc-a5d3-caa09d201911
+g_oracle = fcialg(8, dseporacle, d1.g)
+
+# ╔═╡ 0ee6e245-1afe-48c2-b3ca-09e27bb98118
+g_gauss = fcialg(df, 0.05, gausscitest)
+
+# ╔═╡ 25abc967-483c-4716-836d-9a3dae7e13a1
+let
+    fci_oracle_dot_str = to_gv(g_oracle, d1.vars)
+    fci_gauss_dot_str = to_gv(g_gauss, d1.vars)
+    g1 = GraphViz.Graph(d1.g_dot_str)
+    g2 = GraphViz.Graph(d1.est_g_dot_str)
+    g3 = GraphViz.Graph(fci_oracle_dot_str)
+    g4 = GraphViz.Graph(fci_gauss_dot_str)
+    f = Figure(resolution=default_figure_resolution)
+    ax = Axis(f[1, 1]; aspect=DataAspect(), title="True (generational) DAG")
+    CairoMakie.image!(rotr90(create_png_image(g1)))
+    hidedecorations!(ax)
+    hidespines!(ax)
+    ax = Axis(f[1, 2]; aspect=DataAspect(), title="PC estimated DAG")
+    CairoMakie.image!(rotr90(create_png_image(g2)))
+    hidedecorations!(ax)
+    hidespines!(ax)
+    ax = Axis(f[2, 1]; aspect=DataAspect(), title="FCI oracle estimated DAG")
+    CairoMakie.image!(rotr90(create_png_image(g3)))
+    hidedecorations!(ax)
+    hidespines!(ax)
+    ax = Axis(f[2, 2]; aspect=DataAspect(), title="FCI gauss estimated DAG")
+    CairoMakie.image!(rotr90(create_png_image(g4)))
+    hidedecorations!(ax)
+    hidespines!(ax)
+    f
+end
 
 # ╔═╡ Cell order:
 # ╟─94e13475-839a-4034-b7ce-5562eef89b97
@@ -86,3 +123,7 @@ gvplot(d1)
 # ╠═f39b4739-7b63-43dc-bc2b-b65a173be1d5
 # ╠═bb626a9b-4d1c-44d1-8c6a-6581bca4e28e
 # ╠═6f457c4f-dbc5-4ac3-89d0-2a9c4c912fe4
+# ╠═778b51fd-7b62-4111-98e6-c71793e7258d
+# ╠═9911fe47-b61c-4ffc-a5d3-caa09d201911
+# ╠═0ee6e245-1afe-48c2-b3ca-09e27bb98118
+# ╠═25abc967-483c-4716-836d-9a3dae7e13a1

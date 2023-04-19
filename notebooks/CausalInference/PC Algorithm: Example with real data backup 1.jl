@@ -4,951 +4,100 @@
 using Markdown
 using InteractiveUtils
 
-# ╔═╡ 16ddb41a-fc59-11ea-1631-153e3466c75c
+# ╔═╡ 7d47667f-b0ea-43a1-8a20-6b2d512119eb
 using Pkg
 
-# ╔═╡ d65dd2b2-fc58-11ea-2300-4db47ec9a789
+# ╔═╡ 374cd6e5-1179-4edd-bf4d-917bb288582a
 begin
-	# Notebook specific
-	using GLM
-	
-	# Graphics related
-	using CairoMakie
-	using LaTeXStrings
-
-	# Causal inference support
+	using HTTP, CSV, DataFrames
 	using CausalInference
-
-	# DAG graphics support
+	using CairoMakie
 	using GraphViz
-
-	# Stan specific
-	using StanQuap
 	using StanSample
-	
-	# Project support libraries
-	using StatisticalRethinking: sr_datadir, PRECIS
 	using RegressionAndOtherStories
 end
 
-# ╔═╡ 645d4df3-af64-489b-b2b0-e710d8917680
-md" ## 5.1 - Spurious associations."
+# ╔═╡ 94e13475-839a-4034-b7ce-5562eef89b97
+md" ### PC Algorithm: Example with real data"
 
-# ╔═╡ e875dcfc-fc57-11ea-27e5-c56f1f9d5370
-md"### Julia code snippet 5.1"
-
-# ╔═╡ 234d835c-b651-4b16-9f2e-986eda90a1a8
-md"##### Set page layout for notebook."
-
-# ╔═╡ fbc882d4-18b0-4f08-a1b1-ec4c4f78635d
+# ╔═╡ 19e075c6-4f62-4d31-be28-142dc7300060
 html"""
 <style>
 	main {
 		margin: 0 auto;
 		max-width: 3500px;
-    	padding-left: max(5px, 3%);
-    	padding-right: max(5px, 36%);
+    	padding-left: max(5px, 5%);
+    	padding-right: max(5px, 5%);
 	}
 </style>
 """
 
-# ╔═╡ 2e717b02-0290-49e3-9f67-70f73d760b10
+
+# ╔═╡ 8f5be6ca-2178-4b18-9ad5-eb254a32d189
 #Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
-# ╔═╡ d65e98dc-fc58-11ea-25e1-9fab97b6125a
+# ╔═╡ e67600f8-9038-4ae0-b5e6-a9bc3733d1c0
+url = "https://www.ccd.pitt.edu/wp-content/uploads/files/Retention.txt";
+
+# ╔═╡ 68acd782-c4ae-4c84-ab78-a2dcdbf84898
 begin
-	waffles = CSV.read(sr_datadir("WaffleDivorce.csv"), DataFrame; delim=';');
-	scale_df_cols!(waffles, [:Marriage, :MedianAgeMarriage, :Divorce])
-	waffles.Whpm = waffles.WaffleHouses./waffles.Population
-	waffles[:, [:Loc, :Population, :Marriage, :MedianAgeMarriage, :Divorce, :Divorce_s]]
+	dfi = DataFrame(CSV.File(HTTP.get(url).body))
+	dfi[1:3, :]
 end
 
-# ╔═╡ a7698084-37d1-4677-89ff-183908a33fbe
-describe(waffles)
-
-# ╔═╡ 39f32370-ef8f-4918-9412-e4d8b6e8db38
-stan5_0 = "
-	data {
-		int < lower = 1 > N; // Sample size
-		vector[N] W; // Predictor WaffleHouse per million
-		vector[N] D; // Outcome Divirce rate
-	}
-
-	parameters {
-		real a; // Intercept
-		real bW; // Slope (regression coefficients)
-		real < lower = 0 > sigma; 
-	}
-
-	model {
-		vector[N] mu;               // mu is a vector
-		mu = a + bW * W;
-		a ~ normal(0, 5);         // Priors
-		bW ~ normal(0, 5);
-		sigma ~ exponential(1);
-		D ~ normal(mu, sigma);
-	}
-";
-
-# ╔═╡ cb260a55-1eea-4d4a-930e-547820e2bac6
-let
-	global m5_0s = SampleModel("m5.0s", stan5_0)
-	data = Dict("N" => size(waffles, 1), "D" => waffles.Divorce, "W" => waffles.Whpm)
-	global rc5_0s = stan_sample(m5_0s; data)
-	success(rc5_0s) && describe(m5_0s, [:a, :bW, :sigma])
-end
-
-# ╔═╡ 63fbfe5a-5c5e-4dc8-aeca-742f017f105b
-if success(rc5_0s)
-	post5_0s_df = read_samples(m5_0s, :dataframe)
-	ms5_0s = model_summary(post5_0s_df, [:a, :bW, :sigma])
-end
-
-
-# ╔═╡ 8cdea9c8-7793-4bac-b77b-04b08898fc71
-post5_0s_df
-
-# ╔═╡ b26424bf-d206-4fb1-a2ab-222a8ffb80c7
-md"### Julia code snippet 5.2"
-
-# ╔═╡ cb454809-0dd7-4e79-adc6-7a2793090964
-let
-	f = Figure(resolution=default_figure_resolution)
-	ax = Axis(f[1, 1]; xlabel="WaffleHouses per million", ylabel="Divorce rate", title="Figure 5.1")
-	x_range = 0:0.1:50
-	lines!(x_range, ms5_0s[:a, :mean] .+ ms5_0s[:bW, :mean] .* x_range)
-	res = link(post5_0s_df, (r, x) -> r.a + r.bW * x, x_range)
-	res = hcat(res...)
-	m, l, u = estimparam(res)
-	band!(x_range, l, u; color=(:grey, 0.3))
-	scatter!(waffles.Whpm, waffles.Divorce)
-	for state in ["AR", "AL", "GA", "SC", "ME", "NJ"]
-		for row in eachrow(waffles[waffles.Loc .== state, : ])
-			xpos = row.WaffleHouses/row.Population
-			annotations!(row.Loc; position=(row.Whpm + 0.4, row.Divorce))
-		end
-	end
-	f
-end
-
-# ╔═╡ 238a10f2-3b78-44f5-a727-5839320ce443
-waffles[waffles.Loc .== ["GA"], :]
-
-# ╔═╡ d66f515e-fc58-11ea-3fae-cbb82f1a1a6a
-stan5_1_1 = "
-	data {
-	 int < lower = 1 > N; // Sample size
-	 vector[N] A; // Predictor
-	}
-
-	parameters {
-	 real a; // Intercept
-	 real bA; // Slope (regression coefficients)
-	 real < lower = 0 > sigma;    // Error SD
-	}
-
-	model {
-	  vector[N] mu;               // mu is a vector
-	  mu = a + bA * A;
-	  a ~ normal(0, 0.2);         // Priors
-	  bA ~ normal(0, 0.5);
-	  sigma ~ exponential(1);
-	}
-";
-
-# ╔═╡ f4602d4a-fc59-11ea-0d9d-9f58c73c119f
-md"### Julia code snippet 5.3-4"
-
-# ╔═╡ d670aefa-fc58-11ea-1c56-4bfb66e1cab2
-md"## Define the SampleModel, etc."
-
-# ╔═╡ d67e0602-fc58-11ea-3a27-31d03e1c2318
-let
-	global m5_1_1s = SampleModel("m5.1.1s", stan5_1_1)
-	data = Dict("N" => size(waffles, 1), "A" => waffles.MedianAgeMarriage_s)
-	global rc5_1_1s = stan_sample(m5_1_1s; data)
-	success(rc5_1_1s) && describe(m5_1_1s, [:a, :bA, :sigma])
-end
-
-# ╔═╡ a4a9351a-01c6-11eb-28d0-71f8fb243719
-if success(rc5_1_1s)
-	priors5_1_1s_df = read_samples(m5_1_1s, :dataframe)
-	ms5_1_1s = model_summary(priors5_1_1s_df, [:a, :bA, :sigma])
-end
-
-# ╔═╡ 12fedbca-fc5a-11ea-2d4d-1d5ac93ac4fa
-md"### Julia code snippet 5.5"
-
-# ╔═╡ 45b2b002-01c6-11eb-3f86-3f9586afcc8b
-md"##### Plot priors of the intercept (`:a`) and the slope (`:bA`)."
-
-# ╔═╡ 7f433052-5f29-491d-960d-480bcb836571
-let
-	xi = -3.0:0.1:3.0
-
-	f = Figure(resolution=default_figure_resolution)
-	ax = Axis(f[1, 1]; xlabel="Medium age marriage (scaled)", ylabel="Divorce rate (scaled)",
-		title="Showing 50 regression lines")
-
-	for i in 1:50
-		local yi = mean(priors5_1_1s_df[i, :a]) .+ priors5_1_1s_df[i, :bA] .* xi
-		lines!(xi, yi, color=:lightgrey)
-	end
-	scatter!(waffles[:, :MedianAgeMarriage_s], waffles[!, :Divorce_s], color=:darkblue)
-
-	f
-end
-
-# ╔═╡ 6fc7763b-3d96-44cb-ab90-303e3ba828e8
-stan5_1 = "
-	data {
-	 int < lower = 1 > N; // Sample size
-	 vector[N] D; // Outcome
-	 vector[N] A; // Predictor
-	}
-
-	parameters {
-	 real a; // Intercept
-	 real bA; // Slope (regression coefficients)
-	 real < lower = 0 > sigma;    // Error SD
-	}
-
-	model {
-	  vector[N] mu;               // mu is a vector
-	  a ~ normal(0, 0.2);         // Priors
-	  bA ~ normal(0, 0.5);
-	  sigma ~ exponential(1);
-	  mu = a + bA * A;
-	  D ~ normal(mu , sigma);   // Likelihood
-	}
-";
-
-# ╔═╡ 81d7ce22-15af-4c3e-a361-49b191f8d63d
-let
-	global m5_1s = SampleModel("m5.1s", stan5_1)
-	data = Dict("N" => size(waffles, 1), "D" => waffles.Divorce_s, "A" => waffles.MedianAgeMarriage_s)
-	global rc5_1s = stan_sample(m5_1s; data)
-	success(rc5_1s) && describe(m5_1s, [:a, :bA, :sigma])
-end
-
-# ╔═╡ 59a4d93b-90e3-4bc3-8e75-4a7b04b85b67
-if success(rc5_1s)
-	post5_1s_df = read_samples(m5_1s, :dataframe)
-	ms5_1s = model_summary(post5_1s_df, [:a, :bA, :sigma])
-end
-
-# ╔═╡ 5567d466-e4da-4e9a-b4b2-b77b2700e51b
-let
-	xi = -3.0:0.1:3.0
-
-	f = Figure(resolution=default_figure_resolution)
-	ax = Axis(f[1, 1]; xlabel="Medium age marriage (scaled)", ylabel="Divorce rate (scaled)",
-		title="Showing 50 regression lines")
-
-	for i in 1:50
-		local yi = mean(post5_1s_df[i, :a]) .+ post5_1s_df[i, :bA] .* xi
-		lines!(xi, yi, color=:lightgrey)
-	end
-	scatter!(waffles[:, :MedianAgeMarriage_s], waffles[!, :Divorce_s], color=:darkblue)
-
-	f
-end
-
-# ╔═╡ d69533ba-fc58-11ea-3378-e512a1d55d27
-md"### Julia code snippet 5.6"
-
-# ╔═╡ ee264ad3-947d-4cd7-975e-e0fea7d6b1d4
-stan5_2 = "
-	data {
-	 int < lower = 1 > N; // Sample size
-	 vector[N] D; // Outcome (Divorce rate standardized)
-	 vector[N] M; // Predictor (Marriage rate standardized)
-	}
-
-	parameters {
-	 real a; // Intercept
-	 real bM; // Slope (regression coefficients)
-	 real < lower = 0 > sigma;    // Error SD
-	}
-
-	model {
-	  vector[N] mu;               // mu is a vector
-	  a ~ normal(0, 0.2);         // Priors
-	  bM ~ normal(0, 0.5);
-	  sigma ~ exponential(1);
-	  mu = a + bM * M;
-	  D ~ normal(mu , sigma);   // Likelihood
-	}
-";
-
-# ╔═╡ cecfbf01-7997-49cc-bb67-75eb611f2cf9
-let
-	global m5_2s = SampleModel("m5.2s", stan5_2)
-	data = Dict("N" => size(waffles, 1), "D" => waffles.Divorce_s, "M" => waffles.Marriage_s)
-	global rc5_2s = stan_sample(m5_2s; data)
-	success(rc5_2s) && describe(m5_2s, [:a, :bM, :sigma])
-end
-
-# ╔═╡ 7eb5f4bb-345a-42da-b2d6-e5407af2a663
-if success(rc5_2s)
-	post5_2s_df = read_samples(m5_2s, :dataframe)
-	ms5_2s = model_summary(post5_2s_df, [:a, :bM, :sigma])
-end
-
-# ╔═╡ 62254c66-5a5a-44de-a635-a5044262aeeb
-let
-	xi = -2.0:0.1:3.0
-
-	f = Figure(resolution=default_figure_resolution)
-
-	# Rescale axis
-	scale_factor_x = [mu * std(waffles.Marriage) + mean(waffles.Marriage) for mu in -2:2:2]
-	xtick_labels = string.(round.(scale_factor_x, digits=2))
-	scale_factor_y = [mu * std(waffles.Divorce) + mean(waffles.Divorce) for mu in -2:1:2]
-	ytick_labels = string.(round.(scale_factor_y, digits=2))
-
-	ax = Axis(f[1, 1]; xlabel="Marriage rate (scaled)", ylabel="Divorce rate (scaled)",
-		title="Showing 50 regression lines",
-		xticks=(-2:2:2, xtick_labels), 
-		yticks=(-2:1:2, ytick_labels))
-	
-	for i in 1:50
-		local yi = post5_2s_df[i, :a] .+ post5_2s_df[i, :bM] .* xi
-		lines!(xi, yi, color=:lightgrey)
-	end
-	lines!(xi, ms5_2s[:a, :mean] .+ ms5_2s[:bM, :mean] .* xi; color=:darkred)
-	scatter!(waffles[:, :Marriage_s], waffles[!, :Divorce_s], color=:darkblue)
-
-	xi = -2.5:0.1:3.0
-
-	# Rescale axis
-	scale_factor_x = [mu * std(waffles.MedianAgeMarriage) + mean(waffles.MedianAgeMarriage) for mu in -2:2:2]
-	xtick_labels = string.(round.(scale_factor_x, digits=2))
-	scale_factor_y = [mu * std(waffles.Divorce) + mean(waffles.Divorce) for mu in -2:1:2]
-	ytick_labels = string.(round.(scale_factor_y, digits=2))
-	
-	ax = Axis(f[1, 2]; xlabel="Medium age marriage (scaled)", ylabel="Divorce rate (scaled)",
-		title="Showing 50 regression lines",
-		xticks=(-2:2:2, xtick_labels), 
-		yticks=(-2:1:2, ytick_labels))
-
-
-	for i in 1:50
-		local yi = mean(post5_1s_df[i, :a]) .+ post5_1s_df[i, :bA] .* xi
-		lines!(xi, yi, color=:lightgrey)
-	end
-	lines!(xi, ms5_1s[:a, :mean] .+ ms5_1s[:bA, :mean] .* xi; color=:darkred)
-	scatter!(waffles[:, :MedianAgeMarriage_s], waffles[!, :Divorce_s], color=:darkblue)
-
-	f
-end
-
-# ╔═╡ d6c14359-d723-4dd9-b9a5-fc7b68157be3
-md"### Julia code snippet 5.7"
-
-# ╔═╡ 694ca34c-ebf8-4e5e-bd11-8821a9116e33
-md" ### Using CausalInference.jl and Graphiz.jl"
-
-# ╔═╡ 65dab224-d3d7-4c46-95b2-f23f4971a1bc
-let
-	A = waffles.MedianAgeMarriage_s
-	M = waffles.Marriage_s
-	D = waffles.Divorce_s
-	global p = 0.01
-	global X = [A M D]
-	global dfAMD = DataFrame(A=A, M=M, D=D)
-end;
-
-# ╔═╡ f7c5c5c7-85d4-4e09-b025-31109e451577
+# ╔═╡ 8a705939-bb5c-4ddf-990d-f2cc251216f1
 begin
-	dag_1_edges = "DiGraph DAG_1 {A -> M; M -> D; A -> D;}"
-	dag_1 = create_dag("DAG_1", dfAMD; g_dot_str=dag_1_edges)
-	gvplot(dag_1)
+	df = DataFrame(ss=dfi[:, 1], gr=dfi[:, 2], scs=dfi[:, 3], rr=dfi[:, 4], ts=dfi[:, 5],
+		sar=dfi[:, 6], str=dfi[:, 7], fs=dfi[:, 8])
+	df[1:3, :]
 end
 
-# ╔═╡ bfdab5a8-37a6-4af2-9645-99f8e0d8edd5
-dag_1.g.fadjlist
-
-# ╔═╡ aa2238cd-3d62-467e-a19b-84ab6f1561ea
-dag_1.est_g.fadjlist
-
-# ╔═╡ 5c87da91-ee1f-4d74-827b-efe107f25862
-md" ##### Check d-separation between A, M and D"
-
-# ╔═╡ ab5933f6-43d1-4fb0-9860-3a352bbb251e
-dsep(dag_1, :A, :M; verbose=true)
-
-# ╔═╡ 6c44b0cb-14ed-4c12-b173-f96212f10683
-dsep(dag_1, :A, :M, [:D])
-
-# ╔═╡ 1ce3080e-c5c8-472b-a29d-eda3fc0dce99
-dsep(dag_1, :A, :D, [:M])
-
-# ╔═╡ 0c0ba8f0-efc5-4f22-b2d5-41ba4125d221
-dsep(dag_1, :M, :D, [:A]; verbose=true)
-
-# ╔═╡ 66104ae9-eae1-4f42-b38f-6b562e1c152f
+# ╔═╡ d21e246a-c503-11ed-357e-eb369f06d0bf
 begin
-	dag_2_edges = "DiGraph DAG_2 {A -> M; A -> D;}"
-	dag_2 = create_dag("DAG_2", dfAMD; g_dot_str=dag_2_edges)
-	gvplot(dag_2)
-end
-
-# ╔═╡ ad9edb34-64de-4ae7-aba6-6333421ac1bc
-md" ##### Check d-separation between M and D in DAG_2."
-
-# ╔═╡ 61dcc961-398f-4f95-bffb-4d51f9ea8fc6
-dsep(dag_2, :D, :M, Symbol[], verbose=true)
-
-# ╔═╡ 11e64b3b-1bb4-48dc-b0de-6a66f8e59ae5
-dsep(dag_2, :A, :M, [:D]; verbose=true)
-
-# ╔═╡ 24aa10d0-c938-4834-8cbd-689ed1ca2cbe
-md" ###### Check d-separation between M and D conditioned on A"
-
-# ╔═╡ 2eb20607-232f-4a28-a21d-80e5c348ee1c
-dsep(dag_2, :M, :D, [:A]; verbose=true)
-
-# ╔═╡ 1a100134-2c6d-46f0-8ae3-2064393da8ab
-md" #### Use WaffleHouses data"
-
-# ╔═╡ e17691c6-655e-4275-ad64-9f9f95cd0d00
-dag_1.covm
-
-# ╔═╡ 2f77ef28-44fd-4ca2-9fbb-c7009131b0e9
-@time est_g = pcalg(dfAMD, 0.01, gausscitest)
-
-# ╔═╡ 46f7f849-f8f4-4465-821d-35f26c0e41b7
-est_g
-
-# ╔═╡ 29bb4c65-f91b-44e2-9ad9-10b087083285
-est_g.fadjlist
-
-# ╔═╡ a2a742d8-a46c-43e0-9cd3-1ce5a49a0ad9
-est_g_edges = [(:A, :M), (:A, :D), (:M, :A), (:D, :A)];
-
-# ╔═╡ 753f5b10-17ea-4e32-9f52-ff174321bcd6
-md" ### Julia code snippet 5.10"
-
-# ╔═╡ 95849e5c-aa0f-4d6f-b618-51e8959496a8
-stan5_3 = "
-data {
-  int N;
-  vector[N] D;
-  vector[N] M;
-  vector[N] A;
-}
-parameters {
-  real a;
-  real bA;
-  real bM;
-  real<lower=0> sigma;
-}
-model {
-  vector[N] mu = a + + bA * A + bM * M;
-  a ~ normal( 0 , 0.2 );
-  bA ~ normal( 0 , 0.5 );
-  bM ~ normal( 0 , 0.5 );
-  sigma ~ exponential( 1 );
-  D ~ normal( mu , sigma );
-}
-";
-
-# ╔═╡ 7fb18290-fde1-418b-8908-a8dbcc1a695b
-let
-	global m5_3s = SampleModel("m5.3s", stan5_3)
-	data = (N=size(waffles, 1), M=waffles.Marriage_s, A=waffles.MedianAgeMarriage_s, D=waffles.Divorce_s)
-	global rc5_3s = stan_sample(m5_3s; data)
-	success(rc5_3s) && describe(m5_3s, [:a, :bM, :bA, :sigma])
-end
-
-# ╔═╡ f8cfbdd8-eb5e-421f-8996-afac58117146
-if success(rc5_3s)
-	post5_3s_df = read_samples(m5_3s, :dataframe)
-	ms5_3s = model_summary(post5_3s_df, [:a, :bA, :bM, :sigma])
-end
-
-# ╔═╡ fe796c94-83ba-4b08-a873-099283dfbb15
-md"### Julia code snippet 5.11"
-
-# ╔═╡ a8d4342d-eb5a-4627-9c0b-19bb1c56bcc5
-md"
-!!! note
-Once we know median age at marriage (A) for a State, there is limited or no additional predictive power in also knowing the rate of marriage (M) in that State. See above result for `dsep(g2, 2, 3, [1])`.
-"
-
-# ╔═╡ b36f2e78-2231-408b-844c-c4e237bae57d
-if success(rc5_1s) && success(rc5_2s) && success(rc5_3s) 
-	(s1, f1) = plot_model_coef([m5_1s, m5_2s, m5_3s], [:bA, :bM, :sigma]; 
-		title="Comparison of coefficient bA and bM locations and ranges for models m5_1s, m5_2s and m5_3s.")
-	f1
-end
-
-# ╔═╡ 6a2607b5-83a9-4331-a2c6-c16c62872669
-md"### Julia code snippet 5.12"
-
-# ╔═╡ 0d74cfd6-429d-423c-b098-689e2a66c47c
-let
-	N = 50
-	age = rand(Normal(), N)
-	global sim5_12 = DataFrame(
-		age = age,
-		mar = [rand(Normal(-a, 1), 1)[1] for a in age],
-		div = [rand(Normal(a, 1), 1)[1] for a in age]
-	)
-end
-
-# ╔═╡ 59540d03-e0fe-46fd-864a-8c0c5014773f
-let
-	mar = [rand(Normal(s, 1), 1)[1] for s in sim5_12.age .+ sim5_12.mar]
-end
-
-# ╔═╡ c473ea08-a5b9-46b3-9acf-ae903879baca
-md" ### Julia code snippet 5.13"
-
-# ╔═╡ 8df14f30-96fd-4540-bb84-acf398a63706
-stan5_4 = "
-data {
-  int N;
-  vector[N] M;
-  vector[N] A;
-}
-parameters {
-  real a;
-  real bAM;
-  real<lower=0> sigma;
-}
-model {
-  vector[N] mu = a + bAM * A;
-  a ~ normal( 0 , 0.2 );
-  bAM ~ normal( 0 , 0.5 );
-  sigma ~ exponential( 1 );
-  M ~ normal( mu , sigma );
-}
-";
-
-# ╔═╡ 992d5d6e-f79a-479f-b88e-fcc068eb8dfb
-let
-	global m5_4s = SampleModel("m5.4s", stan5_4)
-	data = (N=size(waffles, 1), M=waffles.Marriage_s, A=waffles.MedianAgeMarriage_s)
-	global rc5_4s = stan_sample(m5_4s; data)
-	success(rc5_4s) && describe(m5_4s, [:a, :bAM, :sigma])
-end
-
-# ╔═╡ e131d3bd-c6fa-4be8-abc1-67efc71d33ec
-if success(rc5_4s)
-	post5_4s_df = read_samples(m5_4s, :dataframe)
-	ms5_4s = model_summary(post5_4s_df, [:a, :bAM, :sigma])
-end
-
-# ╔═╡ b85abe6e-8849-40ad-8e87-5a7c5d5dc78a
-stan5_5 = "
-data {
-  int N;
-  vector[N] M;
-  vector[N] A;
-}
-parameters {
-  real a;
-  real bMA;
-  real<lower=0> sigma;
-}
-model {
-  vector[N] mu = a + bMA * M;
-  a ~ normal( 0 , 0.2 );
-  bMA ~ normal( 0 , 0.5 );
-  sigma ~ exponential( 1 );
-  A ~ normal( mu , sigma );
-}
-";
-
-# ╔═╡ 2ca01ad9-862c-4b79-a876-6ea20a86a6af
-let
-	global m5_5s = SampleModel("m5.5s", stan5_5)
-	data = (N=size(waffles, 1), M=waffles.Marriage_s, A=waffles.MedianAgeMarriage_s)
-	global rc5_5s = stan_sample(m5_5s; data)
-	success(rc5_5s) && describe(m5_5s, [:a, :bMA, :sigma])
-end
-
-# ╔═╡ 4bef1e16-fe09-40af-a2a4-312e8c4f0dd6
-if success(rc5_5s)
-	post5_5s_df = read_samples(m5_5s, :dataframe)
-	ms5_5s = model_summary(post5_5s_df, [:a, :bMA, :sigma])
-end
-
-# ╔═╡ dff714c3-dad1-4e75-8731-dcdc30e7e01b
-md" ### Julia code snipper 5.14"
-
-# ╔═╡ 5dba7793-47a6-4eaf-9ee8-b865ef3583cc
-let
-	global res_df = DataFrame( L = waffles.Loc, D = waffles.Divorce_s,
-		M = waffles.Marriage_s, A = waffles.MedianAgeMarriage_s)
+	vars = names(df)
+	tups = [(1, 3), (3, 6), (2, 5), (5, 8), (6, 7), (7, 8), (1, 4), (2, 4), (4, 6), (4, 8)]
 	
-	mean_a1, mean_bAM, _ = ms5_4s[:, :mean]
-	res_df.preds1 = mean_a1 .+ mean_bAM .* res_df.A
-	res_df.AM_res = res_df.M .- res_df.preds1
-	
-	mean_a2, mean_bMA, _ = ms5_5s[:, :mean]
-	res_df.preds2 = mean_a2 .+ mean_bMA .* res_df.M
-	res_df.MA_res = res_df.A .- res_df.preds2
-	res_df
-end
-
-# ╔═╡ 2f7de9dc-1e67-41b3-80a1-4c3307c190ad
-stan5_5a = "
-data {
-  int N;
-  vector[N] M_res;
-  vector[N] D;
-}
-parameters {
-  real a;
-  real b;
-  real<lower=0> sigma;
-}
-model {
-  vector[N] mu = a + b * M_res;
-  a ~ normal( 0 , 0.2 );
-  b ~ normal( 0 , 0.5 );
-  sigma ~ exponential( 1 );
-  D ~ normal( mu , sigma );
-}
-";
-
-# ╔═╡ b5dae0aa-63fd-4904-9e9f-7c33274ece3b
-let
-	global m5_5as = SampleModel("m5.5as", stan5_5a)
-	data = (N=size(res_df, 1), M_res=res_df.AM_res, D=res_df.D)
-	global rc5_5as = stan_sample(m5_5as; data)
-	success(rc5_5as) && describe(m5_5as, [:a, :b, :sigma])
-end
-
-# ╔═╡ daa93aeb-2419-4bf9-80e9-d96d10eaed34
-if success(rc5_5as)
-	post5_5as_df = read_samples(m5_5as, :dataframe)
-	ms5_5as = model_summary(post5_5as_df, [:a, :b, :sigma])
-end
-
-# ╔═╡ 4f93cc6b-567b-4e9d-85bb-4cf7b11fbf0d
-stan5_5b = "
-data {
-  int N;
-  vector[N] MA_res;
-  vector[N] D;
-}
-parameters {
-  real a;
-  real b;
-  real<lower=0> sigma;
-}
-model {
-  vector[N] mu = a + b * MA_res;
-  a ~ normal( 0 , 0.2 );
-  b ~ normal( 0 , 0.5 );
-  sigma ~ exponential( 1 );
-  D ~ normal( mu , sigma );
-}
-";
-
-# ╔═╡ c8c72e7e-aa05-40be-a0f0-f0f8928a7197
-let
-	global m5_5bs = SampleModel("m5.5bs", stan5_5b)
-	data = (N=size(res_df, 1), MA_res=res_df.MA_res, D=res_df.D)
-	global rc5_5bs = stan_sample(m5_5bs; data)
-	success(rc5_5bs) && describe(m5_5bs, [:a, :b, :sigma])
-end
-
-# ╔═╡ 33c7351d-a175-4f8b-8ab5-c6b4535a538a
-if success(rc5_5bs)
-	post5_5bs_df = read_samples(m5_5bs, :dataframe)
-	ms5_5bs = model_summary(post5_5bs_df, [:a, :b, :sigma])
-end
-
-# ╔═╡ 611061ef-10f7-43cb-8af9-3227abf43c45
-let
-	x = -2.4:0.1:3
-	mean_a1, mean_bAM, mean_sigma = ms5_4s[:, :mean]
-	
-	f = Figure(resolution=default_figure_resolution)
-	ax = Axis(f[1, 1]; xlabel="Age at marriage (std)", ylabel="Marriage rate (std)",
-		title="Regression of M on A")
-	
-	preds = mean_a1 .+ mean_bAM .* x
-	lines!(x, preds)
-	
-	for i in 1:size(res_df, 1)
-		lines!([res_df.A[i], res_df.A[i]], 
-			[mean_a1 .+ mean_bAM .* res_df.A[i], res_df.M[i]]; color=:lightgrey)
+	d1_str = "DiGraph d1 {"
+	for t in tups
+		d1_str = d1_str * "$(vars[t[1]])->$(vars[t[2]]);"
 	end
-	scatter!(res_df.A, res_df.M; marker=:circle)
-	for state in ["ID", "ND", "ME", "HI", "WY", "DC"]
-		for row in eachrow(res_df[res_df.L .== state, : ])
-			annotations!(row.L; position=(row.A + 0.05, row.M - 0.5))
-		end
-	end
+	d1_str = d1_str * "}"
+end 
 
-	ax = Axis(f[2, 1]; xlabel="Age at marriage residuals", ylabel="Divorce rate (std)",
-		title="Regression of D on A residuals")
-	scatter!(res_df.AM_res, res_df.D)
-	for state in ["ID", "ND", "ME", "HI", "WY", "DC"]
-		for row in eachrow(res_df[res_df.L .== state, : ])
-			annotations!(row.L; position=(row.AM_res + 0.05, row.D - 0.1))
-		end
-	end
-	x_range = -2:0.1:2
-	lines!(x_range, ms5_5as[:a, :mean] .+ ms5_5as[:b, :mean] .* x_range)
-	res = link(post5_5as_df, (r, x) -> r.a + r.b * x, x_range)
-	res = hcat(res...)
-	m, l, u = estimparam(res)
-	band!(x_range, l, u; color=(:grey, 0.3))
+# ╔═╡ f39b4739-7b63-43dc-bc2b-b65a173be1d5
+d1 = create_dag("d1", df; g_dot_str=d1_str);
 
-		
-	mean_a2, mean_bMA, mean_sigma = ms5_5s[:, :mean]
-	ax = Axis(f[1, 2]; xlabel="Marriage rate (std)", ylabel="Age at marriage (std)",
-		title="Regression of A on M")
-	
-	preds = mean_a2 .+ mean_bMA .* x
-	lines!(x, preds)
-	
-	for i in 1:size(res_df, 1)
-		lines!([res_df.M[i], res_df.M[i]], 
-			[mean_a2 .+ mean_bMA .* res_df.M[i], res_df.A[i]]; color=:lightgrey)
-	end
-	scatter!(res_df.M, res_df.A; marker=:circle)
-	for state in ["ID", "ND", "ME", "HI", "WY", "DC"]
-		for row in eachrow(res_df[res_df.L .== state, : ])
-			annotations!(row.L; position=(row.M + 0.05, row.A - 0.5))
-		end
-	end
-	ax = Axis(f[2, 2]; xlabel="Marriage rate residuals", ylabel="Divorce rate (std)",
-		title="Regression of D on M residuals")
-	scatter!(res_df.MA_res, res_df.D)
-	for state in ["ID", "ND", "ME", "HI", "WY", "DC"]
-		for row in eachrow(res_df[res_df.L .== state, : ])
-			annotations!(row.L; position=(row.MA_res + 0.05, row.D - 0.5))
-		end
-	end
-	x_range = -2:0.1:3
-	lines!(x_range, ms5_5bs[:a, :mean] .+ ms5_5bs[:b, :mean] .* x_range)
-	res = link(post5_5bs_df, (r, x) -> r.a + r.b * x, x_range)
-	res = hcat(res...)
-	m, l, u = estimparam(res)
-	band!(x_range, l, u; color=(:grey, 0.3))
-	
-	f
-end
-	
+# ╔═╡ bb626a9b-4d1c-44d1-8c6a-6581bca4e28e
+names(df)
 
-# ╔═╡ 7cc2addc-77d4-4405-9867-3380f3c36d79
-md" ### Julia code snippet 5.15"
+# ╔═╡ 6f457c4f-dbc5-4ac3-89d0-2a9c4c912fe4
+gvplot(d1)
 
-# ╔═╡ 0a68e7e4-bf56-454c-9489-f704d56d374c
-begin
-	div_df = DataFrame( L = waffles.Loc, D = waffles.Divorce_s,
-		M = waffles.Marriage_s, A = waffles.MedianAgeMarriage_s)
-	res = link(post5_3s_df, (r, x) -> r.a + r.bA * div_df.A[x] + r.bM * div_df.M[x], 1:50)
-	res = hcat(res...)
-	m, l, u = estimparam(res)
-	div_df.m = m
-	div_df.l = l
-	div_df.u = u
-	div_df
-end
+# ╔═╡ 091cc5f9-85e6-4d6c-a692-c8801a04495f
 
-# ╔═╡ e9530376-06ac-4e85-8cd1-b8f9f9f6ec1b
-let
-	f = Figure(resolution=default_figure_resolution)
-	ax = Axis(f[1, 1]; xlabel="Observed values of D", ylabel="Predicted values of D",
-		title="Prediction of D by state")
-	scatter!(div_df.D, div_df.m)
-	for state in ["ID", "ND", "ME", "HI", "UT", "WY", "DC"]
-		for row in eachrow(div_df[div_df.L .== state, : ])
-			annotations!(row.L; position=(row.D + 0.03, row.m - 0.1))
-		end
-	end
-	for row in eachrow(div_df)
-		lines!([row.D, row.D], [row.l, row.u]; color=:grey)
-	end
-	
-	x = -2:0.1:2.1
-	lm_model = lm(@formula(m ~ D), div_df)
-	regr = lines!(x, coef(lm_model)[1] .+ coef(lm_model)[2] .* x)
-	pred = lines!(x, x; color=:darkred, linestyle=:dash)
-	
-	Legend(f[1, 2],
-	    [regr, pred],
-	    ["Predicted ~ observed values", "Prediction == observed values"])
-
-	f
-end
-
-# ╔═╡ da451143-cb64-4bc0-b8f9-8ff4614c521d
-md" ### Julia code snippet 5.19"
-
-# ╔═╡ d6e3deba-5c57-4b8b-bfa4-c81fccd2aa9c
-stan5_3_A = "
-data {
-  int N;
-  vector[N] D;
-  vector[N] M;
-  vector[N] A;
-}
-parameters {
-  real a;
-  real bA;
-  real bM;
-  real aM;
-  real bAM;
-  real<lower=0> sigma;
-  real<lower=0> sigma_M;
-}
-model {
-  // A -> D <- M
-  vector[N] mu = a + bA * A + bM * M;
-  a ~ normal( 0 , 0.2 );
-  bA ~ normal( 0 , 0.5 );
-  bM ~ normal( 0 , 0.5 );
-  sigma ~ exponential( 1 );
-  D ~ normal( mu , sigma );
-  // A -> M
-  vector[N] mu_M = aM + bAM * A;
-  aM ~ normal( 0 , 0.2 );
-  bAM ~ normal( 0 , 0.5 );
-  sigma_M ~ exponential( 1 );
-  M ~ normal( mu_M , sigma_M );
-}
-";
-
-# ╔═╡ 68ea52fe-c06a-49bc-bede-b68bf4af2e86
-begin
-	data = (N = size(dfAMD, 1), D = waffles.Divorce_s, M = waffles.Marriage_s,
-		A = waffles.MedianAgeMarriage_s)
-	global m5_3_As = SampleModel("m5.3_A", stan5_3_A)
-	global rc5_3_As = stan_sample(m5_3_As; data)
-	success(rc5_3_As) && describe(m5_3_As, [:a, :bA, :bM, :sigma, :aM, :bAM, :sigma_M])
-end
-
-# ╔═╡ 0005da9e-5b05-4bf4-9597-d94dcdb38956
-if success(rc5_3_As)
-	post5_3_As_df = read_samples(m5_3_As, :dataframe)
-	ms5_3_As = model_summary(post5_3_As_df, [:a, :bA, :bM, :sigma, :aM, :bAM, :sigma_M])
-end
-
-# ╔═╡ e4aea49a-6f03-47fd-a260-dbb2c9f02aee
-function simulate2(df, coefs, var_seq, coefs_ext)
-  m_sim = simulate2(df, coefs, var_seq)
-  d_sim = zeros(size(df, 1), length(var_seq));
-  for j in 1:size(df, 1)
-    for i in 1:length(var_seq)
-      d = Normal(df[j, coefs[1]] + df[j, coefs[2]] * var_seq[i] +
-        df[j, coefs_ext[1]] * m_sim[j, i], df[j, coefs_ext[2]])
-      d_sim[j, i] = rand(d)
-    end
-  end
-  (m_sim, d_sim)
-end
-
-# ╔═╡ 2f499cb2-cdec-4814-a379-a5d7ce1bf115
-function simulate2(df, coefs, var_seq)
-  m_sim = zeros(size(df, 1), length(var_seq));
-  for j in 1:size(df, 1)
-    for i in 1:length(var_seq)
-      d = Normal(df[j, coefs[1]] + df[j, coefs[2]] * var_seq[i], df[j, coefs[3]])
-      m_sim[j, i] = rand(d)
-    end
-  end
-  m_sim
-end
-
-
-# ╔═╡ c98dbd9b-9b38-446a-8da9-a7d69ea29956
-md"### Julia code snippet 5.22"
-
-# ╔═╡ 2a353988-ea2c-4d82-8ec7-2c7f0c843f19
-a_seq = range(-2, stop=2, length=100);
-
-# ╔═╡ 33242df0-b647-4974-9cac-b5692ce8100e
-md"### Julia code snippet 5.23"
-
-# ╔═╡ 42f32805-f566-4531-9cd8-b35dc2a3c876
-m_sim, d_sim = simulate(post5_3_As_df, [:aM, :bAM, :sigma_M], a_seq, [:bM, :sigma]);
-
-# ╔═╡ 4a75c36f-3a7f-4d74-9253-6717789d82d6
-md" ### Julia code snippet 5.24"
-
-# ╔═╡ 8c14e485-7a51-4f47-b787-ed6675d80d53
-let
-	f = Figure(resulution=default_figure_resolution)
-	ax = Axis(f[1, 1]; xlabel="Manipulated A", ylabel="Counterfactual D",
-		title="Total counterfactual effect of A on D")
-	m, l, u = estimparam(d_sim)
-	lines!(a_seq, m)
-	band!(a_seq, l, u; color=(:grey, 0.3))
-
-	ax = Axis(f[1, 2]; xlabel="Manipulated A", ylabel="Counterfactual M",
-		title="Counterfactual effect of A on M")
-	m, l, u = estimparam(m_sim)
-	lines!(a_seq, m)
-	band!(a_seq, l, u; color=(:grey, 0.3))
-	
-	f
-end
-
-# ╔═╡ 69c6e338-4450-458b-91a6-eeb08f91cb54
-md"##### M -> D"
-
-# ╔═╡ 44ef03ae-e9fa-4de6-a669-b7b5b46b0346
-let
-	m_seq = range(-2, stop=2, length=100)
-
-	f = Figure(resolution=default_figure_resolution)
-	ax = Axis(f[1, 1]; xlabel="Manipulated A", ylabel="Counterfactual D",
-		title="Total counterfactual effect of A on D")
-	m, l, u = estimparam(d_sim)
-	lines!(a_seq, m)
-	band!(a_seq, l, u; color=(:grey, 0.3))
-	
-	md_sim = zeros(size(post5_3_As_df, 1), length(m_seq))
-	for j in 1:size(post5_3_As_df, 1)
-		for i in 1:length(m_seq)
-			d = Normal(post5_3_As_df[j, :a] + post5_3_As_df[j, :bM] * m_seq[i],
-				post5_3_As_df[j, :sigma])
-			md_sim[j, i] = rand(d, 1)[1]
-		end
-	end
-	ax = Axis(f[1, 2]; xlabel="Manipulated M", ylabel="Counterfactual D",
-		title="Counterfactual effect of M on D")
-	m, l, u = estimparam(md_sim)
-	lines!(a_seq, m)
-	band!(a_seq, l, u; color=(:grey, 0.3))
-
-	f
-end
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
+CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 CairoMakie = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
 CausalInference = "8e462317-f959-576b-b3c1-403f26cec956"
-GLM = "38e38edf-8417-5370-95a0-9cbb8c7f171a"
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 GraphViz = "f526b714-d49f-11e8-06ff-31ed36ee7ee0"
-LaTeXStrings = "b964fa9f-0449-5b57-a5c2-d3ea65f4040f"
+HTTP = "cd3eb016-35fb-5094-929b-558a96fad6f3"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 RegressionAndOtherStories = "21324389-b050-441a-ba7b-9a837781bda0"
-StanQuap = "e4723793-2808-4fc5-8a98-c57f4c160c53"
 StanSample = "c1514b29-d3a0-5178-b312-660c88baa699"
-StatisticalRethinking = "2d09df54-9d0f-5258-8220-54c2a3d4fbee"
 
 [compat]
+CSV = "~0.10.9"
 CairoMakie = "~0.10.4"
 CausalInference = "~0.9.0"
-GLM = "~1.8.2"
+DataFrames = "~1.5.0"
 GraphViz = "~0.2.0"
-LaTeXStrings = "~1.3.0"
-RegressionAndOtherStories = "~0.12.0"
-StanQuap = "~4.2.4"
+HTTP = "~1.7.4"
+RegressionAndOtherStories = "~0.11.0"
 StanSample = "~7.3.0"
-StatisticalRethinking = "~4.7.0"
 """
 
 # ╔═╡ 00000000-0000-0000-0000-000000000002
@@ -957,7 +106,7 @@ PLUTO_MANIFEST_TOML_CONTENTS = """
 
 julia_version = "1.10.0-DEV"
 manifest_format = "2.0"
-project_hash = "b700217cb7cf779ca717553caac5429cef101d54"
+project_hash = "74baa39eb237e5f64a90d4b65eade460ccc6ed6b"
 
 [[deps.ANSIColoredPrinters]]
 git-tree-sha1 = "574baf8110975760d391c710b6341da1afa48d8c"
@@ -973,12 +122,6 @@ weakdeps = ["ChainRulesCore"]
 
     [deps.AbstractFFTs.extensions]
     AbstractFFTsChainRulesCoreExt = "ChainRulesCore"
-
-[[deps.AbstractMCMC]]
-deps = ["BangBang", "ConsoleProgressMonitor", "Distributed", "LogDensityProblems", "Logging", "LoggingExtras", "ProgressLogging", "Random", "StatsBase", "TerminalLoggers", "Transducers"]
-git-tree-sha1 = "323799cab36200a01f5e9da3fecbd58329e2dd27"
-uuid = "80f14c24-f653-4e6a-9b94-39d6b0f70001"
-version = "4.4.0"
 
 [[deps.AbstractTrees]]
 git-tree-sha1 = "faa260e4cb5aba097a73fab382dd4b5819d8ec8c"
@@ -1001,11 +144,6 @@ git-tree-sha1 = "e81c509d2c8e49592413bfb0bb3b08150056c79d"
 uuid = "27a7e980-b3e6-11e9-2bcd-0b925532e340"
 version = "0.4.1"
 
-[[deps.ArgCheck]]
-git-tree-sha1 = "a3a402a35a2f7e0b87828ccabbd5ebfbebe356b4"
-uuid = "dce04be8-c92d-5529-be00-80e4d2c0e197"
-version = "2.3.0"
-
 [[deps.ArgTools]]
 uuid = "0dad84c5-d112-42e6-8d28-ef12dabb789f"
 version = "1.1.1"
@@ -1015,28 +153,6 @@ deps = ["LinearAlgebra", "Random", "StaticArrays"]
 git-tree-sha1 = "62e51b39331de8911e4a7ff6f5aaf38a5f4cc0ae"
 uuid = "ec485272-7323-5ecc-a04f-4719b315124d"
 version = "0.2.0"
-
-[[deps.ArrayInterface]]
-deps = ["Adapt", "LinearAlgebra", "Requires", "SnoopPrecompile", "SparseArrays", "SuiteSparse"]
-git-tree-sha1 = "38911c7737e123b28182d89027f4216cfc8a9da7"
-uuid = "4fba245c-0d91-5ea0-9b3e-6abc04ee57a9"
-version = "7.4.3"
-
-    [deps.ArrayInterface.extensions]
-    ArrayInterfaceBandedMatricesExt = "BandedMatrices"
-    ArrayInterfaceBlockBandedMatricesExt = "BlockBandedMatrices"
-    ArrayInterfaceCUDAExt = "CUDA"
-    ArrayInterfaceGPUArraysCoreExt = "GPUArraysCore"
-    ArrayInterfaceStaticArraysCoreExt = "StaticArraysCore"
-    ArrayInterfaceTrackerExt = "Tracker"
-
-    [deps.ArrayInterface.weakdeps]
-    BandedMatrices = "aae01518-5342-5314-be14-df237901396f"
-    BlockBandedMatrices = "ffab5731-97b5-5995-9138-79e8c1846df0"
-    CUDA = "052768ef-5323-5732-b1bb-66c8b64840ba"
-    GPUArraysCore = "46192b85-c4d5-4398-a991-12ede77f4527"
-    StaticArraysCore = "1e83bf80-4336-4d27-bf5d-d5a4f845583c"
-    Tracker = "9f7883ad-71c0-57eb-9f7f-b5c9e6d3789c"
 
 [[deps.Artifacts]]
 uuid = "56f22d72-fd6d-98f1-02f0-08ddc0907c33"
@@ -1059,25 +175,13 @@ git-tree-sha1 = "1dd4d9f5beebac0c03446918741b1a03dc5e5788"
 uuid = "39de3d68-74b9-583c-8d2d-e117c070f3a9"
 version = "0.4.6"
 
-[[deps.BangBang]]
-deps = ["Compat", "ConstructionBase", "Future", "InitialValues", "LinearAlgebra", "Requires", "Setfield", "Tables", "ZygoteRules"]
-git-tree-sha1 = "7fe6d92c4f281cf4ca6f2fba0ce7b299742da7ca"
-uuid = "198e06fe-97b7-11e9-32a5-e1d131e6ad66"
-version = "0.3.37"
-
 [[deps.Base64]]
 uuid = "2a0f44e3-6c83-55bd-87e4-b1978d98bd5f"
 
-[[deps.Baselet]]
-git-tree-sha1 = "aebf55e6d7795e02ca500a689d326ac979aaf89e"
-uuid = "9718e550-a3fa-408a-8086-8db961cd8217"
-version = "0.1.1"
-
-[[deps.BitTwiddlingConvenienceFunctions]]
-deps = ["Static"]
-git-tree-sha1 = "0c5f81f47bbbcf4aea7b2959135713459170798b"
-uuid = "62783981-4cbd-42fc-bca8-16325de8dc4b"
-version = "0.1.5"
+[[deps.BitFlags]]
+git-tree-sha1 = "43b1a4a8f797c1cddadf60499a8a077d4af2cd2d"
+uuid = "d1d4a3ce-64b1-5f1a-9ba4-7e7e69966f35"
+version = "0.1.7"
 
 [[deps.Bzip2_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -1089,12 +193,6 @@ version = "1.0.8+0"
 git-tree-sha1 = "eb4cb44a499229b3b8426dcfb5dd85333951ff90"
 uuid = "fa961155-64e5-5f13-b03f-caf6b980ea82"
 version = "0.4.2"
-
-[[deps.CPUSummary]]
-deps = ["CpuId", "IfElse", "Static"]
-git-tree-sha1 = "2c144ddb46b552f72d7eafe7cc2f50746e41ea21"
-uuid = "2a0fbf3d-bb9c-48f3-b0a9-814d99fd7ab9"
-version = "0.2.2"
 
 [[deps.CRC32c]]
 uuid = "8bf52ea8-c179-5cab-976a-9e18b702a9bc"
@@ -1197,12 +295,6 @@ git-tree-sha1 = "08c8b6831dc00bfea825826be0bc8336fc369860"
 uuid = "861a8166-3701-5b0c-9a16-15d98fcdc6aa"
 version = "1.0.2"
 
-[[deps.CommonSubexpressions]]
-deps = ["MacroTools", "Test"]
-git-tree-sha1 = "7b8a93dba8af7e3b42fecabf646260105ac373f7"
-uuid = "bbf7d656-a473-5ed7-a52c-81e309532950"
-version = "0.3.0"
-
 [[deps.Compat]]
 deps = ["UUIDs"]
 git-tree-sha1 = "7a60c856b9fa189eb34f5f8a6f6b5529b7942957"
@@ -1224,17 +316,6 @@ deps = ["Artifacts", "Libdl"]
 uuid = "e66e0078-7015-5450-92f7-15fbd957f2ae"
 version = "1.0.2+0"
 
-[[deps.CompositionsBase]]
-git-tree-sha1 = "455419f7e328a1a2493cabc6428d79e951349769"
-uuid = "a33af91c-f02d-484b-be07-31d278c5ca2b"
-version = "0.1.1"
-
-[[deps.ConsoleProgressMonitor]]
-deps = ["Logging", "ProgressMeter"]
-git-tree-sha1 = "3ab7b2136722890b9af903859afcf457fa3059e8"
-uuid = "88cd18e8-d9cc-4ea6-8889-5259c0d15c8b"
-version = "0.1.2"
-
 [[deps.ConstructionBase]]
 deps = ["LinearAlgebra"]
 git-tree-sha1 = "89a9db8d28102b094992472d333674bd1a83ce2a"
@@ -1250,12 +331,6 @@ weakdeps = ["IntervalSets", "StaticArrays"]
 git-tree-sha1 = "d05d9e7b7aedff4e5b51a029dced05cfb6125781"
 uuid = "d38c429a-6771-53c6-b99e-75d170b6e991"
 version = "0.6.2"
-
-[[deps.CpuId]]
-deps = ["Markdown"]
-git-tree-sha1 = "fcbb72b032692610bfbdb15018ac16a36cf2e406"
-uuid = "adafc99b-e345-5852-983c-f28acb93d879"
-version = "0.3.1"
 
 [[deps.Crayons]]
 git-tree-sha1 = "249fe38abf76d48563e2f4556bebd215aa317e15"
@@ -1288,28 +363,11 @@ version = "1.0.0"
 deps = ["Printf"]
 uuid = "ade2ca70-3891-5945-98fb-dc099432e06a"
 
-[[deps.DefineSingletons]]
-git-tree-sha1 = "0fba8b706d0178b4dc7fd44a96a92382c9065c2c"
-uuid = "244e2a9f-e319-4986-a169-4d1fe445cd52"
-version = "0.1.2"
-
 [[deps.DelimitedFiles]]
 deps = ["Mmap"]
 git-tree-sha1 = "9e2f36d3c96a820c678f2f1f1782582fcf685bae"
 uuid = "8bb1440f-4735-579b-a4ab-409b98df4dab"
 version = "1.9.1"
-
-[[deps.DiffResults]]
-deps = ["StaticArraysCore"]
-git-tree-sha1 = "782dd5f4561f5d267313f23853baaaa4c52ea621"
-uuid = "163ba53b-c6d8-5494-b064-1a9d43ac40c5"
-version = "1.1.0"
-
-[[deps.DiffRules]]
-deps = ["IrrationalConstants", "LogExpFunctions", "NaNMath", "Random", "SpecialFunctions"]
-git-tree-sha1 = "a4ad7ef19d2cdc2eff57abbbe68032b1cd0bd8f8"
-uuid = "b552c78f-8df3-52c6-915a-8e097449b14b"
-version = "1.13.0"
 
 [[deps.Distances]]
 deps = ["LinearAlgebra", "SparseArrays", "Statistics", "StatsAPI"]
@@ -1420,12 +478,6 @@ git-tree-sha1 = "fc86b4fd3eff76c3ce4f5e96e2fdfa6282722885"
 uuid = "1a297f60-69ca-5386-bcde-b61e274b549b"
 version = "1.0.0"
 
-[[deps.FiniteDiff]]
-deps = ["ArrayInterface", "LinearAlgebra", "Requires", "Setfield", "SparseArrays", "StaticArrays"]
-git-tree-sha1 = "03fcb1c42ec905d15b305359603888ec3e65f886"
-uuid = "6a86dc24-6348-571c-b903-95158fe2bd41"
-version = "2.19.0"
-
 [[deps.FixedPointNumbers]]
 deps = ["Statistics"]
 git-tree-sha1 = "335bfdceacc84c5cdf16aadc768aa5ddfc5383cc"
@@ -1443,16 +495,6 @@ deps = ["Printf"]
 git-tree-sha1 = "8339d61043228fdd3eb658d86c926cb282ae72a8"
 uuid = "59287772-0a20-5a39-b81b-1366585eb4c0"
 version = "0.4.2"
-
-[[deps.ForwardDiff]]
-deps = ["CommonSubexpressions", "DiffResults", "DiffRules", "LinearAlgebra", "LogExpFunctions", "NaNMath", "Preferences", "Printf", "Random", "SpecialFunctions"]
-git-tree-sha1 = "00e252f4d706b3d55a8863432e742bf5717b498d"
-uuid = "f6369f11-7733-5829-9624-2563aa707210"
-version = "0.10.35"
-weakdeps = ["StaticArrays"]
-
-    [deps.ForwardDiff.extensions]
-    ForwardDiffStaticArraysExt = "StaticArrays"
 
 [[deps.FreeType]]
 deps = ["CEnum", "FreeType2_jll"]
@@ -1493,12 +535,6 @@ deps = ["Adapt"]
 git-tree-sha1 = "1cd7f0af1aa58abc02ea1d872953a97359cb87fa"
 uuid = "46192b85-c4d5-4398-a991-12ede77f4527"
 version = "0.1.4"
-
-[[deps.GenericSchur]]
-deps = ["LinearAlgebra", "Printf"]
-git-tree-sha1 = "fb69b2a645fa69ba5f474af09221b9308b160ce6"
-uuid = "c145ed77-6b09-5dd9-b285-bf645a82121e"
-version = "0.5.3"
 
 [[deps.GeoInterface]]
 deps = ["Extents"]
@@ -1565,17 +601,17 @@ git-tree-sha1 = "53bb909d1151e57e2484c3d1b53e19552b887fb2"
 uuid = "42e2da0e-8278-4e71-bc24-59509adca0fe"
 version = "1.0.2"
 
+[[deps.HTTP]]
+deps = ["Base64", "CodecZlib", "Dates", "IniFile", "Logging", "LoggingExtras", "MbedTLS", "NetworkOptions", "OpenSSL", "Random", "SimpleBufferStream", "Sockets", "URIs", "UUIDs"]
+git-tree-sha1 = "37e4657cd56b11abe3d10cd4a1ec5fbdb4180263"
+uuid = "cd3eb016-35fb-5094-929b-558a96fad6f3"
+version = "1.7.4"
+
 [[deps.HarfBuzz_jll]]
 deps = ["Artifacts", "Cairo_jll", "Fontconfig_jll", "FreeType2_jll", "Glib_jll", "Graphite2_jll", "JLLWrappers", "Libdl", "Libffi_jll", "Pkg"]
 git-tree-sha1 = "129acf094d168394e80ee1dc4bc06ec835e510a3"
 uuid = "2e76f6c2-a576-52d4-95c1-20adfe4de566"
 version = "2.8.1+1"
-
-[[deps.HostCPUFeatures]]
-deps = ["BitTwiddlingConvenienceFunctions", "IfElse", "Libdl", "Static"]
-git-tree-sha1 = "734fd90dd2f920a2f1921d5388dcebe805b262dc"
-uuid = "3e5b6fbb-0976-4d2c-9146-d79de83f2fb0"
-version = "0.1.14"
 
 [[deps.HypergeometricFunctions]]
 deps = ["DualNumbers", "LinearAlgebra", "OpenLibm_jll", "SpecialFunctions"]
@@ -1588,11 +624,6 @@ deps = ["Logging", "Random"]
 git-tree-sha1 = "f7be53659ab06ddc986428d3a9dcc95f6fa6705a"
 uuid = "b5f81e59-6552-4d32-b1f0-c071b021bf89"
 version = "0.2.2"
-
-[[deps.IfElse]]
-git-tree-sha1 = "debdd00ffef04665ccbb3e150747a77560e8fad1"
-uuid = "615f187c-cbe4-4ef1-ba3b-2fcf58d6d173"
-version = "0.1.1"
 
 [[deps.ImageAxes]]
 deps = ["AxisArrays", "ImageBase", "ImageCore", "Reexport", "SimpleTraits"]
@@ -1640,10 +671,10 @@ git-tree-sha1 = "5cd07aab533df5170988219191dfad0519391428"
 uuid = "d25df0c9-e2be-5dd7-82c8-3ad0b3e990b9"
 version = "0.1.3"
 
-[[deps.InitialValues]]
-git-tree-sha1 = "4da0f88e9a39111c2fa3add390ab15f3a44f3ca3"
-uuid = "22cec73e-a1b8-11e9-2c92-598750a2cf9c"
-version = "0.3.1"
+[[deps.IniFile]]
+git-tree-sha1 = "f550e6e32074c939295eb5ea6de31849ac2c9625"
+uuid = "83e8ac13-25f8-5344-8a64-a9f2b223428f"
+version = "0.5.1"
 
 [[deps.InlineStrings]]
 deps = ["Parsers"]
@@ -1752,12 +783,6 @@ git-tree-sha1 = "f2355693d6778a178ade15952b7ac47a4ff97996"
 uuid = "b964fa9f-0449-5b57-a5c2-d3ea65f4040f"
 version = "1.3.0"
 
-[[deps.LayoutPointers]]
-deps = ["ArrayInterface", "LinearAlgebra", "ManualMemory", "SIMDTypes", "Static", "StaticArrayInterface"]
-git-tree-sha1 = "88b8f66b604da079a627b6fb2860d3704a6729a1"
-uuid = "10f19ff3-798f-405d-979b-55457f8fc047"
-version = "0.1.14"
-
 [[deps.LazyArtifacts]]
 deps = ["Artifacts", "Pkg"]
 uuid = "4af54fe1-eca0-43a8-85a7-787d91b784e3"
@@ -1766,12 +791,6 @@ uuid = "4af54fe1-eca0-43a8-85a7-787d91b784e3"
 git-tree-sha1 = "a560dd966b386ac9ae60bdd3a3d3a326062d3c3e"
 uuid = "8cdb02fc-e678-4876-92c5-9defec4f444e"
 version = "0.3.1"
-
-[[deps.LeftChildRightSiblingTrees]]
-deps = ["AbstractTrees"]
-git-tree-sha1 = "fb6803dafae4a5d62ea5cab204b1e657d9737e7f"
-uuid = "1d6d02ad-be62-4b6b-8a6d-2f90e265016e"
-version = "0.2.0"
 
 [[deps.LibCURL]]
 deps = ["LibCURL_jll", "MozillaCACerts_jll"]
@@ -1831,21 +850,9 @@ git-tree-sha1 = "7f3efec06033682db852f8b3bc3c1d2b0a0ab066"
 uuid = "38a345b3-de98-5d2b-a5d3-14cd9215e700"
 version = "2.36.0+0"
 
-[[deps.LineSearches]]
-deps = ["LinearAlgebra", "NLSolversBase", "NaNMath", "Parameters", "Printf"]
-git-tree-sha1 = "7bbea35cec17305fc70a0e5b4641477dc0789d9d"
-uuid = "d3d80556-e9d4-5f37-9878-2ab0fcc64255"
-version = "7.2.0"
-
 [[deps.LinearAlgebra]]
 deps = ["Libdl", "OpenBLAS_jll", "libblastrampoline_jll"]
 uuid = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
-
-[[deps.LogDensityProblems]]
-deps = ["ArgCheck", "DocStringExtensions", "Random"]
-git-tree-sha1 = "f9a11237204bc137617194d79d813069838fcf61"
-uuid = "6fdf6af0-433a-55f7-b3ed-c6c6e0b8df7c"
-version = "2.1.1"
 
 [[deps.LogExpFunctions]]
 deps = ["DocStringExtensions", "IrrationalConstants", "LinearAlgebra"]
@@ -1872,29 +879,11 @@ git-tree-sha1 = "cedb76b37bc5a6c702ade66be44f831fa23c681e"
 uuid = "e6f89c97-d47a-5376-807f-9c37f3926c36"
 version = "1.0.0"
 
-[[deps.MCMCChains]]
-deps = ["AbstractMCMC", "AxisArrays", "Dates", "Distributions", "Formatting", "IteratorInterfaceExtensions", "KernelDensity", "LinearAlgebra", "MCMCDiagnosticTools", "MLJModelInterface", "NaturalSort", "OrderedCollections", "PrettyTables", "Random", "RecipesBase", "Serialization", "Statistics", "StatsBase", "StatsFuns", "TableTraits", "Tables"]
-git-tree-sha1 = "c659f7508035a7bdd5102aef2de028ab035f289a"
-uuid = "c7f686f2-ff18-58e9-bc7b-31028e88f75d"
-version = "5.7.1"
-
-[[deps.MCMCDiagnosticTools]]
-deps = ["AbstractFFTs", "DataAPI", "DataStructures", "Distributions", "LinearAlgebra", "MLJModelInterface", "Random", "SpecialFunctions", "Statistics", "StatsBase", "StatsFuns", "Tables"]
-git-tree-sha1 = "8b862779314f9299cbf7bdbf2413bcbd9c8e77b2"
-uuid = "be115224-59cd-429b-ad48-344e309966f0"
-version = "0.2.6"
-
 [[deps.MKL_jll]]
 deps = ["Artifacts", "IntelOpenMP_jll", "JLLWrappers", "LazyArtifacts", "Libdl", "Pkg"]
 git-tree-sha1 = "2ce8695e1e699b68702c03402672a69f54b8aca9"
 uuid = "856f044c-d86e-5d09-b602-aeab76dc8ba7"
 version = "2022.2.0+0"
-
-[[deps.MLJModelInterface]]
-deps = ["Random", "ScientificTypesBase", "StatisticalTraits"]
-git-tree-sha1 = "c8b7e632d6754a5e36c0d94a4b466a5ba3a30128"
-uuid = "e80e1ace-859a-464e-9ed9-23947d8ae3ea"
-version = "1.8.0"
 
 [[deps.MacroTools]]
 deps = ["Markdown", "Random"]
@@ -1913,11 +902,6 @@ deps = ["Observables"]
 git-tree-sha1 = "9926529455a331ed73c19ff06d16906737a876ed"
 uuid = "20f20a25-4f0e-4fdf-b5d1-57303727442b"
 version = "0.6.3"
-
-[[deps.ManualMemory]]
-git-tree-sha1 = "bcaef4fc7a0cfe2cba636d84cda54b5e4e4ca3cd"
-uuid = "d125e4d3-2237-4719-b19c-fa641b8a4667"
-version = "0.1.8"
 
 [[deps.MappedArrays]]
 git-tree-sha1 = "e8b359ef06ec72e8c030463fe02efe5527ee5142"
@@ -1939,6 +923,12 @@ git-tree-sha1 = "8f52dbaa1351ce4cb847d95568cb29e62a307d93"
 uuid = "0a4f8689-d25c-4efe-a92b-7142dfc1aa53"
 version = "0.5.6"
 
+[[deps.MbedTLS]]
+deps = ["Dates", "MbedTLS_jll", "MozillaCACerts_jll", "Random", "Sockets"]
+git-tree-sha1 = "03a9b9718f5682ecb107ac9f7308991db4ce395b"
+uuid = "739be429-bea8-5141-9913-cc70e7f3736d"
+version = "1.1.7"
+
 [[deps.MbedTLS_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "c8ffd9c3-330d-5841-b78e-0817d7145fa1"
@@ -1949,12 +939,6 @@ deps = ["Graphs", "JLD2", "Random"]
 git-tree-sha1 = "1130dbe1d5276cb656f6e1094ce97466ed700e5a"
 uuid = "626554b9-1ddb-594c-aa3c-2596fe9399a5"
 version = "0.7.2"
-
-[[deps.MicroCollections]]
-deps = ["BangBang", "InitialValues", "Setfield"]
-git-tree-sha1 = "629afd7d10dbc6935ec59b32daeb33bc4460a42e"
-uuid = "128add7d-3638-4c79-886c-908ea0c25c34"
-version = "0.1.4"
 
 [[deps.MiniQhull]]
 deps = ["QhullMiniWrapper_jll"]
@@ -1971,12 +955,6 @@ version = "1.1.0"
 [[deps.Mmap]]
 uuid = "a63ad114-7e13-5084-954f-fe012c677804"
 
-[[deps.MonteCarloMeasurements]]
-deps = ["Distributed", "Distributions", "ForwardDiff", "GenericSchur", "LinearAlgebra", "MacroTools", "Random", "RecipesBase", "Requires", "SLEEFPirates", "StaticArrays", "Statistics", "StatsBase", "Test"]
-git-tree-sha1 = "6d9caa10b362227519efd3f1f4ce6e8795c61c11"
-uuid = "0987c9cc-fe09-11e8-30f0-b96dd679fdca"
-version = "1.1.4"
-
 [[deps.MosaicViews]]
 deps = ["MappedArrays", "OffsetArrays", "PaddedViews", "StackViews"]
 git-tree-sha1 = "7b86a5d4d70a9f5cdf2dacb3cbe6d251d1a61dbe"
@@ -1986,12 +964,6 @@ version = "0.3.4"
 [[deps.MozillaCACerts_jll]]
 uuid = "14a3606d-f60d-562e-9121-12d972cd8159"
 version = "2023.1.10"
-
-[[deps.NLSolversBase]]
-deps = ["DiffResults", "Distributed", "FiniteDiff", "ForwardDiff"]
-git-tree-sha1 = "a0b464d183da839699f4c79e7606d9d186ec172c"
-uuid = "d41bc354-129a-5804-8e4c-c37616107c6c"
-version = "7.8.3"
 
 [[deps.NaNMath]]
 deps = ["OpenLibm_jll"]
@@ -2009,11 +981,6 @@ version = "0.9.8"
 git-tree-sha1 = "90914795fc59df44120fe3fff6742bb0d7adb1d0"
 uuid = "d9ec5142-1e00-5aa0-9d6a-321866360f50"
 version = "0.14.3"
-
-[[deps.NaturalSort]]
-git-tree-sha1 = "eda490d06b9f7c00752ee81cfa451efe55521e21"
-uuid = "c020b1a1-e9b0-503a-9c33-f039bfc54a85"
-version = "1.0.0"
 
 [[deps.NearestNeighbors]]
 deps = ["Distances", "StaticArrays"]
@@ -2070,6 +1037,12 @@ deps = ["Artifacts", "Libdl"]
 uuid = "05823500-19ac-5b8b-9628-191a04bc5112"
 version = "0.8.1+0"
 
+[[deps.OpenSSL]]
+deps = ["BitFlags", "Dates", "MozillaCACerts_jll", "OpenSSL_jll", "Sockets"]
+git-tree-sha1 = "e9d68fe4b5f78f215aa2f0e6e6dc9e9911d33048"
+uuid = "4d8831e6-92b7-49fb-bdf8-b643e874388c"
+version = "1.3.4"
+
 [[deps.OpenSSL_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
 git-tree-sha1 = "9ff31d101d987eb9d66bd8b176ac7c277beccd09"
@@ -2081,12 +1054,6 @@ deps = ["Artifacts", "CompilerSupportLibraries_jll", "JLLWrappers", "Libdl", "Pk
 git-tree-sha1 = "13652491f6856acfd2db29360e1bbcd4565d04f1"
 uuid = "efe28fd5-8261-553b-a9e1-b2916fc3738e"
 version = "0.5.5+0"
-
-[[deps.Optim]]
-deps = ["Compat", "FillArrays", "ForwardDiff", "LineSearches", "LinearAlgebra", "NLSolversBase", "NaNMath", "Parameters", "PositiveFactorizations", "Printf", "SparseArrays", "StatsBase"]
-git-tree-sha1 = "a89b11f0f354f06099e4001c151dffad7ebab015"
-uuid = "429524aa-4258-5aef-a3af-852621145aeb"
-version = "1.7.5"
 
 [[deps.Opus_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -2140,12 +1107,6 @@ git-tree-sha1 = "34c0e9ad262e5f7fc75b10a9952ca7692cfc5fbe"
 uuid = "d96e819e-fc66-5662-9728-84c9c7592b0a"
 version = "0.12.3"
 
-[[deps.ParetoSmoothedImportanceSampling]]
-deps = ["CSV", "DataFrames", "Distributions", "JSON", "Printf", "Random", "Statistics", "StatsFuns", "Test"]
-git-tree-sha1 = "ab01cfa3648326833ce3bd225117d2c0cacc5d9d"
-uuid = "98f080ec-61e2-11eb-1c7b-31ea1097256f"
-version = "1.5.2"
-
 [[deps.Parsers]]
 deps = ["Dates", "SnoopPrecompile"]
 git-tree-sha1 = "478ac6c952fddd4399e71d4779797c538d0ff2bf"
@@ -2186,12 +1147,6 @@ git-tree-sha1 = "a6062fe4063cdafe78f4a0a81cfffb89721b30e7"
 uuid = "2dfb63ee-cc39-5dd5-95bd-886bf059d720"
 version = "1.4.2"
 
-[[deps.PositiveFactorizations]]
-deps = ["LinearAlgebra"]
-git-tree-sha1 = "17275485f373e6673f7e7f97051f703ed5b15b20"
-uuid = "85a6dd25-e78a-55b7-8502-1745935b8125"
-version = "0.2.4"
-
 [[deps.Preferences]]
 deps = ["TOML"]
 git-tree-sha1 = "47e5f437cc0e7ef2ce8406ce1e7e24d44915f88d"
@@ -2207,12 +1162,6 @@ version = "2.2.3"
 [[deps.Printf]]
 deps = ["Unicode"]
 uuid = "de0858da-6303-5e67-8744-51eddeeeb8d7"
-
-[[deps.ProgressLogging]]
-deps = ["Logging", "SHA", "UUIDs"]
-git-tree-sha1 = "80d919dee55b9c50e8d9e2da5eeafff3fe58b539"
-uuid = "33c8b6b6-d38a-422a-b730-caa89a2f386c"
-version = "0.1.4"
 
 [[deps.ProgressMeter]]
 deps = ["Distributed", "Printf"]
@@ -2263,22 +1212,16 @@ git-tree-sha1 = "dc84268fe0e3335a62e315a3a7cf2afa7178a734"
 uuid = "c84ed2f1-dad5-54f0-aa8e-dbefe2724439"
 version = "0.4.3"
 
-[[deps.RecipesBase]]
-deps = ["SnoopPrecompile"]
-git-tree-sha1 = "261dddd3b862bd2c940cf6ca4d1c8fe593e457c8"
-uuid = "3cdcf5f2-1ef4-517c-9805-6587b60abb01"
-version = "1.3.3"
-
 [[deps.Reexport]]
 git-tree-sha1 = "45e428421666073eab6f2da5c9d310d99bb12f9b"
 uuid = "189a3867-3050-52da-a836-e630ba90ab69"
 version = "1.2.2"
 
 [[deps.RegressionAndOtherStories]]
-deps = ["CSV", "CategoricalArrays", "DataFrames", "DataStructures", "Dates", "DelimitedFiles", "Distributions", "DocStringExtensions", "GLM", "Graphs", "KernelDensity", "LaTeXStrings", "LinearAlgebra", "MetaGraphs", "NamedArrays", "NamedTupleTools", "OrderedCollections", "Parameters", "Random", "Reexport", "Requires", "Statistics", "StatsBase", "StatsFuns", "Unicode"]
-git-tree-sha1 = "d080ba9ece03b8611cff2987e578ec1888325c2a"
+deps = ["CSV", "CategoricalArrays", "DataFrames", "DataStructures", "Dates", "DelimitedFiles", "Distributions", "DocStringExtensions", "GLM", "Graphs", "KernelDensity", "LaTeXStrings", "LinearAlgebra", "NamedArrays", "NamedTupleTools", "OrderedCollections", "Parameters", "Random", "Reexport", "Requires", "Statistics", "StatsBase", "StatsFuns", "Unicode"]
+git-tree-sha1 = "028aa0f86c69519721ec555c5dca772e92ed8754"
 uuid = "21324389-b050-441a-ba7b-9a837781bda0"
-version = "0.12.0"
+version = "0.11.0"
 weakdeps = ["CairoMakie", "CausalInference", "GraphViz", "Makie", "StanSample"]
 
     [deps.RegressionAndOtherStories.extensions]
@@ -2321,27 +1264,11 @@ git-tree-sha1 = "8b20084a97b004588125caebf418d8cab9e393d1"
 uuid = "fdea26ae-647d-5447-a871-4b548cad5224"
 version = "3.4.4"
 
-[[deps.SIMDTypes]]
-git-tree-sha1 = "330289636fb8107c5f32088d2741e9fd7a061a5c"
-uuid = "94e857df-77ce-4151-89e5-788b33177be4"
-version = "0.1.0"
-
-[[deps.SLEEFPirates]]
-deps = ["IfElse", "Static", "VectorizationBase"]
-git-tree-sha1 = "cda0aece8080e992f6370491b08ef3909d1c04e7"
-uuid = "476501e8-09a2-5ece-8869-fb82de89a1fa"
-version = "0.6.38"
-
 [[deps.ScanByte]]
 deps = ["Libdl", "SIMD"]
 git-tree-sha1 = "2436b15f376005e8790e318329560dcc67188e84"
 uuid = "7b38b023-a4d7-4c5e-8d43-3f3097f304eb"
 version = "0.3.3"
-
-[[deps.ScientificTypesBase]]
-git-tree-sha1 = "a8e18eb383b5ecf1b5e6fc237eb39255044fd92b"
-uuid = "30f210dd-8aff-4c5f-94ba-8e64358c1161"
-version = "3.0.0"
 
 [[deps.Scratch]]
 deps = ["Dates"]
@@ -2385,6 +1312,11 @@ git-tree-sha1 = "d263a08ec505853a5ff1c1ebde2070419e3f28e9"
 uuid = "73760f76-fbc4-59ce-8f25-708e95d2df96"
 version = "0.4.0"
 
+[[deps.SimpleBufferStream]]
+git-tree-sha1 = "874e8867b33a00e784c8a7e4b60afe9e037b74e1"
+uuid = "777ac1f9-54b0-4bf8-805c-2214025038e7"
+version = "1.1.0"
+
 [[deps.SimpleTraits]]
 deps = ["InteractiveUtils", "MacroTools"]
 git-tree-sha1 = "5d7e3f4e11935503d3ecaf7186eac40602e7d231"
@@ -2427,12 +1359,6 @@ weakdeps = ["ChainRulesCore"]
     [deps.SpecialFunctions.extensions]
     SpecialFunctionsChainRulesCoreExt = "ChainRulesCore"
 
-[[deps.SplittablesBase]]
-deps = ["Setfield", "Test"]
-git-tree-sha1 = "e08a62abc517eb79667d0a29dc08a3b589516bb5"
-uuid = "171d559e-b47b-412a-8079-5efa626c420e"
-version = "0.1.15"
-
 [[deps.StableHashTraits]]
 deps = ["CRC32c", "Compat", "Dates", "SHA", "Tables", "TupleTools", "UUIDs"]
 git-tree-sha1 = "0b8b801b8f03a329a4e86b44c5e8a7d7f4fe10a3"
@@ -2450,18 +1376,6 @@ deps = ["CSV", "DataFrames", "DelimitedFiles", "Distributed", "DocStringExtensio
 git-tree-sha1 = "0c5492a9db462285e293269fc98be924bb28a403"
 uuid = "d0ee94f6-a23d-54aa-bbe9-7f572d6da7f5"
 version = "4.7.6"
-
-[[deps.StanOptimize]]
-deps = ["CSV", "DataFrames", "DelimitedFiles", "Distributed", "DocStringExtensions", "Documenter", "NamedTupleTools", "Parameters", "Random", "Reexport", "StanBase", "Statistics", "Test", "Unicode"]
-git-tree-sha1 = "e13df69e7314e11417a0725c44a5f1b3a361e1b1"
-uuid = "fbd8da12-e93d-5a64-9231-612a0707ab99"
-version = "4.2.5"
-
-[[deps.StanQuap]]
-deps = ["CSV", "DataFrames", "Distributions", "DocStringExtensions", "LinearAlgebra", "MonteCarloMeasurements", "NamedTupleTools", "OrderedCollections", "Reexport", "StanBase", "StanOptimize", "StanSample", "Statistics", "StatsBase"]
-git-tree-sha1 = "b8be315d626173bca8ace5312416daddd8ae6aee"
-uuid = "e4723793-2808-4fc5-8a98-c57f4c160c53"
-version = "4.2.4"
 
 [[deps.StanSample]]
 deps = ["CSV", "CompatHelperLocal", "DataFrames", "DelimitedFiles", "Distributed", "DocStringExtensions", "JSON", "LazyArtifacts", "NamedTupleTools", "OrderedCollections", "Parameters", "Random", "Reexport", "Requires", "Serialization", "StanBase", "TableOperations", "Tables", "Unicode"]
@@ -2481,23 +1395,6 @@ version = "7.3.0"
     MCMCChains = "c7f686f2-ff18-58e9-bc7b-31028e88f75d"
     MonteCarloMeasurements = "0987c9cc-fe09-11e8-30f0-b96dd679fdca"
 
-[[deps.Static]]
-deps = ["IfElse"]
-git-tree-sha1 = "08be5ee09a7632c32695d954a602df96a877bf0d"
-uuid = "aedffcd0-7271-4cad-89d0-dc628f76c6d3"
-version = "0.8.6"
-
-[[deps.StaticArrayInterface]]
-deps = ["ArrayInterface", "Compat", "IfElse", "LinearAlgebra", "Requires", "SnoopPrecompile", "SparseArrays", "Static", "SuiteSparse"]
-git-tree-sha1 = "59d01f440c78ad9046680688d6ad51812953a4a9"
-uuid = "0d7ed370-da01-4f52-bd93-41d350b8b718"
-version = "1.3.1"
-weakdeps = ["OffsetArrays", "StaticArrays"]
-
-    [deps.StaticArrayInterface.extensions]
-    StaticArrayInterfaceOffsetArraysExt = "OffsetArrays"
-    StaticArrayInterfaceStaticArraysExt = "StaticArrays"
-
 [[deps.StaticArrays]]
 deps = ["LinearAlgebra", "Random", "StaticArraysCore", "Statistics"]
 git-tree-sha1 = "63e84b7fdf5021026d0f17f76af7c57772313d99"
@@ -2508,18 +1405,6 @@ version = "1.5.21"
 git-tree-sha1 = "6b7ba252635a5eff6a0b0664a41ee140a1c9e72a"
 uuid = "1e83bf80-4336-4d27-bf5d-d5a4f845583c"
 version = "1.4.0"
-
-[[deps.StatisticalRethinking]]
-deps = ["CSV", "DataFrames", "Dates", "Distributions", "DocStringExtensions", "Documenter", "Formatting", "KernelDensity", "LinearAlgebra", "MCMCChains", "MonteCarloMeasurements", "NamedArrays", "NamedTupleTools", "Optim", "OrderedCollections", "Parameters", "ParetoSmoothedImportanceSampling", "PrettyTables", "Random", "Reexport", "Requires", "Statistics", "StatsBase", "StatsFuns", "StructuralCausalModels", "Tables", "Test", "Unicode"]
-git-tree-sha1 = "0e4f7aff217dff83b0d2ddb883989dd01d23735a"
-uuid = "2d09df54-9d0f-5258-8220-54c2a3d4fbee"
-version = "4.7.0"
-
-[[deps.StatisticalTraits]]
-deps = ["ScientificTypesBase"]
-git-tree-sha1 = "30b9236691858e13f167ce829490a68e1a597782"
-uuid = "64bff920-2084-43da-a3e6-9bb72801c0c9"
-version = "3.2.0"
 
 [[deps.Statistics]]
 deps = ["LinearAlgebra", "SparseArrays"]
@@ -2569,12 +1454,6 @@ git-tree-sha1 = "521a0e828e98bb69042fec1809c1b5a680eb7389"
 uuid = "09ab397b-f2b6-538f-b94a-2f83cf4a842a"
 version = "0.6.15"
 
-[[deps.StructuralCausalModels]]
-deps = ["CSV", "Combinatorics", "DataFrames", "DataStructures", "Distributions", "DocStringExtensions", "LinearAlgebra", "NamedArrays", "Reexport", "Statistics"]
-git-tree-sha1 = "01c838be8d7119708b839aa16d413088a1076ee8"
-uuid = "a41e6734-49ce-4065-8b83-aff084c01dfd"
-version = "1.4.1"
-
 [[deps.SuiteSparse]]
 deps = ["Libdl", "LinearAlgebra", "Serialization", "SparseArrays"]
 uuid = "4607b0f0-06f3-5cda-b6b1-a6196a1729e9"
@@ -2619,12 +1498,6 @@ git-tree-sha1 = "1feb45f88d133a655e001435632f019a9a1bcdb6"
 uuid = "62fd8b95-f654-4bbd-a8a5-9c27f68ccd50"
 version = "0.1.1"
 
-[[deps.TerminalLoggers]]
-deps = ["LeftChildRightSiblingTrees", "Logging", "Markdown", "Printf", "ProgressLogging", "UUIDs"]
-git-tree-sha1 = "f53e34e784ae771eb9ccde4d72e578aa453d0554"
-uuid = "5d786b92-1e48-4d6f-9151-6b4477ca9bed"
-version = "0.1.6"
-
 [[deps.Test]]
 deps = ["InteractiveUtils", "Logging", "Random", "Serialization"]
 uuid = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
@@ -2641,12 +1514,6 @@ git-tree-sha1 = "0b829474fed270a4b0ab07117dce9b9a2fa7581a"
 uuid = "3bb67fe8-82b1-5028-8e26-92a6c54297fa"
 version = "0.9.12"
 
-[[deps.Transducers]]
-deps = ["Adapt", "ArgCheck", "BangBang", "Baselet", "CompositionsBase", "DefineSingletons", "Distributed", "InitialValues", "Logging", "Markdown", "MicroCollections", "Requires", "Setfield", "SplittablesBase", "Tables"]
-git-tree-sha1 = "c42fa452a60f022e9e087823b47e5a5f8adc53d5"
-uuid = "28d57a85-8fef-5791-bfe6-a80928e7c999"
-version = "0.4.75"
-
 [[deps.TriplotBase]]
 git-tree-sha1 = "4d4ed7f294cda19382ff7de4c137d24d16adc89b"
 uuid = "981d1d27-644d-49a2-9326-4793e63143c3"
@@ -2656,6 +1523,11 @@ version = "0.1.0"
 git-tree-sha1 = "3c712976c47707ff893cf6ba4354aa14db1d8938"
 uuid = "9d95972d-f1c8-5527-a6e0-b4b365fa01f6"
 version = "1.3.0"
+
+[[deps.URIs]]
+git-tree-sha1 = "074f993b0ca030848b897beff716d93aca60f06a"
+uuid = "5c2747f8-b7ea-4ff2-ba2e-563bfd36b1d4"
+version = "1.4.2"
 
 [[deps.UUIDs]]
 deps = ["Random", "SHA"]
@@ -2674,12 +1546,6 @@ deps = ["REPL"]
 git-tree-sha1 = "53915e50200959667e78a92a418594b428dffddf"
 uuid = "1cfade01-22cf-5700-b092-accc4b62d6e1"
 version = "0.4.1"
-
-[[deps.VectorizationBase]]
-deps = ["ArrayInterface", "CPUSummary", "HostCPUFeatures", "IfElse", "LayoutPointers", "Libdl", "LinearAlgebra", "SIMDTypes", "Static", "StaticArrayInterface"]
-git-tree-sha1 = "b182207d4af54ac64cbc71797765068fdeff475d"
-uuid = "3d5dd08c-fd9d-11e8-17fa-ed2836048c2f"
-version = "0.21.64"
 
 [[deps.WeakRefStrings]]
 deps = ["DataAPI", "InlineStrings", "Parsers"]
@@ -2763,12 +1629,6 @@ deps = ["Libdl"]
 uuid = "83775a58-1f1d-513f-b197-d71354ab007a"
 version = "1.2.13+0"
 
-[[deps.ZygoteRules]]
-deps = ["ChainRulesCore", "MacroTools"]
-git-tree-sha1 = "977aed5d006b840e2e40c0b48984f7463109046d"
-uuid = "700de1a5-db45-46bc-99cf-38207098b444"
-version = "0.2.3"
-
 [[deps.isoband_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
 git-tree-sha1 = "51b5eeb3f98367157a7a12a1fb0aa5328946c03c"
@@ -2840,104 +1700,18 @@ version = "3.5.0+0"
 """
 
 # ╔═╡ Cell order:
-# ╟─645d4df3-af64-489b-b2b0-e710d8917680
-# ╟─e875dcfc-fc57-11ea-27e5-c56f1f9d5370
-# ╟─234d835c-b651-4b16-9f2e-986eda90a1a8
-# ╠═fbc882d4-18b0-4f08-a1b1-ec4c4f78635d
-# ╠═16ddb41a-fc59-11ea-1631-153e3466c75c
-# ╠═2e717b02-0290-49e3-9f67-70f73d760b10
-# ╠═d65dd2b2-fc58-11ea-2300-4db47ec9a789
-# ╠═d65e98dc-fc58-11ea-25e1-9fab97b6125a
-# ╠═a7698084-37d1-4677-89ff-183908a33fbe
-# ╠═39f32370-ef8f-4918-9412-e4d8b6e8db38
-# ╠═cb260a55-1eea-4d4a-930e-547820e2bac6
-# ╠═63fbfe5a-5c5e-4dc8-aeca-742f017f105b
-# ╠═8cdea9c8-7793-4bac-b77b-04b08898fc71
-# ╟─b26424bf-d206-4fb1-a2ab-222a8ffb80c7
-# ╠═cb454809-0dd7-4e79-adc6-7a2793090964
-# ╠═238a10f2-3b78-44f5-a727-5839320ce443
-# ╠═d66f515e-fc58-11ea-3fae-cbb82f1a1a6a
-# ╟─f4602d4a-fc59-11ea-0d9d-9f58c73c119f
-# ╟─d670aefa-fc58-11ea-1c56-4bfb66e1cab2
-# ╠═d67e0602-fc58-11ea-3a27-31d03e1c2318
-# ╠═a4a9351a-01c6-11eb-28d0-71f8fb243719
-# ╟─12fedbca-fc5a-11ea-2d4d-1d5ac93ac4fa
-# ╟─45b2b002-01c6-11eb-3f86-3f9586afcc8b
-# ╠═7f433052-5f29-491d-960d-480bcb836571
-# ╠═6fc7763b-3d96-44cb-ab90-303e3ba828e8
-# ╠═81d7ce22-15af-4c3e-a361-49b191f8d63d
-# ╠═59a4d93b-90e3-4bc3-8e75-4a7b04b85b67
-# ╠═5567d466-e4da-4e9a-b4b2-b77b2700e51b
-# ╟─d69533ba-fc58-11ea-3378-e512a1d55d27
-# ╠═ee264ad3-947d-4cd7-975e-e0fea7d6b1d4
-# ╠═cecfbf01-7997-49cc-bb67-75eb611f2cf9
-# ╠═7eb5f4bb-345a-42da-b2d6-e5407af2a663
-# ╠═62254c66-5a5a-44de-a635-a5044262aeeb
-# ╟─d6c14359-d723-4dd9-b9a5-fc7b68157be3
-# ╟─694ca34c-ebf8-4e5e-bd11-8821a9116e33
-# ╠═65dab224-d3d7-4c46-95b2-f23f4971a1bc
-# ╠═f7c5c5c7-85d4-4e09-b025-31109e451577
-# ╠═bfdab5a8-37a6-4af2-9645-99f8e0d8edd5
-# ╠═aa2238cd-3d62-467e-a19b-84ab6f1561ea
-# ╟─5c87da91-ee1f-4d74-827b-efe107f25862
-# ╠═ab5933f6-43d1-4fb0-9860-3a352bbb251e
-# ╠═6c44b0cb-14ed-4c12-b173-f96212f10683
-# ╠═1ce3080e-c5c8-472b-a29d-eda3fc0dce99
-# ╠═0c0ba8f0-efc5-4f22-b2d5-41ba4125d221
-# ╠═66104ae9-eae1-4f42-b38f-6b562e1c152f
-# ╟─ad9edb34-64de-4ae7-aba6-6333421ac1bc
-# ╠═61dcc961-398f-4f95-bffb-4d51f9ea8fc6
-# ╠═11e64b3b-1bb4-48dc-b0de-6a66f8e59ae5
-# ╟─24aa10d0-c938-4834-8cbd-689ed1ca2cbe
-# ╠═2eb20607-232f-4a28-a21d-80e5c348ee1c
-# ╟─1a100134-2c6d-46f0-8ae3-2064393da8ab
-# ╠═e17691c6-655e-4275-ad64-9f9f95cd0d00
-# ╠═2f77ef28-44fd-4ca2-9fbb-c7009131b0e9
-# ╠═46f7f849-f8f4-4465-821d-35f26c0e41b7
-# ╠═29bb4c65-f91b-44e2-9ad9-10b087083285
-# ╠═a2a742d8-a46c-43e0-9cd3-1ce5a49a0ad9
-# ╟─753f5b10-17ea-4e32-9f52-ff174321bcd6
-# ╠═95849e5c-aa0f-4d6f-b618-51e8959496a8
-# ╠═7fb18290-fde1-418b-8908-a8dbcc1a695b
-# ╠═f8cfbdd8-eb5e-421f-8996-afac58117146
-# ╟─fe796c94-83ba-4b08-a873-099283dfbb15
-# ╟─a8d4342d-eb5a-4627-9c0b-19bb1c56bcc5
-# ╠═b36f2e78-2231-408b-844c-c4e237bae57d
-# ╟─6a2607b5-83a9-4331-a2c6-c16c62872669
-# ╠═0d74cfd6-429d-423c-b098-689e2a66c47c
-# ╠═59540d03-e0fe-46fd-864a-8c0c5014773f
-# ╟─c473ea08-a5b9-46b3-9acf-ae903879baca
-# ╠═8df14f30-96fd-4540-bb84-acf398a63706
-# ╠═992d5d6e-f79a-479f-b88e-fcc068eb8dfb
-# ╠═e131d3bd-c6fa-4be8-abc1-67efc71d33ec
-# ╠═b85abe6e-8849-40ad-8e87-5a7c5d5dc78a
-# ╠═2ca01ad9-862c-4b79-a876-6ea20a86a6af
-# ╠═4bef1e16-fe09-40af-a2a4-312e8c4f0dd6
-# ╟─dff714c3-dad1-4e75-8731-dcdc30e7e01b
-# ╠═5dba7793-47a6-4eaf-9ee8-b865ef3583cc
-# ╠═2f7de9dc-1e67-41b3-80a1-4c3307c190ad
-# ╠═b5dae0aa-63fd-4904-9e9f-7c33274ece3b
-# ╠═daa93aeb-2419-4bf9-80e9-d96d10eaed34
-# ╠═4f93cc6b-567b-4e9d-85bb-4cf7b11fbf0d
-# ╠═c8c72e7e-aa05-40be-a0f0-f0f8928a7197
-# ╠═33c7351d-a175-4f8b-8ab5-c6b4535a538a
-# ╠═611061ef-10f7-43cb-8af9-3227abf43c45
-# ╟─7cc2addc-77d4-4405-9867-3380f3c36d79
-# ╠═0a68e7e4-bf56-454c-9489-f704d56d374c
-# ╠═e9530376-06ac-4e85-8cd1-b8f9f9f6ec1b
-# ╟─da451143-cb64-4bc0-b8f9-8ff4614c521d
-# ╠═d6e3deba-5c57-4b8b-bfa4-c81fccd2aa9c
-# ╠═68ea52fe-c06a-49bc-bede-b68bf4af2e86
-# ╠═0005da9e-5b05-4bf4-9597-d94dcdb38956
-# ╠═e4aea49a-6f03-47fd-a260-dbb2c9f02aee
-# ╠═2f499cb2-cdec-4814-a379-a5d7ce1bf115
-# ╟─c98dbd9b-9b38-446a-8da9-a7d69ea29956
-# ╠═2a353988-ea2c-4d82-8ec7-2c7f0c843f19
-# ╟─33242df0-b647-4974-9cac-b5692ce8100e
-# ╠═42f32805-f566-4531-9cd8-b35dc2a3c876
-# ╟─4a75c36f-3a7f-4d74-9253-6717789d82d6
-# ╠═8c14e485-7a51-4f47-b787-ed6675d80d53
-# ╠═69c6e338-4450-458b-91a6-eeb08f91cb54
-# ╠═44ef03ae-e9fa-4de6-a669-b7b5b46b0346
+# ╟─94e13475-839a-4034-b7ce-5562eef89b97
+# ╠═19e075c6-4f62-4d31-be28-142dc7300060
+# ╠═7d47667f-b0ea-43a1-8a20-6b2d512119eb
+# ╠═8f5be6ca-2178-4b18-9ad5-eb254a32d189
+# ╠═374cd6e5-1179-4edd-bf4d-917bb288582a
+# ╠═e67600f8-9038-4ae0-b5e6-a9bc3733d1c0
+# ╠═68acd782-c4ae-4c84-ab78-a2dcdbf84898
+# ╠═8a705939-bb5c-4ddf-990d-f2cc251216f1
+# ╠═d21e246a-c503-11ed-357e-eb369f06d0bf
+# ╠═f39b4739-7b63-43dc-bc2b-b65a173be1d5
+# ╠═bb626a9b-4d1c-44d1-8c6a-6581bca4e28e
+# ╠═6f457c4f-dbc5-4ac3-89d0-2a9c4c912fe4
+# ╠═091cc5f9-85e6-4d6c-a692-c8801a04495f
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002

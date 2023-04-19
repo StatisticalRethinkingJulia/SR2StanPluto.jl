@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.22
+# v0.19.25
 
 using Markdown
 using InteractiveUtils
@@ -47,7 +47,7 @@ notebook_files = [
     "~/.julia/dev/SR2StanPluto/notebooks/09.4-Easy HMC.jl",
     "~/.julia/dev/SR2StanPluto/notebooks/09.5-Care of Markov chains.jl",
 	
-    "~/.julia/dev/SR2StanPluto/notebooks/CausalInference/PC Algorithm: Basic example.jl",
+    "~/.julia/dev/SR2StanPluto/notebooks/CausalInference/PC and FCI Algorithms: Basic example.jl",
     "~/.julia/dev/SR2StanPluto/notebooks/CausalInference/PC Algorithm: Example with real data.jl",
     "~/.julia/dev/SR2StanPluto/notebooks/CausalInference/PC Algorithm: Further example.jl",
     "~/.julia/dev/SR2StanPluto/notebooks/CausalInference/PC Algorithm: How it works.jl",

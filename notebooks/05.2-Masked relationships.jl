@@ -353,7 +353,7 @@ end
 
 # ╔═╡ a7b77fb2-d83e-470a-b28b-c7cc8278c3c2
 dag5_7_1 = create_dag("dag5_7_1", data_df;
-	g_dot_repr="DiGraph dag5_7 {M -> K; M -> N; N -> K;}")
+	g_dot_str="DiGraph dag5_7 {M -> K; M -> N; N -> K;}")
 
 # ╔═╡ a2fac060-6c7d-41e6-bfef-fd4a1fd296e7
 gvplot(dag5_7_1)
@@ -361,7 +361,7 @@ gvplot(dag5_7_1)
 # ╔═╡ 30ceb7f3-dbf9-4c84-877c-eb96e343e1dc
 begin
 	dag5_7_2 = create_dag("dag5_7_2", data_df;
-		g_dot_repr="DiGraph dag5_7 {M -> K; N -> M; N -> K;}")
+		g_dot_str="DiGraph dag5_7 {M -> K; N -> M; N -> K;}")
 	gvplot(dag5_7_2)
 end
 
