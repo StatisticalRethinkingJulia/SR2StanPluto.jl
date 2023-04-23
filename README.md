@@ -110,7 +110,11 @@ This repository and format is influenced by previous versions of StatisticalReth
 
 ## Versions
 
-### Version 5.3 (under development)
+### Version 5.4.0-5.5.1
+
+1. Further updates in using CausalInference and GraphViz.
+
+### Version 5.3
 
 1. Switch to (Cairo)Makie.jl, Graphs.jl, CausalInference.jl, GraphViz.jl (and more probably).
 
