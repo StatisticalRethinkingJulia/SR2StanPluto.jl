@@ -12,6 +12,7 @@ plots
 #scripts
 #models
 *.png
+tmp
 
 #Manifest.toml
 
