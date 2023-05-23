@@ -1,11 +1,14 @@
 ### A Pluto.jl notebook ###
-# v0.19.25
+# v0.19.26
 
 using Markdown
 using InteractiveUtils
 
 # ╔═╡ 62c80a26-975a-11ed-2e09-2dce0e33bb70
 using Pkg
+
+# ╔═╡ aaea31c8-37ed-4f0f-8e3e-8e89d30ed918
+#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ 58ece6dd-a20f-4624-898a-40cae4b471e4
 begin
@@ -15,8 +18,6 @@ begin
 	# Graphics related packages
 	using CairoMakie
 	using GraphViz
-	using Graphs
-	using MetaGraphs
 
 	# DAG support
 	using CausalInference
@@ -44,9 +45,6 @@ html"""
 </style>
 """
 
-# ╔═╡ aaea31c8-37ed-4f0f-8e3e-8e89d30ed918
-#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
-
 # ╔═╡ 261cca70-a6dd-4bed-b2f2-8667534d0ceb
 let
 	Random.seed!(13)
@@ -70,22 +68,22 @@ covm
 g_dot_str="DiGraph d1 {x->z; y->z; z->w;}";
 
 # ╔═╡ eff73cbb-a04c-46de-b3bf-1e164ebe411f
-d1 = create_dag("d1", df, p; g_dot_str, est_func=cmitest);
+d1 = create_fci_dag("d1", df, g_dot_str);
 
 # ╔═╡ f1302070-b876-4355-b434-9eb025dc1db2
 gvplot(d1)
+
+# ╔═╡ 71b95bc5-13f9-4278-bfc2-a3632b4c1552
+d2 = create_pc_dag("d1", df, g_dot_str);
+
+# ╔═╡ bfdb1885-15b9-4a6a-9bf4-30b0bb434b4c
+gvplot(d2)
 
 # ╔═╡ a6a8dd0a-44e9-4acf-987c-2d41b245ac6c
 md" #### Illustration of how the PC algorithm works."
 
 # ╔═╡ 080bf7df-6b9b-4e92-8122-06cb830f7010
 md" ##### DAG `d2` is used (abused) to illustrate the PC algorithm."
-
-# ╔═╡ 136fb7f6-1865-40e3-bab7-aede068eff60
-d2 = create_dag("d2");
-
-# ╔═╡ e1eb18bc-4a8f-41c8-a1cf-6cd229195d6b
-update_dag!(d2, nothing; g_dot_str)
 
 # ╔═╡ 38443eb2-7a82-4f07-9a7b-7222233154db
 md"""
@@ -98,9 +96,6 @@ This material may be protected by copyright.
 
 1. Form a complete undirected graph, as in Figure B.
 """
-
-# ╔═╡ bef6b5da-149d-4df6-9f0e-a5a5014d06cd
-set_dag_est_g!(d2; g_dot_str="DiGraph dag_1 {x->z [color=blue, arrowhead=none]; x->w [color=blue, arrowhead=none]; y->z [color=blue, arrowhead=none]; y->w [color=blue, arrowhead=none]; x->y [color=blue, arrowhead=none]; z->w [color=blue, arrowhead=none];}")
 
 # ╔═╡ 9f44ad38-b85f-4aeb-975c-610b0f30c133
 gvplot(d2; 
@@ -116,7 +111,7 @@ md"
 dsep(d1, :x, :y)
 
 # ╔═╡ 181f069d-7820-4867-afb7-4dd7cc0b70a5
-set_dag_est_g!(d2, g_dot_str="DiGraph dag_1 {x->z [color=blue, arrowhead=none]; x->w [color=blue, arrowhead=none]; y->z [color=blue, arrowhead=none]; y->w [color=blue, arrowhead=none]; z->w [color=blue, arrowhead=none];}")
+d2.est_g_dot_str="DiGraph dag_1 {x->z [color=blue, arrowhead=none]; x->w [color=blue, arrowhead=none]; y->z [color=blue, arrowhead=none]; y->w [color=blue, arrowhead=none]; z->w [color=blue, arrowhead=none];}"
 
 # ╔═╡ 7c037a74-11d4-4366-b6e2-c8185ca73464
 gvplot(d2; 
@@ -139,7 +134,7 @@ dsep(d1, :x, :w, [:z], verbose=true)
 dsep(d1, :y, :w, [:z], verbose=true)
 
 # ╔═╡ 486def96-57dc-4ad7-ae26-b8ba99f02037
-set_dag_est_g!(d2, g_dot_str="DiGraph dag_1 {x->z [color=red, arrowhead=none]; y->z [color=red, arrowhead=none]; z->w [color=red, arrowhead=none];}")
+d2.est_g_dot_str="DiGraph dag_1 {x->z [color=red, arrowhead=none]; y->z [color=red, arrowhead=none]; z->w [color=red, arrowhead=none];}"
 
 # ╔═╡ abf035da-9544-4c67-8475-0d1bd8d2989d
 gvplot(d2; 
@@ -152,7 +147,7 @@ md"""
 """
 
 # ╔═╡ 728c0de8-c99b-411e-a419-271f5404a252
-set_dag_est_g!(d2, g_dot_str="DiGraph dag_1 {x->z ; y->z; z->w [color=red, arrowhead=none];}")
+d2.est_g_dot_str="DiGraph dag_1 {x->z ; y->z; z->w [color=red, arrowhead=none];}"
 
 # ╔═╡ 8a631946-6e92-4a60-a896-c8d41b77f59a
 gvplot(d2; 
@@ -165,7 +160,7 @@ md"""
 """
 
 # ╔═╡ 8cfe323f-e48f-4705-be8a-cbb3669498d9
-set_dag_est_g!(d2, g_dot_str="DiGraph dag_1 {x->z; y->z; z->w;}")
+d2.est_g_dot_str="DiGraph dag_1 {x->z; y->z; z->w;}"
 
 # ╔═╡ 5f5f504d-0209-439b-b076-616924ce93d7
 gvplot(d2; 
@@ -224,12 +219,11 @@ end
 # ╠═09f4825a-34ed-4e39-9fd9-c6ddc0610e6c
 # ╠═eff73cbb-a04c-46de-b3bf-1e164ebe411f
 # ╠═f1302070-b876-4355-b434-9eb025dc1db2
+# ╠═71b95bc5-13f9-4278-bfc2-a3632b4c1552
+# ╠═bfdb1885-15b9-4a6a-9bf4-30b0bb434b4c
 # ╟─a6a8dd0a-44e9-4acf-987c-2d41b245ac6c
 # ╟─080bf7df-6b9b-4e92-8122-06cb830f7010
-# ╠═136fb7f6-1865-40e3-bab7-aede068eff60
-# ╠═e1eb18bc-4a8f-41c8-a1cf-6cd229195d6b
 # ╟─38443eb2-7a82-4f07-9a7b-7222233154db
-# ╠═bef6b5da-149d-4df6-9f0e-a5a5014d06cd
 # ╠═9f44ad38-b85f-4aeb-975c-610b0f30c133
 # ╟─5b009a6c-770c-48d7-97ed-4e5449381312
 # ╠═a0cc8175-4f83-45f8-8bba-3e0679ff4ccb

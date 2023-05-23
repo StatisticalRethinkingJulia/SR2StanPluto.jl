@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.22
+# v0.19.26
 
 using Markdown
 using InteractiveUtils
@@ -20,8 +20,8 @@ begin
 	using LaTeXStrings
 
 	# Graphs related
-	using CairoMakie
 	using GraphViz
+	using MetaGraphs
 
 	# Causal inference support
 	using CausalInference
@@ -31,8 +31,7 @@ begin
 	using StanSample
 	
 	# Project support libraries
-	using StatisticalRethinking: SR, sr_datadir, scale!, PRECIS
-	using StatisticalRethinkingPlots: plotbounds
+	using StatisticalRethinking: sr_datadir
 	using RegressionAndOtherStories
 end
 
@@ -49,7 +48,7 @@ html"""
 		margin: 0 auto;
 		max-width: 3500px;
     	padding-left: max(80px, 0%);
-    	padding-right: max(200px, 38%);
+    	padding-right: max(200px, 35%);
 	}
 </style>
 """
@@ -352,17 +351,15 @@ begin
 end
 
 # ╔═╡ a7b77fb2-d83e-470a-b28b-c7cc8278c3c2
-dag5_7_1 = create_dag("dag5_7_1", data_df;
-	g_dot_str="DiGraph dag5_7 {M -> K; M -> N; N -> K;}")
+dag5_7_1 = create_fci_dag("dag5_7_1", data_df, "DiGraph dag5_7 {M -> K; M -> N; N -> K;}");
 
 # ╔═╡ a2fac060-6c7d-41e6-bfef-fd4a1fd296e7
-gvplot(dag5_7_1)
+gvplot(dag5_7_1; title_g="Assumed generational model")
 
 # ╔═╡ 30ceb7f3-dbf9-4c84-877c-eb96e343e1dc
 begin
-	dag5_7_2 = create_dag("dag5_7_2", data_df;
-		g_dot_str="DiGraph dag5_7 {M -> K; N -> M; N -> K;}")
-	gvplot(dag5_7_2)
+	dag5_7_2 = create_fci_dag("dag5_7_2", data_df, "DiGraph dag5_7 {M -> K; N -> M; N -> K;}")
+	gvplot(dag5_7_2; title_g="Assumed generational model")
 end
 
 # ╔═╡ 7d6b1a5d-d3a3-49c2-8553-1e0b9fcade85
@@ -474,7 +471,8 @@ let
 	);
 	global m5_7_As = SampleModel("m5.7_A", stan5_7_A);
 	global rc5_7_As = stan_sample(m5_7_As, data=m5_7_A_data);
-end;
+	success(rc5_7_As) && describe(m5_7_As, [:a, :bN, :bM, :sigma, :aNC, :bMNC, :sigma_NC])
+end
 
 # ╔═╡ c9463bd4-2b53-46ca-a3b4-e9d0c3b67bee
 md"### Julia code snippet 5.40"
@@ -559,11 +557,190 @@ end
 # ╔═╡ 1c3c3e1d-552c-4185-9133-16443c5fa736
 md"### Julia code snippet 5.41-42"
 
-# ╔═╡ d01dbd28-0943-4ac8-a397-68a0afdc2f46
-md"##### NC -> K"
+# ╔═╡ 2b674d50-8df8-47a3-ad2f-cbd15d557322
+Nobs = 10000;
 
 # ╔═╡ d9d3924a-cb8a-4d2d-849d-c72ad9f0e597
-#plot(fig1, fig2, fig3, layout=(3, 1))
+let
+	# M -> K <- N
+	# M -> N
+	M = rand(Normal(), Nobs)
+	N = [rand(Normal(x), 1)[1] for x in M]
+	K = [rand(Normal(x), 1)[1] for x in N .- M]
+	global dfMN = DataFrame(:N => N, :M => M, :K => K)
+end
+
+# ╔═╡ d3508cf5-6e07-4849-946a-075330c19f61
+let
+	# M -> K <- N
+	# N -> M
+	N = rand(Normal(), Nobs)
+	M = [rand(Normal(x), 1)[1] for x in N]
+	K = [rand(Normal(x), 1)[1] for x in N .- M]
+	global dfNM = DataFrame(:N => N, :M => M, :K => K)
+end
+
+# ╔═╡ 65625ed9-ee0d-4bde-98a4-edf22e2e70b0
+let
+	# M -> K <- N
+	# N <- U -> M
+	U = rand(Normal(), Nobs)
+	N = [rand(Normal(x), 1)[1] for x in U]
+	M = [rand(Normal(x), 1)[1] for x in U]
+	K = [rand(Normal(x), 1)[1] for x in N .- M]
+	global
+	dfMUN = DataFrame(:N => N, :M => M, :K => K)
+end
+
+# ╔═╡ 72f6615c-048b-41ae-b328-58e613a05c68
+begin
+	d1_str = "DiGraph d1 {M->K; M->N; N->K;}"
+	d1 = create_fci_dag("d1", dfMN, d1_str)
+end;
+
+# ╔═╡ 54407529-4f09-4050-ad48-ba1861e80153
+g_MN = pcalg(dfMN, 0.25, gausscitest)
+
+# ╔═╡ e874496d-12f7-440c-b396-6e1f78b16935
+g_oracle_MN = fcialg(3, dseporacle, d1.g)
+
+# ╔═╡ 13896111-228a-401e-bdfa-5ff7f9de9dd0
+g_gauss_MN = fcialg(dfMN, 0.05, gausscitest)
+
+# ╔═╡ bfd8febf-a78c-483a-b16d-d45195310737
+let
+    fci_oracle_dot_str = to_gv(g_oracle_MN, d1.vars)
+    fci_gauss_dot_str = to_gv(g_gauss_MN, d1.vars)
+    g1 = GraphViz.Graph(d1.g_dot_str)
+    g2 = GraphViz.Graph(d1.est_g_dot_str)
+    g3 = GraphViz.Graph(fci_oracle_dot_str)
+    g4 = GraphViz.Graph(fci_gauss_dot_str)
+    f = Figure(resolution=default_figure_resolution)
+    ax = Axis(f[1, 1]; aspect=DataAspect(), title="True (generational) DAG")
+    CairoMakie.image!(rotr90(create_png_image(g1)))
+    hidedecorations!(ax)
+    hidespines!(ax)
+    ax = Axis(f[1, 2]; aspect=DataAspect(), title="PC estimated DAG")
+    CairoMakie.image!(rotr90(create_png_image(g2)))
+    hidedecorations!(ax)
+    hidespines!(ax)
+    ax = Axis(f[2, 1]; aspect=DataAspect(), title="FCI oracle estimated DAG")
+    CairoMakie.image!(rotr90(create_png_image(g3)))
+    hidedecorations!(ax)
+    hidespines!(ax)
+    ax = Axis(f[2, 2]; aspect=DataAspect(), title="FCI gauss estimated DAG")
+    CairoMakie.image!(rotr90(create_png_image(g4)))
+    hidedecorations!(ax)
+    hidespines!(ax)
+    f
+end
+
+# ╔═╡ 4d077bcf-8905-4025-aa06-a76700a89ce8
+begin
+	d2_str = "DiGraph d2 {M->K; N->M; N->K;}"
+	d2 = create_fci_dag("d2", dfNM, d2_str)
+end;
+
+# ╔═╡ f5d3877a-0217-43f7-a8b7-b4df9964d1f1
+g_NM = pcalg(dfNM, 0.25, gausscitest)
+
+# ╔═╡ 7fcf851f-3d08-4c92-8fe6-d0d68d6cc147
+g_oracle_NM = fcialg(3, dseporacle, d2.g)
+
+# ╔═╡ 20545a01-6cfd-4024-a1ed-a69daee4873f
+g_gauss_NM = fcialg(dfNM, 0.05, gausscitest)
+
+# ╔═╡ f3fffefe-53b1-4f22-9926-30a6631ee254
+let
+    fci_oracle_dot_str = to_gv(g_oracle_NM, d2.vars)
+    fci_gauss_dot_str = to_gv(g_gauss_NM, d2.vars)
+    g1 = GraphViz.Graph(d2.g_dot_str)
+    g2 = GraphViz.Graph(d2.est_g_dot_str)
+    g3 = GraphViz.Graph(fci_oracle_dot_str)
+    g4 = GraphViz.Graph(fci_gauss_dot_str)
+    f = Figure(resolution=default_figure_resolution)
+    ax = Axis(f[1, 1]; aspect=DataAspect(), title="True (generational) DAG")
+    CairoMakie.image!(rotr90(create_png_image(g1)))
+    hidedecorations!(ax)
+    hidespines!(ax)
+    ax = Axis(f[1, 2]; aspect=DataAspect(), title="PC estimated DAG")
+    CairoMakie.image!(rotr90(create_png_image(g2)))
+    hidedecorations!(ax)
+    hidespines!(ax)
+    ax = Axis(f[2, 1]; aspect=DataAspect(), title="FCI oracle estimated DAG")
+    CairoMakie.image!(rotr90(create_png_image(g3)))
+    hidedecorations!(ax)
+    hidespines!(ax)
+    ax = Axis(f[2, 2]; aspect=DataAspect(), title="FCI gauss estimated DAG")
+    CairoMakie.image!(rotr90(create_png_image(g4)))
+    hidedecorations!(ax)
+    hidespines!(ax)
+    f
+end
+
+# ╔═╡ aaffc288-b366-4c21-91cb-908c4e955c4b
+begin
+	d3_str = "DiGraph d1 {M->K; M->N; N->K;}"
+	d3 = create_fci_dag("d3", dfMUN, d1_str)
+end;
+
+# ╔═╡ 148db2db-82d9-4180-85c3-7960b1eee242
+g_MUN = pcalg(dfMUN, 0.25, gausscitest)
+
+# ╔═╡ 6108e29b-34bb-48c6-b9c6-1de3fe079c33
+g_oracle_MUN = fcialg(3, dseporacle, d3.g)
+
+# ╔═╡ 28199a44-b79b-4193-b7f3-9af59d8ab000
+g_gauss_MUN = fcialg(dfMUN, 0.05, gausscitest)
+
+# ╔═╡ 1db15a70-f679-4933-a4ef-a1aa1f9a8046
+let
+    fci_oracle_dot_str = to_gv(g_oracle_MUN, d1.vars)
+    fci_gauss_dot_str = to_gv(g_gauss_MUN, d1.vars)
+    g1 = GraphViz.Graph(d3.g_dot_str)
+    g2 = GraphViz.Graph(d3.est_g_dot_str)
+    g3 = GraphViz.Graph(fci_oracle_dot_str)
+    g4 = GraphViz.Graph(fci_gauss_dot_str)
+    f = Figure(resolution=default_figure_resolution)
+    ax = Axis(f[1, 1]; aspect=DataAspect(), title="DAG with M <- U -> N")
+    CairoMakie.image!(rotr90(create_png_image(g1)))
+    hidedecorations!(ax)
+    hidespines!(ax)
+    ax = Axis(f[1, 2]; aspect=DataAspect(), title="PC estimated DAG")
+    CairoMakie.image!(rotr90(create_png_image(g2)))
+    hidedecorations!(ax)
+    hidespines!(ax)
+    ax = Axis(f[2, 1]; aspect=DataAspect(), title="FCI oracle estimated DAG")
+    CairoMakie.image!(rotr90(create_png_image(g3)))
+    hidedecorations!(ax)
+    hidespines!(ax)
+    ax = Axis(f[2, 2]; aspect=DataAspect(), title="FCI gauss estimated DAG")
+    CairoMakie.image!(rotr90(create_png_image(g4)))
+    hidedecorations!(ax)
+    hidespines!(ax)
+    f
+end
+
+# ╔═╡ 0c0e5c67-f33c-4151-a262-c8dcd6198fc7
+let
+    g1 = GraphViz.Graph(d1.est_g_dot_str)
+    g2 = GraphViz.Graph(d2.est_g_dot_str)
+    g3 = GraphViz.Graph(d3.est_g_dot_str)
+    f = Figure(resolution=default_figure_resolution)
+    ax = Axis(f[1, 1]; aspect=DataAspect(), title="PC estimated DAG d1")
+    CairoMakie.image!(rotr90(create_png_image(g1)))
+    hidedecorations!(ax)
+    hidespines!(ax)
+    ax = Axis(f[1, 2]; aspect=DataAspect(), title="PC estimated DAG d2")
+    CairoMakie.image!(rotr90(create_png_image(g2)))
+    hidedecorations!(ax)
+    hidespines!(ax)
+    ax = Axis(f[1, 3]; aspect=DataAspect(), title="PC estimated DAG d3")
+    CairoMakie.image!(rotr90(create_png_image(g3)))
+    hidedecorations!(ax)
+    hidespines!(ax)
+   f
+end
 
 # ╔═╡ Cell order:
 # ╟─645d4df3-af64-489b-b2b0-e710d8917680
@@ -621,5 +798,23 @@ md"##### NC -> K"
 # ╠═903c01fc-6995-4c4d-acbf-527bfa353530
 # ╠═26a449f0-73c5-4d17-8b7c-27bd938a7f66
 # ╟─1c3c3e1d-552c-4185-9133-16443c5fa736
-# ╠═d01dbd28-0943-4ac8-a397-68a0afdc2f46
+# ╠═2b674d50-8df8-47a3-ad2f-cbd15d557322
 # ╠═d9d3924a-cb8a-4d2d-849d-c72ad9f0e597
+# ╠═d3508cf5-6e07-4849-946a-075330c19f61
+# ╠═65625ed9-ee0d-4bde-98a4-edf22e2e70b0
+# ╠═72f6615c-048b-41ae-b328-58e613a05c68
+# ╠═54407529-4f09-4050-ad48-ba1861e80153
+# ╠═e874496d-12f7-440c-b396-6e1f78b16935
+# ╠═13896111-228a-401e-bdfa-5ff7f9de9dd0
+# ╠═bfd8febf-a78c-483a-b16d-d45195310737
+# ╠═4d077bcf-8905-4025-aa06-a76700a89ce8
+# ╠═f5d3877a-0217-43f7-a8b7-b4df9964d1f1
+# ╠═7fcf851f-3d08-4c92-8fe6-d0d68d6cc147
+# ╠═20545a01-6cfd-4024-a1ed-a69daee4873f
+# ╠═f3fffefe-53b1-4f22-9926-30a6631ee254
+# ╠═aaffc288-b366-4c21-91cb-908c4e955c4b
+# ╠═148db2db-82d9-4180-85c3-7960b1eee242
+# ╠═6108e29b-34bb-48c6-b9c6-1de3fe079c33
+# ╠═28199a44-b79b-4193-b7f3-9af59d8ab000
+# ╠═1db15a70-f679-4933-a4ef-a1aa1f9a8046
+# ╠═0c0e5c67-f33c-4151-a262-c8dcd6198fc7

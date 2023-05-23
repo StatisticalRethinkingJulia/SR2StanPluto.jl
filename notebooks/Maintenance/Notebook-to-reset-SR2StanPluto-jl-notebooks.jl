@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.25
+# v0.19.26
 
 using Markdown
 using InteractiveUtils
@@ -41,6 +41,10 @@ notebook_files = [
     "~/.julia/dev/SR2StanPluto/notebooks/05.1-Spurious associations.jl",
     "~/.julia/dev/SR2StanPluto/notebooks/05.2-Masked relationships.jl",
     "~/.julia/dev/SR2StanPluto/notebooks/05.3-Categorical variables.jl",
+    "~/.julia/dev/SR2StanPluto/notebooks/06.1-Multicollinearity.jl",
+    "~/.julia/dev/SR2StanPluto/notebooks/06.2-Post-treatment bias.jl",
+    "~/.julia/dev/SR2StanPluto/notebooks/06.3-Collider bias.jl",
+    "~/.julia/dev/SR2StanPluto/notebooks/06.4-Confronting confounding.jl",
     "~/.julia/dev/SR2StanPluto/notebooks/09.1-Good King Markov.jl",
     "~/.julia/dev/SR2StanPluto/notebooks/09.2-Metropolis algorithm.jl",
     "~/.julia/dev/SR2StanPluto/notebooks/09.3-Hamiltonian Monte Carlo.jl",

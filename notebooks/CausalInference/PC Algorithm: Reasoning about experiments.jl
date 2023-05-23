@@ -1,14 +1,11 @@
 ### A Pluto.jl notebook ###
-# v0.19.25
+# v0.19.26
 
 using Markdown
 using InteractiveUtils
 
 # ╔═╡ 62c80a26-975a-11ed-2e09-2dce0e33bb70
 using Pkg
-
-# ╔═╡ aaea31c8-37ed-4f0f-8e3e-8e89d30ed918
-#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ 58ece6dd-a20f-4624-898a-40cae4b471e4
 begin
@@ -18,7 +15,6 @@ begin
 	# Graphics related packages
 	using CairoMakie
 	using GraphViz
-	using Graphs
 
 	# DAG support
 	using CausalInference
@@ -46,11 +42,8 @@ html"""
 </style>
 """
 
-# ╔═╡ a8079d6a-6aaf-48f2-b1d5-3c2f73719eaf
-pwd()
-
-# ╔═╡ 6db80c65-9438-4058-8a53-f5c761393098
-readdir(pwd())
+# ╔═╡ aaea31c8-37ed-4f0f-8e3e-8e89d30ed918
+#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ 261cca70-a6dd-4bed-b2f2-8667534d0ceb
 let
@@ -66,8 +59,8 @@ let
 	y = e + f + c + rand(N) * 0.25
 
 	global X = [a b d c f x e y]
-	global df_full = DataFrame(a=a, b=b, d=d, c=c,f=f, x=x, e=e, y=y)
-	global df = DataFrame(d=d, c=c, f=f, x=x, e=e, y=y)
+	global df_full = DataFrame(A=a, B=b, D=d, C=c, F=f, X=x, E=e, Y=y)
+	global df = DataFrame(D=d, C=c, F=f, X=x, E=e, Y=y)
 	global corm = NamedArray(cor(Array(df)), (names(df), names(df)), ("Rows", "Cols"))
 	corm
 end
@@ -76,125 +69,49 @@ end
 md" ##### Dag d1 is the full generational causal graph."
 
 # ╔═╡ 0ef59054-afd5-443b-a1c9-914798c98017
-g_dot_str="DiGraph d1 {a->d; d->x; b->f; f->y; x->e; e->y; a->c; b->c; c->x; c->y;}";
+g_dot_str="DiGraph d1 {A->D; D->X; B->F; F->Y; X->E; E->Y; A->C; B->C; C->X; C->Y;}";
 
 # ╔═╡ 6bbfe4cb-f7e1-4503-a386-092882a1a49c
-d1 = create_dag("d1", df_full, 0.25; g_dot_str);
+d1 = create_fci_dag("d1", df_full, g_dot_str,0.25);
 
-# ╔═╡ 85e5fbe1-f324-448a-a438-a454c0f744f0
-let
-	g_oracle = fcialg(8, dseporacle, d1.g)
-	g_gauss = fcialg(d1.df, 0.25, gausscitest)
-    fci_oracle_dot_str = to_gv(g_oracle, d1.vars)
-    fci_gauss_dot_str = to_gv(g_gauss, d1.vars)
-    g1 = GraphViz.Graph(d1.g_dot_str)
-    g2 = GraphViz.Graph(d1.est_g_dot_str)
-    g3 = GraphViz.Graph(fci_oracle_dot_str)
-    g4 = GraphViz.Graph(fci_gauss_dot_str)
-    f = Figure(resolution=default_figure_resolution)
-    ax = Axis(f[1, 1]; aspect=DataAspect(), title="True (generational) DAG")
-    CairoMakie.image!(rotr90(create_png_image(g1)))
-    hidedecorations!(ax)
-    hidespines!(ax)
-    ax = Axis(f[1, 2]; aspect=DataAspect(), title="PC estimated DAG")
-    CairoMakie.image!(rotr90(create_png_image(g2)))
-    hidedecorations!(ax)
-    hidespines!(ax)
-    ax = Axis(f[2, 1]; aspect=DataAspect(), title="FCI oracle estimated DAG")
-    CairoMakie.image!(rotr90(create_png_image(g3)))
-    hidedecorations!(ax)
-    hidespines!(ax)
-    ax = Axis(f[2, 2]; aspect=DataAspect(), title="FCI gauss estimated DAG")
-    CairoMakie.image!(rotr90(create_png_image(g4)))
-    hidedecorations!(ax)
-    hidespines!(ax)
-    f
-end
+# ╔═╡ b1f81e4e-cd1c-416d-8300-dcd6042a00bb
+gvplot(d1)
+
+# ╔═╡ b72ae505-db7e-4a4c-a97a-420bf3a2feaf
+all_paths(d1, :A, :B)
+
+# ╔═╡ ff523e85-4760-4fba-99d9-1c19930fc855
+d2 = create_pc_dag("d2", df_full, g_dot_str,0.25);
+
+# ╔═╡ 27350494-87a9-4619-beeb-e9b31502c1cf
+gvplot(d2)
 
 # ╔═╡ b14abbeb-6efa-4dc2-9a68-57e496938d62
-md" ##### Dag d2 is the observed part of the causal graph."
+md" ##### Dag d3 is the observed part of the causal graph."
 
 # ╔═╡ 261199f5-cfe8-48e7-b3d5-83cb3c977de6
-g_dot_str_2="DiGraph d2 {d->x; f->y; x->e; e->y; c->x; c->y;}";
+g_dot_str_2="DiGraph d2 {D->X; X->E; E->Y; C->X; C->Y; F->Y;}";
 
-# ╔═╡ 7ee0b0da-c837-4348-ad9f-7bda0d0d6222
-d2 = create_dag("d2", df, 0.25; g_dot_str=g_dot_str_2);
-
-# ╔═╡ 06554e50-4bfb-4da8-abae-eb58283ac687
-d2.vars
+# ╔═╡ faf4f474-99c2-40df-a47b-0b73d0a92d27
+d3 = create_fci_dag("d3", df, g_dot_str_2);
 
 # ╔═╡ a67ef2e6-b7f4-470a-b5d8-5fd12bfebc91
-gvplot(d2; title_g="Observed part of causal graph.")
-
-# ╔═╡ 5085b099-3f85-47b2-9fac-9f24aa9f4396
-est_g = pcalg(df, 0.25, gausscitest)
-
-# ╔═╡ b890b977-5c28-4b79-99b4-f800423405a0
-est_g.fadjlist
-
-# ╔═╡ ccfd0b98-1eb6-4381-8bb5-fecb9d9e1d5b
-g_oracle = fcialg(6, dseporacle, d2.g)
-
-# ╔═╡ 87b6c0d6-b9af-4d56-b0b1-ccfa412f2130
-g_oracle.graph.fadjlist
-
-# ╔═╡ 0ba0618b-acf6-42f6-8b40-359f40871180
-g_gauss = fcialg(df, 0.25, gausscitest)
-
-# ╔═╡ eca6a867-434d-4a07-ac60-7a466cf8f03f
-g_oracle.graph.fadjlist
-
-# ╔═╡ bb03f591-f6bb-4439-8b62-fa9ad6e6bf2c
-vars = [:d, :c, :f, :x, :e, :y];
-
-# ╔═╡ d91b5dec-28d6-479e-8ea0-fb89657cab67
-let
-	fci_oracle_dot_str = to_gv(g_oracle, vars)
-	fci_gauss_dot_str = to_gv(g_gauss, vars)
-	g1 = GraphViz.Graph(d2.g_dot_str)
-	g2 = GraphViz.Graph(d2.est_g_dot_str)
-	g3 = GraphViz.Graph(fci_oracle_dot_str)
-	g4 = GraphViz.Graph(fci_gauss_dot_str)
-	f = Figure(resolution=default_figure_resolution)
-	ax = Axis(f[1, 1]; aspect=DataAspect(), title="Observed portion of causal DAG")
-	CairoMakie.image!(rotr90(create_png_image(g1)))
-	hidedecorations!(ax)
-	hidespines!(ax)
-	ax = Axis(f[1, 2]; aspect=DataAspect(), title="PC estimated DAG")
-	CairoMakie.image!(rotr90(create_png_image(g2)))
-	hidedecorations!(ax)
-	hidespines!(ax)
-	ax = Axis(f[2, 1]; aspect=DataAspect(), title="FCI oracle estimated DAG")
-	CairoMakie.image!(rotr90(create_png_image(g3)))
-	hidedecorations!(ax)
-	hidespines!(ax)
-	ax = Axis(f[2, 2]; aspect=DataAspect(), title="FCI gauss estimated DAG")
-	CairoMakie.image!(rotr90(create_png_image(g4)))
-	hidedecorations!(ax)
-	hidespines!(ax)
-	f
-end
+gvplot(d3; title_g="Observed part of generational graph.")
 
 # ╔═╡ 2481e166-ddf1-4e44-941e-ada126da201d
-md" ##### Use DAG d3 to illustrate backdoor-paths."
+md" ##### Use DAG d4 to illustrate backdoor-paths."
 
 # ╔═╡ 0d58fc1f-96e2-4df6-9f68-dd405afd888c
-d3 = create_dag("d3", df_full, 0.025; g_dot_str=g_dot_str);
-
-# ╔═╡ 27f574ba-1c83-44b4-91b5-943701d133da
-md" ##### Regression of y on x might not show the correct average causal effect (ACE) as the `backdoor_criterion` returns `false`."
-
-# ╔═╡ ea263529-42af-40e7-8210-bc2cb671e493
-backdoor_criterion(d1, :x, :y; verbose=true)
+dtmp = create_fci_dag("dtmp", df_full, g_dot_str);
 
 # ╔═╡ 363ba48a-643b-42c4-a8a7-12a9c530a4f2
 let
-	ds= "DiGraph d1 {a->d; d->x; b->f; f->y; x->e [color=yellow]; e->y [color=yellow]; a->c; b->c; c->x [color=red]; c->y [color=red];}"
-	set_dag_est_g!(d3; g_dot_str=ds)
-	g1 = GraphViz.Graph(d3.g_dot_str)
-	g2 = GraphViz.Graph(d3.est_g_dot_str)
+	ds= "DiGraph d1 {A->D; B->F; D->X; X->E [color=yellow]; E->Y [color=yellow]; B->C; C->X [color=red]; C->Y [color=red]; F->Y;}"
+	dtmp.est_g_dot_str = ds
+	g1 = GraphViz.Graph(dtmp.g_dot_str)
+	g2 = GraphViz.Graph(dtmp.est_g_dot_str)
 	f = Figure(resolution=default_figure_resolution)
-	ax = Axis(f[1, 1]; aspect=DataAspect(), title="True (generational) DAG")
+	ax = Axis(f[1, 1]; aspect=DataAspect(), title="Generational DAG")
 	CairoMakie.image!(rotr90(create_png_image(g1)))
 	hidedecorations!(ax)
 	hidespines!(ax)
@@ -205,21 +122,33 @@ let
 	f
 end
 
+# ╔═╡ 27f574ba-1c83-44b4-91b5-943701d133da
+md" ##### Regression of Y on X might not show the correct average causal effect (ACE) as the `backdoor_criterion` returns `false`."
+
+# ╔═╡ ea263529-42af-40e7-8210-bc2cb671e493
+backdoor_criterion(dtmp, :X, :Y; verbose=true)
+
+# ╔═╡ 62a63405-6562-4dd5-b005-714a465c1b3b
+all_paths(dtmp, :X, :Y)
+
 # ╔═╡ 4cfc8028-a7ef-4a63-b5c1-c1ff6664cb7d
-md" ##### Can we close the backdoor by conditioning on c?"
+md" ##### Can we close the backdoor by conditioning on C?"
 
 # ╔═╡ b4258b42-89ff-446f-a4c0-d15092734762
-backdoor_criterion(d1, :x, :y, [:c]; verbose=true)
+backdoor_criterion(dtmp, :X, :Y, [:C]; verbose=true)
 
 # ╔═╡ 1dc7b8fa-ffda-4f5b-8b0f-a8df8a4e4708
-md" ##### No, this opens backdoor path x-d-a-c-b-f-y."
+md" ##### No, this opens backdoor path X-D-A-C-B-F-Y."
+
+# ╔═╡ 1be951aa-160a-4c0d-97aa-0a77dc9a9873
+dtmp.vars
 
 # ╔═╡ 51da6b02-d5a9-467c-bfbd-c6d9dc164953
 let
 	ds= "DiGraph d1 {a->d [color=red]; d->x [color=red]; b->f [color=red]; f->y [color=red]; x->e [color=yellow]; e->y [color=yellow]; a->c [color=red]; b->c [color=red]; c->x; c->y;}"
-	set_dag_est_g!(d3; g_dot_str=ds)
-	g1 = GraphViz.Graph(d3.g_dot_str)
-	g2 = GraphViz.Graph(d3.est_g_dot_str)
+	dtmp.est_g_dot_str = ds
+	g1 = GraphViz.Graph(dtmp.g_dot_str)
+	g2 = GraphViz.Graph(dtmp.est_g_dot_str)
 	f = Figure(resolution=default_figure_resolution)
 	ax = Axis(f[1, 1]; aspect=DataAspect(), title="True (generational) DAG")
 	CairoMakie.image!(rotr90(create_png_image(g1)))
@@ -236,20 +165,20 @@ end
 md" ##### Will conditioning on both c and f close all backdoor paths?"
 
 # ╔═╡ 0bca1cbe-4c39-45f7-bda7-23f1509ad1bc
-backdoor_criterion(d1, :x, :y, [:c, :f]; verbose=true)
+backdoor_criterion(dtmp, :X, :Y, [:C, :F]; verbose=true)
 
 # ╔═╡ 3ba9b2e8-813f-437c-81e3-c2ba7c27cb8c
 md" ##### Yes it does, and so will conditioning on d and c."
 
 # ╔═╡ b060b849-2937-4764-bb75-0d3d3f5104a2
-backdoor_criterion(d1, :x, :y, [:c, :d]; verbose=true)
+backdoor_criterion(dtmp, :X, :Y, [:C, :D]; verbose=true)
 
 # ╔═╡ d1a768a9-eee0-43e0-b5b5-567b10836bbe
 let
 	ds= "DiGraph d1 {a->d; d->x; b->f; f->y; x->e [color=yellow]; e->y [color=yellow]; a->c; b->c; c->x; c->y;}"
-	set_dag_est_g!(d3; g_dot_str=ds)
-	g1 = GraphViz.Graph(d3.g_dot_str)
-	g2 = GraphViz.Graph(d3.est_g_dot_str)
+	dtmp.est_g_dot_str = ds
+	g1 = GraphViz.Graph(dtmp.g_dot_str)
+	g2 = GraphViz.Graph(dtmp.est_g_dot_str)
 	f = Figure(resolution=default_figure_resolution)
 	ax = Axis(f[1, 1]; aspect=DataAspect(), title="True (generational) DAG")
 	CairoMakie.image!(rotr90(create_png_image(g1)))
@@ -263,10 +192,10 @@ let
 end
 
 # ╔═╡ 70d69a91-5d84-4ab7-aca4-f321975861db
-backdoor_criterion(d1, :x, :y, [:d, :f]; verbose=true)
+backdoor_criterion(dtmp, :X, :Y, [:D, :F]; verbose=true)
 
 # ╔═╡ 87e59d11-bf40-4c8b-b85c-0f0e07d9689f
-backdoor_criterion(d1, :x, :y, [:c, :d, :f]; verbose=true)
+backdoor_criterion(dtmp, :X, :Y, [:C, :D, :F]; verbose=true)
 
 # ╔═╡ 28853ae3-fd09-4e86-9807-79642cedd56d
 md" ##### Below Stan models illustrate this in another way. See the coefficient plot below."
@@ -408,43 +337,40 @@ stan5_0 = "
 	}
 ";
 
-# ╔═╡ 7426e93b-da9f-423f-a2d2-0a116f286012
-tmpdir = mktempdir()
-
 # ╔═╡ 4d9a3c0d-49c3-4502-b7c7-ab0c95d6b141
-data = (N=size(df, 1), X=df.x, Y=df.y, D=df.d, C=df.c, F=df.f)
+data = (N=size(df, 1), X=df.X, Y=df.Y, D=df.D, C=df.C, F=df.F);
 
 # ╔═╡ d7837ce1-2780-45ec-8645-42b83af17b1d
 let
-	global m1_0s = SampleModel("m1.0s", stan1_0, tmpdir)
+	global m1_0s = SampleModel("m1.0s", stan1_0)
 	global rc1_0s = stan_sample(m1_0s; data)
 	success(rc1_0s) && describe(m1_0s, [:a, :bX, :bC, :bD, :bF, :sigma])
 end
 
 # ╔═╡ f264ee82-9e03-4a0c-bc4a-fbb000700de5
 let
-	global m2_0s = SampleModel("m2.0s", stan2_0, tmpdir)
+	global m2_0s = SampleModel("m2.0s", stan2_0)
 	global rc2_0s = stan_sample(m2_0s; data)
 	success(rc2_0s) && describe(m2_0s, [:a, :bX, :bC, :bD, :sigma])
 end
 
 # ╔═╡ 0c4811f2-ad5b-47af-a74b-ff3b24185a2d
 let
-	global m3_0s = SampleModel("m3.0s", stan3_0, tmpdir)
+	global m3_0s = SampleModel("m3.0s", stan3_0)
 	global rc3_0s = stan_sample(m3_0s; data)
 	success(rc3_0s) && describe(m3_0s, [:a, :bX, :bC, :bF, :sigma])
 end
 
 # ╔═╡ 1691a68e-e918-42b3-b067-120b6dbebc15
 let
-	global m4_0s = SampleModel("m4.0s", stan4_0, tmpdir)
+	global m4_0s = SampleModel("m4.0s", stan4_0)
 	global rc4_0s = stan_sample(m4_0s; data)
 	success(rc4_0s) && describe(m4_0s, [:a, :bX, :bD, :bF, :sigma])
 end
 
 # ╔═╡ 6ba10a1a-b236-4dc8-af0b-ae8403f63b01
 let
-	global m5_0s = SampleModel("m5.0s", stan5_0, tmpdir)
+	global m5_0s = SampleModel("m5.0s", stan5_0)
 	global rc5_0s = stan_sample(m5_0s; data)
 	success(rc5_0s) && describe(m5_0s, [:a, :bX, :sigma])
 end
@@ -486,42 +412,36 @@ if success(rc1_0s) && success(rc2_0s)
 end
 
 # ╔═╡ f908a8aa-b8df-4280-8652-4831483117d1
-md" ##### Models m1.0s and m3.0s will likely provide the best estimate of the average causal effect (ACE) of x on y."
+md" ##### Model m3.0s will likely provide the best estimate of the average causal effect (ACE) of X on Y."
 
 # ╔═╡ Cell order:
 # ╟─ad08dd09-222a-4071-92d4-38deebaf2e82
 # ╠═e4552c81-d0db-4434-b81a-c86f1af515e5
 # ╠═62c80a26-975a-11ed-2e09-2dce0e33bb70
 # ╠═aaea31c8-37ed-4f0f-8e3e-8e89d30ed918
-# ╠═a8079d6a-6aaf-48f2-b1d5-3c2f73719eaf
-# ╠═6db80c65-9438-4058-8a53-f5c761393098
 # ╠═58ece6dd-a20f-4624-898a-40cae4b471e4
 # ╠═261cca70-a6dd-4bed-b2f2-8667534d0ceb
 # ╟─3a7676c8-38be-41d9-949e-d8de8c1b9cff
 # ╠═0ef59054-afd5-443b-a1c9-914798c98017
 # ╠═6bbfe4cb-f7e1-4503-a386-092882a1a49c
-# ╠═85e5fbe1-f324-448a-a438-a454c0f744f0
+# ╠═b1f81e4e-cd1c-416d-8300-dcd6042a00bb
+# ╠═b72ae505-db7e-4a4c-a97a-420bf3a2feaf
+# ╠═ff523e85-4760-4fba-99d9-1c19930fc855
+# ╠═27350494-87a9-4619-beeb-e9b31502c1cf
 # ╟─b14abbeb-6efa-4dc2-9a68-57e496938d62
 # ╠═261199f5-cfe8-48e7-b3d5-83cb3c977de6
-# ╠═7ee0b0da-c837-4348-ad9f-7bda0d0d6222
-# ╠═06554e50-4bfb-4da8-abae-eb58283ac687
+# ╠═faf4f474-99c2-40df-a47b-0b73d0a92d27
 # ╠═a67ef2e6-b7f4-470a-b5d8-5fd12bfebc91
-# ╠═5085b099-3f85-47b2-9fac-9f24aa9f4396
-# ╠═b890b977-5c28-4b79-99b4-f800423405a0
-# ╠═ccfd0b98-1eb6-4381-8bb5-fecb9d9e1d5b
-# ╠═87b6c0d6-b9af-4d56-b0b1-ccfa412f2130
-# ╠═0ba0618b-acf6-42f6-8b40-359f40871180
-# ╠═eca6a867-434d-4a07-ac60-7a466cf8f03f
-# ╠═bb03f591-f6bb-4439-8b62-fa9ad6e6bf2c
-# ╠═d91b5dec-28d6-479e-8ea0-fb89657cab67
 # ╟─2481e166-ddf1-4e44-941e-ada126da201d
 # ╠═0d58fc1f-96e2-4df6-9f68-dd405afd888c
+# ╠═363ba48a-643b-42c4-a8a7-12a9c530a4f2
 # ╟─27f574ba-1c83-44b4-91b5-943701d133da
 # ╠═ea263529-42af-40e7-8210-bc2cb671e493
-# ╠═363ba48a-643b-42c4-a8a7-12a9c530a4f2
+# ╠═62a63405-6562-4dd5-b005-714a465c1b3b
 # ╟─4cfc8028-a7ef-4a63-b5c1-c1ff6664cb7d
 # ╠═b4258b42-89ff-446f-a4c0-d15092734762
 # ╟─1dc7b8fa-ffda-4f5b-8b0f-a8df8a4e4708
+# ╠═1be951aa-160a-4c0d-97aa-0a77dc9a9873
 # ╠═51da6b02-d5a9-467c-bfbd-c6d9dc164953
 # ╟─76eebf62-537f-4ff3-b35a-7f292df6c81f
 # ╠═0bca1cbe-4c39-45f7-bda7-23f1509ad1bc
@@ -536,7 +456,6 @@ md" ##### Models m1.0s and m3.0s will likely provide the best estimate of the av
 # ╠═98745efe-cb3e-44bd-a1fc-ef8150e79772
 # ╠═c947bb30-554d-42bc-9369-a6f8b531c391
 # ╠═61758a72-f516-4e76-b7e0-c7c278d7f2ab
-# ╠═7426e93b-da9f-423f-a2d2-0a116f286012
 # ╠═4d9a3c0d-49c3-4502-b7c7-ab0c95d6b141
 # ╠═d7837ce1-2780-45ec-8645-42b83af17b1d
 # ╠═f264ee82-9e03-4a0c-bc4a-fbb000700de5

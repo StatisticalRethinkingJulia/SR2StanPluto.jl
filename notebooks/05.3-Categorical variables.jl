@@ -1,11 +1,13 @@
 ### A Pluto.jl notebook ###
-# v0.19.22
+# v0.19.26
 
 using Markdown
 using InteractiveUtils
 
 # ╔═╡ 16ddb41a-fc59-11ea-1631-153e3466c75c
 using Pkg
+
+# ╔═╡ 76b6ce64-9f9b-48fa-8ef4-8ee1a0723bf0
 #Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ d65dd2b2-fc58-11ea-2300-4db47ec9a789
@@ -14,7 +16,7 @@ begin
 	using LaTeXStrings
 	
 	# Graphics related
-	using GLMakie
+	using CairoMakie
 
 	# Causal inference support
 	using Graphs
@@ -26,7 +28,7 @@ begin
 	using StanSample
 	
 	# Project support libraries
-	using StatisticalRethinking: sr_datadir
+	using StatisticalRethinking: sr_datadir, PRECIS
 	using RegressionAndOtherStories
 end
 
@@ -48,130 +50,127 @@ html"""
 </style>
 """
 
-# ╔═╡ 76b6ce64-9f9b-48fa-8ef4-8ee1a0723bf0
-#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
-
 # ╔═╡ 4b4ddf89-b54a-4744-a7e2-2c06b0ebcc80
-md"### Julia code snippets 5.28 - 5.31"
+md"### Julia code snippets 5.46"
 
-# ╔═╡ 7eeb791c-2260-4887-b34c-94e7a1cfe43b
+# ╔═╡ 2195f047-416a-40bc-ab00-fd5bef502e62
 begin
-	df = CSV.read(sr_datadir("milk.csv"), DataFrame; delim=';')
-	df.lmass = log.(df.mass)
-	df = filter(row -> !(row[:neocortex_perc] == "NA"), df)
-	df.neocortex_perc = parse.(Float64, df.neocortex_perc)
-	scale_df_cols!(df, [:kcal_per_g, :neocortex_perc, :lmass])
+	df = CSV.read(sr_datadir("Howell1.csv"), DataFrame; delim=';');
+	df = filter(row -> row[:age] > 18, df)
+	scale_df_cols!(df, [:height, :weight])
 end;
 
-# ╔═╡ d73f36f6-39ba-4790-96b2-95d76dd50702
-stan_5_5_draft = "
-data {
- int < lower = 1 > N; // Sample size
- vector[N] K; // Outcome
- vector[N] NC; // Predictor
+# ╔═╡ c67411f7-bd2a-42d8-86dd-bea5e435b4fc
+stan5_8 = "
+data{
+    int N;
+    int male[N];
+    vector[N] age;
+    vector[N] weight;
+    vector[N] height;
+    int sex[N];
 }
-parameters {
- real a; // Intercept
- real bN; // Slope (regression coefficients)
- real < lower = 0 > sigma;    // Error SD
+parameters{
+    vector[2] a;
+    real<lower=0> sigma;
 }
-model {
-  vector[N] mu;               // mu is a vector
-  a ~ normal(0, 1);           //Priors
-  bN ~ normal(0, 1);
-  sigma ~ exponential(1);
-  mu = a + bN * NC;
-  K ~ normal(mu , sigma);     // Likelihood
+model{
+    vector[N] mu;
+    sigma ~ exponential(1);
+    a ~ normal( 178 , 20 );
+    for ( i in 1:N ) {
+        mu[i] = a[sex[i]];
+    }
+    height ~ normal( mu , sigma );
 }
 ";
 
-# ╔═╡ 11558976-07ec-4b87-a53d-eeea4418a315
-md"##### Define the SampleModel, etc."
+# ╔═╡ 74b9ca50-8c24-40ab-a89e-0e022a01345c
+md"### Define the SampleModel, etc."
 
-# ╔═╡ b0b239e9-00c8-4a99-9f49-bb3a51ad6d5c
+# ╔═╡ c65770e3-d43c-4368-bdf2-55efb76db580
 begin
-	m5_5_drafts = SampleModel("m5.5.draft", stan_5_5_draft);
-	m5_5_data = Dict("N" => size(df, 1), "NC" => df.neocortex_perc_s,
-		"K" => df.kcal_per_g_s);
-	rc5_5_drafts = stan_sample(m5_5_drafts, data=m5_5_data)
-	success(rc5_5_drafts) && describe(m5_5_drafts, [:a, :bN, :sigma])
+	howell1 = copy(df)
+	howell1[!, :sex] = [howell1[i, :male] == 1 ? 2 : 1 for i in 1:size(howell1, 1)]
+	howell1 = filter(row -> row[:sex] == 2, howell1)
+	howell1 = filter(row -> row[:sex] == 1, howell1)
+	data = (N = size(howell1, 1), male = howell1.male, weight = howell1.weight,
+		height = howell1.height, age = howell1.age, sex = howell1.sex)
+	m5_8s = SampleModel("m5.8s", stan5_8)
+	rc5_8s = stan_sample(m5_8s; data)
+	success(rc5_8s) && describe(m5_8s, [Symbol("a[1]"), Symbol("a[2]"), :sigma])
 end
 
-# ╔═╡ deec5d40-1bb3-40dc-bf2a-3bb3be1513f0
-if success(rc5_5_drafts)
-  post5_5_drafts_df = read_samples(m5_5_drafts, :dataframe)
+# ╔═╡ 885827cc-a6f4-4658-b3f1-1c8e1a529035
+if success(rc5_8s)
+	post5_8s = read_samples(m5_8s, :dataframe)
+	ms5_8s = model_summary(post5_8s, [Symbol("a.1"), Symbol("a.2"), :sigma])
 end
 
-# ╔═╡ ccccedbd-bdf5-4987-9ce1-b168050cbefe
-md"### Julia code snippets 5.31-5.34"
+# ╔═╡ c0777af3-5bfa-4ec9-9a24-e88d21aab82d
+md" #### Many categories."
 
-# ╔═╡ 77281e0a-e6af-4b51-a781-062871d69d86
-if success(rc5_5_drafts)
-	f = Figure(resolution=default_figure_resolution)
-	ax = Axis(f[1, 1]; title="m5.5.drafts: a ~ Normal(0, 1), bN ~ Normal(0, 1)")
-	x = -2:0.01:2
-	for j in 1:100
-		y = post5_5_drafts_df[j, :a] .+ post5_5_drafts_df[j, :bN]*x
-		lines!(x, y, color=:lightgrey, leg=false)
-	end
-	f
+# ╔═╡ 80eb4c84-5c43-4f2c-9a7a-6c8f7f8a92ea
+begin
+	milk = CSV.read(sr_datadir("milk.csv"), DataFrame; delim=';')
+	milk[!, :clade_id] = Int.(indexin(milk[:, :clade], unique(milk[:, :clade])))
+	scale_df_cols!(milk, [:kcal_per_g])
+	milk
 end
 
-# ╔═╡ 138763e8-58fa-450e-b444-910fa955808f
-md"### Julia code snippet 5.35"
+# ╔═╡ 54de96d1-52bb-4801-956a-e7bedd1d50b6
+PRECIS(milk[:, [:clade_id, :kcal_per_g]])
 
-# ╔═╡ 98e3e682-3a32-4c52-819c-8032ed93397c
-stan5_5 = "
-data {
- int < lower = 1 > N; // Sample size
- vector[N] K; // Outcome
- vector[N] NC; // Predictor
+# ╔═╡ 4a155621-d560-4d6d-850e-a9e57180bfe0
+stan5_9 = "
+data{
+  int <lower=1> N;              // Sample size
+  int <lower=1> k;
+  vector[N] K;
+  int clade_id[N];
 }
-
-parameters {
- real a; // Intercept
- real bN; // Slope (regression coefficients)
- real < lower = 0 > sigma;    // Error SD
+parameters{
+  vector[k] a;
+  real<lower=0> sigma;
 }
-
-model {
-  vector[N] mu;               // mu is a vector
-  a ~ normal(0, 0.2);           //Priors
-  bN ~ normal(0, 0.5);
-  sigma ~ exponential(1);
-  mu = a + bN * NC;
-  K ~ normal(mu , sigma);     // Likelihood
+model{
+  vector[N] mu;
+  sigma ~ exponential( 1 );
+  a ~ normal( 0 , 0.5 );
+  for ( i in 1:N ) {
+      mu[i] = a[clade_id[i]];
+  }
+  K ~ normal( mu , sigma );
 }
 ";
 
-# ╔═╡ 335b965a-5ded-42b7-84fa-9dcb60e0520a
-md"### Julia code snippet 5.36"
-
-# ╔═╡ ab914ecc-f932-479a-85ec-1dac65a75327
+# ╔═╡ 535c6009-ac50-4b9b-a9a4-91b67108fc07
 let
-	m5_5_data = Dict("N" => size(df, 1), "NC" => df[!, :neocortex_perc_s],
-		"K" => df[!, :kcal_per_g_s]);
-	global m5_5s = SampleModel("m5.5", stan5_5);
-	global rc5_5s = stan_sample(m5_5s, data=m5_5_data)
-	success(rc5_5s) && describe(m5_5s, [:a, :bN, :sigma])
+	data = (N = size(milk, 1), clade_id = milk.clade_id,
+    	K = milk.kcal_per_g_s, k = length(unique(milk[:, :clade_id])))
+	global m5_9s = SampleModel("m5.9", stan5_9)
+	global rc5_9s = stan_sample(m5_9s; data)
+
+	success(rc5_9s) && describe(m5_9s, ["a[1]", "a[2]", "a[3]", "a[4]", "sigma"])
 end
 
-# ╔═╡ 33d639d4-ad94-4dd8-b681-14d8305009b8
-md"### Julia code snippet 5.37"
-
-# ╔═╡ 7bd2bc6b-b337-4c44-a837-ac6109665e6a
-if success(rc5_5s)
-  post5_5s_df = read_samples(m5_5s, :dataframe)
-  title = "Kcal_per_g vs. neocortex_perc" * "\nshowing predicted and hpd range"
-  plotbounds(
-    df, :neocortex_perc, :kcal_per_g,
-    post5_5s_df, [:a, :bN, :sigma];
-    title=title
-  )
+# ╔═╡ fa3179c5-8b79-4b05-843a-b906de956aea
+if success(rc5_9s)
+	post5_9s_df = read_samples(m5_9s, :dataframe)
+	PRECIS(post5_9s_df)
 end
 
-# ╔═╡ bb2f1aba-9153-433d-9026-63c2e5713758
-md"### Julia code snippet 5.38"
+# ╔═╡ 689d48c4-100d-437c-aa11-42125d26b326
+model_summary(post5_9s_df, [Symbol("a.1"), Symbol("a.2"), Symbol("a.3"), Symbol("a.4"), :sigma])
+
+# ╔═╡ 0d2d8423-ec6a-4ce5-a069-fc0fabd824f1
+if success(rc5_9s)
+	(s1, f1) = plot_model_coef([m5_9s], 
+		[Symbol("a.1"), Symbol("a.2"), Symbol("a.3"), Symbol("a.4"), :sigma]; 
+	title="Comparison of `a` coefficients for categories")
+	f1
+end
+
 
 # ╔═╡ Cell order:
 # ╟─645d4df3-af64-489b-b2b0-e710d8917680
@@ -181,17 +180,16 @@ md"### Julia code snippet 5.38"
 # ╠═76b6ce64-9f9b-48fa-8ef4-8ee1a0723bf0
 # ╠═d65dd2b2-fc58-11ea-2300-4db47ec9a789
 # ╟─4b4ddf89-b54a-4744-a7e2-2c06b0ebcc80
-# ╠═7eeb791c-2260-4887-b34c-94e7a1cfe43b
-# ╠═d73f36f6-39ba-4790-96b2-95d76dd50702
-# ╟─11558976-07ec-4b87-a53d-eeea4418a315
-# ╠═b0b239e9-00c8-4a99-9f49-bb3a51ad6d5c
-# ╠═deec5d40-1bb3-40dc-bf2a-3bb3be1513f0
-# ╟─ccccedbd-bdf5-4987-9ce1-b168050cbefe
-# ╠═77281e0a-e6af-4b51-a781-062871d69d86
-# ╟─138763e8-58fa-450e-b444-910fa955808f
-# ╠═98e3e682-3a32-4c52-819c-8032ed93397c
-# ╟─335b965a-5ded-42b7-84fa-9dcb60e0520a
-# ╠═ab914ecc-f932-479a-85ec-1dac65a75327
-# ╟─33d639d4-ad94-4dd8-b681-14d8305009b8
-# ╠═7bd2bc6b-b337-4c44-a837-ac6109665e6a
-# ╠═bb2f1aba-9153-433d-9026-63c2e5713758
+# ╠═2195f047-416a-40bc-ab00-fd5bef502e62
+# ╠═c67411f7-bd2a-42d8-86dd-bea5e435b4fc
+# ╟─74b9ca50-8c24-40ab-a89e-0e022a01345c
+# ╠═c65770e3-d43c-4368-bdf2-55efb76db580
+# ╠═885827cc-a6f4-4658-b3f1-1c8e1a529035
+# ╟─c0777af3-5bfa-4ec9-9a24-e88d21aab82d
+# ╠═80eb4c84-5c43-4f2c-9a7a-6c8f7f8a92ea
+# ╠═54de96d1-52bb-4801-956a-e7bedd1d50b6
+# ╠═4a155621-d560-4d6d-850e-a9e57180bfe0
+# ╠═535c6009-ac50-4b9b-a9a4-91b67108fc07
+# ╠═fa3179c5-8b79-4b05-843a-b906de956aea
+# ╠═689d48c4-100d-437c-aa11-42125d26b326
+# ╠═0d2d8423-ec6a-4ce5-a069-fc0fabd824f1

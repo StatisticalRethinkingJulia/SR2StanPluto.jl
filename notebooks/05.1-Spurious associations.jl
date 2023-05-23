@@ -1,11 +1,14 @@
 ### A Pluto.jl notebook ###
-# v0.19.25
+# v0.19.26
 
 using Markdown
 using InteractiveUtils
 
 # ╔═╡ 16ddb41a-fc59-11ea-1631-153e3466c75c
 using Pkg
+
+# ╔═╡ 2e717b02-0290-49e3-9f67-70f73d760b10
+#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ d65dd2b2-fc58-11ea-2300-4db47ec9a789
 begin
@@ -47,13 +50,10 @@ html"""
 		margin: 0 auto;
 		max-width: 3500px;
     	padding-left: max(5px, 3%);
-    	padding-right: max(5px, 36%);
+    	padding-right: max(5px, 6%);
 	}
 </style>
 """
-
-# ╔═╡ 2e717b02-0290-49e3-9f67-70f73d760b10
-#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ d65e98dc-fc58-11ea-25e1-9fab97b6125a
 begin
@@ -362,15 +362,12 @@ end;
 # ╔═╡ f7c5c5c7-85d4-4e09-b025-31109e451577
 begin
 	dag_1_edges = "DiGraph DAG_1 {A -> M; M -> D; A -> D;}"
-	dag_1 = create_dag("DAG_1", dfAMD; g_dot_str=dag_1_edges)
+	dag_1 = create_fci_dag("DAG_1", dfAMD, dag_1_edges)
 	gvplot(dag_1)
 end
 
 # ╔═╡ bfdab5a8-37a6-4af2-9645-99f8e0d8edd5
 dag_1.g.fadjlist
-
-# ╔═╡ aa2238cd-3d62-467e-a19b-84ab6f1561ea
-dag_1.est_g.fadjlist
 
 # ╔═╡ 5c87da91-ee1f-4d74-827b-efe107f25862
 md" ##### Check d-separation between A, M and D"
@@ -390,7 +387,7 @@ dsep(dag_1, :M, :D, [:A]; verbose=true)
 # ╔═╡ 66104ae9-eae1-4f42-b38f-6b562e1c152f
 begin
 	dag_2_edges = "DiGraph DAG_2 {A -> M; A -> D;}"
-	dag_2 = create_dag("DAG_2", dfAMD; g_dot_str=dag_2_edges)
+	dag_2 = create_fci_dag("DAG_2", dfAMD, dag_2_edges)
 	gvplot(dag_2)
 end
 
@@ -788,34 +785,36 @@ md" ### Julia code snippet 5.19"
 # ╔═╡ d6e3deba-5c57-4b8b-bfa4-c81fccd2aa9c
 stan5_3_A = "
 data {
-  int N;
-  vector[N] D;
-  vector[N] M;
-  vector[N] A;
+	int N;
+	vector[N] D;
+	vector[N] M;
+	vector[N] A;
 }
 parameters {
-  real a;
-  real bA;
-  real bM;
-  real aM;
-  real bAM;
-  real<lower=0> sigma;
-  real<lower=0> sigma_M;
+	// A->D + A->M->D
+	real a;
+	real bA;
+	real bM;
+	real<lower=0> sigma;
+	// A-> M
+	real aM;
+	real bAM;
+	real<lower=0> sigma_M;
 }
 model {
-  // A -> D <- M
-  vector[N] mu = a + bA * A + bM * M;
-  a ~ normal( 0 , 0.2 );
-  bA ~ normal( 0 , 0.5 );
-  bM ~ normal( 0 , 0.5 );
-  sigma ~ exponential( 1 );
-  D ~ normal( mu , sigma );
-  // A -> M
-  vector[N] mu_M = aM + bAM * A;
-  aM ~ normal( 0 , 0.2 );
-  bAM ~ normal( 0 , 0.5 );
-  sigma_M ~ exponential( 1 );
-  M ~ normal( mu_M , sigma_M );
+	// A -> M
+	vector[N] mu_M = aM + bAM * A;
+	aM ~ normal( 0 , 0.2 );
+	bAM ~ normal( 0 , 0.5 );
+	sigma_M ~ exponential( 1 );
+	M ~ normal( mu_M , sigma_M );
+	// A -> M -> D
+	vector[N] mu = a + bA * A + bM * M;
+	a ~ normal( 0 , 0.2 );
+	bA ~ normal( 0 , 0.5 );
+	bM ~ normal( 0 , 0.5 );
+	sigma ~ exponential( 1 );
+	D ~ normal( mu , sigma );
 }
 ";
 
@@ -833,6 +832,9 @@ if success(rc5_3_As)
 	post5_3_As_df = read_samples(m5_3_As, :dataframe)
 	ms5_3_As = model_summary(post5_3_As_df, [:a, :bA, :bM, :sigma, :aM, :bAM, :sigma_M])
 end
+
+# ╔═╡ 5ca1a802-f647-4ae2-9abd-8fc2455d5a75
+md" ##### Below cells can be used for the `Overthinking` box in this section of the book."
 
 # ╔═╡ e4aea49a-6f03-47fd-a260-dbb2c9f02aee
 function simulate2(df, coefs, var_seq, coefs_ext)
@@ -865,13 +867,33 @@ end
 md"### Julia code snippet 5.22"
 
 # ╔═╡ 2a353988-ea2c-4d82-8ec7-2c7f0c843f19
-a_seq = range(-2, stop=2, length=100);
+a_seq = range(-2, stop=2, length=30);
 
 # ╔═╡ 33242df0-b647-4974-9cac-b5692ce8100e
 md"### Julia code snippet 5.23"
 
 # ╔═╡ 42f32805-f566-4531-9cd8-b35dc2a3c876
 m_sim, d_sim = simulate(post5_3_As_df, [:aM, :bAM, :sigma_M], a_seq, [:bM, :sigma]);
+
+# ╔═╡ 1e27e6f3-39e9-4e30-b20e-0aa63aa28ce4
+md" ##### As above, below cells are for the `Overthinking` box/"
+
+# ╔═╡ 92e2a574-2b33-417a-af95-3ad223006dcb
+mean(m_sim; dims=1)
+
+# ╔═╡ 68552c4c-1dac-46d2-a7fd-7b5f0113aa63
+mean(d_sim; dims=1)
+
+# ╔═╡ c3fb61a1-c86c-46d9-9d69-36346c3eda67
+let
+	df = post5_3_As_df
+	coefs = [:aM, :bAM, :sigma_M]
+	coefs_ext = [:bM, :sigma]
+	var_seq = -2:1:2
+	m1 = [df[j, coefs[1]] + df[j, coefs[2]] * var_seq[i] for j in 1:4000, i in 1:5]
+	m2 = [df[j, coefs_ext[1]] * m_sim[j, i] for j in 1:4000, i in 1:5]
+	[mean(m1; dims=1); mean(m2; dims=1); mean(m1 + m2; dims=1)]
+end
 
 # ╔═╡ 4a75c36f-3a7f-4d74-9253-6717789d82d6
 md" ### Julia code snippet 5.24"
@@ -880,7 +902,8 @@ md" ### Julia code snippet 5.24"
 let
 	f = Figure(resulution=default_figure_resolution)
 	ax = Axis(f[1, 1]; xlabel="Manipulated A", ylabel="Counterfactual D",
-		title="Total counterfactual effect of A on D")
+		title="Total counterfactual effect of A on D", yticks=-2:1:2)
+	
 	m, l, u = estimparam(d_sim)
 	lines!(a_seq, m)
 	band!(a_seq, l, u; color=(:grey, 0.3))
@@ -899,7 +922,7 @@ md"##### M -> D"
 
 # ╔═╡ 44ef03ae-e9fa-4de6-a669-b7b5b46b0346
 let
-	m_seq = range(-2, stop=2, length=100)
+	m_seq = range(-2, stop=2, length=30)
 
 	f = Figure(resolution=default_figure_resolution)
 	ax = Axis(f[1, 1]; xlabel="Manipulated A", ylabel="Counterfactual D",
@@ -964,7 +987,6 @@ end
 # ╠═65dab224-d3d7-4c46-95b2-f23f4971a1bc
 # ╠═f7c5c5c7-85d4-4e09-b025-31109e451577
 # ╠═bfdab5a8-37a6-4af2-9645-99f8e0d8edd5
-# ╠═aa2238cd-3d62-467e-a19b-84ab6f1561ea
 # ╟─5c87da91-ee1f-4d74-827b-efe107f25862
 # ╠═ab5933f6-43d1-4fb0-9860-3a352bbb251e
 # ╠═6c44b0cb-14ed-4c12-b173-f96212f10683
@@ -1015,12 +1037,17 @@ end
 # ╠═d6e3deba-5c57-4b8b-bfa4-c81fccd2aa9c
 # ╠═68ea52fe-c06a-49bc-bede-b68bf4af2e86
 # ╠═0005da9e-5b05-4bf4-9597-d94dcdb38956
+# ╟─5ca1a802-f647-4ae2-9abd-8fc2455d5a75
 # ╠═e4aea49a-6f03-47fd-a260-dbb2c9f02aee
 # ╠═2f499cb2-cdec-4814-a379-a5d7ce1bf115
 # ╟─c98dbd9b-9b38-446a-8da9-a7d69ea29956
 # ╠═2a353988-ea2c-4d82-8ec7-2c7f0c843f19
 # ╟─33242df0-b647-4974-9cac-b5692ce8100e
 # ╠═42f32805-f566-4531-9cd8-b35dc2a3c876
+# ╟─1e27e6f3-39e9-4e30-b20e-0aa63aa28ce4
+# ╠═92e2a574-2b33-417a-af95-3ad223006dcb
+# ╠═68552c4c-1dac-46d2-a7fd-7b5f0113aa63
+# ╠═c3fb61a1-c86c-46d9-9d69-36346c3eda67
 # ╟─4a75c36f-3a7f-4d74-9253-6717789d82d6
 # ╠═8c14e485-7a51-4f47-b787-ed6675d80d53
 # ╠═69c6e338-4450-458b-91a6-eeb08f91cb54

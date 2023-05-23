@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.25
+# v0.19.26
 
 using Markdown
 using InteractiveUtils
@@ -14,12 +14,10 @@ using Pkg
 begin
 	# Graphics related packages
 	using CairoMakie
-	using GraphViz
-	using Graphs
-	using MetaGraphs
 
 	# DAG support
 	using CausalInference
+	using GraphViz
 
 	# Stan specific
 	using StanSample
@@ -65,102 +63,49 @@ end
 g_dot_str="DiGraph dag_1 {x->v; v->z; x->w; w->z; z->s;}";
 
 # ╔═╡ 383f93fd-6aeb-4e1a-962c-e48a93879d53
-dag_1 = create_dag("dag_1", df; g_dot_str);
+dag_fci = create_fci_dag("dag_fci", df, g_dot_str);
+
+# ╔═╡ ac3c7049-051c-49a8-b46b-454995fe5b7b
+gvplot(dag_fci)
 
 # ╔═╡ 55f9ca6b-1196-4b0f-928f-42c640d09477
-g = pcalg(df, 0.25, gausscitest)
+dag_pc = create_pc_dag("dag_pc", df, g_dot_str);
 
-# ╔═╡ 24160907-515c-4b66-bcdd-7cf6ef4427d1
-g_oracle = fcialg(5, dseporacle, dag_1.g)
-
-# ╔═╡ e5841b24-2f45-446f-a271-2fb7ecca7f7f
-g_gauss = fcialg(dag_1.df, 0.05, gausscitest)
-
-# ╔═╡ 40fa896a-1a8e-4c23-bc73-eb6067aa1f2f
-let
-	fci_oracle_dot_str = to_gv(g_oracle, dag_1.vars)
-	fci_gauss_dot_str = to_gv(g_gauss, dag_1.vars)
-	g1 = GraphViz.Graph(dag_1.g_dot_str)
-	g2 = GraphViz.Graph(dag_1.est_g_dot_str)
-	g3 = GraphViz.Graph(fci_oracle_dot_str)
-	g4 = GraphViz.Graph(fci_gauss_dot_str)
-	f = Figure(resolution=default_figure_resolution)
-	ax = Axis(f[1, 1]; aspect=DataAspect(), title="True (generational) DAG")
-	CairoMakie.image!(rotr90(create_png_image(g1)))
-	hidedecorations!(ax)
-	hidespines!(ax)
-	ax = Axis(f[1, 2]; aspect=DataAspect(), title="PC estimated DAG")
-	CairoMakie.image!(rotr90(create_png_image(g2)))
-	hidedecorations!(ax)
-	hidespines!(ax)
-	ax = Axis(f[2, 1]; aspect=DataAspect(), title="FCI oracle estimated DAG")
-	CairoMakie.image!(rotr90(create_png_image(g3)))
-	hidedecorations!(ax)
-	hidespines!(ax)
-	ax = Axis(f[2, 2]; aspect=DataAspect(), title="FCI gauss estimated DAG")
-	CairoMakie.image!(rotr90(create_png_image(g4)))
-	hidedecorations!(ax)
-	hidespines!(ax)
-	f
-end
-
-
-# ╔═╡ cdd1ec94-324e-46e5-8b8a-5579a1ba3375
-@time est_g_2 = pcalg(df, p, cmitest)
+# ╔═╡ 4acdd821-3172-43a1-9f71-f862e74bea38
+gvplot(dag_pc)
 
 # ╔═╡ e01a8212-3d90-4285-b071-d043c913782f
-dsep(dag_1, :x, :v)
+dsep(dag_fci, :x, :v)
 
 # ╔═╡ c6d93947-4655-450f-a6b0-b637a37764f3
-dsep(dag_1, :x, :s, [:w], verbose=true)
+dsep(dag_fci, :x, :s, [:w], verbose=true)
 
 # ╔═╡ e60b3379-3fb1-424c-9ffd-947ea8333712
-dsep(dag_1, :x, :s, [:z], verbose=true)
+dsep(dag_fci, :x, :s, [:z], verbose=true)
 
 # ╔═╡ d98067c4-ff47-4676-9b83-a339be736103
-dsep(dag_1, :x, :z, [:v, :w], verbose=true)
-
-# ╔═╡ f284dcae-8d63-4345-9029-2dd16143742e
-@time dag_2 = create_dag("dag_2", df, 0.025; g_dot_str, est_func=cmitest);
-
-# ╔═╡ d9324794-cc16-430c-b252-da148070b177
-gvplot(dag_2)
+dsep(dag_fci, :x, :z, [:v, :w], verbose=true)
 
 # ╔═╡ 45402fba-dd05-43c8-8fa2-088ca050e455
-dsep(dag_2, est_g_2, :x, :z, [:v, :w], verbose=true)
+dsep(dag_pc, :x, :z, [:v, :w], verbose=true)
 
 # ╔═╡ 5d0f0049-4809-481b-a0b6-457e72e81959
 md" ##### By default, use g graph."
 
 # ╔═╡ 0280fa92-1ec8-45dd-b22c-89c1fb6ea29c
-backdoor_criterion(dag_1, :x, :v)
+backdoor_criterion(dag_fci, :x, :v)
+
+# ╔═╡ 3abe1405-2f5b-4db3-b106-6805ede186fc
+all_paths(dag_fci, :x, :v)
 
 # ╔═╡ 372828ee-fecb-45fa-b444-b877ccda9df1
-backdoor_criterion(dag_1, :x, :w)
+backdoor_criterion(dag_fci, :x, :w)
 
 # ╔═╡ 858f7dbb-50c2-413c-bfca-f8094e447634
-backdoor_criterion(dag_1, dag_1.g, :x, :w)
-
-# ╔═╡ 63323b41-7660-4157-b1e4-5767a08300ca
-md" ##### Or select the est_g graph."
-
-# ╔═╡ 349475a7-f0b1-4e2f-bb46-fc24477fe6fa
-backdoor_criterion(dag_1, dag_1.est_g, :x, :w)
-
-# ╔═╡ f8b74d86-d86c-48b7-b267-1bc2faefcc24
-md" ##### Use a DAG to use node labels instead of numbers."
-
-# ╔═╡ 786ceba6-ebc8-4cf6-9192-8afb959fefa3
-backdoor_criterion(dag_1, g_oracle, :x, :v)
+backdoor_criterion(dag_fci, dag_fci.g, :x, :w)
 
 # ╔═╡ 2e9be9c4-53eb-4938-aa8f-f9cc00f32a41
-backdoor_criterion(dag_1, g_gauss, :x, :v)
-
-# ╔═╡ f20f6860-5def-4f1a-a1b9-a459342c9de2
-dsep(dag_1, g_oracle, :x, :z, [:v, :w], verbose=true)
-
-# ╔═╡ 03fe639a-eb97-4a37-86d7-68d3ec18de5b
-dsep(dag_1, dag_1.g, :x, :z, [:v, :w], verbose=true)
+backdoor_criterion(dag_pc, :x, :v)
 
 # ╔═╡ Cell order:
 # ╟─8ed92287-2740-42bf-a13a-591390210e44
@@ -171,26 +116,17 @@ dsep(dag_1, dag_1.g, :x, :z, [:v, :w], verbose=true)
 # ╠═be720ef1-1cde-47b6-b50e-4f74ad377de0
 # ╠═90ae6de7-b88e-4560-84ce-cb1cb07ec0fb
 # ╠═383f93fd-6aeb-4e1a-962c-e48a93879d53
+# ╠═ac3c7049-051c-49a8-b46b-454995fe5b7b
 # ╠═55f9ca6b-1196-4b0f-928f-42c640d09477
-# ╠═24160907-515c-4b66-bcdd-7cf6ef4427d1
-# ╠═e5841b24-2f45-446f-a271-2fb7ecca7f7f
-# ╠═40fa896a-1a8e-4c23-bc73-eb6067aa1f2f
-# ╠═cdd1ec94-324e-46e5-8b8a-5579a1ba3375
-# ╠═d9324794-cc16-430c-b252-da148070b177
+# ╠═4acdd821-3172-43a1-9f71-f862e74bea38
 # ╠═e01a8212-3d90-4285-b071-d043c913782f
 # ╠═c6d93947-4655-450f-a6b0-b637a37764f3
 # ╠═e60b3379-3fb1-424c-9ffd-947ea8333712
 # ╠═d98067c4-ff47-4676-9b83-a339be736103
-# ╠═f284dcae-8d63-4345-9029-2dd16143742e
 # ╠═45402fba-dd05-43c8-8fa2-088ca050e455
 # ╟─5d0f0049-4809-481b-a0b6-457e72e81959
 # ╠═0280fa92-1ec8-45dd-b22c-89c1fb6ea29c
+# ╠═3abe1405-2f5b-4db3-b106-6805ede186fc
 # ╠═372828ee-fecb-45fa-b444-b877ccda9df1
 # ╠═858f7dbb-50c2-413c-bfca-f8094e447634
-# ╟─63323b41-7660-4157-b1e4-5767a08300ca
-# ╠═349475a7-f0b1-4e2f-bb46-fc24477fe6fa
-# ╟─f8b74d86-d86c-48b7-b267-1bc2faefcc24
-# ╠═786ceba6-ebc8-4cf6-9192-8afb959fefa3
 # ╠═2e9be9c4-53eb-4938-aa8f-f9cc00f32a41
-# ╠═f20f6860-5def-4f1a-a1b9-a459342c9de2
-# ╠═03fe639a-eb97-4a37-86d7-68d3ec18de5b

@@ -1,11 +1,14 @@
 ### A Pluto.jl notebook ###
-# v0.19.25
+# v0.19.26
 
 using Markdown
 using InteractiveUtils
 
 # ╔═╡ 62c80a26-975a-11ed-2e09-2dce0e33bb70
 using Pkg
+
+# ╔═╡ aaea31c8-37ed-4f0f-8e3e-8e89d30ed918
+#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ 58ece6dd-a20f-4624-898a-40cae4b471e4
 begin
@@ -43,9 +46,6 @@ html"""
 </style>
 """
 
-# ╔═╡ aaea31c8-37ed-4f0f-8e3e-8e89d30ed918
-#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
-
 # ╔═╡ 261cca70-a6dd-4bed-b2f2-8667534d0ceb
 let
 	Random.seed!(1)
@@ -66,7 +66,7 @@ end
 g_dot_str="DiGraph dag_1 {x->v; v->z; x->w; w->z; z->s;}";
 
 # ╔═╡ 6bbfe4cb-f7e1-4503-a386-092882a1a49c
-@time dag_1 = create_dag("dag_1", df; g_dot_str);
+@time dag_1 = create_fci_dag("dag_1", df, g_dot_str);
 
 # ╔═╡ 5b3cb27a-cc3a-4932-999e-334ca801f54c
 dag_1.est_g_dot_str
@@ -87,7 +87,7 @@ dsep(dag_1, :x, :s, [:z], verbose=true)
 dsep(dag_1, :x, :z, [:v, :w], verbose=true)
 
 # ╔═╡ 4b75351b-c1d9-47b7-97c1-49eb90ea5fb1
-@time dag_2 = create_dag("dag_2", df, 0.025; g_dot_str, est_func=cmitest);
+@time dag_2 = create_pc_dag("dag_2", df, g_dot_str, 0.025; est_func=cmitest);
 
 # ╔═╡ 66fae38a-f622-444f-bfce-2c52d336bfdb
 gvplot(dag_2)
