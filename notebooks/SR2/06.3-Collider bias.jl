@@ -119,26 +119,25 @@ md" ## Julia code snippet 6.22"
 # ╔═╡ e20117b2-69e5-4614-aeb1-85b53f18923d
 stan6_9 = "
 data {
-  int <lower=1> N;
-  vector[N] happiness;
-  vector[N] A;
-  int <lower=1>  k;
-  int mid[N];
+	int <lower=1> N;
+	vector[N] happiness;
+	vector[N] A;
+	int <lower=1>  k;
+	int mid[N];
 }
 parameters {
-  real <lower=0> sigma;
-  vector[k] a;
-  real bA;
+	real <lower=0> sigma;
+	vector[k] a;
+	real bA;
 }
 model {
-  vector[N] mu;
-  sigma ~ exponential(1);
-  a ~ normal(0, 1);
-  bA ~ normal(0, 2);
-  for (i in 1:N) {
-    mu[i] = a[mid[i]] + bA * A[i];
-  }
-  happiness ~ normal(mu, sigma);
+	vector[N] mu;
+	sigma ~ exponential(1);
+	a ~ normal(0, 1);
+	bA ~ normal(0, 2);  
+	for (i in 1:N) 
+		mu[i] = a[mid[i]] + bA * A[i];
+	happiness ~ normal(mu, sigma);
 }
 ";
 
@@ -171,14 +170,14 @@ md" ### Julia code snippet 6.24"
 # ╔═╡ 4956ef6f-fbcc-4b89-b517-82e558983cc1
 stan6_10 = "
 data {
-  int <lower=1> N;
-  vector[N] happiness;
-  vector[N] A;
+	int <lower=1> N;
+	vector[N] happiness;
+	vector[N] A;
 }
 parameters {
-  real <lower=0> sigma;
-  real a;
-  real bA;
+	real <lower=0> sigma;
+	real a;
+	real bA;
 }
 model {
 	vector[N] mu;

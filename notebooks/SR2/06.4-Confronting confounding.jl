@@ -1,14 +1,11 @@
 ### A Pluto.jl notebook ###
-# v0.19.26
+# v0.19.27
 
 using Markdown
 using InteractiveUtils
 
 # ╔═╡ 16ddb41a-fc59-11ea-1631-153e3466c75c
 using Pkg
-
-# ╔═╡ 76b6ce64-9f9b-48fa-8ef4-8ee1a0723bf0
-#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ d65dd2b2-fc58-11ea-2300-4db47ec9a789
 begin
@@ -50,6 +47,9 @@ html"""
 	}
 </style>
 """
+
+# ╔═╡ 76b6ce64-9f9b-48fa-8ef4-8ee1a0723bf0
+#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ 9e068b40-6de7-49e5-8e89-0e26f9c7be85
 begin

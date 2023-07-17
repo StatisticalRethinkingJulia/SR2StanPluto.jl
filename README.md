@@ -1,4 +1,4 @@
-## Purpose of SR2StanPluto.jl
+## Purpose of SR2StanPluto.jl (v5.7)
 
 As stated many times by the author in his [online lectures](https://www.youtube.com/watch?v=ENxTrFf9a7c&list=PLDcUM9US4XdNM4Edgs7weiyIguLSToZRI), StatisticalRethinking is a hands-on course. This project is intended to assist with the hands-on aspect of learning the key ideas in StatisticalRethinking. 
 
@@ -15,6 +15,8 @@ Tagged version 4.2.0 is the last more or less complete set of scripts covering `
 ## Using Pluto's package management (or not!)
 
 For development purposes most notebooks include a line like `#Pkg.activate("~/.julie/dev/SR2StanPluto"))`. On the repo it is commented out. While developing code I typically run notebooks inside a project environment (by uncommenting that line).
+
+If you frequently switch between notebooks part of this project, uncommenting (or adding) the `Pkg.activate(...)` line is much faster. But that requires SR2StanPluto.jl to be installed in ~/.julia/dev.
 
 ## Usage
 
@@ -41,7 +43,7 @@ julia> Pluto.run()
 ```
 3. A Pluto page should open in a browser.
 
-4. Select a notebook in the `open a file` entry box, e.g. type `./` and select a notebook. 
+4. Select a notebook in the `open a file` entry box, e.g. type `./`, select a notebook collection and a notebook.. 
 
 ## Usage details
 
@@ -88,19 +90,17 @@ In version 5 I expect to mainly use the output_formats :dataframe and :namedtupl
 For InferenceObjects.jl there is a separate function `inferencedata(m1_1s)`. 
 See the Notebook_Examples in Stan.jl for an example Pluto notebook.
 
-See the project maintenance section in the Readme of RegressionAndOtherStories.jl for a note on using projects environments instead of Pluto's package management features.
-
 ## Status
 
-SR2StanPluto.jl is compatible with the 2nd edition of the book.
+SR2StanPluto.jl is compatible with the 2nd edition of the book. Not all notebooks have been converted to Makie.jl yet. These are in the SR1 subdirectory. In the SR3 subdirectory I've started to look at the SR 2023 lecture examples, mainly as illustrated in the "Statistical Rethinking 2023 Python Notes".
 
-In v5.3.0 StructuralCausalModels.jl is repaced by CausalInference.jl as an extension. To display DAGs, GraphViz.jl and CairoMakie.jl are used.
+Beginning with v5.3.0 StructuralCausalModels.jl is repaced by CausalInference.jl as an extension. To display DAGs, GraphViz.jl and CairoMakie.jl are used. This is a long term project!
 
 ParetoSmoothedImportanceSampling.jl are included as experimental dependencies in the StatisticalRethinking.jl v3+ package.
 
 Definitely WIP! See also below version 5 info.
 
-Any feedback is appreciated. Please open an issue.
+Any feedback is appreciated. Please open an issue if you have questions or suggestions.
 
 ## Acknowledgements
 
