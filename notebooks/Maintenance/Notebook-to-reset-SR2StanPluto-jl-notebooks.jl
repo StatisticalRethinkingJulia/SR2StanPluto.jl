@@ -78,6 +78,9 @@ notebook_files = [
     "~/.julia/dev/SR2StanPluto/notebooks/SR2/09.4-Easy HMC.jl",
     "~/.julia/dev/SR2StanPluto/notebooks/SR2/09.5-Care of Markov chains.jl",
 
+    "~/.julia/dev/SR2StanPluto/notebooks/SR3/threads/Pluto_CI_v0.11.1_threads_test.jl",
+    "~/.julia/dev/SR2StanPluto/notebooks/SR3/Adjustment explorations.jl",
+    "~/.julia/dev/SR2StanPluto/notebooks/SR3/GES explorations.jl",
     "~/.julia/dev/SR2StanPluto/notebooks/SR3/Lecture_3_4.jl",
 	
     "~/.julia/dev/SR2StanPluto/notebooks/CausalInference/PC and FCI Algorithms: Basic example.jl",

@@ -8,7 +8,7 @@ using InteractiveUtils
 using Pkg
 
 # ╔═╡ c80881ad-605b-40fc-a492-d253fef966c8
-Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
+#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ ba53534c-c088-4b75-a220-36c09b375978
 begin
@@ -31,7 +31,7 @@ begin
 end
 
 # ╔═╡ 00d5774b-5ef0-4d01-b21d-1749beec466a
-md"## SR 2023: Adjustment."
+md"## Adjustment explorations"
 
 # ╔═╡ bd8e4305-bb79-409b-9930-e11e579b8cd0
 md"##### Set page layout for notebook."
@@ -67,126 +67,26 @@ let
 	G = rand(N) + 0.4 .* F
 	H = rand(N) + 0.5 .* G
 	D = rand(N) + 0.2 .* A + 0.3 .* B
-	F += D
-	H += D
+	F += 0.9 .* D
+	H += 0.95 .* D
 	global df = DataFrame(A=A, B=B, C=C, D=D, E=E, F=F, G=G, H=H)
 end
 
 # ╔═╡ a1412d5f-da0a-48d7-8186-47bdcd931b06
 p = 0.25;
 
-# ╔═╡ cf96a450-0680-456d-a178-afba6d3721ff
-@time begin
-	g_dot_str = "Digraph PC {A->C; C->F; B->E; E->H; F->G; G->H; A->D; B->D; D->F; D->H;}"
-	est_func = gausscitest
-    vars = Symbol.(names(df))
-	nt = namedtuple(vars, [df[!, k] for k in vars])
-    (g_tuple_list, _) = create_tuple_list(g_dot_str, vars)
-end	
-
-# ╔═╡ 5db66288-1193-4f1c-bb51-03f3be399786
-@time let
-	g3 = pcalg(nt, p, gausscitest)
-end
-
-# ╔═╡ 63586904-0755-46a2-9e69-5c796e30679c
-@time let
-    global g = DiGraph(length(vars))
-    for (i, j) in g_tuple_list
-        add_edge!(g, i, j)
-    end
-
-    global est_g = pcalg(nt, p, est_func)
-end
-
-# ╔═╡ eeb7d08e-1921-4518-a9d3-5ac6a97591b7
-@time let
-    # Create d.est_tuple_list
-    global est_g_tuple_list = Tuple{Int, Int}[]
-    for (f, edge) in enumerate(est_g.fadjlist)
-        for l in edge
-            push!(est_g_tuple_list, (f, l))
-        end
-    end
-    
-    # Create d.est_g_dot_str
-    global est_g_dot_str = "digraph est_g_pc {"
-    for e in g_tuple_list
-        f = e[1]
-        l = e[2]
-        if length(setdiff(est_g_tuple_list, [(e[2], e[1])])) !== length(est_g_tuple_list)
-
-           est_g_dot_str = est_g_dot_str * "$(vars[f]) -> $(vars[l]) [color=red, arrowhead=none];"
-        else
-            est_g_dot_str = est_g_dot_str * "$(vars[f]) -> $(vars[l]);"
-        end
-    end
-    est_g_dot_str = est_g_dot_str * "}"
-end
-
-# ╔═╡ 7f7a84ce-f246-4f79-9db2-1d4946fee186
-@time let
-    # Compute est_g and covariance matrix (as NamedArray)
-    covm = NamedArray(cov(Array(df)), (names(df), names(df)), ("Rows", "Cols"))
-
-    global dag_pc_2 = PCDAG("pc", g, g_tuple_list, g_dot_str, Symbol.(names(df)), est_g, est_g_tuple_list,
-        est_g_dot_str, p, df, covm)
-end;
-
-# ╔═╡ 25b6bcca-4b77-4f5b-a5d4-cbe6a6e8b250
-function create_pc_dag_2(name::AbstractString, df::DataFrame, g_dot_str::AbstractString,
-    p::Float64=0.25; est_func=gausscitest)
-
-    vars = Symbol.(names(df))
-    nt = namedtuple(vars, [df[!, k] for k in vars])
-    (g_tuple_list, _) = create_tuple_list(g_dot_str, vars)
-	
-    g = DiGraph(length(vars))
-    for (i, j) in g_tuple_list
-        add_edge!(g, i, j)
-    end
-    
-    est_g = pcalg(nt, p, est_func)
-	println(g)
-
-    # Create d.est_tuple_list
-    est_g_tuple_list = Tuple{Int, Int}[]
-    for (f, edge) in enumerate(est_g.fadjlist)
-        for l in edge
-            push!(est_g_tuple_list, (f, l))
-        end
-    end
-    
-    # Create d.est_g_dot_str
-    est_g_dot_str = "digraph est_g_$(name) {"
-    for e in g_tuple_list
-        f = e[1]
-        l = e[2]
-        if length(setdiff(est_g_tuple_list, [(e[2], e[1])])) !== length(est_g_tuple_list)
-
-           est_g_dot_str = est_g_dot_str * "$(vars[f]) -> $(vars[l]) [color=red, arrowhead=none];"
-        else
-            est_g_dot_str = est_g_dot_str * "$(vars[f]) -> $(vars[l]);"
-        end
-    end
-    est_g_dot_str = est_g_dot_str * "}"
-
-    # Compute est_g and covariance matrix (as NamedArray)
-    covm = NamedArray(cov(Array(df)), (names(df), names(df)), ("Rows", "Cols"))
-
-    return PCDAG(name, g, g_tuple_list, g_dot_str, vars, est_g, est_g_tuple_list,
-        est_g_dot_str, p, df, covm)
-end
-
-
 # ╔═╡ bc3e4cae-ccaf-44b8-be58-1d90e7870350
-@time dag_pc = create_pc_dag_2("pc", df, "Digraph PC {A->C; C->F; B->E; E->H; F->G; G->H; A->D; B->D; D->F; D->H;}", p);
-
-# ╔═╡ d844ca9f-4302-44e6-b4ac-7758b03c8e68
-gvplot(dag_pc_2)
+@time dag_pc = create_pc_dag("pc", df, "Digraph PC {A->C; C->F; B->E; E->H; F->G; G->H; A->D; B->D; D->F; D->H;}", p);
 
 # ╔═╡ 74d9e42d-2556-4d68-9ecd-a6aa3644ec7b
 gvplot(dag_pc)
+
+# ╔═╡ 8f5372b9-6f66-4154-982e-d726d4b2f3c4
+@time dag_ges = create_ges_dag("ges", df, "Digraph PC {A->C; C->F; B->E; E->H; F->G; G->H; A->D; B->D; D->F; D->H;}";
+	penalty=1.0);
+
+# ╔═╡ 2c067276-fc40-4dc9-8005-af6be72829c8
+gvplot(dag_ges)
 
 # ╔═╡ 3c459abd-d64f-4bc6-99c7-fbc82eb3c280
 dag_fci = create_fci_dag("fci", df, "Digraph FCI {A->C; C->F; B->E; E->H; F->G; G->H; A->D; B->D; D->F; D->H;}");
@@ -269,14 +169,84 @@ find_min_frontdoor_adjustment(dag_pc.g, X, Y) == Set(7)
 # ╔═╡ 22658676-89da-4301-819f-7b1be9c5fe8f
 Set(list_dseps(dag_pc.g, X, Y, Set{Int64}(), Set{Int64}([3,4,5,7]))) == Set([Set([4, 7, 3]), Set([5, 4, 7]), Set([5, 4, 7, 3])])
 
+# ╔═╡ 8176dbc4-2a85-4410-8841-eabbfcb23f19
+Set(list_dseps(dag_pc.g, X, Y, Set{Int64}(), Set{Int64}([3,4,5,7])))
+
 # ╔═╡ 1791b7ad-088b-4847-a5dd-a457e951eacd
 Set(list_covariate_adjustment(dag_pc.g, Set([6]), Set([8]), Set(Int[]), setdiff(Set(1:8), [1,2]))) == Set([Set([3,4]), Set([4,5]), Set([3,4,5])])
+
+# ╔═╡ 522686b1-c3a2-46d3-943d-2bd7261e3476
+Set(list_covariate_adjustment(dag_pc.g, Set([6]), Set([8]), Set(Int[]), setdiff(Set(1:8), [1,2])))
 
 # ╔═╡ ffef95e6-d73b-4da9-b155-d9468dd839e0
 Set(list_backdoor_adjustment(dag_pc.g, Set([6]), Set([8]), Set(Int[]), setdiff(Set(1:8), [1,2]))) == Set([Set([3,4]), Set([4,5]), Set([3,4,5])])
 
+# ╔═╡ e6c65963-5aa7-4f5a-9600-0a74475d8656
+Set(list_backdoor_adjustment(dag_pc.g, Set([6]), Set([8]), Set(Int[]), setdiff(Set(1:8), [1,2])))
+
 # ╔═╡ 97cba8dc-49d8-4a9a-999d-f706ce231fa1
 Set(list_frontdoor_adjustment(dag_pc.g, X, Y)) == Set([Set(7)])
+
+# ╔═╡ 03c68f60-e53b-4643-abb6-2bf0b7084525
+Set(list_frontdoor_adjustment(dag_pc.g, X, Y))
+
+# ╔═╡ 3f9edeee-cf4a-440c-9382-050b34d25a7b
+dag_pc.vars
+
+# ╔═╡ cb52c513-ac71-476d-a6d1-f61751546c4d
+res = Set(list_backdoor_adjustment(dag_pc.g, Set([6]), Set([8]), Set(Int[]), setdiff(Set(1:8), [1,2])))
+
+# ╔═╡ 64d258b2-a870-4829-8b33-644e5bc49820
+adjustment_sets = [Symbol[dag_pc.vars[i] for i in s] for s in res]
+
+# ╔═╡ 63b318b1-6507-4a9e-923d-66fc63f2adf6
+function list_backdoor_adjustments(d::ROS.AbstractDAG, from::Symbol, to::Symbol;
+    include=Symbol[], exclude=Symbol[], verbose=false)
+
+	#list_backdoor_adjustment(g, X, Y, I = Set{eltype(g)}(), R = setdiff(Set(vertices(g)), X, Y))
+
+    f = findfirst(x -> x == from, d.vars)
+    l = findfirst(x -> x == to, d.vars)
+    incl = Int[]
+    for sym in include
+        push!(incl, findfirst(x -> x == sym, d.vars))
+    end
+    excl = Int[]
+    for sym in setdiff(d.vars, exclude)
+        push!(excl, findfirst(x -> x == sym, d.vars))
+    end
+	verbose && println("list_backdoor_adjustment(g, $Set($f), $Set($l), $Set($incl), $Set($excl)")
+    res =  Set(list_backdoor_adjustment(d.g, Set(f), Set(l), Set(incl), Set(excl)))
+	return [Symbol[dag_pc.vars[i] for i in j] for j in res]
+end
+
+
+# ╔═╡ a51a8347-8765-41b7-b7e4-4e0daa16cd65
+setdiff(dag_pc.vars, [:F, :H])
+
+# ╔═╡ 89b17b26-f783-42c9-b458-2db5bc01bd24
+list_backdoor_adjustment(dag_pc, :F, :H)
+
+# ╔═╡ a0505327-588a-4d80-b3d4-edeb6b2e3e97
+md" ##### :A and :B are not observed, can't be used to adjust."
+
+# ╔═╡ eee9b80b-c102-453e-8112-69b73f390311
+list_backdoor_adjustment(dag_pc, :F, :H; exclude=[:A, :B])
+
+# ╔═╡ 0c243a5a-8a3d-4864-a393-56eda6fc82ec
+md" #### Adjustment sets must include :C."
+
+# ╔═╡ 61eb92be-f289-4c73-8959-64600a1fea9c
+list_backdoor_adjustment(dag_pc, :F, :H; include=[:C], exclude=[:A, :B])
+
+# ╔═╡ 2ab2def3-da31-4593-b4c1-b1d2bb569579
+list_backdoor_adjustment(dag_pc, :F, :H; include=[:E, :D], exclude=[:A, :B])
+
+# ╔═╡ fde32313-9511-48c7-a5f4-86a1ed66bb98
+md" #### Use of `verbose` keyword."
+
+# ╔═╡ b787b209-0da7-4987-90ca-e49695de3cfc
+list_backdoor_adjustment(dag_pc, :F, :H; include=[:C], exclude=[:A, :B], debug=true)
 
 # ╔═╡ Cell order:
 # ╟─00d5774b-5ef0-4d01-b21d-1749beec466a
@@ -288,15 +258,10 @@ Set(list_frontdoor_adjustment(dag_pc.g, X, Y)) == Set([Set(7)])
 # ╠═09d39755-53f0-412d-acb3-ba33c7400d32
 # ╠═be65de6f-35f5-43e9-8004-30dd3f189456
 # ╠═a1412d5f-da0a-48d7-8186-47bdcd931b06
-# ╠═cf96a450-0680-456d-a178-afba6d3721ff
-# ╠═5db66288-1193-4f1c-bb51-03f3be399786
-# ╠═63586904-0755-46a2-9e69-5c796e30679c
-# ╠═eeb7d08e-1921-4518-a9d3-5ac6a97591b7
-# ╠═7f7a84ce-f246-4f79-9db2-1d4946fee186
-# ╠═25b6bcca-4b77-4f5b-a5d4-cbe6a6e8b250
 # ╠═bc3e4cae-ccaf-44b8-be58-1d90e7870350
-# ╠═d844ca9f-4302-44e6-b4ac-7758b03c8e68
 # ╠═74d9e42d-2556-4d68-9ecd-a6aa3644ec7b
+# ╠═8f5372b9-6f66-4154-982e-d726d4b2f3c4
+# ╠═2c067276-fc40-4dc9-8005-af6be72829c8
 # ╠═3c459abd-d64f-4bc6-99c7-fbc82eb3c280
 # ╠═8c0fc0b3-5ff9-4943-be6a-05cf27208210
 # ╠═e246455c-fa2c-4831-8774-3c52baa55ea8
@@ -324,6 +289,23 @@ Set(list_frontdoor_adjustment(dag_pc.g, X, Y)) == Set([Set(7)])
 # ╠═78522992-2faf-4072-8465-11ad5402c1d6
 # ╠═bab94d9a-8231-44e4-a9ae-d6f6a19387da
 # ╠═22658676-89da-4301-819f-7b1be9c5fe8f
+# ╠═8176dbc4-2a85-4410-8841-eabbfcb23f19
 # ╠═1791b7ad-088b-4847-a5dd-a457e951eacd
+# ╠═522686b1-c3a2-46d3-943d-2bd7261e3476
 # ╠═ffef95e6-d73b-4da9-b155-d9468dd839e0
+# ╠═e6c65963-5aa7-4f5a-9600-0a74475d8656
 # ╠═97cba8dc-49d8-4a9a-999d-f706ce231fa1
+# ╠═03c68f60-e53b-4643-abb6-2bf0b7084525
+# ╠═3f9edeee-cf4a-440c-9382-050b34d25a7b
+# ╠═cb52c513-ac71-476d-a6d1-f61751546c4d
+# ╠═64d258b2-a870-4829-8b33-644e5bc49820
+# ╠═63b318b1-6507-4a9e-923d-66fc63f2adf6
+# ╠═a51a8347-8765-41b7-b7e4-4e0daa16cd65
+# ╠═89b17b26-f783-42c9-b458-2db5bc01bd24
+# ╟─a0505327-588a-4d80-b3d4-edeb6b2e3e97
+# ╠═eee9b80b-c102-453e-8112-69b73f390311
+# ╟─0c243a5a-8a3d-4864-a393-56eda6fc82ec
+# ╠═61eb92be-f289-4c73-8959-64600a1fea9c
+# ╠═2ab2def3-da31-4593-b4c1-b1d2bb569579
+# ╟─fde32313-9511-48c7-a5f4-86a1ed66bb98
+# ╠═b787b209-0da7-4987-90ca-e49695de3cfc
