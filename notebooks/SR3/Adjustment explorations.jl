@@ -200,22 +200,15 @@ res = Set(list_backdoor_adjustment(dag_pc.g, Set([6]), Set([8]), Set(Int[]), set
 adjustment_sets = [Symbol[dag_pc.vars[i] for i in s] for s in res]
 
 # ╔═╡ 63b318b1-6507-4a9e-923d-66fc63f2adf6
+#list_backdoor_adjustment(g, X, Y, I = Set{eltype(g)}(), R = setdiff(Set(vertices(g)), X, Y))
 function list_backdoor_adjustments(d::ROS.AbstractDAG, from::Symbol, to::Symbol;
-    include=Symbol[], exclude=Symbol[], verbose=false)
-
-	#list_backdoor_adjustment(g, X, Y, I = Set{eltype(g)}(), R = setdiff(Set(vertices(g)), X, Y))
+    include=Symbol[], exclude=Symbol[], debug=false)
 
     f = findfirst(x -> x == from, d.vars)
     l = findfirst(x -> x == to, d.vars)
-    incl = Int[]
-    for sym in include
-        push!(incl, findfirst(x -> x == sym, d.vars))
-    end
-    excl = Int[]
-    for sym in setdiff(d.vars, exclude)
-        push!(excl, findfirst(x -> x == sym, d.vars))
-    end
-	verbose && println("list_backdoor_adjustment(g, $Set($f), $Set($l), $Set($incl), $Set($excl)")
+    incl = Int[findfirst(x -> x == j, d.vars) for j in include]
+    excl = Int[findfirst(x -> x == j, d.vars) for j in setdiff(d.vars, exclude)]
+	debug && println("list_backdoor_adjustment(g, $Set($f), $Set($l), $Set($incl), $Set($excl)")
     res =  Set(list_backdoor_adjustment(d.g, Set(f), Set(l), Set(incl), Set(excl)))
 	return [Symbol[dag_pc.vars[i] for i in j] for j in res]
 end
@@ -242,8 +235,11 @@ list_backdoor_adjustment(dag_pc, :F, :H; include=[:C], exclude=[:A, :B])
 # ╔═╡ 2ab2def3-da31-4593-b4c1-b1d2bb569579
 list_backdoor_adjustment(dag_pc, :F, :H; include=[:E, :D], exclude=[:A, :B])
 
+# ╔═╡ 62870e10-5d9b-4eec-8aef-7e887e8775f2
+list_backdoor_adjustments(dag_pc, :F, :H; include=[:E, :D], exclude=[:A, :B], debug=true)
+
 # ╔═╡ fde32313-9511-48c7-a5f4-86a1ed66bb98
-md" #### Use of `verbose` keyword."
+md" #### Use of `debug` keyword."
 
 # ╔═╡ b787b209-0da7-4987-90ca-e49695de3cfc
 list_backdoor_adjustment(dag_pc, :F, :H; include=[:C], exclude=[:A, :B], debug=true)
@@ -307,5 +303,6 @@ list_backdoor_adjustment(dag_pc, :F, :H; include=[:C], exclude=[:A, :B], debug=t
 # ╟─0c243a5a-8a3d-4864-a393-56eda6fc82ec
 # ╠═61eb92be-f289-4c73-8959-64600a1fea9c
 # ╠═2ab2def3-da31-4593-b4c1-b1d2bb569579
+# ╠═62870e10-5d9b-4eec-8aef-7e887e8775f2
 # ╟─fde32313-9511-48c7-a5f4-86a1ed66bb98
 # ╠═b787b209-0da7-4987-90ca-e49695de3cfc
