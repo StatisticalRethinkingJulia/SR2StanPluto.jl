@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.26
+# v0.19.27
 
 using Markdown
 using InteractiveUtils
@@ -69,7 +69,7 @@ dag_fci = create_fci_dag("dag_fci", df, g_dot_str);
 gvplot(dag_fci)
 
 # ╔═╡ 55f9ca6b-1196-4b0f-928f-42c640d09477
-dag_pc = create_pc_dag("dag_pc", df, g_dot_str);
+dag_pc = create_pcalg_gauss_dag("dag_pc", df, g_dot_str);
 
 # ╔═╡ 4acdd821-3172-43a1-9f71-f862e74bea38
 gvplot(dag_pc)

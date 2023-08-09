@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.26
+# v0.19.27
 
 using Markdown
 using InteractiveUtils
@@ -87,7 +87,7 @@ dsep(dag_1, :x, :s, [:z], verbose=true)
 dsep(dag_1, :x, :z, [:v, :w], verbose=true)
 
 # ╔═╡ 4b75351b-c1d9-47b7-97c1-49eb90ea5fb1
-@time dag_2 = create_pc_dag("dag_2", df, g_dot_str, 0.025; est_func=cmitest);
+@time dag_2 = create_pcalg_cmi_dag("dag_2", df, g_dot_str; p=0.025);
 
 # ╔═╡ 66fae38a-f622-444f-bfce-2c52d336bfdb
 gvplot(dag_2)

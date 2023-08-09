@@ -74,7 +74,7 @@ d1 = create_fci_dag("d1", df, g_dot_str);
 gvplot(d1)
 
 # ╔═╡ 71b95bc5-13f9-4278-bfc2-a3632b4c1552
-d2 = create_pc_dag("d1", df, g_dot_str);
+d2 = create_pcalg_gauss_dag("d1", df, g_dot_str);
 
 # ╔═╡ bfdb1885-15b9-4a6a-9bf4-30b0bb434b4c
 gvplot(d2)

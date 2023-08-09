@@ -1,11 +1,14 @@
 ### A Pluto.jl notebook ###
-# v0.19.26
+# v0.19.27
 
 using Markdown
 using InteractiveUtils
 
-# ╔═╡ 62c80a26-975a-11ed-2e09-2dce0e33bb70
+# ╔═╡ 46ef488a-43ac-4b50-9093-d4e93dd38432
 using Pkg
+
+# ╔═╡ 081be249-4e6c-4d94-b2e8-044d0c7ddcae
+#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ 58ece6dd-a20f-4624-898a-40cae4b471e4
 begin
@@ -42,9 +45,6 @@ html"""
 </style>
 """
 
-# ╔═╡ aaea31c8-37ed-4f0f-8e3e-8e89d30ed918
-#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
-
 # ╔═╡ 261cca70-a6dd-4bed-b2f2-8667534d0ceb
 let
 	Random.seed!(1)
@@ -72,7 +72,7 @@ md" ##### Dag d1 is the full generational causal graph."
 g_dot_str="DiGraph d1 {A->D; D->X; B->F; F->Y; X->E; E->Y; A->C; B->C; C->X; C->Y;}";
 
 # ╔═╡ 6bbfe4cb-f7e1-4503-a386-092882a1a49c
-d1 = create_fci_dag("d1", df_full, g_dot_str,0.25);
+d1 = create_fci_dag("d1", df_full, g_dot_str);
 
 # ╔═╡ b1f81e4e-cd1c-416d-8300-dcd6042a00bb
 gvplot(d1)
@@ -81,7 +81,7 @@ gvplot(d1)
 all_paths(d1, :A, :B)
 
 # ╔═╡ ff523e85-4760-4fba-99d9-1c19930fc855
-d2 = create_pc_dag("d2", df_full, g_dot_str,0.25);
+d2 = create_pcalg_gauss_dag("d2", df_full, g_dot_str; p=0.25);
 
 # ╔═╡ 27350494-87a9-4619-beeb-e9b31502c1cf
 gvplot(d2)
@@ -417,8 +417,8 @@ md" ##### Model m3.0s will likely provide the best estimate of the average causa
 # ╔═╡ Cell order:
 # ╟─ad08dd09-222a-4071-92d4-38deebaf2e82
 # ╠═e4552c81-d0db-4434-b81a-c86f1af515e5
-# ╠═62c80a26-975a-11ed-2e09-2dce0e33bb70
-# ╠═aaea31c8-37ed-4f0f-8e3e-8e89d30ed918
+# ╠═46ef488a-43ac-4b50-9093-d4e93dd38432
+# ╠═081be249-4e6c-4d94-b2e8-044d0c7ddcae
 # ╠═58ece6dd-a20f-4624-898a-40cae4b471e4
 # ╠═261cca70-a6dd-4bed-b2f2-8667534d0ceb
 # ╟─3a7676c8-38be-41d9-949e-d8de8c1b9cff

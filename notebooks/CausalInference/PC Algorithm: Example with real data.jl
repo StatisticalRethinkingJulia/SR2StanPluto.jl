@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.26
+# v0.19.27
 
 using Markdown
 using InteractiveUtils
@@ -65,7 +65,7 @@ begin
 end 
 
 # ╔═╡ f39b4739-7b63-43dc-bc2b-b65a173be1d5
-d_pc = create_pc_dag("d_pc", df, d1_str);
+d_pc = create_pcalg_gauss_dag("d_pc", df, d1_str);
 
 # ╔═╡ 6f457c4f-dbc5-4ac3-89d0-2a9c4c912fe4
 gvplot(d_pc)

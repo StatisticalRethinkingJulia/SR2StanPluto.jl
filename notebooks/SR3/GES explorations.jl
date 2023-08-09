@@ -63,7 +63,7 @@ let
 end
 
 # ╔═╡ 782475cb-bd3c-469e-89a6-ed8058c770c4
-dag_pc = create_pc_dag("pc", df, "Digraph PC {X->V; X->W; V->Z; W->Z; Z->S;}");
+dag_pc = create_pcalg_gauss_dag("pc", df, "Digraph PC {X->V; X->W; V->Z; W->Z; Z->S;}");
 
 # ╔═╡ 3c459abd-d64f-4bc6-99c7-fbc82eb3c280
 dag_fci = create_fci_dag("fci", df, "Digraph FCI {X->V; X->W; V->Z; W->Z; Z->S;}");
@@ -74,11 +74,11 @@ dag_ges = create_ges_dag("ges", df, "Digraph FCI {X->V; X->W; V->Z; W->Z; Z->S;}
 # ╔═╡ d844ca9f-4302-44e6-b4ac-7758b03c8e68
 gvplot(dag_pc)
 
-# ╔═╡ 8c0fc0b3-5ff9-4943-be6a-05cf27208210
-gvplot(dag_fci)
-
 # ╔═╡ 31f432a6-c439-4766-adb3-0c660397a76c
 gvplot(dag_ges)
+
+# ╔═╡ 8c0fc0b3-5ff9-4943-be6a-05cf27208210
+gvplot(dag_fci)
 
 # ╔═╡ 67b8af13-d3b0-4e92-be66-18b96d653ec1
 dag_ges.score
@@ -107,8 +107,8 @@ dag_ges.est_g.fadjlist
 # ╠═3c459abd-d64f-4bc6-99c7-fbc82eb3c280
 # ╠═e38a7c67-696a-4a72-8a6b-7cd152cf0216
 # ╠═d844ca9f-4302-44e6-b4ac-7758b03c8e68
-# ╠═8c0fc0b3-5ff9-4943-be6a-05cf27208210
 # ╠═31f432a6-c439-4766-adb3-0c660397a76c
+# ╠═8c0fc0b3-5ff9-4943-be6a-05cf27208210
 # ╠═67b8af13-d3b0-4e92-be66-18b96d653ec1
 # ╠═7fede47f-39d9-41e0-ae3b-b37e32331955
 # ╠═6c3f3b01-99f4-4005-a022-f9678df6056a

@@ -282,7 +282,7 @@ end
 # ╔═╡ 2ddcd39f-6318-42cc-aad1-99c414536c7c
 let
 	g_dot_str = "DiGraph plant_2 {h0 -> h1; t -> f;}"
-	dag_plants_2 = create_pc_dag("dag_plants_2", df2, g_dot_str);
+	dag_plants_2 = create_pcalg_gauss_dag("dag_plants_2", df2, g_dot_str);
 	gvplot(dag_plants_2; title_g="Observed model")
 end
 
