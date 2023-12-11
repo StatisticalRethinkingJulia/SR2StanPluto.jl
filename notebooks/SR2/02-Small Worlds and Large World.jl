@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.22
+# v0.19.35
 
 using Markdown
 using InteractiveUtils
@@ -100,7 +100,7 @@ likelihood = [pdf(Binomial(9, p), 6) for p in p_grid];
 
 # ╔═╡ ef3b5609-c9e9-4a22-a0a1-15a3d03205a7
 let
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size = default_figure_resolution)
 	ax = Axis(f[1, 1]; title="Distribution of likelihood on the grid")
 	lines!(p_grid, likelihood)
 	f
@@ -132,7 +132,7 @@ let
 	unstd_posterior = likelihood .* prior
 	posterior = unstd_posterior / sum(unstd_posterior)
 	
-	f = Figure(resolution = default_figure_resolution)
+	f = Figure(;size = default_figure_resolution)
 	ax = Axis(f[1, 1]; title="Posterior distribution of probability of water ($N points)",
 	    xlabel="probability of water", 
 	    ylabel="posterior probability")
@@ -160,7 +160,7 @@ let
     unstd_posterior = likelyhood .* prior
     posterior = unstd_posterior / sum(unstd_posterior)
 
-	f = Figure(resolution = default_figure_resolution)
+	f = Figure(;size = default_figure_resolution)
 	ax = Axis(f[1, 1]; xlabel="probability of water", ylabel="posterior probability", title="$size points")
 	lines!(p_grid, posterior)
 	scatter!(p_grid, posterior)
@@ -212,7 +212,7 @@ md"### Julia code snippet 2.7"
 let
     x = range(0, 1; length=101)
 	
-	f = Figure(resolution = default_figure_resolution)
+	f = Figure(;size = default_figure_resolution)
 	ax = Axis(f[1, 1]; title="W=6. L=3")
     W = 6; L = 3
 	qm, sm, om = stan_quap("m2_1s", m2_1; data = (W=6, L=3), init = (p = 0.5,))
@@ -271,7 +271,7 @@ md"### Julia code snippet 2.9"
 # ╔═╡ 3c227bff-f7db-49f5-aaad-f2a58fcf4151
 let
 	x = range(0, 1; length=101)
-	f = Figure(resolution = default_figure_resolution)
+	f = Figure(;size =  default_figure_resolution)
 	ax = Axis(f[1, 1]; title = "Posterior sample density (blue) and Beta analytical density (darkred)")
     density!(p; color = (:lightblue, 0.3), strokecolor = :blue, strokewidth = 3)
     b = Beta(W+1, L+1)

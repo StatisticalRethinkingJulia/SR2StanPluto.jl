@@ -101,7 +101,7 @@ if !isnothing(q7_1s)
 end
 
 # ╔═╡ 5d181571-d5fd-48d7-b987-5ff14e577946
-PRECIS(quap7_1s_df)
+describe(quap7_1s_df)
 
 # ╔═╡ 774fc3e1-25ed-4412-924a-2ec01c5d5293
 log(mean(quap7_1s_df.sigma))
@@ -141,10 +141,10 @@ if !isnothing(q7_1as)
 end
 
 # ╔═╡ 67124c32-c2b1-4496-9ade-1e19e8ea4226
-PRECIS(quap7_1as_df)
+describe(quap7_1as_df)
 
 # ╔═╡ dd57c27a-f360-4f99-89fe-19d22e6d602d
-PRECIS(post7_1as_df)
+describe(post7_1as_df)
 
 # ╔═╡ 581e85c4-72e7-449d-a9b8-b8d924af0714
 exp(mean(quap7_1as_df.log_sigma))
@@ -184,10 +184,10 @@ if !isnothing(q7_1bs)
 end
 
 # ╔═╡ 5cdd6ac6-774d-4602-8bcb-8ce813e46356
-PRECIS(quap7_1bs_df)
+describe(quap7_1bs_df)
 
 # ╔═╡ 32c37504-eabd-4042-be42-ee4d8df73443
-PRECIS(post7_1bs_df)
+describe(post7_1bs_df)
 
 # ╔═╡ aa05a451-943c-4ff7-9bdb-c7b3c5f08857
 begin

@@ -1,14 +1,11 @@
 ### A Pluto.jl notebook ###
-# v0.19.22
+# v0.19.35
 
 using Markdown
 using InteractiveUtils
 
 # ╔═╡ 6a0e1509-a003-4b92-a244-f96a9dd7dd3e
 using Pkg
-
-# ╔═╡ d48cf630-ca08-4f24-9aab-abeefae8e527
-#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ ba53534c-c088-4b75-a220-36c09b375978
 begin
@@ -42,6 +39,9 @@ html"""
 </style>
 """
 
+# ╔═╡ d48cf630-ca08-4f24-9aab-abeefae8e527
+#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
+
 # ╔═╡ ca213187-aedf-49b7-9393-607bf6a4f08e
 md"### Julia code snippet 4.1"
 
@@ -67,7 +67,7 @@ md"##### Plot and annotate the random walks."
 
 # ╔═╡ 2198aa92-300a-4503-a3cf-52eaa6f99b61
 let
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 	ax = Axis(f[1, 1:3]; title="$(size(csum, 2)) random walks of $(size(csum, 1)) steps", xticks = ([4, 8, 16], ["step 4", "step 8", "step 16"]))
 	for i in 1:size(csum, 2)
 		lines!(csum[:, i])
@@ -101,7 +101,7 @@ md"### Julia code snippet 4.3"
 
 # ╔═╡ 56163c82-7652-4449-9204-b062c3853167
 let
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 	ax = Axis(f[1, 1];)
     u = Uniform(0, .1)
     growth = prod.(eachrow(1 .+ rand(u, 10000, 12)));
@@ -118,7 +118,7 @@ md"### Julia code snippet 4.4 and 4.5"
 
 # ╔═╡ 025c8b62-eaff-41ad-8bb6-6b575b8a2445
 let
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 	
     global big = prod.(eachrow(1 .+ rand(Uniform(0, 0.5), 10000, 12)));
     small = prod.(eachrow(1 .+ rand(Uniform(0, 0.01), 10000, 12)));

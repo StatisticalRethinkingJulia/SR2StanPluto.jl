@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.26
+# v0.19.35
 
 using Markdown
 using InteractiveUtils
@@ -27,7 +27,7 @@ begin
 	using StanSample
 	
 	# Project support libraries
-	using StatisticalRethinking: sr_datadir, PRECIS, sim_happiness
+	using StatisticalRethinking: sr_datadir, sim_happiness
 	using RegressionAndOtherStories
 end
 
@@ -72,17 +72,15 @@ end
 # ╔═╡ b4146171-f600-4033-99e2-7aba5db17610
 begin
 	df = sim_happiness()
+	describe(df)
 end
 
 # ╔═╡ 46bb4fa8-923f-42e2-8333-c52673d47c37
 model_summary(df, [:age, :happiness, :married])
 
-# ╔═╡ b0402134-d119-474c-94c0-b8da12da3a34
-PRECIS(df[:, [:age, :happiness, :married]])
-
 # ╔═╡ 24cc2617-9b97-49bb-bc4e-a51270d53462
 let
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 	ax = Axis(f[1, 1]; xlabel="Age", ylabel="Happiness")
 	xlims!(ax, 0, 66)
 	for i in 1:nrow(df)
@@ -104,7 +102,7 @@ let
 	# or `df2 = filter(row -> row[:age] > 17, df2)`
 	df2 = df2[df2.age .> 17, :]
 	df2.A = (df2.age .- 18) / (65 - 18)
-	df2
+	describe(df2)
 end
 
 # ╔═╡ 1a627fb5-3ca8-4157-9496-fdd35b4c8f1c
@@ -123,7 +121,7 @@ data {
 	vector[N] happiness;
 	vector[N] A;
 	int <lower=1>  k;
-	int mid[N];
+	array[N] int mid;
 }
 parameters {
 	real <lower=0> sigma;
@@ -263,7 +261,7 @@ let
 	scale_df_cols!(df3, [:C, :P, :G, :U])
 	q = quantile(df3[:, :P_s], [0.45, 0.60])
 	pset = Int[]
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 	ax = Axis(f[1 ,1];)
 	for (i, r) in enumerate(eachrow(df3))
 		if r.U > 0.0
@@ -338,7 +336,6 @@ end
 # ╠═4659c3bc-9677-4703-8a68-f1bd546efa8e
 # ╠═b4146171-f600-4033-99e2-7aba5db17610
 # ╠═46bb4fa8-923f-42e2-8333-c52673d47c37
-# ╠═b0402134-d119-474c-94c0-b8da12da3a34
 # ╠═24cc2617-9b97-49bb-bc4e-a51270d53462
 # ╟─cfadd300-c683-47d1-9d57-5764b20ea797
 # ╠═030a38f8-5728-43bf-9792-fa3d7d5517c0

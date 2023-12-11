@@ -1,14 +1,11 @@
 ### A Pluto.jl notebook ###
-# v0.19.22
+# v0.19.35
 
 using Markdown
 using InteractiveUtils
 
 # ╔═╡ 859783d0-73c9-4d1a-aab7-1d1bc474389e
 using Pkg
-
-# ╔═╡ c80881ad-605b-40fc-a492-d253fef966c8
-#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ ba53534c-c088-4b75-a220-36c09b375978
 begin
@@ -45,6 +42,9 @@ html"""
 </style>
 """
 
+# ╔═╡ c80881ad-605b-40fc-a492-d253fef966c8
+#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
+
 # ╔═╡ 0f2f43f6-d3f6-43aa-9624-d2be810a261b
 md"### Julia code snippet 4.7"
 
@@ -80,7 +80,7 @@ md"### Julia code snippet 4.12"
 
 # ╔═╡ 298cb966-7a89-495f-9665-606612523a6f
 let
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 	ax = Axis(f[1, 1];)
 	x = 100:0.1:250
 	lines!(x, pdf.(Normal(178, 20), x))
@@ -92,7 +92,7 @@ md"### Julia code snippet 4.13"
 
 # ╔═╡ 2d816327-a0c3-46b4-8cbb-fd1cba7187b3
 let
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 	ax = Axis(f[1, 1];)
 	x = 0:0.1:50
 	lines!(pdf.(Uniform(0, 50), x))
@@ -107,7 +107,7 @@ let
 	sample_mu = rand(Normal(178, 20), 10000)
 	sample_sigma = rand(Uniform(0, 50), 10000)
 	prior_h = [rand(Normal(sample_mu[i], sample_sigma[i]))[1] for i in 1:10000]
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 	ax = Axis(f[1, 1]; title="Prior h", xlabel="h")
 	density!(prior_h)
 	f	
@@ -121,7 +121,7 @@ let
     sample_μ = rand(Normal(178, 100), 10000)
 	sample_σ = rand(Uniform(0, 50), 10000)
     prior_h = [rand(Normal(μ, σ)) for (μ, σ) in zip(sample_μ, sample_σ)]
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 	ax = Axis(f[1, 1];)
 	density!(prior_h)
 	vlines!([0, 272])
@@ -135,7 +135,7 @@ md"### Julia code snippet 4.16"
 stan4_1 = "
 data {
   int N;
-  real<lower=0> height[N];
+  array[N] real<lower=0> height;
 }
 parameters {
   real<lower=0> sigma;
@@ -169,7 +169,7 @@ post4_1s = read_samples(m4_1s, :dataframe)
 
 # ╔═╡ 77ae1357-ccee-4eb3-88c8-573582aa451b
 let
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
     size = 10_000
 	    
 	ax = Axis(f[1, 1]; title="mu ~ rand(Normal(178, 20), $size)", xlabel="μ")
@@ -229,7 +229,7 @@ md"### Julia code snippet 4.17"
 
 # ╔═╡ bf5a275c-895a-4863-aa87-85c33f66fe18
 let
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 	ax = Axis(f[1, 1]; title="Contour plot")
 	contour!(μ_list, σ_list, prob)
 	f
@@ -240,7 +240,7 @@ md"### Julia code snippet 4.18"
 
 # ╔═╡ de78a53f-76b4-41ad-b543-56c14f09171e
 let
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 	ax = Axis(f[1, 1]; title="Heatmap plot")
 	heatmap!(μ_list, σ_list, prob)
 	f
@@ -251,7 +251,7 @@ md"### Julia code snippet 4.19 & 4.20"
 
 # ╔═╡ 590f7b71-cbf2-4d6e-bddb-a8cc3afd8366
 let
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 	ax = Axis(f[1, 1];)
     indices = collect(Iterators.product(1:length(μ_list), 1:length(σ_list)));
     sample_idx = wsample(vec(indices), vec(prob), 10_000; replace=true)
@@ -266,7 +266,7 @@ md"### Julia code snippet 4.21"
 
 # ╔═╡ 2db4ec20-7321-483f-a61e-133420c4e20d
 begin
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 	ax = Axis(f[1, 1];)
     p1 = Makie.density!(sample_μs)
 	ax = Axis(f[2, 1];)
@@ -294,7 +294,7 @@ md"### Julia code snippet 4.24"
 
 # ╔═╡ 740b6299-5a58-4f61-a80b-606ab273129f
 let
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 	ax = Axis(f[1, 1])
 	#xlims!(100, 200)
     log_likelihood = [
@@ -323,7 +323,7 @@ md"### Julia code snippet 4.25"
 
 # ╔═╡ 82c707a2-0340-430b-ab4f-624116610dec
 let
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 	ax = Axis(f[1, 1]; title="Normal")
     density!(sample2_σ)
     μ = mean(sample2_σ)
@@ -400,7 +400,7 @@ stan4_2 = "
 // Inferring the mean and std
 data {
   int N;
-  real<lower=0> h[N];
+  array[N] real<lower=0> h;
 }
 parameters {
   real<lower=0> sigma;

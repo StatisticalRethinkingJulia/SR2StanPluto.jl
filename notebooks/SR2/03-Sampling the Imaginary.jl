@@ -1,14 +1,11 @@
 ### A Pluto.jl notebook ###
-# v0.19.22
+# v0.19.35
 
 using Markdown
 using InteractiveUtils
 
 # ╔═╡ 9017fe5b-537c-434a-8a9a-6f55515e0f43
 using Pkg
-
-# ╔═╡ 2ca8f4be-10d4-44bb-81e8-98c57775acc3
-#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ 10249d26-e2b5-4ce5-a87d-4a703e9f3b45
 begin
@@ -42,6 +39,9 @@ html"""
 	}
 </style>
 """
+
+# ╔═╡ 2ca8f4be-10d4-44bb-81e8-98c57775acc3
+#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ 3080b453-0a4f-45ef-8e3d-731c44e14b6d
 md"### Julia code snippet 3.1"
@@ -83,7 +83,7 @@ md"### Julia code snippet 3.4,  code snippet 3.5 and Figure 3.1"
 
 # ╔═╡ e78b6f64-61b0-4790-a4a7-e40c5546fd5d
 let
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 	ax = Axis(f[1, 1]; xlabel="Sample number", ylabel="Proportion water (p)")
 	scatter!(samples1; alpha=0.2, markersize=4)
 	ax = Axis(f[1, 2]; xlabel="Proportion water (p)", ylabel="Density")
@@ -105,7 +105,7 @@ sum(samples1 .< 0.5) / length(samples1)
 
 # ╔═╡ 47060a12-d34e-404e-956f-b7c6a262c3d7
 let
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 	x = 0:0.01:1
 	d = Normal(mean(samples1), std(samples1))
 	
@@ -178,7 +178,7 @@ highest_posterior_interval = hpdi(samples2, alpha=0.5)
 
 # ╔═╡ b35c9437-d664-4af8-872f-08aa9f48958b
 let
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 	
 	pi = percentage_interval
 	hpi = highest_posterior_interval
@@ -254,7 +254,7 @@ md" #### Figure 3.2"
 
 # ╔═╡ 0c733bb4-ce48-477b-ac7d-23d2fb2aa7e3
 let
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 
 	k = kde(samples2, bandwidth=0.01)
 

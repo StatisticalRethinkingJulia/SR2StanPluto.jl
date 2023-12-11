@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.22
+# v0.19.35
 
 using Markdown
 using InteractiveUtils
@@ -12,15 +12,9 @@ using Pkg
 
 # ╔═╡ 3626cf55-ee2b-4363-95ee-75f2444a1542
 begin
-	using CSV
-	using Random
-	using StatsBase
-	using DataFrames
-	using LaTeXStrings
-	using Parameters
 	using CairoMakie
 	using StanSample
-	using StatisticalRethinking: sr_datadir, PRECIS
+	using StatisticalRethinking: sr_datadir
 	using RegressionAndOtherStories
 end
 
@@ -70,7 +64,7 @@ begin
 end
 
 # ╔═╡ f67cbc42-1132-4626-93b0-82fe381a579e
-PRECIS(post9_2s_df[:, [:alpha, :sigma]])
+describe(post9_2s_df[:, [:alpha, :sigma]])
 
 # ╔═╡ 0e490fd5-d7f0-4c29-8d60-226c777b7609
 sdf
@@ -114,7 +108,7 @@ end
 sdf9_3s
 
 # ╔═╡ c78b03ac-81ba-4a10-9f82-e4f6341a8d7a
-PRECIS(post9_3s_df[:, [:alpha, :sigma]])
+describe(post9_3s_df[:, [:alpha, :sigma]])
 
 # ╔═╡ 739831b7-27d4-4450-a3ed-8db96870e105
 plot_chains(post9_3s_df, [:alpha, :sigma])
@@ -157,7 +151,7 @@ end
 sdf9_4s
 
 # ╔═╡ 0162ead7-e9d7-4ddf-a453-9a9f1285fc31
-PRECIS(post9_4s_df[:, [:alpha, :beta, :sigma]])
+describe(post9_4s_df[:, [:alpha, :beta, :sigma]])
 
 # ╔═╡ cc947268-ef10-46f6-8bdf-6d2b42a70e10
 plot_chains(post9_4s_df, [:alpha, :beta, :sigma])
@@ -203,7 +197,7 @@ end
 sdf9_5s
 
 # ╔═╡ 4bfb188a-486c-42b8-9d47-d9eebdcb1e3d
-PRECIS(post9_5s_df[:, [:alpha, :beta, :sigma]])
+describe(post9_5s_df[:, [:alpha, :beta, :sigma]])
 
 # ╔═╡ 213010f0-aaa7-423a-bcff-4dfe6bbc34cd
 plot_chains(post9_5s_df, [:alpha, :beta, :sigma])
@@ -212,7 +206,7 @@ plot_chains(post9_5s_df, [:alpha, :beta, :sigma])
 trankplot(post9_5s_df, "alpha"; n_eff=sdf9_5s[sdf9_5s.parameters .== :alpha, :ess][1])
 
 # ╔═╡ Cell order:
-# ╠═4a6f12f9-3b83-42b5-9fed-0296a5a603c6
+# ╟─4a6f12f9-3b83-42b5-9fed-0296a5a603c6
 # ╠═2409c72b-cbcc-467f-9e81-23d83d2b703a
 # ╠═a20974be-c658-11ec-3a53-a185aa9085cb
 # ╠═a280f7d2-6cda-4a71-92e5-8d2c8d0d31ef

@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.26
+# v0.19.35
 
 using Markdown
 using InteractiveUtils
@@ -30,7 +30,7 @@ begin
 	using StanSample
 	
 	# Project support libraries
-	using StatisticalRethinking: sr_datadir, PRECIS
+	using StatisticalRethinking: sr_datadir
 	using RegressionAndOtherStories
 end
 
@@ -113,7 +113,7 @@ md"### Julia code snippet 5.2"
 
 # ╔═╡ cb454809-0dd7-4e79-adc6-7a2793090964
 let
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 	ax = Axis(f[1, 1]; xlabel="WaffleHouses per million", ylabel="Divorce rate", title="Figure 5.1")
 	x_range = 0:0.1:50
 	lines!(x_range, ms5_0s[:a, :mean] .+ ms5_0s[:bW, :mean] .* x_range)
@@ -186,7 +186,7 @@ md"##### Plot priors of the intercept (`:a`) and the slope (`:bA`)."
 let
 	xi = -3.0:0.1:3.0
 
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 	ax = Axis(f[1, 1]; xlabel="Medium age marriage (scaled)", ylabel="Divorce rate (scaled)",
 		title="Showing 50 regression lines")
 
@@ -241,7 +241,7 @@ end
 let
 	xi = -3.0:0.1:3.0
 
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 	ax = Axis(f[1, 1]; xlabel="Medium age marriage (scaled)", ylabel="Divorce rate (scaled)",
 		title="Showing 50 regression lines")
 
@@ -299,7 +299,7 @@ end
 let
 	xi = -2.0:0.1:3.0
 
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 
 	# Rescale axis
 	scale_factor_x = [mu * std(waffles.Marriage) + mean(waffles.Marriage) for mu in -2:2:2]
@@ -666,7 +666,7 @@ let
 	x = -2.4:0.1:3
 	mean_a1, mean_bAM, mean_sigma = ms5_4s[:, :mean]
 	
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 	ax = Axis(f[1, 1]; xlabel="Age at marriage (std)", ylabel="Marriage rate (std)",
 		title="Regression of M on A")
 	
@@ -754,7 +754,7 @@ end
 
 # ╔═╡ e9530376-06ac-4e85-8cd1-b8f9f9f6ec1b
 let
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 	ax = Axis(f[1, 1]; xlabel="Observed values of D", ylabel="Predicted values of D",
 		title="Prediction of D by state")
 	scatter!(div_df.D, div_df.m)
@@ -924,7 +924,7 @@ md"##### M -> D"
 let
 	m_seq = range(-2, stop=2, length=30)
 
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 	ax = Axis(f[1, 1]; xlabel="Manipulated A", ylabel="Counterfactual D",
 		title="Total counterfactual effect of A on D")
 	m, l, u = estimparam(d_sim)

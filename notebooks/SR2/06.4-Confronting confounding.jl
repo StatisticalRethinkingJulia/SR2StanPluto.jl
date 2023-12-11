@@ -1,11 +1,14 @@
 ### A Pluto.jl notebook ###
-# v0.19.27
+# v0.19.35
 
 using Markdown
 using InteractiveUtils
 
 # ╔═╡ 16ddb41a-fc59-11ea-1631-153e3466c75c
 using Pkg
+
+# ╔═╡ 76b6ce64-9f9b-48fa-8ef4-8ee1a0723bf0
+#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ d65dd2b2-fc58-11ea-2300-4db47ec9a789
 begin
@@ -23,7 +26,7 @@ begin
 	using StanSample
 	
 	# Project support libraries
-	using StatisticalRethinking: sr_datadir, PRECIS, sim_happiness
+	using StatisticalRethinking: sr_datadir, sim_happiness
 	using RegressionAndOtherStories
 end
 
@@ -47,9 +50,6 @@ html"""
 	}
 </style>
 """
-
-# ╔═╡ 76b6ce64-9f9b-48fa-8ef4-8ee1a0723bf0
-#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ 9e068b40-6de7-49e5-8e89-0e26f9c7be85
 begin
@@ -264,7 +264,7 @@ let
 	fci_oracle_dot_str = to_gv(g_oracle2, d2.vars)
 	g1 = GraphViz.Graph(d2.g_dot_str)
 	g2 = GraphViz.Graph(fci_oracle_dot_str)
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 	ax = Axis(f[1, 1]; aspect=DataAspect(), title="True (generational) DAG")
 	CairoMakie.image!(rotr90(create_png_image(g1)))
 	hidedecorations!(ax)

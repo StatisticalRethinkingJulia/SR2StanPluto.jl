@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.22
+# v0.19.35
 
 using Markdown
 using InteractiveUtils
@@ -8,22 +8,14 @@ using InteractiveUtils
 using Pkg
 #Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
+# ╔═╡ 36f365f3-2c43-4ca4-9972-1238e55966c6
+#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
+
 # ╔═╡ a9d9fd82-5466-42e8-bb5a-204a2e706462
 begin
-	using CSV
-	using Random
-	using StatsBase
-	using DataFrames
-	using StatsPlots
-	#using StatsFuns
-	using LaTeXStrings
-	using Parameters
-	using CategoricalArrays
-	using NamedTupleTools
-	using ParetoSmoothedImportanceSampling
 	using CairoMakie
 	using StanSample
-	using StatisticalRethinking: sr_datadir, PRECIS
+	using StatisticalRethinking: sr_datadir
 	using RegressionAndOtherStories
 end
 
@@ -42,9 +34,6 @@ html"""
 </style>
 """
 
-# ╔═╡ 36f365f3-2c43-4ca4-9972-1238e55966c6
-#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
-
 # ╔═╡ 8d545ec8-0389-4c81-8a0d-653d35667b92
 begin
 	df = CSV.read(sr_datadir("rugged.csv"), DataFrame)
@@ -55,7 +44,7 @@ begin
 	df.rugged_s = df.rugged / maximum(df.rugged)
 	df.cid = [df.cont_africa[i] == 1 ? 1 : 2 for i in 1:size(df, 1)]
 	r̄ = mean(df.rugged_s)
-	PRECIS(df[:, [:rgdppc_2000, :log_gdp, :log_gdp_s, :rugged, :rugged_s, :cid]])
+	describe(df[:, [:rgdppc_2000, :log_gdp, :log_gdp_s, :rugged, :rugged_s, :cid]])
 end
 
 # ╔═╡ 3c59c453-f71b-49ae-8f83-6ede555badb8
@@ -69,7 +58,7 @@ data {
 	int K;
 	vector[N] G;
 	vector[N] R;
-	int cid[N];
+	array[N] int cid;
 }
 
 parameters {

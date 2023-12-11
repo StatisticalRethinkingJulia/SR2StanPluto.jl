@@ -1,14 +1,11 @@
 ### A Pluto.jl notebook ###
-# v0.19.22
+# v0.19.35
 
 using Markdown
 using InteractiveUtils
 
 # ╔═╡ a6c3f6dc-bd11-4316-a9ec-8d72c94e6a4c
 using Pkg
-
-# ╔═╡ 47eb0509-fd58-45c9-9d39-ada8d37bb76a
-#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ 4ade84b6-fc0b-11ea-06ff-9517579c812c
 begin
@@ -46,6 +43,9 @@ html"""
 
 # ╔═╡ 5433c67d-6294-4984-9490-04e4a0edeb7a
 md" ### Julia code snippet 4.64"
+
+# ╔═╡ 47eb0509-fd58-45c9-9d39-ada8d37bb76a
+#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ 4af00a44-fc0b-11ea-080c-e9f7bc30a1b1
 begin
@@ -184,7 +184,7 @@ let
 	res3 = hcat(res3...)
 	m3, l3, u3 = estimparam(res3)
 
-	f = Figure(resolution= default_figure_resolution)
+	f = Figure(;size=  default_figure_resolution)
 	ax = Axis(f[1, 1]; xlabel="weight_s", ylabel="height", title="....")
 	Makie.lines!(mu_range, m1)
 	Makie.band!(mu_range, l1, u1; color=:lightblue)
@@ -224,7 +224,7 @@ let
 	scale_factor = [mu * std(howell1.weight) + mean(howell1.weight) for mu in -2:1:2]
 	xtick_labels = string.(round.(scale_factor, digits=2))
 	
-	f = Figure(resolution= default_figure_resolution)
+	f = Figure(;size=  default_figure_resolution)
 	ax = Axis(f[1, 1]; xlabel="weight", ylabel="height", title="Linear regression line",
 		xticks=(-2:1:2, xtick_labels),)
 	Makie.lines!(mu_range, m1)
@@ -266,7 +266,7 @@ end;
 
 # ╔═╡ 66a6647d-5361-4934-93d6-d1f4b657a761
 let
-	f = Figure(resolution= default_figure_resolution)
+	f = Figure(;size=  default_figure_resolution)
 	ax = Axis(f[1, 1]; xlabel="year", ylabel="doy", title="Cherry blossom")
 	Makie.scatter!(df.year, df.doy, leg=false)
 	f
@@ -285,7 +285,7 @@ end;
 
 # ╔═╡ 7a6094d9-8480-4171-8c9f-d1a0011ad93c
 let
-	f = Figure(resolution= default_figure_resolution)
+	f = Figure(;size=  default_figure_resolution)
 	ax = Axis(f[1, 1]; xlabel="year", ylabel="basis value", title="....")
 	for y in eachcol(B)
 		Makie.lines!(df.year, y)
@@ -301,7 +301,7 @@ stan4_7 = "
 data {
     int n;
     int k;
-    int doy[n];
+    array[n] int doy;
     matrix[n, k] B;
 }
 parameters {
@@ -354,7 +354,7 @@ begin
 	w_3 = mean.(eachcol(post_3[:, w_str]))              # either
 	w_3 = [mean(post_3[:, col]) for col in w_str]       # or
 	
-	f = Figure(resolution= default_figure_resolution)
+	f = Figure(;size=  default_figure_resolution)
 	ax = Axis(f[1, 1]; xlabel="year", ylabel="basis * weight", title="....")
 	for y in eachcol(B .* w_3')
 		Makie.lines!(df.year, y)
@@ -370,7 +370,7 @@ let
 	mu_3 = post_3.a' .+ B * Array(post_3[!, w_str])'
 	m, l, u = meanlowerupper(mu_3)
 
-	f = Figure(resolution= default_figure_resolution)
+	f = Figure(;size=  default_figure_resolution)
 	ax = Axis(f[1, 1]; xlabel="Observations", ylabel="day in year")
 	Makie.scatter!(df.year, df.doy)
 	Makie.lines!(df.year, m)

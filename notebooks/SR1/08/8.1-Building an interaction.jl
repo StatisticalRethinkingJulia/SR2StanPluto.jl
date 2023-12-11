@@ -36,7 +36,7 @@ begin
 	df.cid = [df.cont_africa[i] == 1 ? 1 : 2 for i in 1:size(df, 1)]
 	data = (N = size(df, 1), K = length(unique(df.cid)), 
 		G = df.log_gdp_s, R = df.rugged_s, cid=df.cid)
-	PRECIS(df[:, [:log_gdp, :log_gdp_s, :rugged, :rugged_s, :cid]])
+	describe(df[:, [:log_gdp, :log_gdp_s, :rugged, :rugged_s, :cid]])
 end
 
 # ╔═╡ a7acb9d6-3fe7-428b-8ea4-b9578a7dc84f
@@ -58,7 +58,7 @@ begin
 	rc8_1_1s = stan_sample(m8_1_1s)
 	if success(rc8_1_1s)
 		post8_1_1s_df = read_samples(m8_1_1s, :dataframe)
-		PRECIS(post8_1_1s_df[:, [:a, :b]])
+		describe(post8_1_1s_df[:, [:a, :b]])
 	end
 end
 
@@ -92,7 +92,7 @@ begin
 	rc8_1_2s = stan_sample(m8_1_2s)
 	if success(rc8_1_2s)
 		post8_1_2s_df = read_samples(m8_1_2s, :dataframe)
-		PRECIS(post8_1_2s_df[:, [:a, :b]])
+		describe(post8_1_2s_df[:, [:a, :b]])
 	end
 end
 
@@ -117,7 +117,7 @@ begin
 	rc8_1_3s = stan_sample(m8_1_3s; data)
 	if success(rc8_1_3s)
 		post8_1_3s_df = read_samples(m8_1_3s, :dataframe)
-		PRECIS(post8_1_3s_df[:, [:a, :b, :sigma]])
+		describe(post8_1_3s_df[:, [:a, :b, :sigma]])
 	end
 end
 
@@ -157,7 +157,7 @@ begin
 	rc8_1_4s = stan_sample(m8_1_4s; data)
 	if success(rc8_1_4s)
 		post8_1_4s_df = read_samples(m8_1_4s, :dataframe)
-		PRECIS(post8_1_4s_df[:, [:a, :b, :sigma]])
+		describe(post8_1_4s_df[:, [:a, :b, :sigma]])
 	end
 end
 
@@ -199,7 +199,7 @@ begin
 	rc8_1s = stan_sample(m8_1s; data)
 	if success(rc8_1s)
 		post8_1s_df = read_samples(m8_1s, :dataframe)
-		PRECIS(post8_1s_df[:, [:a, :b, :sigma]])
+		describe(post8_1s_df[:, [:a, :b, :sigma]])
 	end
 end
 
@@ -287,7 +287,7 @@ begin
 	rc8_2s = stan_sample(m8_2s; data)
 	if success(rc8_2s)
 		post8_2s_df = read_samples(m8_2s, :dataframe)
-		PRECIS(post8_2s_df[:, [Symbol("a.1"), Symbol("a.2"), :b, :sigma]])
+		describe(post8_2s_df[:, [Symbol("a.1"), Symbol("a.2"), :b, :sigma]])
 	end
 end
 
@@ -384,7 +384,7 @@ begin
 	rc8_3s = stan_sample(m8_3s; data)
 	if success(rc8_3s)
 		post8_3s_df = read_samples(m8_3s, :dataframe)
-		PRECIS(post8_3s_df[:, [Symbol("a.1"), Symbol("a.2"), 
+		describe(post8_3s_df[:, [Symbol("a.1"), Symbol("a.2"), 
 					Symbol("b.1"), Symbol("b.2"), :sigma]])
 	end
 end

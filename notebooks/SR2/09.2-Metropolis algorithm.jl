@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.22
+# v0.19.35
 
 using Markdown
 using InteractiveUtils
@@ -12,16 +12,8 @@ using Pkg
 
 # ╔═╡ 3626cf55-ee2b-4363-95ee-75f2444a1542
 begin
-    using DataFrames
-    using Parameters
-    using Statistics
-    using StatsBase
-    using LinearAlgebra
-    using FreqTables
-    using Random
-    using Distributions
     using CairoMakie
-    using AlgebraOfGraphics
+	using RegressionAndOtherStories
 end
 
 # ╔═╡ 4a6f12f9-3b83-42b5-9fed-0296a5a603c6

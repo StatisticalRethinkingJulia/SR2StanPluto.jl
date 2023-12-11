@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.22
+# v0.19.35
 
 using Markdown
 using InteractiveUtils
@@ -99,7 +99,7 @@ coef(cars_lm)
 
 # ╔═╡ 90f8174e-4ea8-45b4-9e88-38c3bd19b5e8
 let
-	fig = Figure(resolution=default_figure_resolution)
+	fig = Figure(;size=default_figure_resolution)
 	xlabel = "Speed"
 	ylabel = "Distance"
 	let
@@ -188,7 +188,7 @@ md" ##### Plot residuals."
 
 # ╔═╡ d26b5c9a-5912-40fc-9ee4-12c75dd97150
 let
-	f = Figure(resolution = default_figure_resolution)
+	f = Figure(;size = default_figure_resolution)
 	ax = Axis(f[1, 1]; title = "Speed vs residual of predicted distance", xlabel = "Speed", ylabel = "Model residual")
 	resid = cars.dist - (mean_a .+ mean_b * cars.speed)
 	scatter!(cars.speed, resid; color=:darkblue)
@@ -213,7 +213,7 @@ trankplot(post0_0s, "b")
 
 # ╔═╡ f00a4384-c4ea-4372-839a-2bcc5763ab4b
 let
-	fig = Figure(resolution = default_figure_resolution)
+	fig = Figure(;size = default_figure_resolution)
 	xlabel = "Speed"
 	ylabel = "Distance"
 	let

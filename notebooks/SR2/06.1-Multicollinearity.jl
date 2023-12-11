@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.26
+# v0.19.35
 
 using Markdown
 using InteractiveUtils
@@ -26,7 +26,7 @@ begin
 	using StanSample
 	
 	# Project support libraries
-	using StatisticalRethinking: sr_datadir, PRECIS
+	using StatisticalRethinking: sr_datadir
 	using RegressionAndOtherStories
 end
 
@@ -117,7 +117,7 @@ end
 let
 	if success(rc6_0s)
 		x = -2.0:0.01:3.0
-		f = Figure(resolution=default_figure_resolution)
+		f = Figure(;size=default_figure_resolution)
 		ax = Axis(f[1, 1]; xlabel="newsworthiness", ylabel="trustworthiness",
 			title="Science distortion (selection distortion)")
 		sel = scatter!(selected_df[:, :nw], selected_df[:, :tw], color=:blue, lab="selected")
@@ -134,7 +134,7 @@ end
 # ╔═╡ d1e551e0-075f-464b-a1ee-20db753e89c3
 if success(rc6_0s)
 	x_range = -2.0:0.01:3.0
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 	ax = Axis(f[1, 1]; xlabel="newsworthiness", ylabel="trustworthiness",
 		title="Science distortion")
 
@@ -237,7 +237,7 @@ let
 		# Get coefficients from the model
 		coefs = coef(m)
 
-		f = Figure(resolution=default_figure_resolution)
+		f = Figure(;size=default_figure_resolution)
 		
 		ax = Axis(f[1, 1]; xlabel="bR", ylabel="bL", title="bL ~ bR")
 		lines!(post6_1s_df[:, :bR], post6_1s_df[:, :bL])
@@ -303,7 +303,7 @@ begin
 	df5.K = df4.kcal_per_g_s
 	df5.F = df4.perc_fat_s
 	df5.L = df4.perc_lactose_s
-	df5
+	describe(df5)
 end
 
 # ╔═╡ f81204eb-0f80-42a9-93c7-e4bf4f5e0f03
@@ -459,7 +459,7 @@ stddev = [rep_sim_coll(df6, r) for r in r_range]
 
 # ╔═╡ 14da1e75-bcbe-41f4-af28-b9cec3ffedd9
 let
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 	ax = Axis(f[1, 1])
 	scatter!(r_range, stddev)
 	f

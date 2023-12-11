@@ -1,25 +1,19 @@
 ### A Pluto.jl notebook ###
-# v0.19.22
+# v0.19.35
 
 using Markdown
 using InteractiveUtils
 
 # ╔═╡ a20974be-c658-11ec-3a53-a185aa9085cb
 using Pkg
+
+# ╔═╡ 5fecfda0-af41-430a-8693-b0a408680792
 #Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ 3626cf55-ee2b-4363-95ee-75f2444a1542
 begin
-    using DataFrames
-    using Parameters
-    using Statistics
-    using StatsBase
-    using LinearAlgebra
-    using FreqTables
-    using Random
-    using Distributions
     using CairoMakie
-    using AlgebraOfGraphics
+    using RegressionAndOtherStories
 end
 
 # ╔═╡ 4a6f12f9-3b83-42b5-9fed-0296a5a603c6
@@ -36,9 +30,6 @@ html"""
     }
 </style>
 """
-
-# ╔═╡ 5fecfda0-af41-430a-8693-b0a408680792
-#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ 036457b2-4046-4379-bfbc-2e56b562bd54
 begin
@@ -246,8 +237,8 @@ end
 # ╔═╡ Cell order:
 # ╠═4a6f12f9-3b83-42b5-9fed-0296a5a603c6
 # ╠═2409c72b-cbcc-467f-9e81-23d83d2b703a
-# ╠═5fecfda0-af41-430a-8693-b0a408680792
 # ╠═a20974be-c658-11ec-3a53-a185aa9085cb
+# ╠═5fecfda0-af41-430a-8693-b0a408680792
 # ╠═3626cf55-ee2b-4363-95ee-75f2444a1542
 # ╠═036457b2-4046-4379-bfbc-2e56b562bd54
 # ╠═a0c92dd4-448e-44aa-8bdd-0cc5f09e1307

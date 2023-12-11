@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.26
+# v0.19.35
 
 using Markdown
 using InteractiveUtils
@@ -28,7 +28,7 @@ begin
 	using StanSample
 	
 	# Project support libraries
-	using StatisticalRethinking: sr_datadir, PRECIS
+	using StatisticalRethinking: sr_datadir
 	using RegressionAndOtherStories
 end
 
@@ -63,11 +63,8 @@ let
 	);
 	df[!, :fungus] = [rand(Binomial(1, 0.5 - 0.4 * df[i, :treatment]), 1)[1] for i in 1:N]
 	df[!, :h1] = [df[i, :h0] + rand(Normal(5 - 3 * df[i, :fungus]), 1)[1] for i in 1:N]
-	df
+	describe(df)
 end
-
-# ╔═╡ f9a4d078-c6c7-4fae-bad2-75866d00d204
-PRECIS(df)
 
 # ╔═╡ e07e83b4-b338-4481-880a-330e55e2e041
 md" ## Julia code snippet 6.14"
@@ -75,7 +72,7 @@ md" ## Julia code snippet 6.14"
 # ╔═╡ b1cd8dce-580c-43bf-a8b9-9b16b6685343
 let
 	sim_p = rand(LogNormal(0, 0.25), 10000)
-	PRECIS(DataFrame(sim_p = sim_p))
+	describe(DataFrame(sim_p = sim_p))
 end
 
 # ╔═╡ 9dd4d597-938a-4dc2-9194-793bc790bf03
@@ -269,7 +266,7 @@ let
 	df2.m = [x == true ? 1 : 0 for x in m]
 	df2.f = [rand(Binomial(1, 0.5 - 0.4 * df2[i, :t] + 0.4 * df2[i, :m]), 1)[1] for i in 1:N]
 	df2.h1 = [df2[i, :h0] + rand(Normal(5 - 3 * df2[i, :m]), 1)[1] for i in 1:N]
-	df2
+	describe(df2)
 end
 
 # ╔═╡ 1fe1fb6c-68dc-481a-a70b-04e1e1df6fd4
@@ -295,7 +292,6 @@ end
 # ╠═d65dd2b2-fc58-11ea-2300-4db47ec9a789
 # ╟─39d7aa5c-e2d7-454d-b738-713224adb209
 # ╠═e83fb187-b43e-427e-b3f4-998be3dfe877
-# ╠═f9a4d078-c6c7-4fae-bad2-75866d00d204
 # ╟─e07e83b4-b338-4481-880a-330e55e2e041
 # ╠═b1cd8dce-580c-43bf-a8b9-9b16b6685343
 # ╠═9dd4d597-938a-4dc2-9194-793bc790bf03

@@ -34,7 +34,7 @@ df = DataFrame(
 );
 
 # ╔═╡ 85013b04-6731-11eb-3df7-4f9ba267f65b
-PRECIS(df)
+describe(df)
 
 # ╔═╡ 97755284-6731-11eb-3a87-51384900e50b
 cars_stan = "
@@ -80,7 +80,7 @@ end;
 # ╔═╡ 1d99951e-673c-11eb-3920-49db0451c1cd
 begin
 	post_df = read_samples(cars_stan_model, :dataframe)
-	PRECIS(post_df[:, [:a, :b, :sigma]])
+	describe(post_df[:, [:a, :b, :sigma]])
 end
 
 # ╔═╡ a3a5feae-6732-11eb-2893-7397c30b2daa

@@ -1,17 +1,16 @@
-
 ### A Pluto.jl notebook ###
-# v0.19.26
+# v0.19.35
 
 using Markdown
 using InteractiveUtils
 
-# ╔═╡ 16ddb41a-fc59-11ea-1631-153e3466c75c
+# ╔═╡ ad749c1e-b3e8-4889-b5ae-e3a34003815e
 using Pkg
 
-# ╔═╡ 76b6ce64-9f9b-48fa-8ef4-8ee1a0723bf0
+# ╔═╡ 20e931f5-965b-4e12-943a-164c7bfe17e6
 #Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
-# ╔═╡ d65dd2b2-fc58-11ea-2300-4db47ec9a789
+# ╔═╡ fa9aa4e8-3967-4032-a5c4-bca70678045e
 begin
 	# Notebook specific
 	using LaTeXStrings
@@ -29,17 +28,17 @@ begin
 	using StanSample
 	
 	# Project support libraries
-	using StatisticalRethinking: sr_datadir, PRECIS
+	using StatisticalRethinking: sr_datadir
 	using RegressionAndOtherStories
 end
 
-# ╔═╡ 645d4df3-af64-489b-b2b0-e710d8917680
+# ╔═╡ 87ec8a7a-38c5-4f1b-a187-56471f61ac01
 md" ## 5.3 - Categorical variables."
 
-# ╔═╡ 234d835c-b651-4b16-9f2e-986eda90a1a8
+# ╔═╡ 0217d8d6-fad5-41df-94e3-8f7dc3883f89
 md"##### Set page layout for notebook."
 
-# ╔═╡ fbc882d4-18b0-4f08-a1b1-ec4c4f78635d
+# ╔═╡ c26f9f12-ac83-46f7-b46c-6d39c585f10b
 html"""
 <style>
 	main {
@@ -51,25 +50,25 @@ html"""
 </style>
 """
 
-# ╔═╡ 4b4ddf89-b54a-4744-a7e2-2c06b0ebcc80
+# ╔═╡ 694005d2-df03-490f-ac71-b449c8dd7b1a
 md"### Julia code snippets 5.46"
 
-# ╔═╡ 2195f047-416a-40bc-ab00-fd5bef502e62
+# ╔═╡ 63a73ce0-c098-4bf2-942f-f5d6e64b0e1d
 begin
 	df = CSV.read(sr_datadir("Howell1.csv"), DataFrame; delim=';');
 	df = filter(row -> row[:age] > 18, df)
 	scale_df_cols!(df, [:height, :weight])
 end;
 
-# ╔═╡ c67411f7-bd2a-42d8-86dd-bea5e435b4fc
+# ╔═╡ 5038119c-031d-40ae-a951-c6ea8eaa0ab1
 stan5_8 = "
 data{
     int N;
-    int male[N];
+    array[N] int male;
     vector[N] age;
     vector[N] weight;
     vector[N] height;
-    int sex[N];
+    array[N] int sex;
 }
 parameters{
     vector[2] a;
@@ -86,10 +85,10 @@ model{
 }
 ";
 
-# ╔═╡ 74b9ca50-8c24-40ab-a89e-0e022a01345c
+# ╔═╡ 37eb04f4-8a5b-4a07-8c5f-b0e55b8215cb
 md"### Define the SampleModel, etc."
 
-# ╔═╡ c65770e3-d43c-4368-bdf2-55efb76db580
+# ╔═╡ 29820723-606d-4fe3-861d-486cbd8d4921
 begin
 	howell1 = copy(df)
 	howell1[!, :sex] = [howell1[i, :male] == 1 ? 2 : 1 for i in 1:size(howell1, 1)]
@@ -102,16 +101,16 @@ begin
 	success(rc5_8s) && describe(m5_8s, [Symbol("a[1]"), Symbol("a[2]"), :sigma])
 end
 
-# ╔═╡ 885827cc-a6f4-4658-b3f1-1c8e1a529035
+# ╔═╡ c2ae9f52-ea70-45b8-9e6f-22407cda89ab
 if success(rc5_8s)
 	post5_8s = read_samples(m5_8s, :dataframe)
 	ms5_8s = model_summary(post5_8s, [Symbol("a.1"), Symbol("a.2"), :sigma])
 end
 
-# ╔═╡ c0777af3-5bfa-4ec9-9a24-e88d21aab82d
+# ╔═╡ 6a2e70fd-d7d2-484c-a92b-dda57891b1f3
 md" #### Many categories."
 
-# ╔═╡ 80eb4c84-5c43-4f2c-9a7a-6c8f7f8a92ea
+# ╔═╡ 5a790520-0ca7-410d-9dbb-65f6edd092fe
 begin
 	milk = CSV.read(sr_datadir("milk.csv"), DataFrame; delim=';')
 	milk[!, :clade_id] = Int.(indexin(milk[:, :clade], unique(milk[:, :clade])))
@@ -119,16 +118,16 @@ begin
 	milk
 end
 
-# ╔═╡ 54de96d1-52bb-4801-956a-e7bedd1d50b6
-PRECIS(milk[:, [:clade_id, :kcal_per_g]])
+# ╔═╡ 5acbad80-e131-4f3b-b27f-058bcc430120
+milk[:, [:clade_id, :kcal_per_g]]
 
-# ╔═╡ 4a155621-d560-4d6d-850e-a9e57180bfe0
+# ╔═╡ 34f19d14-5707-42ce-9c5b-876fdfa9eafd
 stan5_9 = "
 data{
   int <lower=1> N;              // Sample size
   int <lower=1> k;
   vector[N] K;
-  int clade_id[N];
+  array[N] int clade_id;
 }
 parameters{
   vector[k] a;
@@ -145,7 +144,7 @@ model{
 }
 ";
 
-# ╔═╡ 535c6009-ac50-4b9b-a9a4-91b67108fc07
+# ╔═╡ f67cb8ee-2b3b-4030-8601-72d063f9e30f
 let
 	data = (N = size(milk, 1), clade_id = milk.clade_id,
     	K = milk.kcal_per_g_s, k = length(unique(milk[:, :clade_id])))
@@ -155,16 +154,16 @@ let
 	success(rc5_9s) && describe(m5_9s, ["a[1]", "a[2]", "a[3]", "a[4]", "sigma"])
 end
 
-# ╔═╡ fa3179c5-8b79-4b05-843a-b906de956aea
+# ╔═╡ 4a28fb97-7a9b-4e08-9c05-73809bc30ef3
 if success(rc5_9s)
 	post5_9s_df = read_samples(m5_9s, :dataframe)
-	PRECIS(post5_9s_df)
+	post5_9s_df
 end
 
-# ╔═╡ 689d48c4-100d-437c-aa11-42125d26b326
+# ╔═╡ 9dbbb2fb-0ad6-4f99-a2aa-a4395f8ebc6e
 model_summary(post5_9s_df, [Symbol("a.1"), Symbol("a.2"), Symbol("a.3"), Symbol("a.4"), :sigma])
 
-# ╔═╡ 0d2d8423-ec6a-4ce5-a069-fc0fabd824f1
+# ╔═╡ 39ca9bf6-11ec-4fe0-ae6e-4207f695e43f
 if success(rc5_9s)
 	(s1, f1) = plot_model_coef([m5_9s], 
 		[Symbol("a.1"), Symbol("a.2"), Symbol("a.3"), Symbol("a.4"), :sigma]; 
@@ -172,25 +171,24 @@ if success(rc5_9s)
 	f1
 end
 
-
 # ╔═╡ Cell order:
-# ╟─645d4df3-af64-489b-b2b0-e710d8917680
-# ╟─234d835c-b651-4b16-9f2e-986eda90a1a8
-# ╠═fbc882d4-18b0-4f08-a1b1-ec4c4f78635d
-# ╠═16ddb41a-fc59-11ea-1631-153e3466c75c
-# ╠═76b6ce64-9f9b-48fa-8ef4-8ee1a0723bf0
-# ╠═d65dd2b2-fc58-11ea-2300-4db47ec9a789
-# ╟─4b4ddf89-b54a-4744-a7e2-2c06b0ebcc80
-# ╠═2195f047-416a-40bc-ab00-fd5bef502e62
-# ╠═c67411f7-bd2a-42d8-86dd-bea5e435b4fc
-# ╟─74b9ca50-8c24-40ab-a89e-0e022a01345c
-# ╠═c65770e3-d43c-4368-bdf2-55efb76db580
-# ╠═885827cc-a6f4-4658-b3f1-1c8e1a529035
-# ╟─c0777af3-5bfa-4ec9-9a24-e88d21aab82d
-# ╠═80eb4c84-5c43-4f2c-9a7a-6c8f7f8a92ea
-# ╠═54de96d1-52bb-4801-956a-e7bedd1d50b6
-# ╠═4a155621-d560-4d6d-850e-a9e57180bfe0
-# ╠═535c6009-ac50-4b9b-a9a4-91b67108fc07
-# ╠═fa3179c5-8b79-4b05-843a-b906de956aea
-# ╠═689d48c4-100d-437c-aa11-42125d26b326
-# ╠═0d2d8423-ec6a-4ce5-a069-fc0fabd824f1
+# ╟─87ec8a7a-38c5-4f1b-a187-56471f61ac01
+# ╠═0217d8d6-fad5-41df-94e3-8f7dc3883f89
+# ╠═c26f9f12-ac83-46f7-b46c-6d39c585f10b
+# ╠═ad749c1e-b3e8-4889-b5ae-e3a34003815e
+# ╠═20e931f5-965b-4e12-943a-164c7bfe17e6
+# ╠═fa9aa4e8-3967-4032-a5c4-bca70678045e
+# ╟─694005d2-df03-490f-ac71-b449c8dd7b1a
+# ╠═63a73ce0-c098-4bf2-942f-f5d6e64b0e1d
+# ╠═5038119c-031d-40ae-a951-c6ea8eaa0ab1
+# ╟─37eb04f4-8a5b-4a07-8c5f-b0e55b8215cb
+# ╠═29820723-606d-4fe3-861d-486cbd8d4921
+# ╠═c2ae9f52-ea70-45b8-9e6f-22407cda89ab
+# ╟─6a2e70fd-d7d2-484c-a92b-dda57891b1f3
+# ╠═5a790520-0ca7-410d-9dbb-65f6edd092fe
+# ╠═5acbad80-e131-4f3b-b27f-058bcc430120
+# ╠═34f19d14-5707-42ce-9c5b-876fdfa9eafd
+# ╠═f67cb8ee-2b3b-4030-8601-72d063f9e30f
+# ╠═4a28fb97-7a9b-4e08-9c05-73809bc30ef3
+# ╠═9dbbb2fb-0ad6-4f99-a2aa-a4395f8ebc6e
+# ╠═39ca9bf6-11ec-4fe0-ae6e-4207f695e43f

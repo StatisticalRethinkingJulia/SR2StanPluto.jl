@@ -75,7 +75,7 @@ begin
 
 	if success(rc5_1s_t)
 		post5_1s_t_df = read_samples(m5_1s_t, :dataframe)
-		PRECIS(post5_1s_t_df[:, [:a, :bA, :sigma]])
+		describe(post5_1s_t_df[:, [:a, :bA, :sigma]])
 	end
 end
 
@@ -132,7 +132,7 @@ begin
 	rc5_2s_t = stan_sample(m5_2s_t; data)
 	if success(rc5_2s_t)
 		post5_2s_t_df = read_samples(m5_2s_t, :dataframe)
-		PRECIS(post5_2s_t_df[:, [:a, :bM, :sigma]])
+		describe(post5_2s_t_df[:, [:a, :bM, :sigma]])
 	end
 end
 
@@ -190,7 +190,7 @@ begin
 
 	if success(rc5_3s_t)
 		post5_3s_t_df = read_samples(m5_3s_t, :dataframe)
-		PRECIS(post5_3s_t_df[:, [:a, :bA, :bM, :sigma]])
+		describe(post5_3s_t_df[:, [:a, :bA, :bM, :sigma]])
 	end
 end
 

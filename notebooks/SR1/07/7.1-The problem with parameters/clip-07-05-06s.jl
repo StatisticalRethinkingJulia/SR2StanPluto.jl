@@ -85,13 +85,13 @@ end
 log(0.169)
 
 # ╔═╡ 77c93e33-d7e2-4eb8-819b-e568ac1585af
-PRECIS(quap7_1as_df)
+describe(quap7_1as_df)
 
 # ╔═╡ 278f62e2-5079-11eb-003f-cfc6b482ea79
 post7_1as_df = read_samples(m7_1as, :dataframe);
 
 # ╔═╡ 080b72a3-5cee-43ca-b710-4a1d73bcb9ad
-PRECIS(post7_1as_df)
+describe(post7_1as_df)
 
 # ╔═╡ 93d1db36-5118-11eb-3183-212c07cdf0eb
 md" ### Julia code snippet 7.5"

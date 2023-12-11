@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.26
+# v0.19.35
 
 using Markdown
 using InteractiveUtils
@@ -26,7 +26,7 @@ begin
 	using StanSample
 	
 	# Project support libraries
-	using StatisticalRethinking: sr_datadir, PRECIS
+	using StatisticalRethinking: sr_datadir
 	using RegressionAndOtherStories
 end
 
@@ -71,7 +71,7 @@ df
 
 # ╔═╡ dc95e7b0-96b5-4259-9cb9-1389769c165e
 begin
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 	ax = Axis(f[1, 1]; xlabel="body mass [kg]", ylabel="brain vol [cc]")
 	scatter!(df.mass, df.brain)
 	
@@ -126,7 +126,7 @@ if success(rc7_1s)
 end
 
 # ╔═╡ 9a196854-d7e3-4a99-8a7a-31b4cb24b011
-PRECIS(post7_1s_df)
+describe(post7_1s_df)
 
 # ╔═╡ cb7ddc89-c71b-41d7-9940-b48114793b38
 log(mean(post7_1s_df.sigma))
@@ -215,7 +215,7 @@ let
 	y_s = ms7_1bs[:a, :mean] .+ ms7_1bs[:bA, :mean] .* x_s
 	x = (x_s .- mean(df.mass)) ./ std(df.mass)
 	y = (y_s .- mean(df.brain)) ./ std(df.brain)
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 	ax = Axis(f[1, 1])
 	scatter!(df.mass_s, df.brain_s)
 		

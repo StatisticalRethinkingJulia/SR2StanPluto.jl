@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.26
+# v0.19.35
 
 using Markdown
 using InteractiveUtils
@@ -108,7 +108,7 @@ end
 # ╔═╡ eb13b755-0024-45fc-ab03-3e05c2a2b3b7
 let
 	if success(rc5_5_drafts)
-		f = Figure(resolution=default_figure_resolution)
+		f = Figure(;size=default_figure_resolution)
 		ax = Axis(f[1, 1]; title="m5.5.drafts: a ~ Normal(0, 1), bN ~ Normal(0, 1)")
 		x = -2:0.01:2
 		for j in 1:100
@@ -371,7 +371,7 @@ let
 	title = "Partial model: Kcal_per_g_s vs. neocortex_perc_s" * "\n89% predicted and mean range"
 	global post5_5s_df = read_samples(m5_5s, :dataframe)
 
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 	ax = Axis(f[1, 1]; title, xlabel="neocortex_perc", ylabel="kcal_per_g")
 	scatter!(df.neocortex_perc_s, df.kcal_per_g_s)
 	res = link(post5_5s_df, (r, x) -> r.a + r.bN * x, x_range)
@@ -494,7 +494,7 @@ m_sim, d_sim = simulate(post5_7_As_df, [:aNC, :bMNC, :sigma_NC], a_seq, [:bM, :s
 
 # ╔═╡ c2e86fef-56e9-4831-823e-e26ffcaf7e2d
 let
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 	ax = Axis(f[1, 1]; xlabel="Manipulated M", ylabel="Counterfactual K",
 	  title="Total counterfactual effect of M on K")
 	m, l, u = estimparam(d_sim)
@@ -530,7 +530,7 @@ nc_k_sim
 
 # ╔═╡ 26a449f0-73c5-4d17-8b7c-27bd938a7f66
 begin
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 
 	ax = Axis(f[1, 1]; xlabel="Manipulated M", ylabel="Counterfactual K",
 	  title="Total counterfactual effect of M on K")
@@ -615,7 +615,7 @@ let
     g2 = GraphViz.Graph(d1.est_g_dot_str)
     g3 = GraphViz.Graph(fci_oracle_dot_str)
     g4 = GraphViz.Graph(fci_gauss_dot_str)
-    f = Figure(resolution=default_figure_resolution)
+    f = Figure(;size=default_figure_resolution)
     ax = Axis(f[1, 1]; aspect=DataAspect(), title="True (generational) DAG")
     CairoMakie.image!(rotr90(create_png_image(g1)))
     hidedecorations!(ax)
@@ -658,7 +658,7 @@ let
     g2 = GraphViz.Graph(d2.est_g_dot_str)
     g3 = GraphViz.Graph(fci_oracle_dot_str)
     g4 = GraphViz.Graph(fci_gauss_dot_str)
-    f = Figure(resolution=default_figure_resolution)
+    f = Figure(;size=default_figure_resolution)
     ax = Axis(f[1, 1]; aspect=DataAspect(), title="True (generational) DAG")
     CairoMakie.image!(rotr90(create_png_image(g1)))
     hidedecorations!(ax)
@@ -701,7 +701,7 @@ let
     g2 = GraphViz.Graph(d3.est_g_dot_str)
     g3 = GraphViz.Graph(fci_oracle_dot_str)
     g4 = GraphViz.Graph(fci_gauss_dot_str)
-    f = Figure(resolution=default_figure_resolution)
+    f = Figure(;size=default_figure_resolution)
     ax = Axis(f[1, 1]; aspect=DataAspect(), title="DAG with M <- U -> N")
     CairoMakie.image!(rotr90(create_png_image(g1)))
     hidedecorations!(ax)
@@ -726,7 +726,7 @@ let
     g1 = GraphViz.Graph(d1.est_g_dot_str)
     g2 = GraphViz.Graph(d2.est_g_dot_str)
     g3 = GraphViz.Graph(d3.est_g_dot_str)
-    f = Figure(resolution=default_figure_resolution)
+    f = Figure(;size=default_figure_resolution)
     ax = Axis(f[1, 1]; aspect=DataAspect(), title="PC estimated DAG d1")
     CairoMakie.image!(rotr90(create_png_image(g1)))
     hidedecorations!(ax)

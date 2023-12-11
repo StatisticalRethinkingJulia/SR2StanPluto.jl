@@ -137,7 +137,7 @@ b6  1.63 0.02  1.59  1.66    49  1.06
 "
 
 # ╔═╡ bc6292b4-5a75-11eb-2a11-a31ae9ae5c4f
-PRECIS(read_samples(m7_6s, :dataframe))
+describe(read_samples(m7_6s, :dataframe))
 
 # ╔═╡ 91e9af0a-5065-11eb-212c-f751fd114263
 md" ## End of clip-07-15.bs.jl"

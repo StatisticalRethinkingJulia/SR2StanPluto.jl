@@ -35,7 +35,7 @@ begin
 	df.rugged_s = df.rugged / maximum(df.rugged)
 	df.cid = [df.cont_africa[i] == 1 ? 1 : 2 for i in 1:size(df, 1)]
 	r̄ = mean(df.rugged_s)
-	PRECIS(df[:, [:rgdppc_2000, :log_gdp, :log_gdp_s, :rugged, :rugged_s, :cid]])
+	describe(df[:, [:rgdppc_2000, :log_gdp, :log_gdp_s, :rugged, :rugged_s, :cid]])
 end
 
 
@@ -91,7 +91,7 @@ end;
 md"### Code 8.14"
 
 # ╔═╡ 885619ae-7f62-4c46-8954-151bd23e7836
-PRECIS(post8_3s_df[:, [Symbol("a.1"), Symbol("a.2"), 
+describe(post8_3s_df[:, [Symbol("a.1"), Symbol("a.2"), 
 	Symbol("b.1"), Symbol("b.2"), :sigma]])
 
 # ╔═╡ f416b40e-84a4-4d0c-92dc-8284472fbe48

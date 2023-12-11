@@ -35,7 +35,7 @@ begin
 	dropmissing!(df_africa, :rugged)
 	df_africa.log_gdp = log.(df_africa[:, :rgdppc_2000])
 	scale_df_cols!(df_africa, [:log_gdp, :rugged])
-	PRECIS(df_africa)
+	describe(df_africa)
 end
 
 # ╔═╡ 25ee6cd8-6a54-11eb-0a72-3fb09ee63b0e
@@ -82,7 +82,7 @@ begin
 	rc8_1_1s = stan_sample(m8_1s; data=data1)
 	if success(rc8_1_1s)
 		post8_1_1s_df = read_samples(m8_1s, :dataframe)
-		PRECIS(post8_1_1s_df[:, [:a, :b, :sigma]])
+		describe(post8_1_1s_df[:, [:a, :b, :sigma]])
 	end
 end
 
@@ -93,7 +93,7 @@ begin
 	rc8_1_2s = stan_sample(m8_1s; data=data2)
 	if success(rc8_1_2s)
 		post8_1_2s_df = read_samples(m8_1s, :dataframe)
-		PRECIS(post8_1_2s_df[:, [:a, :b, :sigma]])
+		describe(post8_1_2s_df[:, [:a, :b, :sigma]])
 	end
 end
 

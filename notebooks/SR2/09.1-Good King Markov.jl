@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.22
+# v0.19.35
 
 using Markdown
 using InteractiveUtils
@@ -12,16 +12,8 @@ using Pkg
 
 # ╔═╡ 3626cf55-ee2b-4363-95ee-75f2444a1542
 begin
-    using DataFrames
-    using Parameters
-    using Statistics
-    using StatsBase
-    using LinearAlgebra
-    using FreqTables
-    using Random
-    using Distributions
     using CairoMakie
-    using AlgebraOfGraphics
+	using RegressionAndOtherStories
 end
 
 # ╔═╡ 2409c72b-cbcc-467f-9e81-23d83d2b703a
@@ -65,7 +57,7 @@ end
 let
     positions = metropolis(100000, 10)
     cm = countmap(positions)
-    f = Figure()
+    f = Figure(;size=default_figure_resolution)
     
     # Left graph
     ax = Axis(f[1, 1]; title="Position in the first 100 weeks", ylabel="Island", xlabel="Week")

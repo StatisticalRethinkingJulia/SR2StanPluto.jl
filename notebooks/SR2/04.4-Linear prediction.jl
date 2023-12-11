@@ -1,14 +1,11 @@
 ### A Pluto.jl notebook ###
-# v0.19.22
+# v0.19.35
 
 using Markdown
 using InteractiveUtils
 
 # ╔═╡ 6fbe488b-f265-49a9-89c8-f5d11c45a907
 using Pkg
-
-# ╔═╡ 9dbace63-a018-4d16-96e2-c9a8ce35c14f
-#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ ba53534c-c088-4b75-a220-36c09b375978
 begin
@@ -47,6 +44,9 @@ html"""
 # ╔═╡ 2f5c0721-d7ee-4073-a026-2d8febf0f400
 md" ##### Used packages in this notebook."
 
+# ╔═╡ 9dbace63-a018-4d16-96e2-c9a8ce35c14f
+#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
+
 # ╔═╡ 6e93c98d-55d7-4a30-b9cf-1b411ad7ef3c
 md"### Julia code snippet 4.37"
 
@@ -59,7 +59,7 @@ end
 # ╔═╡ 90dc4bbc-8574-40ab-bdd1-a8999391c09b
 let
 
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 	ax = Axis(f[1, 1]; xlabel="Weight", ylabel="Height", title="Scatter plot of Howell1 data")
 	Makie.scatter!(d2.weight, d2.height)
 	f
@@ -81,7 +81,7 @@ md"### Julia code snippet 4.39"
 
 # ╔═╡ 00bc00c5-981c-4158-aeb4-17437ac48fe4
 let
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 	ax = Axis(f[1, 1]; xlabel="Weight [kg]", ylabel="Height [cm]", title="Possible prior regression lines")
 	hlow = Makie.hlines!([0, 272]; color=:darkred)
 	Makie.xlims!(extrema(d2.weight)...)
@@ -176,7 +176,7 @@ map4_3bs
 md"## snippet 4.40"
 
 # ╔═╡ 6071f58d-29cc-4acc-83ee-5cc79f8bd230
-density(rand(LogNormal(0, 1), 4000))
+Makie.density(rand(LogNormal(0, 1), 4000))
 
 # ╔═╡ 2880d9f6-b2d4-4314-9009-92b61a030c32
 md"### snippets 4.39 & 4.41"
@@ -187,7 +187,7 @@ let
 	    x = range(30.0, stop=70.0, length=50)
 	    xbar = mean(x)
 
-		f = Figure(resolution=default_figure_resolution)
+		f = Figure(;size=default_figure_resolution)
 		ax = Axis(f[1, 1]; ylabel="height [cm]", xlabel="weight [kg]", title="beta ~ Normal(0, 10)")
 	    ylims!(ax, -100, 400)
 	    for i in 1:30
@@ -236,7 +236,7 @@ let
 	    x = range(30.0, stop=70.0, length=50)
 	    xbar = mean(x)
 
-		f = Figure(resolution=default_figure_resolution)
+		f = Figure(;size=default_figure_resolution)
 	    ax = Axis(f[1, 1]; ylabel="height [cm]", xlabel="weight [kg]", title="beta ~ LogNormal(0, 1)")
 		ylims!(ax, -100, 400)
 	    for i in 1:30

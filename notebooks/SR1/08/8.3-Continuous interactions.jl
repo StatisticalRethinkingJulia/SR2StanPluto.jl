@@ -103,7 +103,7 @@ begin
 	if success(rc8_4s)
 		post8_4s_df = read_samples(m8_4s, :dataframe)
 	end
-	PRECIS(post8_4s_df)
+	describe(post8_4s_df)
 end
 
 # ╔═╡ 3bd5b2ee-ab4e-474d-8520-2a7e6c3b20c0
@@ -145,7 +145,7 @@ begin
 	if success(rc8_5s)
 		post8_5s_df = read_samples(m8_5s, :dataframe)
 	end
-	PRECIS(post8_5s_df[:, [:a, :bs, :bw, :bws, :sigma]])
+	describe(post8_5s_df[:, [:a, :bs, :bw, :bws, :sigma]])
 end
 
 # ╔═╡ 6d82ff1b-16a8-4da4-8820-152dbc76bbe5
@@ -206,7 +206,7 @@ let
 	if success(rc8_5s)
 		global priors8_5s_df = read_samples(m8_5s, :dataframe)
 	end
-	PRECIS(priors8_5s_df[:, [:a, :bs, :bw, :bws, :sigma]])
+	describe(priors8_5s_df[:, [:a, :bs, :bw, :bws, :sigma]])
 end	
 
 # ╔═╡ fbdeeb1f-e335-4345-b258-d3e635cfc0bd

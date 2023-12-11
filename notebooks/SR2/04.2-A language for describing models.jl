@@ -1,14 +1,11 @@
 ### A Pluto.jl notebook ###
-# v0.19.22
+# v0.19.35
 
 using Markdown
 using InteractiveUtils
 
 # ╔═╡ e2fbf73e-aa3d-4482-917b-dfbecdd6c4b9
 using Pkg
-
-# ╔═╡ 1af0319c-c956-40d8-a6bb-6bfef0e9959e
-#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ ba53534c-c088-4b75-a220-36c09b375978
 begin
@@ -44,6 +41,9 @@ html"""
 	}
 </style>
 """
+
+# ╔═╡ 1af0319c-c956-40d8-a6bb-6bfef0e9959e
+#Pkg.activate(expanduser("~/.julia/dev/SR2StanPluto"))
 
 # ╔═╡ a6297992-a96d-4c7a-a335-3ac959cdca05
 md"In the book and associated R package `rethinking` statistical models are defined as illustrated below:
@@ -121,7 +121,7 @@ stan1_1 = "
 data {
   int N;
   int<lower=1> n;
-  int<lower=0> k[N];
+  array[N] int<lower=0> k;
 }
 parameters {
   real<lower=0,upper=1> theta;
@@ -213,7 +213,7 @@ md"### Julia code snippet 4.6"
 
 # ╔═╡ 6bcb5ef8-c053-4ed4-8cff-35acb29c0e90
 let
-	f = Figure(resolution=default_figure_resolution)
+	f = Figure(;size=default_figure_resolution)
 	ax = Axis(f[1, 1];)
     w = 6
     n = 9

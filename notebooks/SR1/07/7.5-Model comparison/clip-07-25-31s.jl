@@ -42,7 +42,7 @@ begin
 end;
 
 # ╔═╡ 34079ef0-68c1-11eb-24f5-afa32aad15d5
-PRECIS(df)
+describe(df)
 
 # ╔═╡ 8177cc20-68bf-11eb-2f03-17eb658f83f3
 stan6_6 = "
@@ -86,7 +86,7 @@ begin
 
 	if success(rc6_6s)
 		post6_6s_df = read_samples(m6_6s, :dataframe)
-		PRECIS(post6_6s_df[:, [:a, :sigma]])
+		describe(post6_6s_df[:, [:a, :sigma]])
 	end
 end
 
@@ -133,7 +133,7 @@ begin
 	rc6_7s = stan_sample(m6_7s; data)
 	if success(rc6_7s)
  		post6_7s_df = read_samples(m6_7s, :dataframe);
- 		PRECIS(post6_7s_df[:, [:a, :bt, :bf, :sigma]])
+ 		describe(post6_7s_df[:, [:a, :bt, :bf, :sigma]])
 	end
 end
 
@@ -191,7 +191,7 @@ begin
 	rc6_8s = stan_sample(m6_8s; data)
 	if success(rc6_8s)
 	 	post6_8s_df = read_samples(m6_8s, :dataframe);
-	 	PRECIS(post6_8s_df[:, [:a, :bt, :sigma]])
+	 	describe(post6_8s_df[:, [:a, :bt, :sigma]])
 	end
 end
 
